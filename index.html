@@ -750,9 +750,9 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
 .func-head h3{margin:0 0 4px;font-family:'Space Grotesk',sans-serif;font-size:17px;line-height:1.25}
 .func-q{margin:0;color:var(--ink-3);font-size:12.8px;line-height:1.5;max-width:62ch}
 .func-count{flex:0 0 auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
-.func-track{position:relative;display:grid;grid-template-columns:repeat(var(--func-cols,6),minmax(92px,1fr));gap:9px;overflow-x:auto;padding:2px 1px 10px;scrollbar-width:thin}
-.func-step{position:relative;min-height:105px;text-align:left;padding:11px 10px;border-radius:11px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font:inherit;cursor:pointer;transition:border-color .16s,background .16s,transform .16s;scroll-snap-align:center}
-.func-step:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:43%;z-index:2;color:var(--ink-3);font-family:'IBM Plex Mono',monospace;font-size:14px;pointer-events:none}
+.func-track{position:relative;display:flex;flex-direction:column;gap:14px;padding:2px 1px 18px}
+.func-step{position:relative;width:100%;min-height:78px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font:inherit;cursor:pointer;transition:border-color .16s,background .16s,transform .16s}
+.func-step:not(:last-child)::after{content:'↓';position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);z-index:2;color:var(--ink-3);font-family:'IBM Plex Mono',monospace;font-size:14px;pointer-events:none}
 .func-step:hover{border-color:color-mix(in srgb,var(--mc) 45%,var(--line));transform:translateY(-1px)}
 .func-step.active{border-color:color-mix(in srgb,var(--mc) 72%,var(--line));background:color-mix(in srgb,var(--mc) 10%,var(--panel));color:var(--ink)}
 .func-step.hinge{box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--amber) 68%,transparent)}
@@ -777,7 +777,6 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
 .func-whatif p{margin:0;padding:0 13px 13px;color:var(--ink-3);font-size:12.5px;line-height:1.55}
 .func-live{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:700px){
-  .func-track{grid-template-columns:repeat(var(--func-cols,6),minmax(142px,72vw));scroll-snap-type:x proximity}
   .func-detail{grid-template-columns:1fr}
   .func-controls{justify-content:flex-start}
   .func-head{flex-direction:column}
@@ -1314,7 +1313,6 @@ function renderFunctional(m){
   }
   if(tab) tab.hidden=false;
   host.style.setProperty('--mc',m.color);
-  host.style.setProperty('--func-cols',String(d.chain.length));
   const steps=d.chain.map((text,i)=>`<button type="button" class="func-step${i===d.hinge?' hinge':''}" data-fstep="${i}" onclick="selectFunctionalStep(${i})" aria-label="Passo ${i+1} de ${d.chain.length}: ${escapeFunctional(text)}"><span class="func-num">${i+1}</span><span class="func-label">${escapeFunctional(text)}</span><span class="func-phase">${funcPhase(i,d.chain.length)}${i===d.hinge?' · virada':''}</span></button>`).join('');
   const wi=(d.ifs&&d.ifs[0])?`<details class="func-whatif"><summary>${escapeFunctional(d.ifs[0][0])}</summary><p>${escapeFunctional(d.ifs[0][1])}</p></details>`:'';
   host.innerHTML=`
@@ -1352,7 +1350,7 @@ function selectFunctionalStep(i,focus=true){
     const on=n===_funcStep;
     b.classList.toggle('active',on);
     b.setAttribute('aria-current',on?'step':'false');
-    if(on){ try{ b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'}); }catch(e){} }
+    if(on){ try{ b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'}); }catch(e){} }
   });
   const current=d.chain[_funcStep];
   const prev=_funcStep>0?d.chain[_funcStep-1]:null;

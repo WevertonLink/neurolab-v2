@@ -351,6 +351,147 @@ test('@visual capturas e verificação de estouro horizontal', async ({ page }, 
   expect(layoutIssues).toEqual([]);
 });
 
+const MOBILE_VIEWPORTS = [
+  { width: 360, height: 800 },
+  { width: 390, height: 844 },
+  { width: 412, height: 915 },
+  { width: 430, height: 932 }
+];
+
+test('@visual mecanismo vertical sem estouro em viewports móveis', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'A verificação usa dimensões móveis.');
+  const failures = [];
+
+  for (const viewport of MOBILE_VIEWPORTS) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await boot(page);
+
+    for (let mi = 0; mi < 16; mi += 1) {
+      await openModule(page, mi);
+      await page.locator('#vis-tab-functional').click();
+      await expect(page.locator('#md-functional')).toBeVisible();
+      await expect(page.locator('#func-track .func-step').first()).toBeVisible();
+
+      const inspection = await page.evaluate(() => {
+        const doc = document.documentElement;
+        const track = document.getElementById('func-track');
+        const steps = track ? Array.from(track.querySelectorAll('.func-step')) : [];
+        const trackRect = track ? track.getBoundingClientRect() : null;
+        const overflowingSteps = [];
+        if (trackRect) {
+          steps.forEach((step, idx) => {
+            const r = step.getBoundingClientRect();
+            if (r.left < trackRect.left - 1 || r.right > trackRect.right + 1) {
+              overflowingSteps.push({
+                index: idx,
+                left: Math.round(r.left),
+                right: Math.round(r.right),
+                trackLeft: Math.round(trackRect.left),
+                trackRight: Math.round(trackRect.right)
+              });
+            }
+          });
+        }
+        return {
+          pageScrollWidth: doc.scrollWidth,
+          pageClientWidth: doc.clientWidth,
+          pageOverflow: doc.scrollWidth > doc.clientWidth + 1,
+          trackScrollWidth: track ? track.scrollWidth : 0,
+          trackClientWidth: track ? track.clientWidth : 0,
+          trackHorizontalScroll: track ? track.scrollWidth > track.clientWidth + 1 : false,
+          stepCount: steps.length,
+          overflowingSteps
+        };
+      });
+
+      if (inspection.pageOverflow) {
+        failures.push({
+          viewport, moduleIndex: mi + 1,
+          kind: 'page-scrollWidth-exceeds-clientWidth',
+          pageScrollWidth: inspection.pageScrollWidth,
+          pageClientWidth: inspection.pageClientWidth
+        });
+      }
+      if (inspection.trackHorizontalScroll) {
+        failures.push({
+          viewport, moduleIndex: mi + 1,
+          kind: 'func-track-horizontal-scroll',
+          trackScrollWidth: inspection.trackScrollWidth,
+          trackClientWidth: inspection.trackClientWidth
+        });
+      }
+      if (inspection.overflowingSteps.length) {
+        failures.push({
+          viewport, moduleIndex: mi + 1,
+          kind: 'func-step-overflows-track',
+          overflows: inspection.overflowingSteps
+        });
+      }
+    }
+  }
+
+  await attachJson(testInfo, 'vertical-mechanism-audit.json', failures);
+  expect(failures).toEqual([]);
+});
+
+test('@visual salto contextual posiciona verticalmente a etapa ativa', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Verificação do salto contextual em mobile.');
+  const failures = [];
+
+  for (const viewport of MOBILE_VIEWPORTS) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await boot(page);
+    await openModule(page, 1);
+    const chip = page.locator('#md-anat .anat-chip').first();
+    await chip.click();
+    await expect(page.locator('#term-modal')).toBeVisible();
+    const mechanism = page.locator('#tm-mech .ctx-mech');
+    await expect(mechanism).toHaveCount(1);
+    await mechanism.locator('summary').click();
+    await mechanism.locator('.ctx-open').click();
+    await expect(page.locator('#md-functional')).toBeVisible();
+    await expect(page.locator('#func-track .func-step.active')).toBeVisible();
+
+    const positioning = await page.evaluate(() => {
+      const doc = document.documentElement;
+      const active = document.querySelector('#func-track .func-step.active');
+      const track = document.getElementById('func-track');
+      if (!active || !track) return null;
+      const ar = active.getBoundingClientRect();
+      const tr = track.getBoundingClientRect();
+      return {
+        pageScrollWidth: doc.scrollWidth,
+        pageClientWidth: doc.clientWidth,
+        activeLeft: Math.round(ar.left),
+        activeRight: Math.round(ar.right),
+        activeTop: Math.round(ar.top),
+        activeBottom: Math.round(ar.bottom),
+        trackLeft: Math.round(tr.left),
+        trackRight: Math.round(tr.right),
+        viewportHeight: doc.clientHeight,
+        viewportWidth: doc.clientWidth
+      };
+    });
+
+    if (!positioning) {
+      failures.push({ viewport, kind: 'missing-active-step' });
+      continue;
+    }
+    if (positioning.pageScrollWidth > positioning.pageClientWidth + 1) {
+      failures.push({ viewport, kind: 'page-overflow-after-jump', ...positioning });
+    }
+    if (positioning.activeLeft < positioning.trackLeft - 1 || positioning.activeRight > positioning.trackRight + 1) {
+      failures.push({ viewport, kind: 'active-step-exceeds-track', ...positioning });
+    }
+    if (positioning.activeBottom < 0 || positioning.activeTop > positioning.viewportHeight) {
+      failures.push({ viewport, kind: 'active-step-off-screen', ...positioning });
+    }
+  }
+
+  await attachJson(testInfo, 'contextual-jump-positioning.json', failures);
+  expect(failures).toEqual([]);
+});
+
 test('@smoke acessibilidade estrutural básica', async ({ page }, testInfo) => {
   const audit = await page.evaluate(() => {
     const duplicateIds = [];
