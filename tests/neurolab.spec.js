@@ -54,9 +54,27 @@ async function attachJson(testInfo, name, data) {
 async function collectLayoutIssues(page, scopeSelector) {
   return page.evaluate((selector) => {
     const scope = document.querySelector(selector) || document.body;
-    const viewportWidth = document.documentElement.clientWidth;
+    const doc = document.documentElement;
+    const viewportWidth = doc.clientWidth;
     const issues = [];
     const ignored = new Set(['SVG', 'PATH', 'LINE', 'CIRCLE', 'RECT', 'POLYLINE', 'POLYGON', 'G']);
+
+    function scrollingAncestor(el) {
+      for (let p = el.parentElement; p && p !== doc; p = p.parentElement) {
+        const s = getComputedStyle(p);
+        if (s.overflowX === 'auto' || s.overflowX === 'scroll') return p;
+      }
+      return null;
+    }
+
+    if (doc.scrollWidth > viewportWidth + 1) {
+      issues.push({
+        type: 'page-horizontal-overflow',
+        tag: 'html',
+        scrollWidth: doc.scrollWidth,
+        clientWidth: viewportWidth
+      });
+    }
 
     for (const el of scope.querySelectorAll('*')) {
       if (ignored.has(el.tagName)) continue;
@@ -64,6 +82,8 @@ async function collectLayoutIssues(page, scopeSelector) {
       if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) continue;
       const r = el.getBoundingClientRect();
       if (!r.width || !r.height) continue;
+      const container = scrollingAncestor(el);
+      if (container) continue;
       if (r.right > viewportWidth + 3 || r.left < -3) {
         issues.push({
           type: 'horizontal-overflow',
