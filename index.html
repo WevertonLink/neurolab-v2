@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#08080d">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
 <title>NeuroLab V2 · Fase 6 — Estudo da Mente</title>
 <!-- NEUROLAB V2 · FASE 6 · MECANISMOS VERTICAIS E AUDITORIA ROBUSTA -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1564,7 +1565,12 @@ function openContextMechanismFull(){
           const focus=nodes[target]||nodes[marked[0]]; if(focus){focus.setAttribute('tabindex','-1');focus.focus({preventScroll:true});}
           setTimeout(()=>{box.classList.remove('ctx-jumped');nodes.forEach(el=>el.classList.remove('ctx-jump'));},2400);
         }
-      }else{ setVisualMode('functional'); selectFunctionalStep(target,false); const el=document.getElementById('md-functional'); if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}); }
+      }else{
+        setVisualMode('functional');
+        // Aguarda o layout vertical ficar visível e deixa a própria etapa ativa
+        // ser a referência final da rolagem. Evita que o painel desfaça o centro.
+        requestAnimationFrame(()=>requestAnimationFrame(()=>selectFunctionalStep(target,false)));
+      }
     }catch(e){}
   },90);
 }
