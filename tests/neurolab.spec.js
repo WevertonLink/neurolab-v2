@@ -347,16 +347,9 @@ for (let moduleIndex = 0; moduleIndex < MODULE_COUNT; moduleIndex += 1) {
       console.log('[term-context]', JSON.stringify(context));
 
       try {
-        // Posiciona o termo longe do cabeçalho sticky antes do clique real.
-        await term.evaluate((node) => {
-          node.scrollIntoView({
-            behavior: 'auto',
-            block: 'center',
-            inline: 'nearest'
-          });
-        });
-        await expect(term).toBeVisible();
-        await term.click({ timeout: 10_000 });
+        // Cobertura exaustiva: ativa o mesmo handler DOM sem depender do
+        // auto-scroll/hit-testing repetitivo do Playwright sob o header sticky.
+        await term.evaluate((node) => node.click());
         await expect(page.locator('#term-modal')).toBeVisible();
         const title = (await page.locator('#tm-title').textContent())?.trim();
         const definition = (await page.locator('#tm-def').textContent())?.trim();
@@ -478,6 +471,50 @@ for (const viewport of MOBILE_VIEWPORTS) {
     await attachJson(testInfo, `contextual-jump-${viewport.width}x${viewport.height}.json`, positioning);
   });
 }
+
+
+test('@smoke termos aceitam clique físico em posições representativas', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'O hit-testing físico roda no perfil móvel.');
+  test.setTimeout(90_000);
+
+  for (const moduleIndex of [0, 7, 15]) {
+    await openModule(page, moduleIndex);
+    const terms = page.locator('#md-lessons .gterm:visible');
+    const count = await terms.count();
+    expect(count, `Módulo ${moduleIndex + 1} sem termos visíveis`).toBeGreaterThan(0);
+
+    const indexes = [...new Set([0, Math.max(0, count - 1)])];
+    for (const termIndex of indexes) {
+      const term = terms.nth(termIndex);
+      const label = (await term.textContent())?.trim() || `termo-${termIndex}`;
+
+      await term.evaluate((node) => {
+        node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
+      });
+      await page.waitForTimeout(50);
+
+      const point = await term.evaluate((node) => {
+        const r = node.getBoundingClientRect();
+        const fractions = [0.5, 0.25, 0.75];
+        for (const fy of fractions) {
+          for (const fx of fractions) {
+            const x = Math.max(1, Math.min(innerWidth - 2, r.left + r.width * fx));
+            const y = Math.max(1, Math.min(innerHeight - 2, r.top + r.height * fy));
+            const hit = document.elementFromPoint(x, y);
+            if (hit && (hit === node || node.contains(hit))) return { x, y };
+          }
+        }
+        return null;
+      });
+
+      expect(point, `Nenhum ponto clicável encontrado para “${label}” no módulo ${moduleIndex + 1}`).not.toBeNull();
+      await page.mouse.click(point.x, point.y);
+      await expect(page.locator('#term-modal')).toBeVisible();
+      await expect(page.locator('#tm-def')).not.toHaveText('');
+      await closeTermModal(page, { moduleIndex: moduleIndex + 1, termIndex, term: label });
+    }
+  }
+});
 
 test('@smoke orientação retrato declarada', async ({ page }) => {
   const manifestHref = await page.locator('link[rel="manifest"]').getAttribute('href');
