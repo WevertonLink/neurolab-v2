@@ -347,7 +347,16 @@ for (let moduleIndex = 0; moduleIndex < MODULE_COUNT; moduleIndex += 1) {
       console.log('[term-context]', JSON.stringify(context));
 
       try {
-        await term.click();
+        // Posiciona o termo longe do cabeçalho sticky antes do clique real.
+        await term.evaluate((node) => {
+          node.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+            inline: 'nearest'
+          });
+        });
+        await expect(term).toBeVisible();
+        await term.click({ timeout: 10_000 });
         await expect(page.locator('#term-modal')).toBeVisible();
         const title = (await page.locator('#tm-title').textContent())?.trim();
         const definition = (await page.locator('#tm-def').textContent())?.trim();

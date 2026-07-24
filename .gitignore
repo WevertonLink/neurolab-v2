@@ -6,3 +6,5 @@ test-results/
 audit-failed.log
 audit-report/
 neurolab-audit-*.zip
+.backup/
+latest-audit-failed.log

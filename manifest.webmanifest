@@ -1,0 +1,12 @@
+{
+  "name": "NeuroLab V2",
+  "short_name": "NeuroLab",
+  "description": "Estudo interativo de neurociência, cognição e estado mental.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#08080d",
+  "theme_color": "#08080d",
+  "lang": "pt-BR"
+}
