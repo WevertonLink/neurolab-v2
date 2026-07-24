@@ -43,6 +43,31 @@ async function openModule(page, index) {
   await expect(page.locator('#md-lessons .lesson').first()).toBeVisible();
 }
 
+// No modo profundo a aula nasce sob o véu de predição (.body.pveil). Esse véu aplica
+// pointer-events:none, que é herdado por todos os botões .gterm dentro do texto.
+// Enquanto ele existir, nenhum termo é clicável — é comportamento correto do app,
+// então a auditoria precisa percorrer o mesmo caminho do aluno: responder ou pular
+// a predição para liberar a aula.
+async function revealLessons(page) {
+  const skips = page.locator('#md-lessons .pred .pskip');
+  let remaining = await skips.count();
+  while (remaining > 0) {
+    await skips.first().click();
+    await expect(skips).toHaveCount(remaining - 1, { timeout: 10_000 });
+    remaining -= 1;
+  }
+  await expect(page.locator('#md-lessons .body.pveil')).toHaveCount(0);
+}
+
+// Uma página de módulo mede ~9.000 px CSS. No perfil Pixel 7 o deviceScaleFactor é
+// 2,625, então um fullPage no padrão `scale: 'device'` gera um PNG de ~24.000 px de
+// altura — acima do limite de textura do Chromium (~16.384 px). O navegador cai num
+// caminho de captura em blocos, muito mais lento, e estoura o actionTimeout de 15 s
+// no runner do CI. `scale: 'css'` mantém a imagem em ~9.000 px e a captura volta a
+// custar centenas de milissegundos; `animations: 'disabled'` remove a variação de
+// quadro a quadro que ainda deixava o tempo irregular.
+const SHOT = { fullPage: true, scale: 'css', animations: 'disabled', timeout: 30_000 };
+
 async function attachJson(testInfo, name, data) {
   await testInfo.attach(name, {
     body: Buffer.from(JSON.stringify(data, null, 2)),
@@ -332,6 +357,7 @@ for (let moduleIndex = 0; moduleIndex < MODULE_COUNT; moduleIndex += 1) {
     test.skip(testInfo.project.name !== 'mobile-chromium', 'A amostra contextual roda no perfil móvel.');
     test.setTimeout(90_000);
     await openModule(page, moduleIndex);
+    await revealLessons(page);
 
     const moduleName = (await page.locator('.mhead h2').textContent())?.trim();
     const totalTerms = await page.locator('#md-lessons .gterm:visible').count();
@@ -347,9 +373,16 @@ for (let moduleIndex = 0; moduleIndex < MODULE_COUNT; moduleIndex += 1) {
       console.log('[term-context]', JSON.stringify(context));
 
       try {
-        // Cobertura exaustiva: ativa o mesmo handler DOM sem depender do
-        // auto-scroll/hit-testing repetitivo do Playwright sob o header sticky.
-        await term.evaluate((node) => node.click());
+        // Posiciona o termo longe do cabeçalho sticky antes do clique real.
+        await term.evaluate((node) => {
+          node.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+            inline: 'nearest'
+          });
+        });
+        await expect(term).toBeVisible();
+        await term.click({ timeout: 10_000 });
         await expect(page.locator('#term-modal')).toBeVisible();
         const title = (await page.locator('#tm-title').textContent())?.trim();
         const definition = (await page.locator('#tm-def').textContent())?.trim();
@@ -382,12 +415,12 @@ for (let moduleIndex = 0; moduleIndex < MODULE_COUNT; moduleIndex += 1) {
     const issues = [];
 
     await page.locator('#vis-tab-anatomy').click();
-    await page.screenshot({ path: path.join(screenshotDir, `${safeName}-anatomia.png`), fullPage: true });
+    await page.screenshot({ ...SHOT, path: path.join(screenshotDir, `${safeName}-anatomia.png`) });
     issues.push(...(await collectLayoutIssues(page, '#view-module')).map((issue) => ({ ...issue, mode: 'anatomia' })));
 
     await page.locator('#vis-tab-functional').click();
     await expect(page.locator('#md-functional')).toBeVisible();
-    await page.screenshot({ path: path.join(screenshotDir, `${safeName}-mecanismo.png`), fullPage: true });
+    await page.screenshot({ ...SHOT, path: path.join(screenshotDir, `${safeName}-mecanismo.png`) });
     issues.push(...(await collectLayoutIssues(page, '#view-module')).map((issue) => ({ ...issue, mode: 'mecanismo' })));
 
     const vertical = await inspectVerticalMechanism(page);
@@ -471,50 +504,6 @@ for (const viewport of MOBILE_VIEWPORTS) {
     await attachJson(testInfo, `contextual-jump-${viewport.width}x${viewport.height}.json`, positioning);
   });
 }
-
-
-test('@smoke termos aceitam clique físico em posições representativas', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile-chromium', 'O hit-testing físico roda no perfil móvel.');
-  test.setTimeout(90_000);
-
-  for (const moduleIndex of [0, 7, 15]) {
-    await openModule(page, moduleIndex);
-    const terms = page.locator('#md-lessons .gterm:visible');
-    const count = await terms.count();
-    expect(count, `Módulo ${moduleIndex + 1} sem termos visíveis`).toBeGreaterThan(0);
-
-    const indexes = [...new Set([0, Math.max(0, count - 1)])];
-    for (const termIndex of indexes) {
-      const term = terms.nth(termIndex);
-      const label = (await term.textContent())?.trim() || `termo-${termIndex}`;
-
-      await term.evaluate((node) => {
-        node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
-      });
-      await page.waitForTimeout(50);
-
-      const point = await term.evaluate((node) => {
-        const r = node.getBoundingClientRect();
-        const fractions = [0.5, 0.25, 0.75];
-        for (const fy of fractions) {
-          for (const fx of fractions) {
-            const x = Math.max(1, Math.min(innerWidth - 2, r.left + r.width * fx));
-            const y = Math.max(1, Math.min(innerHeight - 2, r.top + r.height * fy));
-            const hit = document.elementFromPoint(x, y);
-            if (hit && (hit === node || node.contains(hit))) return { x, y };
-          }
-        }
-        return null;
-      });
-
-      expect(point, `Nenhum ponto clicável encontrado para “${label}” no módulo ${moduleIndex + 1}`).not.toBeNull();
-      await page.mouse.click(point.x, point.y);
-      await expect(page.locator('#term-modal')).toBeVisible();
-      await expect(page.locator('#tm-def')).not.toHaveText('');
-      await closeTermModal(page, { moduleIndex: moduleIndex + 1, termIndex, term: label });
-    }
-  }
-});
 
 test('@smoke orientação retrato declarada', async ({ page }) => {
   const manifestHref = await page.locator('link[rel="manifest"]').getAttribute('href');
