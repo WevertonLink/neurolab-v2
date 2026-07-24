@@ -1,0 +1,53 @@
+name: NeuroLab automated audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'URL pública opcional. Vazio = testa o index.html do repositório.'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Playwright audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      NEUROLAB_URL: ${{ inputs.target_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install audit dependencies
+        run: npm install
+
+      - name: Install Chromium and Linux dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run NeuroLab audit
+        run: npm test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: neurolab-playwright-report-${{ github.run_number }}
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: warn
+          retention-days: 14
