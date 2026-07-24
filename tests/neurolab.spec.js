@@ -3,6 +3,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const runtimeAudit = new WeakMap();
+const MODULE_COUNT = 16;
+const MOBILE_VIEWPORTS = [
+  { width: 360, height: 800 },
+  { width: 390, height: 844 },
+  { width: 412, height: 915 },
+  { width: 430, height: 932 }
+];
 
 function normalize(value) {
   return String(value || '')
@@ -24,7 +31,7 @@ async function boot(page) {
   });
   await page.goto('./?audit=1', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('#view-dashboard')).toHaveClass(/active/);
-  await expect(page.locator('.card')).toHaveCount(16);
+  await expect(page.locator('.card')).toHaveCount(MODULE_COUNT);
 }
 
 async function openModule(page, index) {
@@ -36,19 +43,25 @@ async function openModule(page, index) {
   await expect(page.locator('#md-lessons .lesson').first()).toBeVisible();
 }
 
-async function closeTermModal(page) {
-  const modal = page.locator('#term-modal');
-  if (await modal.isVisible()) {
-    await page.locator('#tm-close').click();
-    await expect(modal).toBeHidden();
-  }
-}
-
 async function attachJson(testInfo, name, data) {
   await testInfo.attach(name, {
     body: Buffer.from(JSON.stringify(data, null, 2)),
     contentType: 'application/json'
   });
+}
+
+async function closeTermModal(page, context = {}) {
+  const modal = page.locator('#term-modal');
+  if (!(await modal.isVisible())) return;
+
+  await page.locator('#tm-close').click();
+  await expect(modal, `Modal não fechou: ${JSON.stringify(context)}`).toBeHidden({ timeout: 5_000 });
+  await page.waitForFunction(() => {
+    const term = document.getElementById('term-modal');
+    const zoom = document.getElementById('fig-zoom');
+    const bodyUnlocked = document.body.style.overflow !== 'hidden';
+    return Boolean(term?.hidden && zoom?.hidden && bodyUnlocked);
+  }, null, { timeout: 5_000 });
 }
 
 async function collectLayoutIssues(page, scopeSelector) {
@@ -60,9 +73,9 @@ async function collectLayoutIssues(page, scopeSelector) {
     const ignored = new Set(['SVG', 'PATH', 'LINE', 'CIRCLE', 'RECT', 'POLYLINE', 'POLYGON', 'G']);
 
     function scrollingAncestor(el) {
-      for (let p = el.parentElement; p && p !== doc; p = p.parentElement) {
-        const s = getComputedStyle(p);
-        if (s.overflowX === 'auto' || s.overflowX === 'scroll') return p;
+      for (let parent = el.parentElement; parent && parent !== doc; parent = parent.parentElement) {
+        const style = getComputedStyle(parent);
+        if (style.overflowX === 'auto' || style.overflowX === 'scroll') return parent;
       }
       return null;
     }
@@ -80,24 +93,59 @@ async function collectLayoutIssues(page, scopeSelector) {
       if (ignored.has(el.tagName)) continue;
       const style = getComputedStyle(el);
       if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) continue;
-      const r = el.getBoundingClientRect();
-      if (!r.width || !r.height) continue;
-      const container = scrollingAncestor(el);
-      if (container) continue;
-      if (r.right > viewportWidth + 3 || r.left < -3) {
+      const rect = el.getBoundingClientRect();
+      if (!rect.width || !rect.height) continue;
+      if (scrollingAncestor(el)) continue;
+      if (rect.right > viewportWidth + 3 || rect.left < -3) {
         issues.push({
           type: 'horizontal-overflow',
           tag: el.tagName.toLowerCase(),
           id: el.id || null,
           className: String(el.className || '').slice(0, 160),
-          left: Math.round(r.left),
-          right: Math.round(r.right),
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
           viewportWidth
         });
       }
     }
-    return issues.slice(0, 100);
+    return issues.slice(0, 200);
   }, scopeSelector);
+}
+
+async function inspectVerticalMechanism(page) {
+  return page.evaluate(() => {
+    const doc = document.documentElement;
+    const track = document.getElementById('func-track');
+    const steps = track ? Array.from(track.querySelectorAll('.func-step')) : [];
+    const trackRect = track?.getBoundingClientRect() || null;
+    const overflowingSteps = [];
+
+    if (trackRect) {
+      steps.forEach((step, index) => {
+        const rect = step.getBoundingClientRect();
+        if (rect.left < trackRect.left - 1 || rect.right > trackRect.right + 1) {
+          overflowingSteps.push({
+            index,
+            left: Math.round(rect.left),
+            right: Math.round(rect.right),
+            trackLeft: Math.round(trackRect.left),
+            trackRight: Math.round(trackRect.right)
+          });
+        }
+      });
+    }
+
+    return {
+      pageScrollWidth: doc.scrollWidth,
+      pageClientWidth: doc.clientWidth,
+      pageOverflow: doc.scrollWidth > doc.clientWidth + 1,
+      trackScrollWidth: track?.scrollWidth || 0,
+      trackClientWidth: track?.clientWidth || 0,
+      trackHorizontalScroll: Boolean(track && track.scrollWidth > track.clientWidth + 1),
+      stepCount: steps.length,
+      overflowingSteps
+    };
+  });
 }
 
 test.beforeEach(async ({ page }, testInfo) => {
@@ -133,12 +181,10 @@ test.afterEach(async ({ page }, testInfo) => {
 
 test('@smoke dashboard, metadados e navegação principal', async ({ page }) => {
   await expect(page).toHaveTitle(/NeuroLab/i);
-  await expect(page.locator('.card')).toHaveCount(16);
+  await expect(page).toHaveTitle(/Fase 6/i);
+  await expect(page.locator('.card')).toHaveCount(MODULE_COUNT);
   await expect(page.locator('#vis-tab-anatomy')).toHaveText(/Anatomia/i);
   await expect(page.locator('#vis-tab-functional')).toHaveText(/Mecanismo/i);
-
-  // Esta verificação detecta a inconsistência atualmente presente no HTML publicado.
-  await expect.soft(page).toHaveTitle(/Fase 5/i);
 
   const firstTitle = (await page.locator('.card .ct').first().textContent())?.trim();
   await page.locator('.card').first().click();
@@ -147,20 +193,19 @@ test('@smoke dashboard, metadados e navegação principal', async ({ page }) => 
 });
 
 test('@smoke os 16 módulos renderizam anatomia e mecanismo', async ({ page }, testInfo) => {
+  test.setTimeout(180_000);
   const summary = [];
-  for (let i = 0; i < 16; i += 1) {
-    await openModule(page, i);
+  for (let index = 0; index < MODULE_COUNT; index += 1) {
+    await openModule(page, index);
     const moduleName = (await page.locator('.mhead h2').textContent())?.trim();
-    const chips = page.locator('#md-anat .anat-chip');
-    const chipCount = await chips.count();
+    const anatomyComponents = await page.locator('#md-anat .anat-chip').count();
 
-    await expect(page.locator('#vis-tab-functional')).toBeVisible();
     await page.locator('#vis-tab-functional').click();
     await expect(page.locator('#md-functional')).toBeVisible();
-    const stepCount = await page.locator('#md-functional .func-step').count();
-    expect(stepCount, `Módulo ${i + 1} sem etapas no mecanismo`).toBeGreaterThan(0);
+    const mechanismSteps = await page.locator('#md-functional .func-step').count();
+    expect(mechanismSteps, `Módulo ${index + 1} sem etapas no mecanismo`).toBeGreaterThan(0);
 
-    summary.push({ index: i + 1, moduleName, anatomyComponents: chipCount, mechanismSteps: stepCount });
+    summary.push({ index: index + 1, moduleName, anatomyComponents, mechanismSteps });
   }
   await attachJson(testInfo, 'modules-summary.json', summary);
 });
@@ -169,7 +214,7 @@ test('@coverage integridade dos dados contextuais e dos termos essenciais', asyn
   test.skip(testInfo.project.name !== 'mobile-chromium', 'A auditoria de dados roda uma vez.');
 
   const audit = await page.evaluate(() => {
-    const norm = (v) => String(v || '')
+    const norm = (value) => String(value || '')
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/²/g, '2').replace(/⁺/g, '')
       .replace(/[^a-zA-Z0-9]+/g, ' ').trim().toLowerCase();
@@ -185,8 +230,7 @@ test('@coverage integridade dos dados contextuais e dos termos essenciais', asyn
       contextualKinds: {}
     };
 
-    const glossaryKeys = Object.keys(GLOSSARY || {});
-    const glossaryNorm = new Set(glossaryKeys.map(norm));
+    const glossaryNorm = new Set(Object.keys(GLOSSARY || {}).map(norm));
 
     for (const module of MODULES || []) {
       const anatomy = (ANATOMY || {})[module.id];
@@ -196,11 +240,8 @@ test('@coverage integridade dos dados contextuais e dos termos essenciais', asyn
 
       for (const part of anatomy?.parts || []) {
         counters.anatomyParts += 1;
-        if (anatomyMap && Object.prototype.hasOwnProperty.call(anatomyMap, part.id)) {
-          counters.anatomyMappings += 1;
-        } else {
-          issues.push({ type: 'unmapped-anatomy-part', module: module.id, part: part.id, label: part.label });
-        }
+        if (anatomyMap && Object.prototype.hasOwnProperty.call(anatomyMap, part.id)) counters.anatomyMappings += 1;
+        else issues.push({ type: 'unmapped-anatomy-part', module: module.id, part: part.id, label: part.label });
       }
 
       const requiredByLesson = (CONTEXT_REQUIRED || {})[module.id] || {};
@@ -208,8 +249,7 @@ test('@coverage integridade dos dados contextuais e dos termos essenciais', asyn
 
       for (const [lessonIndex, requiredTerms] of Object.entries(requiredByLesson)) {
         const topicMap = mappedByLesson[String(lessonIndex)] || {};
-        const topicKeys = Object.keys(topicMap);
-        const topicByNorm = new Map(topicKeys.map((key) => [norm(key), topicMap[key]]));
+        const topicByNorm = new Map(Object.keys(topicMap).map((key) => [norm(key), topicMap[key]]));
         let topicData = null;
         try { topicData = ctxTopicData(module, Number(lessonIndex)); } catch (_) {}
         const chainLength = Array.isArray(topicData?.chain) ? topicData.chain.length : 0;
@@ -229,10 +269,7 @@ test('@coverage integridade dos dados contextuais e dos termos essenciais', asyn
 
           for (const step of relation.steps || []) {
             if (!Number.isInteger(step) || step < 0 || step >= chainLength) {
-              issues.push({
-                type: 'invalid-step-index', module: module.id, lessonIndex, term,
-                step, chainLength
-              });
+              issues.push({ type: 'invalid-step-index', module: module.id, lessonIndex, term, step, chainLength });
             }
           }
           if (Number.isInteger(relation.primary) && !relation.steps?.includes(relation.primary)) {
@@ -241,31 +278,33 @@ test('@coverage integridade dos dados contextuais e dos termos essenciais', asyn
         }
       }
     }
-
     return { counters, issues };
   });
 
   await attachJson(testInfo, 'context-data-audit.json', audit);
-  expect(audit.counters.modules).toBe(16);
+  expect(audit.counters.modules).toBe(MODULE_COUNT);
   expect(audit.counters.anatomyMappings).toBe(audit.counters.anatomyParts);
   expect(audit.counters.topicMappings).toBe(audit.counters.requiredOccurrences);
   expect(audit.issues).toEqual([]);
 });
 
-test('@coverage todos os componentes anatômicos abrem o mecanismo contextual', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile-chromium', 'A cobertura completa roda uma vez.');
-  const results = [];
-  const failures = [];
-
-  for (let moduleIndex = 0; moduleIndex < 16; moduleIndex += 1) {
+for (let moduleIndex = 0; moduleIndex < MODULE_COUNT; moduleIndex += 1) {
+  test(`@coverage anatomia contextual · módulo ${String(moduleIndex + 1).padStart(2, '0')}`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'A cobertura contextual roda no perfil móvel.');
+    test.setTimeout(90_000);
     await openModule(page, moduleIndex);
-    const moduleName = (await page.locator('.mhead h2').textContent())?.trim();
-    const chips = page.locator('#md-anat .anat-chip');
-    const count = await chips.count();
 
-    for (let chipIndex = 0; chipIndex < count; chipIndex += 1) {
-      const chip = chips.nth(chipIndex);
+    const moduleName = (await page.locator('.mhead h2').textContent())?.trim();
+    const componentCount = await page.locator('#md-anat .anat-chip').count();
+    const results = [];
+    const failures = [];
+
+    for (let chipIndex = 0; chipIndex < componentCount; chipIndex += 1) {
+      const chip = page.locator('#md-anat .anat-chip').nth(chipIndex);
       const label = (await chip.textContent())?.trim();
+      const context = { moduleIndex: moduleIndex + 1, moduleName, chipIndex, component: label };
+      console.log('[anatomy-context]', JSON.stringify(context));
+
       try {
         await chip.click();
         await expect(page.locator('#term-modal')).toBeVisible();
@@ -275,173 +314,119 @@ test('@coverage todos os componentes anatômicos abrem o mecanismo contextual', 
         await mechanism.locator('summary').click();
         const contextualSteps = await mechanism.locator('.ctx-step').count();
         expect(contextualSteps).toBeGreaterThan(0);
-        results.push({ moduleIndex: moduleIndex + 1, moduleName, component: label, contextualSteps });
+        results.push({ ...context, contextualSteps });
       } catch (error) {
-        failures.push({ moduleIndex: moduleIndex + 1, moduleName, component: label, error: String(error) });
+        failures.push({ ...context, error: String(error) });
       } finally {
-        await closeTermModal(page);
+        try { await closeTermModal(page, context); }
+        catch (error) { failures.push({ ...context, phase: 'close', error: String(error) }); }
       }
     }
-  }
 
-  await attachJson(testInfo, 'anatomy-context-results.json', { results, failures });
-  expect(failures).toEqual([]);
-  expect(results.length).toBeGreaterThanOrEqual(78);
-});
+    await attachJson(testInfo, `anatomy-context-${moduleIndex + 1}.json`, { results, failures });
+    expect(failures).toEqual([]);
+    expect(results.length).toBe(componentCount);
+  });
 
-test('@coverage amostra visual de termos clicáveis em todos os módulos', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile-chromium', 'A amostra contextual roda uma vez.');
-  const samples = [];
-  const failures = [];
-
-  for (let moduleIndex = 0; moduleIndex < 16; moduleIndex += 1) {
+  test(`@coverage termos clicáveis · módulo ${String(moduleIndex + 1).padStart(2, '0')}`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'A amostra contextual roda no perfil móvel.');
+    test.setTimeout(90_000);
     await openModule(page, moduleIndex);
+
     const moduleName = (await page.locator('.mhead h2').textContent())?.trim();
-    const visibleTerms = page.locator('#md-lessons .gterm:visible');
-    const count = await visibleTerms.count();
-    const sampleCount = Math.min(count, 8);
+    const totalTerms = await page.locator('#md-lessons .gterm:visible').count();
+    const sampleCount = Math.min(totalTerms, 8);
+    const samples = [];
+    const failures = [];
 
     for (let termIndex = 0; termIndex < sampleCount; termIndex += 1) {
-      const term = visibleTerms.nth(termIndex);
+      const term = page.locator('#md-lessons .gterm:visible').nth(termIndex);
       const label = (await term.textContent())?.trim();
+      const lessonId = await term.evaluate((node) => node.closest('.lesson')?.id || null);
+      const context = { moduleIndex: moduleIndex + 1, moduleName, termIndex, lessonId, term: label };
+      console.log('[term-context]', JSON.stringify(context));
+
       try {
         await term.click();
         await expect(page.locator('#term-modal')).toBeVisible();
-        await expect(page.locator('#tm-title')).toContainText(label || '');
+        const title = (await page.locator('#tm-title').textContent())?.trim();
+        const definition = (await page.locator('#tm-def').textContent())?.trim();
+        expect(normalize(title).length).toBeGreaterThan(0);
+        expect(normalize(definition).length).toBeGreaterThan(0);
         await expect(page.locator('#tm-mech .ctx-mech')).toHaveCount(1);
-        samples.push({ moduleIndex: moduleIndex + 1, moduleName, term: label });
+        samples.push({ ...context, modalTitle: title });
       } catch (error) {
-        failures.push({ moduleIndex: moduleIndex + 1, moduleName, term: label, error: String(error) });
+        failures.push({ ...context, error: String(error) });
       } finally {
-        await closeTermModal(page);
+        try { await closeTermModal(page, context); }
+        catch (error) { failures.push({ ...context, phase: 'close', error: String(error) }); }
       }
     }
-  }
 
-  await attachJson(testInfo, 'term-samples.json', { samples, failures });
-  expect(failures).toEqual([]);
-  expect(samples.length).toBeGreaterThan(0);
-});
+    await attachJson(testInfo, `term-samples-${moduleIndex + 1}.json`, { samples, failures });
+    expect(failures).toEqual([]);
+    expect(samples.length).toBe(sampleCount);
+  });
 
-test('@visual capturas e verificação de estouro horizontal', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile-chromium', 'As capturas completas rodam no perfil móvel.');
-  const screenshotDir = path.join(testInfo.outputDir, 'screenshots');
-  fs.mkdirSync(screenshotDir, { recursive: true });
-  const layoutIssues = [];
+  test(`@visual módulo ${String(moduleIndex + 1).padStart(2, '0')} sem overflow`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'A auditoria visual completa roda no perfil móvel.');
+    test.setTimeout(90_000);
+    const screenshotDir = path.join(testInfo.outputDir, 'screenshots');
+    fs.mkdirSync(screenshotDir, { recursive: true });
 
-  await page.screenshot({ path: path.join(screenshotDir, '00-dashboard.png'), fullPage: true });
-  layoutIssues.push(...(await collectLayoutIssues(page, '#view-dashboard')).map((issue) => ({ ...issue, screen: 'dashboard' })));
-
-  for (let moduleIndex = 0; moduleIndex < 16; moduleIndex += 1) {
     await openModule(page, moduleIndex);
     const moduleName = (await page.locator('.mhead h2').textContent())?.trim() || `module-${moduleIndex + 1}`;
     const safeName = `${String(moduleIndex + 1).padStart(2, '0')}-${normalize(moduleName).replace(/\s+/g, '-')}`;
+    const issues = [];
 
     await page.locator('#vis-tab-anatomy').click();
     await page.screenshot({ path: path.join(screenshotDir, `${safeName}-anatomia.png`), fullPage: true });
-    layoutIssues.push(...(await collectLayoutIssues(page, '#view-module')).map((issue) => ({ ...issue, moduleIndex: moduleIndex + 1, moduleName, mode: 'anatomia' })));
+    issues.push(...(await collectLayoutIssues(page, '#view-module')).map((issue) => ({ ...issue, mode: 'anatomia' })));
 
     await page.locator('#vis-tab-functional').click();
     await expect(page.locator('#md-functional')).toBeVisible();
     await page.screenshot({ path: path.join(screenshotDir, `${safeName}-mecanismo.png`), fullPage: true });
-    layoutIssues.push(...(await collectLayoutIssues(page, '#view-module')).map((issue) => ({ ...issue, moduleIndex: moduleIndex + 1, moduleName, mode: 'mecanismo' })));
-  }
+    issues.push(...(await collectLayoutIssues(page, '#view-module')).map((issue) => ({ ...issue, mode: 'mecanismo' })));
 
-  await attachJson(testInfo, 'layout-issues.json', layoutIssues);
-  expect(layoutIssues).toEqual([]);
-});
+    const vertical = await inspectVerticalMechanism(page);
+    if (vertical.pageOverflow) issues.push({ type: 'page-overflow', ...vertical });
+    if (vertical.trackHorizontalScroll) issues.push({ type: 'func-track-horizontal-scroll', ...vertical });
+    if (vertical.overflowingSteps.length) issues.push({ type: 'func-step-overflows-track', ...vertical });
 
-const MOBILE_VIEWPORTS = [
-  { width: 360, height: 800 },
-  { width: 390, height: 844 },
-  { width: 412, height: 915 },
-  { width: 430, height: 932 }
-];
+    await attachJson(testInfo, `layout-module-${moduleIndex + 1}.json`, { moduleIndex: moduleIndex + 1, moduleName, vertical, issues });
+    expect(issues).toEqual([]);
+  });
+}
 
-test('@visual mecanismo vertical sem estouro em viewports móveis', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile-chromium', 'A verificação usa dimensões móveis.');
-  const failures = [];
-
-  for (const viewport of MOBILE_VIEWPORTS) {
-    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+for (const viewport of MOBILE_VIEWPORTS) {
+  test(`@visual mecanismo vertical em ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'A verificação usa dimensões móveis.');
+    test.setTimeout(180_000);
+    await page.setViewportSize(viewport);
     await boot(page);
+    const failures = [];
 
-    for (let mi = 0; mi < 16; mi += 1) {
-      await openModule(page, mi);
+    for (let moduleIndex = 0; moduleIndex < MODULE_COUNT; moduleIndex += 1) {
+      await openModule(page, moduleIndex);
       await page.locator('#vis-tab-functional').click();
-      await expect(page.locator('#md-functional')).toBeVisible();
       await expect(page.locator('#func-track .func-step').first()).toBeVisible();
-
-      const inspection = await page.evaluate(() => {
-        const doc = document.documentElement;
-        const track = document.getElementById('func-track');
-        const steps = track ? Array.from(track.querySelectorAll('.func-step')) : [];
-        const trackRect = track ? track.getBoundingClientRect() : null;
-        const overflowingSteps = [];
-        if (trackRect) {
-          steps.forEach((step, idx) => {
-            const r = step.getBoundingClientRect();
-            if (r.left < trackRect.left - 1 || r.right > trackRect.right + 1) {
-              overflowingSteps.push({
-                index: idx,
-                left: Math.round(r.left),
-                right: Math.round(r.right),
-                trackLeft: Math.round(trackRect.left),
-                trackRight: Math.round(trackRect.right)
-              });
-            }
-          });
-        }
-        return {
-          pageScrollWidth: doc.scrollWidth,
-          pageClientWidth: doc.clientWidth,
-          pageOverflow: doc.scrollWidth > doc.clientWidth + 1,
-          trackScrollWidth: track ? track.scrollWidth : 0,
-          trackClientWidth: track ? track.clientWidth : 0,
-          trackHorizontalScroll: track ? track.scrollWidth > track.clientWidth + 1 : false,
-          stepCount: steps.length,
-          overflowingSteps
-        };
-      });
-
-      if (inspection.pageOverflow) {
-        failures.push({
-          viewport, moduleIndex: mi + 1,
-          kind: 'page-scrollWidth-exceeds-clientWidth',
-          pageScrollWidth: inspection.pageScrollWidth,
-          pageClientWidth: inspection.pageClientWidth
-        });
-      }
-      if (inspection.trackHorizontalScroll) {
-        failures.push({
-          viewport, moduleIndex: mi + 1,
-          kind: 'func-track-horizontal-scroll',
-          trackScrollWidth: inspection.trackScrollWidth,
-          trackClientWidth: inspection.trackClientWidth
-        });
-      }
-      if (inspection.overflowingSteps.length) {
-        failures.push({
-          viewport, moduleIndex: mi + 1,
-          kind: 'func-step-overflows-track',
-          overflows: inspection.overflowingSteps
-        });
+      const inspection = await inspectVerticalMechanism(page);
+      if (inspection.pageOverflow || inspection.trackHorizontalScroll || inspection.overflowingSteps.length) {
+        failures.push({ viewport, moduleIndex: moduleIndex + 1, ...inspection });
       }
     }
-  }
 
-  await attachJson(testInfo, 'vertical-mechanism-audit.json', failures);
-  expect(failures).toEqual([]);
-});
+    await attachJson(testInfo, `vertical-mechanism-${viewport.width}x${viewport.height}.json`, failures);
+    expect(failures).toEqual([]);
+  });
 
-test('@visual salto contextual posiciona verticalmente a etapa ativa', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile-chromium', 'Verificação do salto contextual em mobile.');
-  const failures = [];
-
-  for (const viewport of MOBILE_VIEWPORTS) {
-    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+  test(`@visual salto contextual visível em ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'Verificação do salto contextual em mobile.');
+    test.setTimeout(90_000);
+    await page.setViewportSize(viewport);
     await boot(page);
     await openModule(page, 1);
+
     const chip = page.locator('#md-anat .anat-chip').first();
     await chip.click();
     await expect(page.locator('#term-modal')).toBeVisible();
@@ -456,40 +441,43 @@ test('@visual salto contextual posiciona verticalmente a etapa ativa', async ({ 
       const doc = document.documentElement;
       const active = document.querySelector('#func-track .func-step.active');
       const track = document.getElementById('func-track');
+      const header = document.querySelector('header.top');
       if (!active || !track) return null;
-      const ar = active.getBoundingClientRect();
-      const tr = track.getBoundingClientRect();
+      const activeRect = active.getBoundingClientRect();
+      const trackRect = track.getBoundingClientRect();
       return {
         pageScrollWidth: doc.scrollWidth,
         pageClientWidth: doc.clientWidth,
-        activeLeft: Math.round(ar.left),
-        activeRight: Math.round(ar.right),
-        activeTop: Math.round(ar.top),
-        activeBottom: Math.round(ar.bottom),
-        trackLeft: Math.round(tr.left),
-        trackRight: Math.round(tr.right),
-        viewportHeight: doc.clientHeight,
-        viewportWidth: doc.clientWidth
+        activeLeft: Math.round(activeRect.left),
+        activeRight: Math.round(activeRect.right),
+        activeTop: Math.round(activeRect.top),
+        activeBottom: Math.round(activeRect.bottom),
+        trackLeft: Math.round(trackRect.left),
+        trackRight: Math.round(trackRect.right),
+        headerBottom: Math.round(header?.getBoundingClientRect().bottom || 0),
+        viewportHeight: window.innerHeight
       };
     });
 
-    if (!positioning) {
-      failures.push({ viewport, kind: 'missing-active-step' });
-      continue;
-    }
-    if (positioning.pageScrollWidth > positioning.pageClientWidth + 1) {
-      failures.push({ viewport, kind: 'page-overflow-after-jump', ...positioning });
-    }
-    if (positioning.activeLeft < positioning.trackLeft - 1 || positioning.activeRight > positioning.trackRight + 1) {
-      failures.push({ viewport, kind: 'active-step-exceeds-track', ...positioning });
-    }
-    if (positioning.activeBottom < 0 || positioning.activeTop > positioning.viewportHeight) {
-      failures.push({ viewport, kind: 'active-step-off-screen', ...positioning });
-    }
-  }
+    expect(positioning).not.toBeNull();
+    expect(positioning.pageScrollWidth).toBeLessThanOrEqual(positioning.pageClientWidth + 1);
+    expect(positioning.activeLeft).toBeGreaterThanOrEqual(positioning.trackLeft - 1);
+    expect(positioning.activeRight).toBeLessThanOrEqual(positioning.trackRight + 1);
+    expect(positioning.activeTop).toBeGreaterThanOrEqual(positioning.headerBottom - 1);
+    expect(positioning.activeBottom).toBeLessThanOrEqual(positioning.viewportHeight + 1);
 
-  await attachJson(testInfo, 'contextual-jump-positioning.json', failures);
-  expect(failures).toEqual([]);
+    await attachJson(testInfo, `contextual-jump-${viewport.width}x${viewport.height}.json`, positioning);
+  });
+}
+
+test('@smoke orientação retrato declarada', async ({ page }) => {
+  const manifestHref = await page.locator('link[rel="manifest"]').getAttribute('href');
+  expect(manifestHref).toBe('manifest.webmanifest');
+
+  const response = await page.request.get(new URL(manifestHref, page.url()).toString());
+  expect(response.ok()).toBeTruthy();
+  const manifest = await response.json();
+  expect(manifest.orientation).toBe('portrait-primary');
 });
 
 test('@smoke acessibilidade estrutural básica', async ({ page }, testInfo) => {

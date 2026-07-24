@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>NeuroLab V2 · Fase 5 — Estudo da Mente</title>
-<!-- NEUROLAB V2 · FASE 4 · MECANISMOS CONTEXTUAIS -->
+<meta name="theme-color" content="#08080d">
+<link rel="manifest" href="manifest.webmanifest">
+<title>NeuroLab V2 · Fase 6 — Estudo da Mente</title>
+<!-- NEUROLAB V2 · FASE 6 · MECANISMOS VERTICAIS E AUDITORIA ROBUSTA -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -750,9 +752,9 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
 .func-head h3{margin:0 0 4px;font-family:'Space Grotesk',sans-serif;font-size:17px;line-height:1.25}
 .func-q{margin:0;color:var(--ink-3);font-size:12.8px;line-height:1.5;max-width:62ch}
 .func-count{flex:0 0 auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
-.func-track{position:relative;display:flex;flex-direction:column;gap:14px;padding:2px 1px 18px}
-.func-step{position:relative;width:100%;min-height:78px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font:inherit;cursor:pointer;transition:border-color .16s,background .16s,transform .16s}
-.func-step:not(:last-child)::after{content:'↓';position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);z-index:2;color:var(--ink-3);font-family:'IBM Plex Mono',monospace;font-size:14px;pointer-events:none}
+.func-track{position:relative;display:flex;flex-direction:column;gap:14px;padding:2px 1px 18px;overflow:visible}
+.func-step{position:relative;width:100%;min-width:0;min-height:78px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font:inherit;cursor:pointer;transition:border-color .16s,background .16s,transform .16s;scroll-margin-top:calc(var(--hdr-h) + 18px);scroll-margin-bottom:24px}
+.func-step:not(:last-child)::after{content:'↓';position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);z-index:2;color:var(--ink-3);font-family:'IBM Plex Mono',monospace;font-size:14px;pointer-events:none}
 .func-step:hover{border-color:color-mix(in srgb,var(--mc) 45%,var(--line));transform:translateY(-1px)}
 .func-step.active{border-color:color-mix(in srgb,var(--mc) 72%,var(--line));background:color-mix(in srgb,var(--mc) 10%,var(--panel));color:var(--ink)}
 .func-step.hinge{box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--amber) 68%,transparent)}
@@ -782,6 +784,17 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
   .func-head{flex-direction:column}
 }
 @media(prefers-reduced-motion:reduce){.func-step{transform:none!important}}
+/* O NeuroLab é projetado para uso móvel em orientação retrato. */
+.portrait-only{display:none;position:fixed;inset:0;z-index:500;background:rgba(8,8,13,.97);color:var(--ink);padding:28px;text-align:center;align-items:center;justify-content:center}
+.portrait-only-card{max-width:420px;border:1px solid var(--line);border-radius:18px;padding:24px;background:var(--panel);box-shadow:var(--shadow)}
+.portrait-only-card svg{width:44px;height:44px;color:var(--violet);margin-bottom:12px}
+.portrait-only-card h2{font-family:'Space Grotesk',sans-serif;font-size:20px;margin:0 0 8px}
+.portrait-only-card p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.6}
+@media (orientation:landscape) and (max-width:1000px) and (pointer:coarse){
+  .portrait-only{display:flex}
+  body{overflow:hidden}
+}
+
 
 /* ---------- Fase 3: domínio multidimensional ---------- */
 #db-knowledge:empty,#md-mastery:empty{display:none}
@@ -862,6 +875,13 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
 <meta name="apple-mobile-web-app-title" content="NeuroLab">
 </head>
 <body>
+<div class="portrait-only" role="dialog" aria-modal="true" aria-label="Use o NeuroLab na vertical">
+  <div class="portrait-only-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"></rect><path d="M12 18h.01"></path><path d="M4 8l-2 2 2 2"></path><path d="M20 8l2 2-2 2"></path></svg>
+    <h2>Gire o dispositivo para a vertical</h2>
+    <p>O NeuroLab foi organizado para leitura e acompanhamento dos mecanismos em orientação retrato.</p>
+  </div>
+</div>
 
 <header class="top">
   <div class="top-inner">
@@ -1350,7 +1370,7 @@ function selectFunctionalStep(i,focus=true){
     const on=n===_funcStep;
     b.classList.toggle('active',on);
     b.setAttribute('aria-current',on?'step':'false');
-    if(on){ try{ b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'}); }catch(e){} }
+    if(on){ try{ b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'}); }catch(e){} }
   });
   const current=d.chain[_funcStep];
   const prev=_funcStep>0?d.chain[_funcStep-1]:null;
@@ -6366,6 +6386,9 @@ function closeTermModal(fromPop){
   if(!back || back.hidden) return;
   back.hidden = true;
   back.setAttribute('aria-hidden','true');
+  const mech = document.getElementById('tm-mech');
+  if(mech){ mech.innerHTML=''; mech.hidden=true; }
+  if(typeof _ctxMechanism !== 'undefined') _ctxMechanism = null;
   if(document.getElementById('fig-zoom').hidden) document.body.style.overflow = '';
   if(tmOpener){ try{ tmOpener.focus({preventScroll:true}); }catch(e){} tmOpener = null; }
   if(fromPop !== true){ try{ history.back(); }catch(e){} }

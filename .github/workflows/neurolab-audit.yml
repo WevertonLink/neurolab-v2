@@ -19,7 +19,7 @@ jobs:
   audit:
     name: Playwright audit
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     env:
       NEUROLAB_URL: ${{ inputs.target_url }}
 
@@ -33,7 +33,7 @@ jobs:
           node-version: '20'
 
       - name: Install audit dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
       - name: Install Chromium and Linux dependencies
         run: npx playwright install --with-deps chromium

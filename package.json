@@ -1,8 +1,8 @@
 {
   "name": "neurolab-v2-playwright-audit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Auditoria automatizada visual, funcional e estrutural do NeuroLab V2.",
+  "description": "Auditoria automatizada do NeuroLab V2 com mecanismo vertical, cobertura contextual e testes de orientação retrato.",
   "scripts": {
     "test": "playwright test",
     "test:smoke": "playwright test --grep @smoke",
