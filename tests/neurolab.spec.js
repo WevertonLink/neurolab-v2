@@ -799,3 +799,65 @@ test('@smoke estado saudável carrega sem aviso de integridade', async ({ page }
   const gravado = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)).xp, STORE_KEY);
   expect(gravado, 'a gravação normal parou de funcionar').toBe(700);
 });
+
+/* MEDIÇÃO — alcance do botão "Próxima" na revisão.
+
+   O relato foi que, depois de responder, é preciso rolar a tela para chegar ao
+   botão. O bloco "Por que apareceu agora?" que ficava acima da questão foi
+   removido por redundância, mas ele não era a causa: .rv-card tem
+   scroll-margin-top e focusCardTop rola o card para o topo, então aquele bloco
+   já saía de vista antes de o aluno responder.
+
+   Este teste não afirma nada sobre o resultado ainda — ele mede e reporta, para
+   a correção seguinte atacar a causa certa com número na mão. */
+for (const viewport of MOBILE_VIEWPORTS) {
+  test(`@visual alcance do botão da revisão em ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'A medição usa os viewports retrato.');
+    await page.setViewportSize(viewport);
+
+    // Semeia um tópico vencido para entrar na sessão de revisão.
+    await page.evaluate(() => {
+      const m = MODULES[0];
+      const key = topicKey(m.id, 0);
+      state.srs = {};
+      state.srs[key] = { box: 0, due: startOfDay(Date.now()) - DAY, last: 0, reps: 1, lapses: 0 };
+      state.topicMastery[key] = 0.5;
+      startReview();
+    });
+    await expect(page.locator('#view-review')).toHaveClass(/active/);
+    await expect(page.locator('#rv-body .rv-card')).toBeVisible();
+
+    // O bloco removido não pode reaparecer.
+    await expect(page.locator('.review-why')).toHaveCount(0);
+
+    await page.locator('#rv-body .mq-options button').first().click();
+    await expect(page.locator('#rv-fb .fbnav .bigbtn')).toBeVisible();
+
+    const geo = await page.evaluate(() => {
+      const btn = document.querySelector('#rv-fb .fbnav .bigbtn');
+      const card = document.querySelector('#rv-body .rv-card');
+      const header = document.querySelector('header.top');
+      const r = btn.getBoundingClientRect();
+      return {
+        viewport: window.innerHeight,
+        header: Math.round(header.getBoundingClientRect().height),
+        alturaDoCard: Math.round(card.getBoundingClientRect().height),
+        botaoTopo: Math.round(r.top),
+        botaoBase: Math.round(r.bottom),
+        visivelSemRolar: r.top >= 0 && r.bottom <= window.innerHeight,
+        pixelsAbaixoDaDobra: Math.max(0, Math.round(r.bottom - window.innerHeight)),
+        scrollY: Math.round(window.scrollY)
+      };
+    });
+
+    // console.log de propósito: aparece no log do CI, que é onde vou ler os
+    // números sem precisar baixar o artefato do relatório.
+    console.log(`[medida ${viewport.width}x${viewport.height}] ${JSON.stringify(geo)}`);
+    await attachJson(testInfo, `alcance-botao-${viewport.width}x${viewport.height}.json`, geo);
+
+    // Só o que já é defeito inequívoco. O critério de alcance entra junto com a
+    // correção, quando houver número para calibrá-lo.
+    expect(geo.botaoBase, 'o botão não foi renderizado').toBeGreaterThan(0);
+    expect(geo.alturaDoCard, 'o card da revisão não tem altura').toBeGreaterThan(0);
+  });
+}
