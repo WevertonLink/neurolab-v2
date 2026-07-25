@@ -808,9 +808,13 @@ test('@smoke estado saudável carrega sem aviso de integridade', async ({ page }
    scroll-margin-top e focusCardTop rola o card para o topo, então aquele bloco
    já saía de vista antes de o aluno responder.
 
-   Este teste não afirma nada sobre o resultado ainda — ele mede e reporta, para
-   a correção seguinte atacar a causa certa com número na mão. */
-for (const viewport of MOBILE_VIEWPORTS) {
+   A medição mostrou que o botão cabia na tela, mas com folga de apenas 74px no
+   viewport de 360x800 — que a barra de endereço de um navegador real consome
+   inteira. Daí o revealAfterAnswer, e daí o viewport de 360x620 abaixo, que
+   representa a altura útil de um celular pequeno com a barra visível. É o caso
+   em que o botão não cabe, e portanto o que de fato exercita a correção. */
+const REVIEW_VIEWPORTS = [...MOBILE_VIEWPORTS, { width: 360, height: 620 }];
+for (const viewport of REVIEW_VIEWPORTS) {
   test(`@visual alcance do botão da revisão em ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'mobile-chromium', 'A medição usa os viewports retrato.');
     await page.setViewportSize(viewport);
@@ -832,6 +836,10 @@ for (const viewport of MOBILE_VIEWPORTS) {
 
     await page.locator('#rv-body .mq-options button').first().click();
     await expect(page.locator('#rv-fb .fbnav .bigbtn')).toBeVisible();
+    // revealAfterAnswer rola em requestAnimationFrame e com behavior:'smooth'.
+    // reducedMotion:'reduce' no config torna o scroll instantâneo, mas o frame
+    // ainda precisa acontecer antes de medir.
+    await page.waitForTimeout(400);
 
     const geo = await page.evaluate(() => {
       const btn = document.querySelector('#rv-fb .fbnav .bigbtn');
@@ -855,9 +863,13 @@ for (const viewport of MOBILE_VIEWPORTS) {
     console.log(`[medida ${viewport.width}x${viewport.height}] ${JSON.stringify(geo)}`);
     await attachJson(testInfo, `alcance-botao-${viewport.width}x${viewport.height}.json`, geo);
 
-    // Só o que já é defeito inequívoco. O critério de alcance entra junto com a
-    // correção, quando houver número para calibrá-lo.
     expect(geo.botaoBase, 'o botão não foi renderizado').toBeGreaterThan(0);
     expect(geo.alturaDoCard, 'o card da revisão não tem altura').toBeGreaterThan(0);
+    // O critério que a medição permitiu calibrar: depois de responder, o botão
+    // de avançar tem de estar alcançável sem o aluno rolar a tela.
+    expect(
+      geo.visivelSemRolar,
+      `botão fora da dobra em ${viewport.width}x${viewport.height}: ${geo.pixelsAbaixoDaDobra}px abaixo`
+    ).toBe(true);
   });
 }

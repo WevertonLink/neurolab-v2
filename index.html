@@ -2696,6 +2696,26 @@ function focusCardTop(sel){
     else window.scrollTo({top:0,behavior:m});
   });
 }
+
+/* Depois de responder, o que o aluno precisa — a explicação e o que fazer em
+   seguida — nasce no fim do card e pode cair abaixo da dobra.
+
+   A medição no CI mostrou folga de apenas 74px no viewport de 360x800. Num
+   celular real a barra de endereço do navegador consome isso inteiro, e era o
+   que obrigava a rolar a mão para achar o botão.
+
+   block:'nearest' rola o mínimo necessário e não mexe na tela quando o alvo já
+   está visível — nas telas maiores nada acontece. O botão que aparece depois da
+   auto-avaliação já é tratado pelo focus() em selfRate. */
+function revealAfterAnswer(containerId){
+  requestAnimationFrame(function(){
+    var c=document.getElementById(containerId); if(!c) return;
+    var alvo=c.querySelector('.fbnav')||c.querySelector('.selfrate')||c;
+    var reduz=false;
+    try{ reduz=window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+    try{ alvo.scrollIntoView({block:'nearest',behavior:reduz?'auto':'smooth'}); }catch(e){}
+  });
+}
 /* ---- sessão de revisão ---- */
 let review = { queue:[], ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] };
 function startReview(){
@@ -2768,6 +2788,7 @@ function answerReview(k){
   fb.innerHTML = `<div class="mq-verd" style="color:${right?'var(--good)':'var(--bad)'}">${right?'✓ Lembrou':'✕ Escapou'}${right?' · +'+XP.review+' XP':''}</div><p>${right?q.er:q.ew}</p>
     <div class="fbnav"><button class="bigbtn" onclick="nextReview()">${!last?'Próxima':(lastTopic?'Concluir revisão':'Próximo tópico')}</button></div>`;
   if(right) awardXP(XP.review, {currentTarget:fb}); else saveState();
+  revealAfterAnswer('rv-fb');
 }
 function nextReview(){
   if(review.qi+1 < review.topicQs.length){ review.qi++; renderReviewQuestion(); return; }
@@ -8038,6 +8059,7 @@ function answerMini(k){
       ? selfRateHTML('mq'+miniQuiz.lesson, 'M:'+mk+':'+miniQuiz.i, 'nextMini', nlabel)
       : `<div class="fbnav"><button class="bigbtn" onclick="nextMini()">${nlabel}</button></div>`}`;
   if(gained>0) awardXP(gained,{currentTarget:fb}); else saveState();
+  revealAfterAnswer('mq-fb-'+miniQuiz.lesson);
 }
 function nextMini(){
   const m=MODULES[currentModule];
@@ -8159,6 +8181,7 @@ function answer(k){
     const btn=document.querySelector('#qz-fb .xppill');
     awardXP(gained,{currentTarget:btn});
   } else { saveState(); }
+  revealAfterAnswer('qz-fb');
 }
 function nextQ(){
   const m=MODULES[quiz.mod];
