@@ -692,6 +692,11 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
 .bkwarn button{background:var(--amber);border:none;border-radius:9px;padding:8px 14px;
   font-family:inherit;font-size:13px;font-weight:600;color:#1a1405;cursor:pointer}
 .bkwarn .bkdismiss{background:none;color:var(--ink-3);padding:8px 6px;font-weight:400}
+/* o âmbar comunica "convém exportar"; "nada está sendo salvo" precisa de outro peso */
+.bkwarn.grave{border-color:color-mix(in srgb,var(--bad) 45%,var(--line));
+  background:linear-gradient(180deg,color-mix(in srgb,var(--bad) 9%,var(--panel)),var(--panel))}
+.bkwarn.grave button{background:var(--bad);color:#fff}
+.bkwarn.grave .bkdismiss{background:none;color:var(--ink-3)}
 .bkinfo{margin-top:8px;font-size:12px;line-height:1.6;color:var(--ink-3)}
 .bkinfo .ok{color:var(--good)}
 .bkinfo .warn{color:var(--amber)}
@@ -2240,6 +2245,51 @@ function defaultState(){
     creditC:{}, creditW:{}, miniCredit:{}, miniWrong:{}, srs:{},
     attempts:0, correctTotal:0, wrongTotal:0, lastModule:null, lastStudiedAt:0 };
 }
+/* =====================================================================
+   INTEGRIDADE DA PERSISTÊNCIA
+
+   O progresso do aluno existe só neste aparelho e não tem como ser
+   recuperado. Antes, as duas maneiras de perdê-lo eram silenciosas:
+
+   - um JSON corrompido virava "estado zero" sem aviso, e o primeiro save
+     seguinte gravava por cima do blob — que pode ser recuperável à mão
+     antes disso, nunca depois;
+   - um localStorage que recusa escrita (aba privada, cota do iOS, storage
+     desabilitado) deixava o app rodar normalmente sem persistir nada, e o
+     aluno só descobria ao fechar.
+
+   Nenhum dos dois é detectável pelo navigator.storage.persist() que o app
+   já consulta: aquilo mede risco de evicção, não se a escrita funciona.
+   ===================================================================== */
+
+// null enquanto está tudo bem; {motivo, quarentena} quando a leitura falhou.
+let _falhaLeitura = null;
+// true quando uma gravação foi recusada — nada está sendo salvo.
+let _falhaEscrita = false;
+
+// Separada de loadState para poder ser testada sem storage nem DOM.
+// {ok:true, state} | {ok:false, motivo:'json'|'formato'}
+function readSavedState(raw){
+  let parsed;
+  try{ parsed = JSON.parse(raw); }
+  catch(e){ return {ok:false, motivo:'json'}; }
+  if(!parsed || typeof parsed!=='object' || Array.isArray(parsed)){
+    // migrateState devolveria defaultState() aqui, calado. Havia dado e não
+    // foi possível usá-lo: isso é falha, não "primeira execução".
+    return {ok:false, motivo:'formato'};
+  }
+  return {ok:true, state:migrateState(parsed)};
+}
+
+// Move o blob ilegível para uma chave datada, antes de qualquer escrita.
+// Devolve 'ok' ou 'falhou' — o chamador decide o que fazer com isso.
+function quarentenarEstado(raw){
+  try{
+    localStorage.setItem(STORE_KEY+':corrompido:'+Date.now(), raw);
+    return 'ok';
+  }catch(e){ return 'falhou'; }
+}
+
 async function loadState(){
   // 1) storage do artifact (persistência dentro do Claude).
   //    Na primeira vez a chave não existe e o get lança erro — isso é esperado,
@@ -2247,15 +2297,48 @@ async function loadState(){
   try{
     if(window.storage && window.storage.get){
       const r = await window.storage.get(STORE_KEY, false);
-      if(r && r.value){ return migrateState(JSON.parse(r.value)); }
+      if(r && r.value){
+        const lido = readSavedState(r.value);
+        if(lido.ok) return lido.state;
+        // Sem quarentena aqui: este caminho só existe dentro de artifact do
+        // Claude e não tem localStorage próprio para preservar a cópia.
+        _falhaLeitura = {motivo:lido.motivo, quarentena:'nao-tentada'};
+      }
     }
   }catch(e){ /* chave ainda inexistente — segue para o fallback */ }
   // 2) localStorage (persistência quando o app é publicado fora do Claude).
   try{
     const raw = localStorage.getItem(STORE_KEY);
-    if(raw){ return migrateState(JSON.parse(raw)); }
-  }catch(e){}
+    if(raw){
+      const lido = readSavedState(raw);
+      if(lido.ok){ _falhaLeitura = null; return lido.state; }
+      _falhaLeitura = {motivo:lido.motivo, quarentena:quarentenarEstado(raw)};
+    }
+  }catch(e){
+    // getItem lançou: storage indisponível. Não há blob para preservar, mas a
+    // escrita também não vai funcionar — a sondagem confirma e o aviso aparece.
+    _falhaEscrita = true;
+  }
   return defaultState();
+}
+
+/* Grava/lê/remove uma chave descartável. Detecta storage indisponível já na
+   carga, em vez de deixar o aluno investir uma sessão para descobrir. */
+function sondarArmazenamento(){
+  const k = STORE_KEY+':sonda';
+  try{
+    localStorage.setItem(k, '1');
+    const voltou = localStorage.getItem(k) === '1';
+    localStorage.removeItem(k);
+    _falhaEscrita = !voltou;
+  }catch(e){ _falhaEscrita = true; }
+  return !_falhaEscrita;
+}
+
+/* Só recusa gravar quando o blob ilegível é a única cópia que existe. Se a
+   quarentena deu certo, a cópia está a salvo e o app volta ao normal. */
+function podeGravar(){
+  return !(_falhaLeitura && _falhaLeitura.quarentena === 'falhou');
 }
 let saveTimer=null;
 function migrateState(raw){
@@ -2287,11 +2370,26 @@ function migrateState(raw){
   return out;
 }
 
+/* Escreve no localStorage registrando o resultado. O catch antes era vazio, o
+   que fazia uma gravação recusada passar como se tivesse dado certo. */
+function gravarLocal(payload){
+  try{
+    localStorage.setItem(STORE_KEY, payload);
+    _falhaEscrita = false;
+    return true;
+  }catch(e){
+    _falhaEscrita = true;
+    try{ avisoIntegridade(); renderBackupInfo(); }catch(_){}
+    return false;
+  }
+}
+
 // grava JÁ, sem esperar o debounce (usado ao fechar o app e no backup)
 function saveNow(){
   clearTimeout(saveTimer);
+  if(!podeGravar()) return;
   const payload=JSON.stringify(state);
-  try{ localStorage.setItem(STORE_KEY, payload); }catch(e){}
+  gravarLocal(payload);
   try{ if(window.storage && window.storage.set) window.storage.set(STORE_KEY, payload, false); }catch(e){}
 }
 window.addEventListener('pagehide', saveNow);
@@ -2299,12 +2397,13 @@ document.addEventListener('visibilitychange', function(){ if(document.visibility
 
 function saveState(){
   clearTimeout(saveTimer);
+  if(!podeGravar()) return;
   saveTimer=setTimeout(async()=>{
     const payload=JSON.stringify(state);
     try{
       if(window.storage && window.storage.set){ await window.storage.set(STORE_KEY, payload, false); }
     }catch(e){}
-    try{ localStorage.setItem(STORE_KEY, payload); }catch(e){}
+    gravarLocal(payload);
   },120);
 }
 
@@ -8310,7 +8409,58 @@ function renderBackupInfo(){
     l2 = '<br><span class="ok">Armazenamento protegido contra limpeza automática.</span>';
   else if(_persistIdo === 'negado')
     l2 = '<br><span class="warn">O sistema não garantiu o armazenamento — exporte backup com mais frequência.</span>';
-  el.innerHTML = l1 + l2;
+  // Estas duas vêm por último porque são mais graves que o resto do painel:
+  // sem elas, o aluno lia "armazenamento protegido" enquanto nada era salvo.
+  let l3 = '';
+  if(_falhaEscrita)
+    l3 = '<br><span class="warn">Este navegador não está salvando nada. Exporte um backup antes de fechar.</span>';
+  else if(_falhaLeitura)
+    l3 = '<br><span class="warn">O progresso salvo não pôde ser lido'
+       + (_falhaLeitura.quarentena === 'ok' ? ' — uma cópia foi preservada neste aparelho.' : '.')
+       + '</span>';
+  el.innerHTML = l1 + l2 + l3;
+}
+
+/* Banner de integridade, no topo do dashboard. Segue o mesmo padrão do
+   avisoBackup, mas com id e flag próprios: os dois podem coexistir, e dispensar
+   um não pode dispensar o outro. */
+let _integridadeFechada = false;
+function fecharAvisoIntegridade(){
+  _integridadeFechada = true;
+  const b = document.getElementById('bk-integridade');
+  if(b) b.remove();
+}
+
+function avisoIntegridade(){
+  const host = document.getElementById('view-dashboard');
+  const antigo = document.getElementById('bk-integridade');
+  if(antigo) antigo.remove();
+  if(!host || _integridadeFechada) return;
+  if(!_falhaEscrita && !_falhaLeitura) return;
+
+  let texto, botoes, grave = '';
+  if(_falhaEscrita){
+    // Mais urgente que a leitura: o que está em risco é a sessão de agora.
+    // Exportar continua funcionando — usa Blob, não depende do localStorage.
+    grave = ' grave';
+    texto = '<b>Nada está sendo salvo neste navegador.</b> Pode ser aba privada ou '
+          + 'armazenamento cheio. O que você fizer agora se perde ao fechar — exporte um backup.';
+    botoes = '<button type="button" onclick="exportProgress()">Exportar backup</button>';
+  } else {
+    texto = _falhaLeitura.quarentena === 'ok'
+      ? 'Não foi possível ler seu progresso salvo, então o percurso recomeçou do zero. '
+        + '<b>Uma cópia do dado original foi preservada</b> neste aparelho. Se você tem um backup, importe agora.'
+      : 'Não foi possível ler seu progresso salvo, e também não deu para preservar uma cópia. '
+        + '<b>Nada será gravado por cima</b> até você decidir. Importe um backup, se tiver.';
+    botoes = '<button type="button" onclick="document.getElementById(\'bk-file\').click()">Importar backup</button>';
+  }
+
+  const div = document.createElement('div');
+  div.className = 'bkwarn' + grave;
+  div.id = 'bk-integridade';
+  div.innerHTML = '<p>' + texto + '</p>' + botoes
+    + '<button type="button" class="bkdismiss" onclick="fecharAvisoIntegridade()">Entendi</button>';
+  host.insertBefore(div, host.firstChild);
 }
 
 let _avisoFechado = false;
@@ -8356,15 +8506,19 @@ if(typeof renderDashboard === 'function'){
   const _dashOriginal = renderDashboard;
   renderDashboard = function(){
     const r = _dashOriginal.apply(this, arguments);
-    try{ avisoBackup(); }catch(e){}
+    try{ avisoBackup(); avisoIntegridade(); }catch(e){}
     return r;
   };
 }
 
 (function iniciarProtecao(){
   const rodar = function(){
+    // A sondagem vem antes de tudo: é ela que descobre aba privada logo na
+    // carga, sem esperar o aluno investir uma sessão para só então descobrir.
+    try{ sondarArmazenamento(); }catch(e){}
+    try{ avisoIntegridade(); }catch(e){}
     pedirArmazenamentoPersistente().then(function(){
-      try{ renderBackupInfo(); avisoBackup(); }catch(e){}
+      try{ renderBackupInfo(); avisoBackup(); avisoIntegridade(); }catch(e){}
     });
   };
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', rodar);

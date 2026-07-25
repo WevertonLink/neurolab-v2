@@ -34,6 +34,16 @@ async function boot(page) {
   await expect(page.locator('.card')).toHaveCount(MODULE_COUNT);
 }
 
+// Os testes de persistência precisam preparar o localStorage ANTES de o app
+// bootar. Os addInitScript acumulam na ordem em que são registrados, e o
+// beforeEach já registrou o de limpeza — então este roda depois dele, e a
+// renavegação é o que aplica o cenário.
+async function bootComArmazenamento(page, script, arg) {
+  await page.addInitScript(script, arg);
+  await page.goto('./?audit=1', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#view-dashboard')).toHaveClass(/active/);
+}
+
 async function openModule(page, index) {
   await page.evaluate((i) => {
     if (typeof openModule !== 'function') throw new Error('openModule não está disponível.');
@@ -711,4 +721,81 @@ test('@smoke service worker registra e o app abre offline', async ({ page, conte
   } finally {
     await context.setOffline(false);
   }
+});
+
+/* O progresso do aluno só existe no aparelho dele. As duas formas de perdê-lo
+   eram silenciosas: um JSON corrompido virava estado zero e era sobrescrito
+   pelo primeiro save, e um localStorage que recusa escrita deixava o app rodar
+   sem gravar nada. Estes três testes cobrem os dois casos e o caminho saudável. */
+
+const STORE_KEY = 'neurolab-state-v1';
+
+test('@smoke progresso ilegível é preservado e a falha aparece na tela', async ({ page }) => {
+  const corrompido = '{"xp":990,"lessons":{"neuronio-0":true},TRUNCA';
+  await bootComArmazenamento(page, ([k, v]) => {
+    localStorage.setItem(k, v);
+  }, [STORE_KEY, corrompido]);
+
+  await expect(page.locator('#bk-integridade')).toBeVisible();
+  await expect(page.locator('#bk-integridade')).toContainText('não foi possível ler', { ignoreCase: true });
+  await expect(page.locator('#bk-integridade button[onclick*="bk-file"]')).toBeVisible();
+  await expect(page.locator('#bk-info')).toContainText('não pôde ser lido');
+
+  const quarentena = await page.evaluate((k) => {
+    const chave = Object.keys(localStorage).find((x) => x.startsWith(k + ':corrompido:'));
+    return { chave, valor: chave ? localStorage.getItem(chave) : null };
+  }, STORE_KEY);
+  expect(quarentena.chave, 'o blob ilegível não foi posto em quarentena').toBeTruthy();
+  expect(quarentena.valor).toBe(corrompido);
+
+  // O ponto principal: era exatamente aqui que o dado morria antes.
+  await page.evaluate(() => { state.xp = 5; saveNow(); });
+  const depois = await page.evaluate((c) => localStorage.getItem(c), quarentena.chave);
+  expect(depois, 'a quarentena foi destruída por um save posterior').toBe(corrompido);
+});
+
+test('@smoke storage que recusa escrita é detectado na carga', async ({ page }) => {
+  await bootComArmazenamento(page, () => {
+    Storage.prototype.setItem = function () {
+      throw new DOMException('QuotaExceededError', 'QuotaExceededError');
+    };
+  });
+
+  // Sem interação nenhuma: quem detecta é a sondagem do init.
+  await expect(page.locator('#bk-integridade')).toBeVisible();
+  await expect(page.locator('#bk-integridade')).toHaveClass(/grave/);
+  await expect(page.locator('#bk-integridade')).toContainText('Nada está sendo salvo');
+  await expect(page.locator('#bk-info')).toContainText('não está salvando');
+
+  // Exportar é a saída real do aluno neste estado, e não depende do storage.
+  await expect(page.locator('#bk-integridade button[onclick*="exportProgress"]')).toBeVisible();
+  const download = page.waitForEvent('download', { timeout: 10_000 });
+  await page.locator('#bk-integridade button[onclick*="exportProgress"]').click();
+  expect((await download).suggestedFilename()).toMatch(/^neurolab-progresso-.*\.json$/);
+});
+
+test('@smoke estado saudável carrega sem aviso de integridade', async ({ page }) => {
+  const salvo = JSON.stringify({ v: 3, xp: 640, lessons: { 'neuronio-0': true }, mastery: { neuronio: 0.9 } });
+  await bootComArmazenamento(page, ([k, v]) => { localStorage.setItem(k, v); }, [STORE_KEY, salvo]);
+
+  const estado = await page.evaluate(() => ({
+    xp: state.xp, mastery: state.mastery['neuronio'],
+    leitura: _falhaLeitura, escrita: _falhaEscrita
+  }));
+  expect(estado.xp).toBe(640);
+  expect(estado.mastery).toBe(0.9);
+  expect(estado.leitura).toBeNull();
+  expect(estado.escrita).toBe(false);
+
+  // Um banner que aparece sem motivo seria pior que o defeito original.
+  await expect(page.locator('#bk-integridade')).toHaveCount(0);
+  await expect(page.locator('#hd-xp')).toHaveText('640');
+
+  const residuo = await page.evaluate((k) => Object.keys(localStorage)
+    .filter((x) => x.startsWith(k + ':')), STORE_KEY);
+  expect(residuo, 'sobrou quarentena ou chave de sondagem no storage').toEqual([]);
+
+  await page.evaluate(() => { state.xp = 700; saveNow(); });
+  const gravado = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)).xp, STORE_KEY);
+  expect(gravado, 'a gravação normal parou de funcionar').toBe(700);
 });
