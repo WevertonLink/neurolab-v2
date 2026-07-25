@@ -5983,6 +5983,10 @@ function scChip(text, onclick, cls){
   return '<button type="button" class="sc-chip '+(cls||'')+'" onclick="'+onclick+'">'+text+'</button>';
 }
 function esc1(s){ return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+// esc1 protege string JS dentro de atributo onclick — não serve para texto em HTML.
+// Para ecoar o que o aluno digitou (única entrada não confiável do app) use escHtml.
+const ESC_MAP={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+function escHtml(s){ return String(s).replace(/[&<>"']/g, c=>ESC_MAP[c]); }
 
 function renderSearch(q){
   const box = document.getElementById('sc-body');
@@ -5991,7 +5995,7 @@ function renderSearch(q){
   if(!toks.length){ box.innerHTML = suggestHTML(); return; }
   const res = searchAll(q);
   if(!res.length){
-    box.innerHTML = '<div class="sc-empty"><p>Nada encontrado para <b>'+q+'</b>.</p>'
+    box.innerHTML = '<div class="sc-empty"><p>Nada encontrado para <b>'+escHtml(q)+'</b>.</p>'
       + '<p class="sc-hint">Tente descrever em palavras suas: "não consigo focar", "acordo cansado", "por que esqueço".</p></div>'
       + suggestHTML();
     return;
