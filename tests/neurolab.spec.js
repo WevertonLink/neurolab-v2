@@ -174,21 +174,32 @@ async function inspectVerticalMechanism(page) {
 }
 
 test.beforeEach(async ({ page }, testInfo) => {
-  const audit = { consoleErrors: [], pageErrors: [], failedRequests: [] };
+  // requests guarda toda requisição para a asserção de origem no afterEach.
+  // expectNetworkFailures é ligado pelo teste que corta a rede de propósito:
+  // offline, falha de requisição é o comportamento esperado, não um defeito.
+  const audit = {
+    consoleErrors: [], pageErrors: [], failedRequests: [],
+    requests: [], expectNetworkFailures: false
+  };
   runtimeAudit.set(page, audit);
 
   page.on('console', (message) => {
     if (message.type() !== 'error') return;
     const text = message.text();
-    if (/fonts\.googleapis|fonts\.gstatic|favicon/i.test(text)) return;
+    if (/favicon/i.test(text)) return;
     audit.consoleErrors.push(text);
   });
 
   page.on('pageerror', (error) => audit.pageErrors.push(error.stack || error.message));
   page.on('requestfailed', (request) => {
     const url = request.url();
-    if (/fonts\.googleapis|fonts\.gstatic|favicon/i.test(url)) return;
+    if (/favicon/i.test(url)) return;
     audit.failedRequests.push({ url, error: request.failure()?.errorText || 'unknown' });
+  });
+  page.on('request', (request) => {
+    const url = request.url();
+    if (/^(data|blob):/i.test(url)) return;
+    audit.requests.push(url);
   });
 
   await boot(page);
@@ -198,10 +209,26 @@ test.beforeEach(async ({ page }, testInfo) => {
 test.afterEach(async ({ page }, testInfo) => {
   const audit = runtimeAudit.get(page);
   if (!audit) return;
+
+  // O index.html é o aplicativo: as fontes estão embutidas nele e não há mais
+  // nenhuma dependência de terceiros. Medir isso em todos os testes é o que
+  // impede a dependência externa de voltar sem ninguém notar.
+  let external = [];
+  try {
+    const origin = new URL(page.url()).origin;
+    external = audit.requests.filter((url) => {
+      try { return new URL(url).origin !== origin; } catch (_) { return false; }
+    });
+  } catch (_) {}
+  audit.externalRequests = external;
+
   await attachJson(testInfo, 'runtime-audit.json', audit);
   expect.soft(audit.pageErrors, 'Erros JavaScript não tratados').toEqual([]);
   expect.soft(audit.consoleErrors, 'Erros no console').toEqual([]);
-  expect.soft(audit.failedRequests, 'Requisições internas que falharam').toEqual([]);
+  expect.soft(external, 'Requisições para fora da origem do app').toEqual([]);
+  if (!audit.expectNetworkFailures) {
+    expect.soft(audit.failedRequests, 'Requisições internas que falharam').toEqual([]);
+  }
 });
 
 test('@smoke dashboard, metadados e navegação principal', async ({ page }) => {
@@ -542,4 +569,146 @@ test('@smoke acessibilidade estrutural básica', async ({ page }, testInfo) => {
   expect(audit.duplicateIds).toEqual([]);
   expect(audit.unnamedButtons).toEqual([]);
   expect(audit.unlabeledImages).toEqual([]);
+});
+
+// A busca é a única entrada não confiável do app a alcançar o DOM. O ramo
+// "nada encontrado" chegou a inserir a query crua via innerHTML, então
+// digitar uma tag no campo executava script com acesso ao localStorage —
+// isto é, a todo o progresso do aluno.
+test('@smoke a busca escapa o que o aluno digita', async ({ page }) => {
+  // src inválido de propósito: o carregamento falha, o onerror dispara e o
+  // script roda — é o que acontecia antes do escape. O `hits` abaixo trava a
+  // premissa: se um dia algum token deste payload passar a casar com o
+  // índice, o teste falha avisando, em vez de exercitar o ramo errado em
+  // silêncio.
+  const payload = '<img src=zzqx onerror="window.__xss=1">';
+
+  const hits = await page.evaluate((p) => searchAll(p).length, payload);
+  expect(hits, 'o payload precisa não ter resultados para cair no ramo "nada encontrado"').toBe(0);
+
+  await page.locator('#sc-fab').click();
+  await expect(page.locator('#search-modal')).toBeVisible();
+  await page.locator('#sc-input').fill(payload);
+  await expect(page.locator('#sc-body .sc-empty')).toBeVisible();
+
+  expect(await page.evaluate(() => window.__xss), 'a injeção executou').toBeUndefined();
+  await expect(page.locator('#sc-body img'), 'a tag injetada virou elemento').toHaveCount(0);
+  await expect(page.locator('#sc-body .sc-empty b')).toHaveText(payload);
+
+  // O mesmo pelo caminho com espaços, que percorre os outros ramos de render.
+  await page.locator('#sc-input').fill('<svg onload="window.__xss=1"> talamo');
+  await expect(page.locator('#sc-body')).not.toBeEmpty();
+  expect(await page.evaluate(() => window.__xss)).toBeUndefined();
+  await expect(page.locator('#sc-body svg[onload]')).toHaveCount(0);
+});
+
+// applyImportedState foi separada do input justamente "p/ poder ser testada".
+// É o único caminho de recuperação do progresso, que só existe neste aparelho.
+test('@smoke backup: exportar, zerar e importar preserva o progresso', async ({ page }) => {
+  const before = await page.evaluate(() => {
+    state.xp = 420;
+    state.lessons['neuronio-0'] = true;
+    state.mastery['neuronio'] = 0.8;
+    state.attempts = 7;
+    saveNow();
+    renderHeader();
+    return { xp: state.xp, lessons: Object.keys(state.lessons).length, mastery: state.mastery['neuronio'], attempts: state.attempts };
+  });
+  const backup = await page.evaluate(() => JSON.stringify(state));
+  await expect(page.locator('#hd-xp')).toHaveText('420');
+
+  await page.evaluate(() => { state = defaultState(); saveNow(); renderHeader(); renderDashboard(); });
+  expect(await page.evaluate(() => state.xp)).toBe(0);
+
+  const imported = await page.evaluate((text) => applyImportedState(text), backup);
+  expect(imported.ok, imported.err).toBe(true);
+
+  const after = await page.evaluate(() => ({
+    xp: state.xp, lessons: Object.keys(state.lessons).length,
+    mastery: state.mastery['neuronio'], attempts: state.attempts
+  }));
+  expect(after).toEqual(before);
+  await expect(page.locator('#hd-xp')).toHaveText('420');
+  await expect(page.locator('#view-dashboard')).toHaveClass(/active/);
+
+  // Um arquivo que não é backup precisa ser recusado sem destruir o que existe.
+  for (const lixo of ['{"foo":1}', 'nao e json', '[]', 'null']) {
+    const bad = await page.evaluate((t) => applyImportedState(t), lixo);
+    expect(bad.ok, `aceitou entrada inválida: ${lixo}`).toBe(false);
+    expect(bad.err).toBeTruthy();
+  }
+  expect(await page.evaluate(() => state.xp), 'entrada inválida corrompeu o estado').toBe(420);
+});
+
+test('@smoke quiz completo registra domínio, XP e conclusão', async ({ page }) => {
+  await openModule(page, 0);
+  // Fora do modo profundo as alternativas não nascem sob véu (.veiled é
+  // display:none) e o avanço é um botão simples, sem a auto-avaliação.
+  await page.evaluate(() => { state.deepMode = false; });
+
+  const xpBefore = await page.evaluate(() => state.xp);
+  await page.evaluate(() => startQuiz());
+  await expect(page.locator('#view-quiz')).toHaveClass(/active/);
+
+  const total = await page.evaluate(() => MODULES[quiz.mod].quiz.length);
+  expect(total).toBeGreaterThan(0);
+
+  for (let i = 0; i < total; i += 1) {
+    await expect(page.locator('#qz-count')).toHaveText(
+      `${String(i + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`
+    );
+    // shuffleOptions embaralha a cada questão, então a correta vem do estado.
+    const correct = await page.evaluate(() => quiz.opts.findIndex((o) => o.correct));
+    expect(correct).toBeGreaterThanOrEqual(0);
+    await page.locator(`#qz-opts .opt[data-k="${correct}"]`).click();
+    await expect(page.locator('#qz-fb .fb.right')).toBeVisible();
+    await page.locator('#qz-fb .fbnav .bigbtn').click();
+  }
+
+  await expect(page.locator('#view-result')).toHaveClass(/active/);
+  const after = await page.evaluate(() => {
+    const id = MODULES[0].id;
+    return { xp: state.xp, mastery: state.mastery[id], done: Boolean(state.doneQuiz[id]), correct: state.correctTotal };
+  });
+  expect(after.mastery, 'acertar tudo deve dar domínio 1').toBe(1);
+  expect(after.done).toBe(true);
+  expect(after.correct).toBe(total);
+  expect(after.xp, 'o quiz não creditou XP').toBeGreaterThan(xpBefore);
+});
+
+// O registro do service worker foi por muito tempo um no-op, então o app tinha
+// manifesto e ícones mas nunca abria offline. Este teste é o que garante que o
+// caminho todo — registro, precache e resposta a partir do cache — funciona.
+test('@smoke service worker registra e o app abre offline', async ({ page, context }) => {
+  const support = await page.evaluate(async () => {
+    if (!('serviceWorker' in navigator)) return 'sem-suporte';
+    const registration = await navigator.serviceWorker.ready;
+    return registration.active ? 'ativo' : 'sem-worker-ativo';
+  });
+  expect(support).toBe('ativo');
+
+  // Espera o precache concluir. O nome do cache não é fixado aqui de propósito:
+  // ele carrega a VERSION do sw.js e mudaria a cada release.
+  await page.waitForFunction(async () => {
+    for (const name of await caches.keys()) {
+      const cache = await caches.open(name);
+      if ((await cache.keys()).length >= 6) return true;
+    }
+    return false;
+  }, null, { timeout: 20_000 });
+
+  const audit = runtimeAudit.get(page);
+  if (audit) audit.expectNetworkFailures = true;
+
+  await context.setOffline(true);
+  try {
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#view-dashboard')).toHaveClass(/active/);
+    await expect(page.locator('.card'), 'os módulos não renderizaram offline').toHaveCount(MODULE_COUNT);
+    // A tipografia embutida tem de sobreviver ao offline junto com o resto.
+    const faces = await page.evaluate(() => document.fonts.size);
+    expect(faces, 'nenhum @font-face disponível offline').toBeGreaterThan(0);
+  } finally {
+    await context.setOffline(false);
+  }
 });
