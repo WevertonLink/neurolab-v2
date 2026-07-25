@@ -834,28 +834,11 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
 
 
 /* ---------- Fase 3: domínio multidimensional ---------- */
-#db-knowledge:empty,#md-mastery:empty{display:none}
-.knowledge-panel,.module-knowledge{margin:18px 0 4px;border:1px solid var(--line);border-radius:16px;padding:17px;background:radial-gradient(420px 190px at 100% 0%,rgba(96,165,250,.09),transparent 68%),linear-gradient(180deg,var(--panel),var(--panel-2))}
-.knowledge-head,.module-knowledge-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.knowledge-head h3,.module-knowledge-head h3{margin:2px 0 4px;font-family:'Space Grotesk',sans-serif;font-size:17px;letter-spacing:-.01em}
-.knowledge-head p{margin:0;color:var(--ink-3);font-size:12.8px;max-width:58ch}
-.knowledge-k{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue)}
-.knowledge-focus{min-width:170px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--amber) 32%,var(--line));border-radius:11px;background:color-mix(in srgb,var(--amber) 6%,var(--panel));display:flex;flex-direction:column}
-.knowledge-focus span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber)}
-.knowledge-focus b{font-family:'Space Grotesk',sans-serif;font-size:14px;margin-top:2px}.knowledge-focus small{color:var(--ink-3);font-size:11.5px}
-.knowledge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.knowledge-grid.module-grid{margin-top:12px}
-.knowledge-row{min-width:0;padding:11px;border-radius:11px;border:1px solid var(--line-soft);background:rgba(255,255,255,.018)}
-.knowledge-label{display:flex;justify-content:space-between;align-items:baseline;gap:7px;font-size:12px;color:var(--ink-2)}.knowledge-label span{overflow:hidden;text-overflow:ellipsis}.knowledge-label b{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-size:11px}
-.knowledge-bar{height:6px;border-radius:8px;background:var(--bg-2);border:1px solid var(--line-soft);overflow:hidden;margin-top:8px}.knowledge-bar i{display:block;height:100%;border-radius:8px;background:var(--blue);transition:width .55s cubic-bezier(.22,1,.36,1)}
-.knowledge-row.strong .knowledge-bar i{background:var(--good)}.knowledge-row.forming .knowledge-bar i{background:var(--amber)}.knowledge-row.fragile .knowledge-bar i{background:var(--bad)}.knowledge-row.empty{opacity:.62}.knowledge-row.empty .knowledge-bar i{width:0!important}
-.knowledge-desc{margin-top:7px;color:var(--ink-3);font-size:11.5px;line-height:1.45}.knowledge-empty{margin-top:14px;padding:12px;border:1px dashed var(--line);border-radius:11px;color:var(--ink-3);font-size:13px;line-height:1.55}
-.knowledge-help{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-3);border-bottom:1px dashed var(--ink-3);cursor:help}.module-knowledge{margin:14px 0 16px;border-color:color-mix(in srgb,var(--mc) 26%,var(--line));background:radial-gradient(380px 160px at 100% 0%,color-mix(in srgb,var(--mc) 10%,transparent),transparent 68%),linear-gradient(180deg,var(--panel),var(--panel-2))}.module-knowledge .knowledge-k{color:var(--mc)}
 .topic-dims{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 3px}.topic-dim{display:flex;flex-direction:column;gap:1px;padding:7px 8px;border:1px solid var(--line-soft);border-radius:8px;background:var(--panel);min-width:0}.topic-dim small{font-size:10px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.topic-dim b{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-2)}.topic-dim.strong b{color:var(--good)}.topic-dim.forming b{color:var(--amber)}.topic-dim.fragile b{color:var(--bad)}.topic-dim.empty{opacity:.55}
 .dim-chip{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.04em;vertical-align:1px}.dim-recognition{color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 40%,var(--line))}.dim-location{color:var(--violet);border-color:color-mix(in srgb,var(--violet) 40%,var(--line))}.dim-causality{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 40%,var(--line))}.dim-application{color:var(--green);border-color:color-mix(in srgb,var(--green) 40%,var(--line))}
 .review-why{margin:0 0 12px;padding:12px 13px;border-radius:11px;border:1px solid color-mix(in srgb,var(--cyan) 30%,var(--line));background:color-mix(in srgb,var(--cyan) 6%,var(--panel))}.review-why-k{font-family:'IBM Plex Mono',monospace;font-size:9.8px;letter-spacing:.11em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}.review-why b{font-family:'Space Grotesk',sans-serif;font-size:13.5px}.review-why p{margin:4px 0 7px;color:var(--ink-2);font-size:12.5px;line-height:1.5}.review-why span{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-3)}.rwhy{display:block;margin-top:3px;color:var(--ink-3);font-size:11.5px;line-height:1.4}
-.result-knowledge{margin:17px auto 0;max-width:700px;text-align:left;padding:14px;border:1px solid var(--line);border-radius:13px;background:var(--panel)}
-@media(max-width:720px){.knowledge-grid{grid-template-columns:1fr 1fr}.topic-dims{grid-template-columns:1fr 1fr}}
-@media(max-width:420px){.knowledge-grid{grid-template-columns:1fr}.topic-dims{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.topic-dims{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.topic-dims{grid-template-columns:1fr 1fr}}
 
 /* =====================================================================
    NEUROLAB V2 · FASE 4
@@ -977,7 +960,6 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
     </div>
 
     <div class="lab-stats" id="db-stats"></div>
-    <div class="knowledge-panel" id="db-knowledge"></div>
     <div class="twoscores" id="db-links"></div>
     <div class="lab-panel review-panel" id="db-review" style="display:none"></div>
 
@@ -1006,7 +988,6 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
     <button class="backbtn" onclick="go('dashboard')">← voltar ao mapa</button>
     <div class="mhead" id="md-head"></div>
     <div class="mdnote" id="md-note" hidden></div>
-    <div class="module-knowledge" id="md-mastery"></div>
     <div class="visual-lab" id="md-visual-lab">
       <div class="visual-tabs" role="tablist" aria-label="Tipo de visualização do módulo">
         <button type="button" class="visual-tab active" id="vis-tab-anatomy" role="tab" aria-selected="true" aria-controls="md-anat" onclick="setVisualMode('anatomy')">Anatomia</button>
@@ -1723,41 +1704,10 @@ function scopeDimensionScore(scope, dim){
 function topicDimensionScores(key){
   const out={}; KNOWLEDGE_DIM_IDS.forEach(id=>out[id]=scopeDimensionScore(topicScope(key),id)); return out;
 }
-function moduleDimensionScores(m){
-  const out={};
-  KNOWLEDGE_DIM_IDS.forEach(dim=>{
-    const topicVals=[];
-    m.lessons.forEach((_,li)=>{
-      const v=scopeDimensionScore(topicScope(m.id+'-'+li),dim);
-      if(v!==null) topicVals.push(v);
-    });
-    const direct=scopeDimensionScore(moduleScope(m.id),dim);
-    if(!topicVals.length && direct===null){ out[dim]=null; return; }
-    const topicAvg=topicVals.length?topicVals.reduce((a,b)=>a+b,0)/topicVals.length:null;
-    if(topicAvg!==null && direct!==null) out[dim]=(topicAvg*topicVals.length+direct*2)/(topicVals.length+2);
-    else out[dim]=topicAvg!==null?topicAvg:direct;
-  });
-  return out;
-}
-function globalDimensionScores(){
-  const out={};
-  KNOWLEDGE_DIM_IDS.forEach(dim=>{
-    const vals=[]; MODULES.forEach(m=>{const v=moduleDimensionScores(m)[dim];if(v!==null) vals.push(v);});
-    out[dim]=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
-  });
-  return out;
-}
 function weakestDimensionForTopic(key){
   const scores=topicDimensionScores(key);
   const tried=KNOWLEDGE_DIMS.filter(d=>scores[d.id]!==null);
   if(!tried.length) return Object.assign({},KNOWLEDGE_DIMS[0],{score:null});
-  const d=tried.sort((a,b)=>scores[a.id]-scores[b.id])[0];
-  return Object.assign({},d,{score:scores[d.id]});
-}
-function weakestGlobalDimension(){
-  const scores=globalDimensionScores();
-  const tried=KNOWLEDGE_DIMS.filter(d=>scores[d.id]!==null);
-  if(!tried.length) return null;
   const d=tried.sort((a,b)=>scores[a.id]-scores[b.id])[0];
   return Object.assign({},d,{score:scores[d.id]});
 }
@@ -1767,29 +1717,6 @@ function dimensionChipHTML(q, context){
   const id=inferQuestionDimension(q,context); const d=dimMeta(id);
   return `<span class="dim-chip dim-${id}">${d.label}</span>`;
 }
-function knowledgeBarsHTML(scores, compact){
-  return KNOWLEDGE_DIMS.map(d=>{
-    const v=scores[d.id]; const pct=v===null?0:Math.round(v*100);
-    return `<div class="knowledge-row ${knowledgeTone(v)}">
-      <div class="knowledge-label"><span>${d.label}</span><b>${formatKnowledgeScore(v)}</b></div>
-      <div class="knowledge-bar" role="progressbar" aria-label="${d.label}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${v===null?0:pct}" aria-valuetext="${v===null?'sem evidência':pct+'%'}"><i style="width:${pct}%"></i></div>
-      ${compact?'':`<div class="knowledge-desc">${v===null?'Ainda não há evidência suficiente.':d.desc}</div>`}
-    </div>`;
-  }).join('');
-}
-function renderKnowledgeDashboard(){
-  const host=document.getElementById('db-knowledge'); if(!host) return;
-  const scores=globalDimensionScores(); const weak=weakestGlobalDimension();
-  const tried=KNOWLEDGE_DIM_IDS.some(id=>scores[id]!==null);
-  host.innerHTML=`<div class="knowledge-head"><div><div class="knowledge-k">Perfil de conhecimento</div><h3>Você não domina tudo do mesmo jeito</h3><p>O NeuroLab agora separa reconhecer, localizar, explicar a cadeia e aplicar em situações novas.</p></div>${weak?`<div class="knowledge-focus"><span>próximo foco</span><b>${weak.label}</b><small>${Math.round(weak.score*100)}% de evidência atual</small></div>`:''}</div>
-    ${tried?`<div class="knowledge-grid">${knowledgeBarsHTML(scores,true)}</div>`:`<div class="knowledge-empty">Faça os mini quizzes para o perfil começar a aparecer. Resultados antigos foram preservados, sem inventar dimensões que eles não mediam.</div>`}`;
-}
-function renderModuleMastery(m){
-  const host=document.getElementById('md-mastery'); if(!host) return;
-  const scores=moduleDimensionScores(m);
-  host.style.setProperty('--mc',m.color);
-  host.innerHTML=`<div class="module-knowledge-head"><div><div class="knowledge-k">Domínio por dimensão</div><h3>O que já está sólido neste módulo</h3></div><span class="knowledge-help" title="A pontuação combina evidências recentes dos mini quizzes, teste do módulo, revisão e autoavaliação.">como é calculado?</span></div><div class="knowledge-grid module-grid">${knowledgeBarsHTML(scores,true)}</div>`;
-}
 function topicDimensionStripHTML(moduleId, lessonIdx){
   const key=moduleId+'-'+lessonIdx; const scores=topicDimensionScores(key);
   return `<div class="topic-dims" id="topic-dims-${moduleId}-${lessonIdx}" aria-label="Domínio por dimensão deste tópico">${KNOWLEDGE_DIMS.map(d=>{const v=scores[d.id];return `<span class="topic-dim ${knowledgeTone(v)}"><small>${d.short}</small><b>${formatKnowledgeScore(v)}</b></span>`;}).join('')}</div>`;
@@ -1797,11 +1724,6 @@ function topicDimensionStripHTML(moduleId, lessonIdx){
 function refreshTopicKnowledge(moduleId,lessonIdx){
   const el=document.getElementById('topic-dims-'+moduleId+'-'+lessonIdx);
   if(el) el.outerHTML=topicDimensionStripHTML(moduleId,lessonIdx);
-  const m=MODULES.find(x=>x.id===moduleId);
-  if(m&&document.getElementById('view-module')&&document.getElementById('view-module').classList.contains('active')) renderModuleMastery(m);
-}
-function resultKnowledgeHTML(m){
-  return `<div class="result-knowledge"><div class="knowledge-k">Perfil atualizado do módulo</div><div class="knowledge-grid module-grid">${knowledgeBarsHTML(moduleDimensionScores(m),true)}</div></div>`;
 }
 
 function resolveQuestionContextFromKey(key){
@@ -2631,7 +2553,6 @@ function renderDashboard(){
   renderSynMap();
   renderInsight(op);
   renderDashboardStats();
-  renderKnowledgeDashboard();
   renderReview();
   // cards
   const wrap=document.getElementById('db-cards');
@@ -7997,7 +7918,6 @@ function openModule(i){
   renderAnatomy(m);
   wireAnatA11y(m);
   renderFunctional(m);
-  renderModuleMastery(m);
   setVisualMode('anatomy');
   // lessons
   const wrap=document.getElementById('md-lessons');
@@ -8305,7 +8225,6 @@ function renderResult(m,correct,total,score,mastery,prev,improved,delta,firstTim
       <h2>${headline}</h2>
       <p class="rmsg">${msg}</p>
       <div class="deltas">${deltaBlock}${firstTime?'<div class="delta"><div class="dl">Bônus</div><div class="dv up">+'+XP.complete+' XP</div></div>':''}</div>
-      ${typeof resultKnowledgeHTML==='function'?resultKnowledgeHTML(m):''}
       <div class="rbtns">
         <button class="bigbtn ghost" style="--mc:${m.color}" onclick="openModule(${MODULES.indexOf(m)})">Rever aulas</button>
         <button class="bigbtn" style="--mc:${m.color}" onclick="startQuiz()">Refazer teste</button>
