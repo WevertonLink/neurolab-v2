@@ -836,7 +836,7 @@ button.lk-row{display:block;width:100%;text-align:left;padding:12px;border-radiu
 /* ---------- Fase 3: domínio multidimensional ---------- */
 .topic-dims{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 3px}.topic-dim{display:flex;flex-direction:column;gap:1px;padding:7px 8px;border:1px solid var(--line-soft);border-radius:8px;background:var(--panel);min-width:0}.topic-dim small{font-size:10px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.topic-dim b{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-2)}.topic-dim.strong b{color:var(--good)}.topic-dim.forming b{color:var(--amber)}.topic-dim.fragile b{color:var(--bad)}.topic-dim.empty{opacity:.55}
 .dim-chip{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.04em;vertical-align:1px}.dim-recognition{color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 40%,var(--line))}.dim-location{color:var(--violet);border-color:color-mix(in srgb,var(--violet) 40%,var(--line))}.dim-causality{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 40%,var(--line))}.dim-application{color:var(--green);border-color:color-mix(in srgb,var(--green) 40%,var(--line))}
-.review-why{margin:0 0 12px;padding:12px 13px;border-radius:11px;border:1px solid color-mix(in srgb,var(--cyan) 30%,var(--line));background:color-mix(in srgb,var(--cyan) 6%,var(--panel))}.review-why-k{font-family:'IBM Plex Mono',monospace;font-size:9.8px;letter-spacing:.11em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}.review-why b{font-family:'Space Grotesk',sans-serif;font-size:13.5px}.review-why p{margin:4px 0 7px;color:var(--ink-2);font-size:12.5px;line-height:1.5}.review-why span{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-3)}.rwhy{display:block;margin-top:3px;color:var(--ink-3);font-size:11.5px;line-height:1.4}
+.rwhy{display:block;margin-top:3px;color:var(--ink-3);font-size:11.5px;line-height:1.4}
 @media(max-width:720px){.topic-dims{grid-template-columns:1fr 1fr}}
 @media(max-width:420px){.topic-dims{grid-template-columns:1fr 1fr}}
 
@@ -1781,11 +1781,10 @@ function reviewReasonData(topic){
   else { title='O intervalo programado terminou'; body=`O tópico ficou ${rec.reasonInterval||SRS_INTERVALS[rec.box||0]} dia${(rec.reasonInterval||SRS_INTERVALS[rec.box||0])!==1?'s':''} sem apoio. Agora é o momento de testar retenção.`; }
   return {title,body,weak};
 }
+// Versão de uma linha, usada na lista de revisão do dashboard. O bloco extenso
+// que existia dentro de cada questão saiu: repetia este mesmo texto — que o
+// aluno já lê na lista, antes de começar — uma vez por pergunta do tópico.
 function reviewReasonText(topic){ const r=reviewReasonData(topic); return `${r.title} · foco mais frágil: ${r.weak.label}`; }
-function reviewReasonHTML(topic){
-  const r=reviewReasonData(topic);
-  return `<div class="review-why"><div class="review-why-k">Por que apareceu agora?</div><b>${r.title}</b><p>${r.body}</p><span>Ênfase atual: ${r.weak.label}</span></div>`;
-}
 function orderReviewQuestions(qs,key){
   const weak=weakestDimensionForTopic(key).id;
   return qs.map((q,i)=>Object.assign({_reviewIndex:i},q)).sort((a,b)=>{
@@ -2697,6 +2696,26 @@ function focusCardTop(sel){
     else window.scrollTo({top:0,behavior:m});
   });
 }
+
+/* Depois de responder, o que o aluno precisa — a explicação e o que fazer em
+   seguida — nasce no fim do card e pode cair abaixo da dobra.
+
+   A medição no CI mostrou folga de apenas 74px no viewport de 360x800. Num
+   celular real a barra de endereço do navegador consome isso inteiro, e era o
+   que obrigava a rolar a mão para achar o botão.
+
+   block:'nearest' rola o mínimo necessário e não mexe na tela quando o alvo já
+   está visível — nas telas maiores nada acontece. O botão que aparece depois da
+   auto-avaliação já é tratado pelo focus() em selfRate. */
+function revealAfterAnswer(containerId){
+  requestAnimationFrame(function(){
+    var c=document.getElementById(containerId); if(!c) return;
+    var alvo=c.querySelector('.fbnav')||c.querySelector('.selfrate')||c;
+    var reduz=false;
+    try{ reduz=window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+    try{ alvo.scrollIntoView({block:'nearest',behavior:reduz?'auto':'smooth'}); }catch(e){}
+  });
+}
 /* ---- sessão de revisão ---- */
 let review = { queue:[], ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] };
 function startReview(){
@@ -2740,7 +2759,6 @@ function renderReviewQuestion(){
   review.opts = shuffleOptions(q.o, q.c);
   const letters=['A','B','C','D','E'];
   document.getElementById('rv-body').innerHTML = `
-    ${typeof reviewReasonHTML==='function'?reviewReasonHTML(t):''}
     <div class="miniquiz-card rv-card">
       <div class="mq-k">Módulo ${m.n} · ${t.title} · ${review.qi+1}/${qs.length}${lvlChip(q)}${dimensionChipHTML(q,{source:'review'})}</div>
       <h4>${q.q}</h4>
@@ -2770,6 +2788,7 @@ function answerReview(k){
   fb.innerHTML = `<div class="mq-verd" style="color:${right?'var(--good)':'var(--bad)'}">${right?'✓ Lembrou':'✕ Escapou'}${right?' · +'+XP.review+' XP':''}</div><p>${right?q.er:q.ew}</p>
     <div class="fbnav"><button class="bigbtn" onclick="nextReview()">${!last?'Próxima':(lastTopic?'Concluir revisão':'Próximo tópico')}</button></div>`;
   if(right) awardXP(XP.review, {currentTarget:fb}); else saveState();
+  revealAfterAnswer('rv-fb');
 }
 function nextReview(){
   if(review.qi+1 < review.topicQs.length){ review.qi++; renderReviewQuestion(); return; }
@@ -8040,6 +8059,7 @@ function answerMini(k){
       ? selfRateHTML('mq'+miniQuiz.lesson, 'M:'+mk+':'+miniQuiz.i, 'nextMini', nlabel)
       : `<div class="fbnav"><button class="bigbtn" onclick="nextMini()">${nlabel}</button></div>`}`;
   if(gained>0) awardXP(gained,{currentTarget:fb}); else saveState();
+  revealAfterAnswer('mq-fb-'+miniQuiz.lesson);
 }
 function nextMini(){
   const m=MODULES[currentModule];
@@ -8161,6 +8181,7 @@ function answer(k){
     const btn=document.querySelector('#qz-fb .xppill');
     awardXP(gained,{currentTarget:btn});
   } else { saveState(); }
+  revealAfterAnswer('qz-fb');
 }
 function nextQ(){
   const m=MODULES[quiz.mod];
