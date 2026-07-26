@@ -243,15 +243,51 @@ test.afterEach(async ({ page }, testInfo) => {
 
 test('@smoke dashboard, metadados e navegação principal', async ({ page }) => {
   await expect(page).toHaveTitle(/NeuroLab/i);
-  await expect(page).toHaveTitle(/Fase 6/i);
+  await expect(page).toHaveTitle(/Fase 9/i);
   await expect(page.locator('.card')).toHaveCount(MODULE_COUNT);
   await expect(page.locator('#vis-tab-anatomy')).toHaveText(/Anatomia/i);
   await expect(page.locator('#vis-tab-functional')).toHaveText(/Mecanismo/i);
+  await expect(page.locator('#vis-tab-integrated')).toHaveText(/Visão integrada/i);
 
   const firstTitle = (await page.locator('.card .ct').first().textContent())?.trim();
   await page.locator('.card').first().click();
   await expect(page.locator('#view-module')).toHaveClass(/active/);
   await expect(page.locator('.mhead h2')).toContainText(firstTitle || '');
+});
+
+test('@smoke visão integrada abre e fecha pelo mesmo controle', async ({ page }) => {
+  await openModule(page, 0);
+  const tab = page.locator('#vis-tab-integrated');
+  const panel = page.locator('#md-integrated');
+  await expect(tab).toBeVisible();
+  await expect(tab).toHaveText(/^Visão integrada$/i);
+  await expect(tab).toHaveAttribute('aria-expanded', 'false');
+  await expect(panel).toBeHidden();
+
+  await tab.click();
+  await expect(panel).toBeVisible();
+  await expect(tab).toHaveText(/Fechar visão integrada/i);
+  await expect(tab).toHaveAttribute('aria-expanded', 'true');
+  const image = panel.locator('img');
+  await expect(image).toHaveAttribute('alt', /dois neurônios/i);
+  await expect.poll(async () => image.evaluate((img) => img.naturalWidth)).toBeGreaterThan(0);
+
+  await tab.click();
+  await expect(panel).toBeHidden();
+  await expect(page.locator('#md-anat')).toBeVisible();
+  await expect(tab).toHaveText(/^Visão integrada$/i);
+  await expect(tab).toHaveAttribute('aria-expanded', 'false');
+
+  await tab.click();
+  await page.locator('.integrated-imgbtn').click();
+  await expect(page.locator('#fig-zoom')).toBeVisible();
+  const zoomImage = page.locator('#zoom-inner img');
+  await expect.poll(async () => zoomImage.evaluate((img) => img.naturalWidth)).toBeGreaterThan(0);
+  await page.locator('#zoom-close').click();
+  await expect(page.locator('#fig-zoom')).toBeHidden();
+
+  await openModule(page, 1);
+  await expect(page.locator('#vis-tab-integrated')).toBeVisible();
 });
 
 test('@smoke os 16 módulos renderizam anatomia e mecanismo', async ({ page }, testInfo) => {
@@ -267,7 +303,14 @@ test('@smoke os 16 módulos renderizam anatomia e mecanismo', async ({ page }, t
     const mechanismSteps = await page.locator('#md-functional .func-step').count();
     expect(mechanismSteps, `Módulo ${index + 1} sem etapas no mecanismo`).toBeGreaterThan(0);
 
-    summary.push({ index: index + 1, moduleName, anatomyComponents, mechanismSteps });
+    const integratedTab = page.locator('#vis-tab-integrated');
+    await expect(integratedTab, `Módulo ${index + 1} sem visão integrada`).toBeVisible();
+    await integratedTab.click();
+    await expect(page.locator('#md-integrated')).toBeVisible();
+    const integratedImage = page.locator('#md-integrated img');
+    await expect.poll(async () => integratedImage.evaluate((img) => img.naturalWidth)).toBeGreaterThan(0);
+
+    summary.push({ index: index + 1, moduleName, anatomyComponents, mechanismSteps, integrated: true });
   }
   await attachJson(testInfo, 'modules-summary.json', summary);
 });
@@ -459,6 +502,15 @@ for (let moduleIndex = 0; moduleIndex < MODULE_COUNT; moduleIndex += 1) {
     await expect(page.locator('#md-functional')).toBeVisible();
     await page.screenshot({ ...SHOT, path: path.join(screenshotDir, `${safeName}-mecanismo.png`) });
     issues.push(...(await collectLayoutIssues(page, '#view-module')).map((issue) => ({ ...issue, mode: 'mecanismo' })));
+
+    const integratedTab = page.locator('#vis-tab-integrated');
+    if (await integratedTab.isVisible()) {
+      await integratedTab.click();
+      await expect(page.locator('#md-integrated')).toBeVisible();
+      await expect.poll(async () => page.locator('#md-integrated img').evaluate((img) => img.naturalWidth)).toBeGreaterThan(0);
+      await page.screenshot({ ...SHOT, path: path.join(screenshotDir, `${safeName}-integrada.png`) });
+      issues.push(...(await collectLayoutIssues(page, '#view-module')).map((issue) => ({ ...issue, mode: 'integrada' })));
+    }
 
     const vertical = await inspectVerticalMechanism(page);
     if (vertical.pageOverflow) issues.push({ type: 'page-overflow', ...vertical });

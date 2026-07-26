@@ -1,24 +1,33 @@
-# NeuroLab V2 — Fase 5
+# NeuroLab V2 — Fase 9
 
-Esta fase audita e amplia a integração **termo → mecanismo**.
+Aplicação educacional móvel de neurociência com 16 módulos, anatomia interativa, mecanismos causais, glossário contextual, metáforas didáticas e quizzes.
 
-## Principais mudanças
+## Novidade da Fase 9
 
-- mecanismo contextual por tópico, não apenas por módulo;
-- 57 termos essenciais adicionados ao glossário e tornados clicáveis;
-- 356 relações essenciais auditadas e explicitamente classificadas;
-- 78/78 componentes anatômicos preservados;
-- relações classificadas como direta, distribuída, contexto, processo paralelo ou contraste;
-- salto do modal para a cadeia causal do tópico com destaque das etapas;
-- correspondência exata para evitar associações por substring;
-- teste editorial por `CONTEXT_REQUIRED`.
+A **Visão integrada** agora está disponível nos **16 módulos**. Cada módulo recebeu um infográfico vertical próprio, uma miniatura otimizada, ampliação em tela cheia, explicações complementares em HTML e uma distinção conceitual específica.
 
-## Teste rápido
+O mesmo botão abre e fecha a visão, preservando a navegação livre entre Anatomia, Mecanismo e Visão integrada. Todos os 32 assets WebP — miniatura e versão ampliada de cada módulo — entram no cache offline do PWA.
 
-1. Abra o Módulo 02 e o tópico sobre Hebb.
-2. Toque em **potenciação de longo prazo** ou **NMDA**.
-3. Expanda “Ver onde entra no mecanismo”.
-4. Use “Ir ao tópico e destacar esta sequência”.
-5. No Módulo 14, toque em **epilepsia**: o app deve informar que a cadeia visível representa o ramo vascular do AVC, sem encaixar epilepsia falsamente nela.
+## Fases anteriores preservadas
 
-Consulte `docs/CONTEXT_AUDIT.md` para o relatório completo.
+- mecanismo contextual por tópico e por módulo;
+- glossário clicável e relações termo → mecanismo;
+- 78 componentes anatômicos interativos;
+- mini quizzes por tópico e avaliação integrada;
+- metáforas didáticas e modo profundo;
+- auditoria Playwright para múltiplos tamanhos de tela em retrato.
+
+## Executar a auditoria
+
+```bash
+npm ci
+npx playwright install chromium
+npm test
+```
+
+Consulte:
+
+- `docs/CHANGELOG_FASE8.md` — abertura e fechamento pelo mesmo controle;
+- `docs/CHANGELOG_FASE7.md` — integração visual detalhada;
+- `docs/CONTEXT_AUDIT.md` — auditoria termo → mecanismo;
+- `docs/context-coverage.csv` — cobertura contextual.
