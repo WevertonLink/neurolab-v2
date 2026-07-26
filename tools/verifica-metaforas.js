@@ -31,8 +31,17 @@ tem ter vai vao pode podem fica ficam faz fazem da-se pelo pela pelos pelas num 
 
 const norm = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const palavras = (s) => norm(s).replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w));
-// radical grosseiro: casa/casas, braco/bracos, comporta/comportas
-const raiz = (w) => w.replace(/(coes|cao|oes|ais|eis|ns|s)$/, '');
+/* Radical grosseiro, só para casar singular com plural: casa/casas,
+   comporta/comportas, estacao/estacoes. A primeira versão removia "cao" como
+   sufixo e transformava "estação" em "esta" e "investigação" em "investiga" —
+   ou seja, inventava radicais e comparava lixo com lixo. */
+const raiz = (w) => w
+  .replace(/coes$/, 'cao')
+  .replace(/oes$/, 'ao')
+  .replace(/(a|e|o)is$/, '$1l')
+  .replace(/ns$/, 'm')
+  .replace(/([^aeiou])s$/, '$1')
+  .replace(/([aeiou])s$/, '$1');
 const raizes = (s) => new Set(palavras(s).map(raiz));
 
 function nucleoDoTitulo(titulo) {
@@ -40,7 +49,12 @@ function nucleoDoTitulo(titulo) {
   return raiz(norm(t.split(/[\s,]+/)[0]).replace(/[^a-z0-9]/g, ''));
 }
 
+/* Sem argumento, lê o IMAGINE_DATA_V2 do index.html. Com um caminho de .json,
+   verifica uma proposta antes de ela virar código — que é onde a checagem
+   custa menos: reprovar no documento evita implementar e desimplementar. */
 function carregarDados() {
+  const alt = process.argv[2];
+  if (alt) return JSON.parse(fs.readFileSync(alt, 'utf8'));
   const src = fs.readFileSync(ARQUIVO, 'utf8');
   const m = src.match(/const IMAGINE_DATA_V2 = (\{.*?\});/s);
   if (!m) throw new Error('IMAGINE_DATA_V2 não encontrado em index.html');
@@ -53,7 +67,10 @@ function verificar(dados) {
   const nucleos = {};
 
   for (const [mod, d] of Object.entries(dados)) {
-    const cena = d.scene.join(' ');
+    /* A restrição faz parte da cena para efeito de vocabulário: é a regra do
+       sistema, e é dela que os contrafactuais têm de derivar. Registros
+       antigos não têm o campo; o `|| ''` mantém os dois formatos válidos. */
+    const cena = d.scene.join(' ') + ' ' + (d.restricao || '');
     const lexCena = raizes(d.scene_title + ' ' + cena);
     const lexMapa = raizes(d.mapping.map((r) => r[2]).join(' '));
     const nucleo = nucleoDoTitulo(d.scene_title);
@@ -63,6 +80,9 @@ function verificar(dados) {
        Se o título nomeia uma coisa e o corpo fala de outra, a metáfora
        está apontando para dois lugares. */
     if (!lexCena.has(nucleo)) add(mod, 'ERRO', 'nucleo-na-cena', `"${nucleo}" está no título mas não aparece na cena`);
+    /* Ausente do mapping é mais fraco que ausente da cena: a coluna traduz
+       termo técnico por termo da imagem e pode nomear a parte em vez do
+       todo ("cancela", não "rua"). Fica em AVISO, para leitura humana. */
     if (!lexMapa.has(nucleo)) add(mod, 'AVISO', 'nucleo-no-mapping', `"${nucleo}" não aparece em nenhuma linha do mapping`);
 
     /* 2 · o keep tem de falar a língua da cena, não resumir em termo
@@ -73,9 +93,9 @@ function verificar(dados) {
     if (compart.length === 0) {
       add(mod, 'ERRO', 'keep-abandona-a-cena', `o keep não reutiliza nada da cena: "${d.keep}"`);
     } else if (!raizes(d.keep).has(nucleo)) {
-      /* foi exatamente este o defeito da farmacologia: título dizia
-         "a fechadura que se acostuma" e o keep dizia que quem se
-         reajusta é a casa. */
+      /* Reutilizar a cena sem citar o núcleo ainda deixa o resumo torto: foi
+         este o defeito da farmacologia, com o título dizendo "a fechadura que
+         se acostuma" enquanto o keep dizia que quem se reajusta é a casa. */
       add(mod, 'AVISO', 'keep-perde-o-nucleo', `o keep não menciona "${nucleo}", que é o núcleo do título`);
     }
 
