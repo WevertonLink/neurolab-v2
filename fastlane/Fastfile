@@ -1,0 +1,64 @@
+# Publicação do NeuroLab na Google Play pela API, sem clicar no console.
+#
+# O que a API alcança: enviar o pacote para uma faixa, escrever os textos da
+# ficha e subir as imagens. O que ela não alcança: criar o app, responder o
+# formulário de segurança dos dados e o questionário de classificação. Isso não
+# é suposição — está registrado no diário do MindinLine, onde a automação do
+# data safety custou sete tentativas contra uma API mal documentada e terminou
+# semiautomática.
+
+default_platform(:android)
+
+platform :android do
+  desc "Envia o .aab para uma faixa, junto com textos e imagens da ficha"
+  lane :publicar do |options|
+    faixa = options[:track] || "internal"
+    pacote = options[:aab] || "../android/app-release-bundle.aab"
+
+    UI.user_error!("Pacote não encontrado: #{pacote}") unless File.exist?(pacote)
+
+    upload_to_play_store(
+      track: faixa,
+      aab: pacote,
+      # O app entra na faixa já ativo. Rascunho exigiria uma visita ao console
+      # para promover, que é justamente o que este lane existe para evitar.
+      release_status: "completed",
+      skip_upload_apk: true,
+      # As imagens são enviadas junto: elas mudam pouco, e mandar sempre evita
+      # a ficha divergir do que está versionado no repositório.
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      skip_upload_changelogs: false,
+      validate_only: options[:dry_run] == "true"
+    )
+  end
+
+  desc "Atualiza só os textos e imagens da ficha, sem enviar pacote"
+  lane :ficha do
+    upload_to_play_store(
+      skip_upload_aab: true,
+      skip_upload_apk: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      skip_upload_changelogs: true
+    )
+  end
+
+  desc "Descobre o maior versionCode ja publicado, para nao colidir"
+  lane :maior_version_code do
+    maior = 0
+    ["internal", "alpha", "beta", "production"].each do |faixa|
+      begin
+        codigos = google_play_track_version_codes(track: faixa)
+        codigos.each { |c| maior = [maior, c.to_i].max }
+      rescue => e
+        # Faixa sem nenhuma versao responde com erro; nao e problema.
+        UI.message("Faixa #{faixa}: #{e.message}")
+      end
+    end
+    UI.success("Maior versionCode na loja: #{maior}")
+    File.write("/tmp/maior_version_code.txt", maior.to_s)
+  end
+end

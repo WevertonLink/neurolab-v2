@@ -1,0 +1,3 @@
+Primeira versão pública.
+
+Os 16 módulos com anatomia interativa, mecanismos causais, visão integrada, glossário contextual e quizzes com revisão espaçada. Funciona offline por completo.
