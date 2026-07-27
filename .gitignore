@@ -8,3 +8,10 @@ audit-report/
 neurolab-audit-*.zip
 .backup/
 latest-audit-failed.log
+
+# Android TWA: só a configuração é versionada. Todo o resto de android/ é
+# gerado pelo Bubblewrap a cada build — e a chave de assinatura vive ali.
+# Commitar a chave por acidente entregaria a identidade do app na loja, então
+# a regra é negar tudo e liberar um arquivo só.
+android/*
+!android/twa-manifest.json

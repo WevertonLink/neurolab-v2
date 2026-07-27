@@ -1,0 +1,40 @@
+{
+  "packageId": "io.github.wevertonlink.neurolab",
+  "host": "wevertonlink.github.io",
+  "name": "NeuroLab V2",
+  "launcherName": "NeuroLab",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#08080D",
+  "themeColorDark": "#08080D",
+  "navigationColor": "#08080D",
+  "navigationColorDark": "#08080D",
+  "navigationDividerColor": "#08080D",
+  "navigationDividerColorDark": "#08080D",
+  "backgroundColor": "#08080D",
+  "enableNotifications": false,
+  "startUrl": "/neurolab-v2/",
+  "fullScopeUrl": "https://wevertonlink.github.io/neurolab-v2/",
+  "webManifestUrl": "https://wevertonlink.github.io/neurolab-v2/manifest.webmanifest",
+  "iconUrl": "https://wevertonlink.github.io/neurolab-v2/icons/icon-512.png",
+  "maskableIconUrl": "https://wevertonlink.github.io/neurolab-v2/icons/icon-maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "neurolab"
+  },
+  "appVersion": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "fallbackType": "customtabs",
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "additionalTrustedOrigins": [],
+  "retainedBundles": []
+}
