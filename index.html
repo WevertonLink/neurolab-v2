@@ -357,6 +357,16 @@ header.top{
    e o sinal visual sao os mesmos em todo o app. So o destino do clique muda,
    e isso e decidido em toggleGloss.
 
+   Menos o "?" sobrescrito: ele usa vertical-align:super, que engorda a linha,
+   e soma largura. Na primeira tentativa isso bastou para empurrar o botao de
+   continuar da revisao para fora da dobra em 360x620 — o teste de alcance
+   acusou "0px abaixo". No texto da aula o marcador ajuda a descobrir que o
+   termo e tocavel; num paragrafo curto de feedback o sublinhado ja diz isso,
+   e o custo de altura nao se paga. */
+.mq-feedback .gterm:after,
+#rv-fb .gterm:after,
+#qz-fb .gterm:after{content:none}
+
    A explicacao nasce embaixo e empurra o resto, em vez de cobrir. Modal
    sobre a questao 2 de 3 faz o aluno perder o lugar — e este app ja teve
    um painel abrindo atras de outro por disputa de sobreposicao. */
