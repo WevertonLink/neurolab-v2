@@ -353,6 +353,24 @@ header.top{
 .mq-feedback:empty{display:none}
 .mq-feedback{margin-top:12px;border-top:1px solid var(--line-soft);padding-top:11px;color:var(--ink-2);font-size:13px;line-height:1.55}
 .mq-feedback p{margin:6px 0 0}
+/* Termo do glossario ligado dentro do feedback do quiz.
+   Sublinhado pontilhado em vez de cor forte: o feedback ja usa cor para
+   dizer certo ou errado, e um segundo sinal colorido competiria com o que
+   o aluno precisa ler primeiro. */
+.fbterm{background:none;border:none;padding:0;font:inherit;color:var(--mc);
+  border-bottom:1px dotted currentColor;cursor:pointer;line-height:inherit}
+.fbterm:hover{color:var(--ink)}
+.fbterm[aria-expanded="true"]{color:var(--ink);border-bottom-style:solid}
+/* A explicacao nasce embaixo e empurra o resto, em vez de cobrir. Modal
+   sobre a questao 2 de 3 faz o aluno perder o lugar — e este app ja teve
+   um painel abrindo atras de outro por disputa de sobreposicao. */
+.fbterm-exp{margin:9px 0 2px;padding:10px 12px;border-radius:9px;
+  border:1px solid var(--line);border-left:2px solid var(--mc);
+  background:var(--panel);font-size:12.5px;line-height:1.6;color:var(--ink-2)}
+.fbterm-exp b{color:var(--ink);font-weight:600;display:block;margin-bottom:3px}
+.fbterm-exp .fbterm-more{background:none;border:none;padding:6px 0 0;font:inherit;
+  font-size:11.5px;color:var(--ink-3);cursor:pointer;text-decoration:underline}
+.fbterm-exp .fbterm-more:hover{color:var(--ink-2)}
 .mq-verd{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px}
 
 /* ---------- dashboard stats strip ---------- */
@@ -3095,6 +3113,7 @@ function answerReview(k){
   const fb = document.getElementById('rv-fb');
   fb.innerHTML = `<div class="mq-verd" style="color:${right?'var(--good)':'var(--bad)'}">${right?'✓ Lembrou':'✕ Escapou'}${right?' · +'+XP.review+' XP':''}</div><p>${right?q.er:q.ew}</p>
     <div class="fbnav"><button class="bigbtn" onclick="nextReview()">${!last?'Próxima':(lastTopic?'Concluir revisão':'Próximo tópico')}</button></div>`;
+  if(typeof linkGlossaryTerms === 'function') linkGlossaryTerms(fb);
   if(right) awardXP(XP.review, {currentTarget:fb}); else saveState();
   revealAfterAnswer('rv-fb');
 }
@@ -8350,6 +8369,105 @@ function renderMiniQuestion(){
       <div class="mq-feedback" id="mq-fb-${miniQuiz.lesson}" aria-live="polite"></div>
     </div>`;
 }
+/* =====================================================================
+   TERMOS CLICÁVEIS NO FEEDBACK DO QUIZ
+
+   Os termos já são clicáveis no texto da aula. Quem aprendeu esse gesto
+   tentava usá-lo no feedback do quiz e não acontecia nada — não era falta
+   de recurso, era promessa quebrada pela própria interface.
+
+   Só depois de responder. Antes da resposta isso trocaria recordação por
+   consulta, e o valor do quiz vem do esforço de lembrar.
+   ===================================================================== */
+
+/* Trabalha sobre nós de texto já no DOM, não sobre a string de HTML. O
+   feedback traz <strong> dentro, e expressão regular em cima de marcação
+   cedo ou tarde quebra um atributo. Andando pelos nós de texto, o que é
+   marcação nunca é visitado. */
+const FBTERM_LETRA = /[0-9A-Za-zÀ-ÖØ-öø-ÿ]/;
+
+function linkGlossaryTerms(root){
+  if(!root || typeof GLOSSARY !== 'object') return;
+  /* Mais longos primeiro: "memória de trabalho" tem de ganhar de "memória",
+     senão o termo curto consome o começo do longo e sobra um caco. */
+  const termos = Object.keys(GLOSSARY).sort((a,b)=>b.length-a.length);
+  const usados = new Set();
+  for(const termo of termos){
+    if(usados.has(termo)) continue;
+    /* Um nó por vez, sempre relendo: cada ligação parte o nó em três e
+       invalida a lista anterior. */
+    const nos = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(n){
+        if(!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        /* Não liga dentro do que já é botão, link ou termo ligado. */
+        for(let p=n.parentNode; p && p!==root; p=p.parentNode){
+          const t=(p.tagName||'').toLowerCase();
+          if(t==='button' || t==='a' || (p.classList && p.classList.contains('fbterm-exp'))) return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    let n; while((n = walker.nextNode())) nos.push(n);
+
+    for(const no of nos){
+      const texto = no.nodeValue;
+      const i = texto.toLowerCase().indexOf(termo.toLowerCase());
+      if(i < 0) continue;
+      /* Fronteira de palavra feita à mão: o \b do JS trata letra acentuada
+         como não-palavra, então "córtex" casaria no meio de outra coisa. */
+      const antes = i > 0 ? texto[i-1] : '';
+      const depois = i+termo.length < texto.length ? texto[i+termo.length] : '';
+      if((antes && FBTERM_LETRA.test(antes)) || (depois && FBTERM_LETRA.test(depois))) continue;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'fbterm';
+      btn.setAttribute('aria-expanded','false');
+      btn.textContent = texto.slice(i, i+termo.length);
+      btn.onclick = function(){ toggleFbTerm(this, termo); };
+
+      const fim = no.splitText(i);
+      fim.nodeValue = fim.nodeValue.slice(termo.length);
+      no.parentNode.insertBefore(btn, fim);
+      usados.add(termo);
+      break; /* uma ocorrência por termo; ligar todas vira campo minado */
+    }
+  }
+}
+
+function toggleFbTerm(btn, termo){
+  const aberto = btn.getAttribute('aria-expanded') === 'true';
+  const bloco = btn.parentNode.querySelector('.fbterm-exp[data-t="'+termo+'"]');
+  if(aberto){
+    btn.setAttribute('aria-expanded','false');
+    if(bloco) bloco.remove();
+    return;
+  }
+  /* Um aberto por vez dentro do mesmo feedback: dois ou três empilhados
+     afastam o botão de continuar da mão do aluno. */
+  const host = btn.closest('.mq-feedback, #rv-fb') || btn.parentNode;
+  host.querySelectorAll('.fbterm[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'));
+  host.querySelectorAll('.fbterm-exp').forEach(e=>e.remove());
+
+  const def = GLOSSARY[termo];
+  if(!def) return;
+  const exp = document.createElement('div');
+  exp.className = 'fbterm-exp';
+  exp.setAttribute('data-t', termo);
+  exp.innerHTML = '<b>'+escHtml(termo)+'</b>' + escHtml(def);
+  if(typeof openTermModal === 'function'){
+    const mais = document.createElement('button');
+    mais.type = 'button';
+    mais.className = 'fbterm-more';
+    mais.textContent = 'Ver onde este termo entra no mecanismo';
+    mais.onclick = ()=>openTermModal(termo, null);
+    exp.appendChild(mais);
+  }
+  btn.setAttribute('aria-expanded','true');
+  btn.parentNode.insertBefore(exp, btn.nextSibling);
+}
+
 function answerMini(k){
   if(miniQuiz.answered) return;
   miniQuiz.answered=true;
@@ -8381,6 +8499,7 @@ function answerMini(k){
     ${deepOn()
       ? selfRateHTML('mq'+miniQuiz.lesson, 'M:'+mk+':'+miniQuiz.i, 'nextMini', nlabel)
       : `<div class="fbnav"><button class="bigbtn" onclick="nextMini()">${nlabel}</button></div>`}`;
+  linkGlossaryTerms(fb);
   if(gained>0) awardXP(gained,{currentTarget:fb}); else saveState();
   revealAfterAnswer('mq-fb-'+miniQuiz.lesson);
 }

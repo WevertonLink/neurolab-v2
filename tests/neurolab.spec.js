@@ -925,3 +925,58 @@ for (const viewport of REVIEW_VIEWPORTS) {
     ).toBe(true);
   });
 }
+
+// Os termos já eram clicáveis no texto da aula, e não no feedback do quiz — quem
+// aprendia o gesto tentava usá-lo depois de responder e não acontecia nada.
+// O teste guarda as duas decisões de desenho: a explicação nasce embutida, e o
+// modal do termo NÃO abre por cima da questão. Foi assim que a busca quebrou uma
+// vez, com um painel abrindo atrás do outro por disputa de sobreposição.
+test('@smoke o termo no feedback do quiz abre explicação embutida, não modal', async ({ page }) => {
+  await openModule(page, 0);
+
+  // Nem todo feedback menciona termo do glossário — a maioria não menciona —
+  // então fixar uma questão específica deixaria o teste refém de edição de texto.
+  // Procura a primeira que ligue algum.
+  let host = null;
+  for (let li = 0; li < 3 && !host; li++) {
+    const existe = await page.evaluate((i) => {
+      if (typeof startMiniQuiz !== 'function') return false;
+      if (!document.getElementById('mini-' + i)) return false;
+      startMiniQuiz(i);
+      return true;
+    }, li);
+    if (!existe) continue;
+
+    const box = page.locator(`#mini-${li}`);
+    for (let n = 0; n < 4; n++) {
+      await page.evaluate((i) => {
+        const b = document.querySelector(`#mini-${i} .mq-options button`);
+        if (b) b.click();
+      }, li);
+      if (await box.locator('.mq-feedback .fbterm').count() > 0) { host = box; break; }
+      const avancou = await page.evaluate((i) => {
+        const b = document.querySelector(`#mini-${i} .mq-feedback .fbnav .bigbtn`);
+        if (!b) return false;
+        b.click();
+        return true;
+      }, li);
+      if (!avancou) break;
+    }
+  }
+
+  expect(host, 'nenhum feedback do módulo 01 ligou termo do glossário').not.toBeNull();
+
+  const termo = host.locator('.mq-feedback .fbterm').first();
+  await expect(termo).toHaveAttribute('aria-expanded', 'false');
+  await expect(host.locator('.fbterm-exp')).toHaveCount(0);
+
+  await termo.click();
+  await expect(host.locator('.fbterm-exp')).toHaveCount(1);
+  await expect(termo).toHaveAttribute('aria-expanded', 'true');
+  await expect(host.locator('.fbterm-exp')).toContainText(/\S/);
+  await expect(page.locator('#term-modal')).toBeHidden();
+
+  await termo.click();
+  await expect(host.locator('.fbterm-exp')).toHaveCount(0);
+  await expect(termo).toHaveAttribute('aria-expanded', 'false');
+});
