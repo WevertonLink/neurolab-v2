@@ -123,7 +123,20 @@ jobs:
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: yes | bubblewrap build --manifest=./twa-manifest.json
+          VERSION_NAME: ${{ inputs.version_name }}
+        run: |
+          # --skipVersionUpgrade e obrigatorio aqui: sem ele o bubblewrap soma
+          # 1 ao codigo e pergunta um nome de versao novo, e a resposta as
+          # cegas produz um app chamado "y". O codigo desta execucao ja foi
+          # resolvido consultando a loja; nao pode ser mexido depois.
+          bubblewrap update --skipVersionUpgrade --manifest=./twa-manifest.json
+          bubblewrap build --manifest=./twa-manifest.json
+          SAIU=$(node -e 'const m=require("./twa-manifest.json");console.log(m.appVersion,m.appVersionCode)')
+          echo "esperado: $VERSION_NAME $VERSION_CODE | saiu: $SAIU"
+          [ "$SAIU" = "$VERSION_NAME $VERSION_CODE" ] || {
+            echo "::error::A versão construída não é a pedida — não envie."
+            exit 1
+          }
 
       - name: Envia para a Play
         run: |

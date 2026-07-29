@@ -92,20 +92,40 @@ jobs:
             echo "assinado=nao" >> "$GITHUB_OUTPUT"
           fi
 
-      # `bubblewrap build` pergunta antes de regenerar o projeto quando não
-      # encontra manifest-checksum.txt, que é sempre o caso num runner limpo.
-      # O `yes` responde por nós; sem ele o passo trava esperando um enter.
+      # `update` primeiro, por dois motivos. Ele gera o manifest-checksum.txt,
+      # e sem esse arquivo o `build` abre uma pergunta interativa. E o
+      # --skipVersionUpgrade desarma o incremento automático: sem ele o
+      # bubblewrap soma 1 ao appVersionCode e, quando o appVersionName não é
+      # igual ao código anterior, para e pergunta um nome novo.
+      #
+      # A primeira versão deste workflow respondia essas perguntas com `yes |`.
+      # O resultado foi um app publicável chamado versão "y", código 2, em vez
+      # de 1.0.0 código 1 — e nada falhou para avisar. Responder no escuro é
+      # pior que travar: agora, pergunta inesperada quebra o build.
       - name: Build
         working-directory: android
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          bubblewrap update --skipVersionUpgrade --manifest=./twa-manifest.json
           if [ "${{ steps.keystore.outputs.assinado }}" = "sim" ]; then
-            yes | bubblewrap build --manifest=./twa-manifest.json
+            bubblewrap build --manifest=./twa-manifest.json
           else
-            yes | bubblewrap build --manifest=./twa-manifest.json --skipSigning
+            bubblewrap build --manifest=./twa-manifest.json --skipSigning
           fi
+
+      - name: Confere a versão que saiu
+        working-directory: android
+        run: |
+          ESPERADO_NOME="${{ inputs.version_name }}"
+          ESPERADO_CODIGO="${{ inputs.version_code }}"
+          SAIU=$(node -e 'const m=require("./twa-manifest.json");console.log(m.appVersion,m.appVersionCode)')
+          echo "esperado: $ESPERADO_NOME $ESPERADO_CODIGO | saiu: $SAIU"
+          [ "$SAIU" = "$ESPERADO_NOME $ESPERADO_CODIGO" ] || {
+            echo "::error::A versão construída não é a pedida."
+            exit 1
+          }
 
       - name: Mostra o que saiu
         working-directory: android
