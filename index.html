@@ -353,15 +353,11 @@ header.top{
 .mq-feedback:empty{display:none}
 .mq-feedback{margin-top:12px;border-top:1px solid var(--line-soft);padding-top:11px;color:var(--ink-2);font-size:13px;line-height:1.55}
 .mq-feedback p{margin:6px 0 0}
-/* Termo do glossario ligado dentro do feedback do quiz.
-   Sublinhado pontilhado em vez de cor forte: o feedback ja usa cor para
-   dizer certo ou errado, e um segundo sinal colorido competiria com o que
-   o aluno precisa ler primeiro. */
-.fbterm{background:none;border:none;padding:0;font:inherit;color:var(--mc);
-  border-bottom:1px dotted currentColor;cursor:pointer;line-height:inherit}
-.fbterm:hover{color:var(--ink)}
-.fbterm[aria-expanded="true"]{color:var(--ink);border-bottom-style:solid}
-/* A explicacao nasce embaixo e empurra o resto, em vez de cobrir. Modal
+/* O termo dentro do feedback usa .gterm, o mesmo do texto da aula — o gesto
+   e o sinal visual sao os mesmos em todo o app. So o destino do clique muda,
+   e isso e decidido em toggleGloss.
+
+   A explicacao nasce embaixo e empurra o resto, em vez de cobrir. Modal
    sobre a questao 2 de 3 faz o aluno perder o lugar — e este app ja teve
    um painel abrindo atras de outro por disputa de sobreposicao. */
 .fbterm-exp{margin:9px 0 2px;padding:10px 12px;border-radius:9px;
@@ -3113,7 +3109,7 @@ function answerReview(k){
   const fb = document.getElementById('rv-fb');
   fb.innerHTML = `<div class="mq-verd" style="color:${right?'var(--good)':'var(--bad)'}">${right?'✓ Lembrou':'✕ Escapou'}${right?' · +'+XP.review+' XP':''}</div><p>${right?q.er:q.ew}</p>
     <div class="fbnav"><button class="bigbtn" onclick="nextReview()">${!last?'Próxima':(lastTopic?'Concluir revisão':'Próximo tópico')}</button></div>`;
-  if(typeof linkGlossaryTerms === 'function') linkGlossaryTerms(fb);
+  glossifyFeedback(fb);
   if(right) awardXP(XP.review, {currentTarget:fb}); else saveState();
   revealAfterAnswer('rv-fb');
 }
@@ -6620,7 +6616,12 @@ function glossify(root){
    ===================================================================== */
 let tmOpener = null;
 
-function toggleGloss(btn, key){   // agora abre a janela flutuante
+function toggleGloss(btn, key){
+  /* Mesmo botão, dois destinos, decididos pelo lugar. No texto da aula a
+     janela flutuante está certa: o aluno está lendo, não respondendo. No
+     feedback de um quiz ele está no meio de uma sequência de questões, e
+     cobrir a tela ali custa o lugar dele. */
+  if(btn && btn.closest && btn.closest(FB_HOSTS)) return expandirTermoInline(btn, key);
   openTermModal(key, btn);
 }
 
@@ -8304,7 +8305,9 @@ function openModule(i){
           <span class="readtag">${read?'✓ estudada':'Teste rápido ou marque quando terminar'}</span>
           <div class="mini-actions">
             <button class="readbtn" ${read?'disabled':''} onclick="markRead(${idx},event)">${read?'Concluída':'Marcar como estudada'}</button>
-            <button class="readbtn alt" onclick="startMiniQuiz(${idx})">Mini quiz</button>
+            ${(MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][idx] && MINI_QUIZZES[m.id][idx].length)
+              ? `<button class="readbtn alt" onclick="startMiniQuiz(${idx})">Mini quiz</button>`
+              : ''}
           </div>
         </div>
         <div id="mini-${idx}"></div>
@@ -8378,65 +8381,33 @@ function renderMiniQuestion(){
 
    Só depois de responder. Antes da resposta isso trocaria recordação por
    consulta, e o valor do quiz vem do esforço de lembrar.
+
+   A marcação é a mesma do texto da aula: glossify(). A primeira versão
+   disto tinha um localizador próprio, que redescobria — pior — o que
+   glossify já fazia: travessia por nós de texto, fronteira de palavra que
+   entende acento, uma ocorrência por termo. Aquele laço percorria os 110
+   termos por nó; glossify usa uma regex única montada em buildGloss.
+
+   O que muda aqui é só o destino do clique, tratado em toggleGloss.
    ===================================================================== */
 
-/* Trabalha sobre nós de texto já no DOM, não sobre a string de HTML. O
-   feedback traz <strong> dentro, e expressão regular em cima de marcação
-   cedo ou tarde quebra um atributo. Andando pelos nós de texto, o que é
-   marcação nunca é visitado. */
-const FBTERM_LETRA = /[0-9A-Za-zÀ-ÖØ-öø-ÿ]/;
-
-function linkGlossaryTerms(root){
-  if(!root || typeof GLOSSARY !== 'object') return;
-  /* Mais longos primeiro: "memória de trabalho" tem de ganhar de "memória",
-     senão o termo curto consome o começo do longo e sobra um caco. */
-  const termos = Object.keys(GLOSSARY).sort((a,b)=>b.length-a.length);
-  const usados = new Set();
-  for(const termo of termos){
-    if(usados.has(termo)) continue;
-    /* Um nó por vez, sempre relendo: cada ligação parte o nó em três e
-       invalida a lista anterior. */
-    const nos = [];
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-      acceptNode(n){
-        if(!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-        /* Não liga dentro do que já é botão, link ou termo ligado. */
-        for(let p=n.parentNode; p && p!==root; p=p.parentNode){
-          const t=(p.tagName||'').toLowerCase();
-          if(t==='button' || t==='a' || (p.classList && p.classList.contains('fbterm-exp'))) return NodeFilter.FILTER_REJECT;
-        }
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    });
-    let n; while((n = walker.nextNode())) nos.push(n);
-
-    for(const no of nos){
-      const texto = no.nodeValue;
-      const i = texto.toLowerCase().indexOf(termo.toLowerCase());
-      if(i < 0) continue;
-      /* Fronteira de palavra feita à mão: o \b do JS trata letra acentuada
-         como não-palavra, então "córtex" casaria no meio de outra coisa. */
-      const antes = i > 0 ? texto[i-1] : '';
-      const depois = i+termo.length < texto.length ? texto[i+termo.length] : '';
-      if((antes && FBTERM_LETRA.test(antes)) || (depois && FBTERM_LETRA.test(depois))) continue;
-
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'fbterm';
-      btn.setAttribute('aria-expanded','false');
-      btn.textContent = texto.slice(i, i+termo.length);
-      btn.onclick = function(){ toggleFbTerm(this, termo); };
-
-      const fim = no.splitText(i);
-      fim.nodeValue = fim.nodeValue.slice(termo.length);
-      no.parentNode.insertBefore(btn, fim);
-      usados.add(termo);
-      break; /* uma ocorrência por termo; ligar todas vira campo minado */
-    }
-  }
+/* glossify desiste se já marcou o elemento antes, e os containers de
+   feedback são reaproveitados a cada questão: innerHTML troca os filhos e
+   deixa o data-glossed para trás. Sem limpar, só a primeira questão de
+   cada sessão ganharia termos clicáveis. */
+function glossifyFeedback(el){
+  if(!el || typeof glossify !== 'function') return;
+  el.removeAttribute('data-glossed');
+  glossify(el);
 }
+/* Dentro do feedback de quiz a explicação nasce embutida e empurra o resto,
+   em vez de cobrir. Modal sobre a questão 2 de 3 faz o aluno perder o lugar
+   — e este app já teve painel abrindo atrás de painel por disputa de
+   sobreposição. Quem quiser a janela cheia tem o botão no fim do bloco:
+   aí a troca de tela é escolha, não acidente. */
+const FB_HOSTS = '.mq-feedback, #rv-fb, #qz-fb';
 
-function toggleFbTerm(btn, termo){
+function expandirTermoInline(btn, termo){
   const aberto = btn.getAttribute('aria-expanded') === 'true';
   const bloco = btn.parentNode.querySelector('.fbterm-exp[data-t="'+termo+'"]');
   if(aberto){
@@ -8446,8 +8417,8 @@ function toggleFbTerm(btn, termo){
   }
   /* Um aberto por vez dentro do mesmo feedback: dois ou três empilhados
      afastam o botão de continuar da mão do aluno. */
-  const host = btn.closest('.mq-feedback, #rv-fb') || btn.parentNode;
-  host.querySelectorAll('.fbterm[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'));
+  const host = btn.closest(FB_HOSTS) || btn.parentNode;
+  host.querySelectorAll('.gterm[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'));
   host.querySelectorAll('.fbterm-exp').forEach(e=>e.remove());
 
   const def = GLOSSARY[termo];
@@ -8499,7 +8470,7 @@ function answerMini(k){
     ${deepOn()
       ? selfRateHTML('mq'+miniQuiz.lesson, 'M:'+mk+':'+miniQuiz.i, 'nextMini', nlabel)
       : `<div class="fbnav"><button class="bigbtn" onclick="nextMini()">${nlabel}</button></div>`}`;
-  linkGlossaryTerms(fb);
+  glossifyFeedback(fb);
   if(gained>0) awardXP(gained,{currentTarget:fb}); else saveState();
   revealAfterAnswer('mq-fb-'+miniQuiz.lesson);
 }
@@ -8619,6 +8590,7 @@ function answer(k){
     ${deepOn()
       ? selfRateHTML('qz','Q:'+m.id+':'+quiz.i,'nextQ', quiz.i+1<m.quiz.length?'Próxima questão':'Ver resultado')
       : `<div class="fbnav"><button class="bigbtn" onclick="nextQ()">${quiz.i+1<m.quiz.length?'Próxima questão':'Ver resultado'}</button></div>`}`;
+  glossifyFeedback(fb);
   if(gained>0){
     const btn=document.querySelector('#qz-fb .xppill');
     awardXP(gained,{currentTarget:btn});
