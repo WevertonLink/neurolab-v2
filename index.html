@@ -353,21 +353,15 @@ header.top{
 .mq-feedback:empty{display:none}
 .mq-feedback{margin-top:12px;border-top:1px solid var(--line-soft);padding-top:11px;color:var(--ink-2);font-size:13px;line-height:1.55}
 .mq-feedback p{margin:6px 0 0}
-/* O termo dentro do feedback usa .gterm, o mesmo do texto da aula — o gesto
-   e o sinal visual sao os mesmos em todo o app. So o destino do clique muda,
-   e isso e decidido em toggleGloss.
-
-   Menos o "?" sobrescrito: ele usa vertical-align:super, que engorda a linha,
-   e soma largura. Na primeira tentativa isso bastou para empurrar o botao de
-   continuar da revisao para fora da dobra em 360x620 — o teste de alcance
-   acusou "0px abaixo". No texto da aula o marcador ajuda a descobrir que o
-   termo e tocavel; num paragrafo curto de feedback o sublinhado ja diz isso,
-   e o custo de altura nao se paga. */
-.mq-feedback .gterm:after,
-#rv-fb .gterm:after,
-#qz-fb .gterm:after{content:none}
-
-   A explicacao nasce embaixo e empurra o resto, em vez de cobrir. Modal
+/* Termo do glossario ligado dentro do feedback do quiz.
+   Sublinhado pontilhado em vez de cor forte: o feedback ja usa cor para
+   dizer certo ou errado, e um segundo sinal colorido competiria com o que
+   o aluno precisa ler primeiro. */
+.fbterm{background:none;border:none;padding:0;font:inherit;color:var(--mc);
+  border-bottom:1px dotted currentColor;cursor:pointer;line-height:inherit}
+.fbterm:hover{color:var(--ink)}
+.fbterm[aria-expanded="true"]{color:var(--ink);border-bottom-style:solid}
+/* A explicacao nasce embaixo e empurra o resto, em vez de cobrir. Modal
    sobre a questao 2 de 3 faz o aluno perder o lugar — e este app ja teve
    um painel abrindo atras de outro por disputa de sobreposicao. */
 .fbterm-exp{margin:9px 0 2px;padding:10px 12px;border-radius:9px;
@@ -2154,14 +2148,14 @@ const MODULES = [
        o:['Gerando um potencial de ação de maior amplitude','Aumentando a frequência dos disparos','Tornando o sinal mais lento','Ativando a mielina'], c:1,
        er:'Exato. A amplitude é sempre a mesma; o que muda é a <strong>frequência</strong>. Estímulo mais forte = disparos mais rápidos e frequentes, não um sinal "maior".',
        ew:'A amplitude não muda — é sempre a mesma, por isso "tudo-ou-nada". A intensidade é codificada pela <strong>frequência dos disparos</strong>: quanto mais forte o estímulo, mais rápido o neurônio dispara.'},
-      {lvl:2,q:'O potencial de ação é sempre do mesmo tamanho. Então como um estímulo mais forte chega mais forte ao neurônio seguinte?',
-       o:['O potencial de ação fica maior e libera mais neurotransmissor','O neurônio dispara com mais frequência, e cada chegada libera vesículas','O limiar baixa permanentemente para aquela entrada','A mielina fica mais espessa e acelera o sinal'], c:1,
-       er:'Isso. A intensidade é codificada em <strong>frequência, não em amplitude</strong>: o disparo é tudo-ou-nada, mas disparos mais seguidos chegam mais seguidos ao terminal, e cada chegada libera vesículas na fenda.',
-       ew:'O potencial de ação não cresce — ele é <strong>tudo-ou-nada</strong>. O que muda é a <strong>frequência</strong>: mais disparos por segundo significam mais liberação de neurotransmissor no terminal.'},
-      {lvl:2,q:'Glutamato age numa sinapse específica; dopamina muda o funcionamento de circuitos inteiros. O que explica essa diferença de alcance?',
-       o:['A dopamina é uma molécula muito menor e se espalha mais rápido','O glutamato atua ponto a ponto na fenda; o neuromodulador é liberado de forma difusa e ajusta como muitas sinapses respondem','A dopamina não usa receptores, age direto na membrana','O glutamato só existe no córtex e a dopamina no cérebro inteiro'], c:1,
-       er:'Exato. Transmissão rápida é <strong>endereçada</strong>: uma célula fala com a seguinte pela fenda. Neuromodulação é <strong>ambiental</strong> — muda o ganho de muitas sinapses ao mesmo tempo, sem carregar a mensagem em si.',
-       ew:'A diferença não é de tamanho nem de região. É de <strong>modo de entrega</strong>: o glutamato atravessa uma fenda específica; o neuromodulador é despejado de forma difusa e altera como muitas sinapses respondem, sem ser o conteúdo da mensagem.'}
+      {q:'Qual é a diferença funcional entre glutamato e GABA?',
+       o:['Glutamato inibe, GABA excita','Ambos excitam, mas em regiões diferentes','Glutamato excita, GABA inibe','Nenhum afeta o disparo, só o humor'], c:2,
+       er:'Correto. <strong>Glutamato</strong> é o principal excitatório (aproxima do limiar) e <strong>GABA</strong> o principal inibitório (afasta dele). O equilíbrio entre os dois define se a célula dispara.',
+       ew:'É o contrário do que a alternativa diz. <strong>Glutamato excita</strong> (empurra a célula em direção ao disparo) e <strong>GABA inibe</strong> (segura o disparo). Esse equilíbrio é a base do controle cerebral.'},
+      {q:'Por que um único neuromodulador, como a dopamina, consegue afetar algo tão amplo quanto motivação e humor?',
+       o:['Porque viaja bem mais rápido pelo axônio do que os demais sinais químicos','Porque modula circuitos inteiros de uma vez, não uma só sinapse','Porque é liberada em quantidade muito maior que o glutamato na fenda','Porque age diretamente no DNA de cada neurônio que ela alcança'], c:1,
+       er:'Isso mesmo. Neuromoduladores ajustam o <strong>modo de operação de regiões inteiras</strong> — não entregam uma mensagem pontual. Daí o efeito amplo sobre estados mentais.',
+       ew:'A razão é o alcance: neuromoduladores <strong>ajustam circuitos inteiros</strong> ao mesmo tempo, em vez de transmitir uma mensagem ponto-a-ponto. Por isso um só ajuste químico muda humor, foco e motivação juntos.'}
     ]
   },
   {
@@ -2179,22 +2173,22 @@ const MODULES = [
        b:`<p>Uma memória recém-formada é frágil. O <span class="term">hipocampo</span> a codifica primeiro e, ao longo de dias e semanas, ela é gradualmente transferida e estabilizada no córtex — processo chamado <span class="term">consolidação sistêmica</span>.</p><p>Daí uma consequência prática enorme: <strong>repetição espaçada supera repetição massificada</strong>. Estudar em blocos separados no tempo dá ao cérebro as janelas necessárias para consolidar e reforçar cada traço, em vez de sobrecarregar tudo de uma vez. Revisar amanhã e depois vale mais que reler dez vezes hoje. E o sono, que veremos no último módulo, é peça central desse processo.</p>`}
     ],
     quiz:[
-      {lvl:2,q:'Se conexões se fortalecem quando os neurônios disparam juntos, por que repetir a mesma coisa dez vezes seguidas rende menos que repetir em dias diferentes?',
-       o:['A repetição seguida não chega a ativar a via nenhuma vez','Disparar junto inicia a mudança, mas estabilizá-la exige tempo e síntese de proteína, que a repetição colada não dá','O espaçamento aumenta o número de neurônios recrutados','A regra de Hebb só vale para memórias motoras'], c:1,
-       er:'Isso liga as duas pontas. Hebb explica <strong>o que inicia</strong> o fortalecimento; a consolidação explica <strong>o que o torna duradouro</strong>. Repetir colado dispara junto muitas vezes, mas não dá o intervalo que a estabilização estrutural exige.',
-       ew:'A ativação acontece nas duas formas — o problema não é iniciar. É que a <strong>estabilização</strong> depende de tempo e de síntese proteica entre as sessões, e a repetição colada não abre esse intervalo.'},
-      {lvl:2,q:'Uma pessoa estuda a noite inteira e lembra bem na manhã seguinte, mas quase nada uma semana depois. O que aconteceu, no modelo de Kandel?',
-       o:['A informação nunca chegou ao hipocampo','Houve mudança de curto prazo, que altera sinapses existentes, sem a síntese de proteína que constrói conexões novas','O cortisol da noite mal dormida apagou a memória','A memória foi para o cerebelo em vez do córtex'], c:1,
-       er:'Exato. Curto prazo <strong>modifica o que já existe</strong>; longo prazo <strong>constrói</strong>, e construir exige CREB, expressão gênica e proteínas novas — processos que pedem tempo e repetição espaçada.',
-       ew:'A informação foi codificada, tanto que ela lembrava na manhã seguinte. O que faltou foi a passagem para o longo prazo: <strong>síntese de proteína e conexões novas</strong>, e não apenas o ajuste temporário de sinapses existentes.'},
-      {lvl:2,q:'Plasticidade costuma ser apresentada como algo bom. Em que situação ela trabalha contra a pessoa?',
-       o:['Ela nunca trabalha contra — só fortalece o que é útil','Quando o que se repete é um padrão indesejado: o mesmo mecanismo que fixa o aprendizado também fixa o hábito ruim','Apenas em cérebros adultos, que perderam a capacidade de mudar','Quando há sono demais, que desfaz as conexões formadas'], c:1,
-       er:'Isso. A plasticidade é <strong>indiferente ao conteúdo</strong>: ela registra o que é repetido, não o que é conveniente. Ruminação, evitação e hábito prejudicial usam a mesma maquinaria que a habilidade treinada.',
-       ew:'A plasticidade não escolhe o que vale a pena. Ela fortalece <strong>o que é repetido</strong> — e isso inclui padrões que a pessoa gostaria de não ter. É por isso que mudar hábito é difícil: o circuito está bem construído.'},
-      {lvl:2,q:'Duas sinapses do mesmo neurônio são ativadas com a mesma frequência, mas só uma se fortalece de forma duradoura. O que mais provavelmente as separou?',
-       o:['A que se fortaleceu recebeu ativação coincidente com despolarização suficiente para disparar a cascata de Ca²⁺','A que se fortaleceu ficava mais perto do soma','A outra sinapse usava GABA em vez de glutamato','O acaso: a plasticidade é aleatória entre sinapses vizinhas'], c:0,
-       er:'Isso. Não basta atividade: é preciso <strong>coincidência</strong> — glutamato chegando enquanto a membrana já está despolarizada. É o que libera o bloqueio do NMDA e deixa o Ca²⁺ entrar para iniciar a cascata.',
-       ew:'Frequência igual não garante fortalecimento igual. O que decide é a <strong>coincidência</strong> entre a chegada do glutamato e a despolarização da membrana — a condição que permite a entrada de Ca²⁺ e dispara a cascata.'}
+      {q:'O que a regra de Hebb descreve?',
+       o:['Que o cérebro para de mudar depois do fim da infância','Que neurônios que disparam juntos fortalecem sua conexão','Que cada memória fica guardada em uma única célula do cérebro','Que a inibição é sempre mais forte do que a excitação'], c:1,
+       er:'Isso. "Disparam juntos, conectam-se juntos" — a atividade coincidente e repetida <strong>fortalece a sinapse</strong>. É o princípio celular do aprendizado.',
+       ew:'A regra de Hebb diz que <strong>neurônios que disparam juntos se conectam mais fortemente</strong>. Não fala de célula única nem de fim da plasticidade — é sobre como a conexão entre células se fortalece com o uso.'},
+      {q:'No modelo de Kandel, o que distingue a memória de LONGO prazo da de curto prazo?',
+       o:['Ela usa neurotransmissores completamente diferentes dos de curto prazo','Ela exige síntese de novas proteínas e crescimento de novas conexões','Ela dura apenas alguns segundos e depois desaparece por completo','Ela é a única que não envolve o hipocampo em nenhum momento'], c:1,
+       er:'Exato. Curto prazo modifica proteínas já existentes; <strong>longo prazo requer expressão gênica, novas proteínas e novas sinapses</strong>. Memória duradoura é estrutura física nova.',
+       ew:'A marca do longo prazo é justamente <strong>construir estrutura nova</strong>: ativar genes, sintetizar novas proteínas e formar novas conexões. O curto prazo apenas ajusta, temporariamente, proteínas que já existem.'},
+      {q:'Por que a repetição espaçada consolida melhor que estudar tudo de uma vez?',
+       o:['Porque cansa menos a vista e permite estudar por muito mais horas seguidas','Porque dá ao cérebro janelas para consolidar cada traço entre as sessões','Porque ativa a LTD em vez da LTP, o que fixa melhor a informação','Porque evita o uso do hipocampo, poupando-o para outras tarefas'], c:1,
+       er:'Correto. A consolidação leva tempo. Espaçar as revisões respeita essas <strong>janelas de estabilização</strong>, reforçando o traço a cada retomada, em vez de saturá-lo de uma vez.',
+       ew:'O motivo é a consolidação: ela ocorre <strong>ao longo do tempo</strong>. Espaçar dá ao cérebro as janelas para estabilizar e reforçar cada memória entre as sessões — algo que a maratona de uma noite não permite.'},
+      {q:'Qual é o papel do hipocampo na formação de memórias declarativas?',
+       o:['Ele guarda de forma permanente todas as memórias que você já formou na vida','Ele codifica a memória inicialmente e a transfere ao córtex com o tempo','Ele apenas controla o sono e não participa da memória declarativa','Ele produz a dopamina necessária para que a memória seja gravada'], c:1,
+       er:'Isso mesmo. O hipocampo <strong>codifica e indexa</strong> primeiro; ao longo de dias e semanas o traço migra e se estabiliza no córtex. É a consolidação sistêmica.',
+       ew:'O hipocampo não é o armazém final. Ele <strong>codifica a memória no início</strong> e, com o tempo, ela é transferida e consolidada no córtex — por isso lesões nele apagam a formação de novas memórias, mas não as antigas já consolidadas.'}
     ]
   },
   {
@@ -2212,14 +2206,14 @@ const MODULES = [
        b:`<p>Comportamentos repetidos migram do controle consciente (córtex pré-frontal) para o <span class="term">estriado</span>, nos gânglios da base, onde viram automáticos. A estrutura é sempre a mesma: <strong>gatilho → rotina → recompensa</strong>.</p><p>O gatilho é o contexto que dispara o comportamento; a rotina é a ação; a recompensa é o que faz o cérebro querer repetir. Para construir um hábito, a peça crítica é a <strong>recompensa imediata e consistente</strong> — quanto mais próxima da ação, mais forte o aprendizado. É por isso que feedback instantâneo (como saber na hora se acertou) constrói hábito muito melhor que feedback adiado.</p>`}
     ],
     quiz:[
-      {lvl:2,q:'No começo, uma atividade nova dá uma sensação forte de recompensa; meses depois ela vira rotina quase automática. O que mudou no sinal de dopamina?',
-       o:['A dopamina parou de ser produzida naquele circuito','O sinal migrou do resultado para a pista que o antecipa, e o erro de previsão diminuiu porque já não há surpresa','Os receptores foram destruídos pelo uso repetido','A atividade passou a ser processada pelo cerebelo'], c:1,
-       er:'Exato. O disparo <strong>antecipa</strong>: sai do resultado e vai para a pista que o prevê. Sem surpresa não há erro de previsão, e o controle se transfere para circuitos mais automáticos — que é a definição de hábito.',
-       ew:'A dopamina continua ativa, e os receptores não se destroem assim. O que muda é <strong>quando</strong> ela dispara: o sinal se desloca para a pista antecipatória e encolhe, porque o resultado deixou de surpreender.'},
-      {lvl:2,q:'Por que um progresso pequeno e visível sustenta o engajamento melhor que uma recompensa grande e distante?',
-       o:['Porque recompensas grandes ativam menos neurônios no total','Porque cada avanço perceptível gera um erro de previsão positivo, e é esse sinal frequente que mantém a busca','Porque o cérebro não consegue representar prazos longos','Porque o accumbens só responde a estímulos de baixa intensidade'], c:1,
-       er:'Isso. O que sustenta a busca não é o tamanho do prêmio, é a <strong>frequência do sinal de que se está indo melhor que o esperado</strong>. Progresso visível entrega esse sinal muitas vezes; a recompensa distante entrega uma vez só.',
-       ew:'Não é limitação de intensidade nem de prazo. O motor é o <strong>erro de previsão positivo</strong>: um avanço percebido gera esse sinal agora, e repetidamente — enquanto a recompensa distante o gera uma única vez, lá no fim.'},
+      {q:'Qual é a função mais precisa da dopamina no sistema de recompensa?',
+       o:['Produzir a sensação de prazer em si, no momento do consumo','Sinalizar motivação, busca e antecipação ("querer")','Armazenar as memórias de longo prazo no hipocampo','Inibir o córtex pré-frontal durante a tomada de decisão'], c:1,
+       er:'Isso. Dopamina é o "querer" — <strong>motivação e antecipação</strong>, não o prazer em si (que envolve outros sistemas). É o que te faz ir atrás e persistir.',
+       ew:'É o mal-entendido mais comum. Dopamina é sobretudo <strong>motivação e antecipação</strong> — o "querer", não o "gostar". O prazer propriamente dito depende de outros sistemas.'},
+      {q:'Segundo Schultz, quando os neurônios de dopamina disparam com MAIS força?',
+       o:['Quando a recompensa é exatamente a que era esperada','Quando a recompensa é melhor do que o esperado','Quando não há recompensa nenhuma no ambiente','Sempre que aparece qualquer estímulo novo'], c:1,
+       er:'Exato. Eles codificam <strong>surpresa positiva</strong> — recompensa melhor que o previsto. Se é exatamente esperada, quase não disparam; se falha, caem abaixo do basal.',
+       ew:'Eles disparam mais forte diante de <strong>surpresa positiva</strong> — recompensa melhor que o esperado. Quando é exatamente prevista, o disparo é mínimo; é um sinal de "atualize sua previsão", não de recompensa em si.'},
       {q:'Do ponto de vista neurológico, por que fatiar uma meta grande em passos pequenos e visíveis aumenta a motivação?',
        o:['Porque engana o cérebro, fazendo-o esquecer completamente o tamanho real da meta','Porque cada avanço visível gera um micro-sinal de recompensa que reforça o continuar','Porque reduz a produção de dopamina e com isso diminui a ansiedade da espera','Porque desativa o loop do hábito e libera o pré-frontal para agir'], c:1,
        er:'Correto. Progresso granular = <strong>sinal de recompensa frequente</strong>. Metas vagas e distantes não dão ao cérebro como "prever recompensa", então quase não motivam.',
@@ -2245,10 +2239,10 @@ const MODULES = [
        b:`<p>O cérebro tem <strong>enorme dificuldade em executar duas tarefas que exijam controle consciente ao mesmo tempo</strong> — elas disputam os mesmos recursos. (Tarefas já automatizadas, como andar e conversar, escapam disso.) O que parece multitarefa costuma ser <span class="term">alternância rápida</span> entre tarefas — e cada troca cobra um <strong>custo de troca</strong>: tempo e precisão perdidos ao recarregar o contexto mental.</p><p>Fazer duas coisas "ao mesmo tempo" quase sempre significa fazer as duas pior e mais devagar. O foco unitário é mais eficiente por design. Isso é especialmente relevante para o <strong>TDAH</strong>, onde a regulação dopaminérgica e pré-frontal torna ainda mais custoso sustentar uma única linha de atenção — daí a importância de estruturar o ambiente para reduzir a demanda de troca.</p>`}
     ],
     quiz:[
-      {lvl:2,q:'Alguém alterna entre escrever um texto e responder mensagens, e no fim rende menos que fazendo um de cada vez. Qual é o mecanismo por trás disso?',
-       o:['A memória de trabalho é apagada por completo a cada troca','Cada retomada exige reconstruir o conteúdo mantido, e essa reconstrução custa tempo e capacidade que sobram menos para a tarefa','O cérebro executa as duas em paralelo, mas com metade da velocidade cada','A atenção só se recupera depois de um período de sono'], c:1,
-       er:'Isso. Não existe paralelismo aqui: há <strong>alternância</strong>. E como a memória de trabalho segura pouca coisa, cada volta paga o custo de reconstruir o que estava sendo mantido.',
-       ew:'O conteúdo não é apagado por inteiro, e não há execução paralela real. O que existe é <strong>troca com custo</strong>: reconstruir o que a memória de trabalho segurava consome tempo e a capacidade limitada que sobraria para a tarefa.'},
+      {q:'Qual é a capacidade aproximada da memória de trabalho, segundo estimativas modernas?',
+       o:['Cerca de 4 itens','Cerca de 50 itens','Praticamente ilimitada','Exatamente 1 item'], c:0,
+       er:'Isso. Cerca de <strong>quatro itens</strong> por vez. Passar disso não é distração — é o buffer transbordando. Muito "desfoco" é sobrecarga de memória de trabalho.',
+       ew:'É bem menos do que se imagina: cerca de <strong>quatro itens</strong>. Quando você ultrapassa isso, o desempenho cai porque o buffer transbordou — não por falta de esforço.'},
       {q:'Qual é o papel central do córtex pré-frontal na atenção?',
        o:['Produzir a dopamina usada pelo restante do cérebro','Manter objetivos ativos e inibir distrações','Armazenar memórias permanentes de longo prazo','Controlar o batimento cardíaco e a respiração'], c:1,
        er:'Exato. Ele mantém a meta ativa e <strong>inibe distrações</strong> — o maestro do controle executivo. E por ser caro e fatigável, o foco desmorona quando ele se esgota.',
@@ -2278,14 +2272,14 @@ const MODULES = [
        b:`<p>A neurociência desfez a velha separação entre "razão" e "emoção": elas estão <strong>entrelaçadas</strong>. Circuitos emocionais influenciam diretamente atenção, memória e decisão — não há cognição "pura", isolada do estado afetivo.</p><p>A consequência é libertadora e exigente ao mesmo tempo: <strong>regular o estado é parte de trabalhar bem</strong>, não uma distração dele. Sono, respiração, reavaliação de situações e reduzir a carga de ameaça não são "autocuidado" opcional — são intervenções que mudam o substrato neural do qual seu desempenho depende. É por isso que o estado importa tanto quanto o esforço.</p>`}
     ],
     quiz:[
-      {lvl:2,q:'Você leva um susto e o corpo já reagiu antes de você entender o que era. Por que a explicação chega depois da reação?',
-       o:['O córtex só é ativado se a ameaça for real','A detecção rápida dispara a resposta antes da avaliação cortical detalhada; o eixo HPA e a interpretação vêm em seguida','O cortisol precisa ser liberado antes de qualquer percepção','A amígdala substitui o córtex durante o susto'], c:1,
-       er:'Exato. A via rápida <strong>age antes de saber</strong> — barato errar por excesso de cautela. A avaliação detalhada e a cascata hormonal do eixo HPA operam numa escala de tempo mais lenta.',
-       ew:'O córtex participa sempre, e a amígdala não o substitui. O que acontece é <strong>diferença de velocidade</strong>: a detecção rápida dispara a resposta primeiro, e a avaliação detalhada mais a cascata do eixo HPA chegam depois.'},
-      {lvl:2,q:'Duas pessoas com o mesmo nível de ativação fisiológica antes de uma prova: uma rende bem, a outra trava. O que a curva em U invertido sozinha não explica?',
-       o:['Nada — ativação igual sempre produz desempenho igual','Que a mesma ativação é interpretada de formas diferentes, e a interpretação faz parte do estado que determina o desempenho','Que uma delas tinha mais cortisol circulante','Que a curva só se aplica a tarefas motoras'], c:1,
-       er:'Isso. A curva descreve a relação entre <strong>ativação e desempenho</strong>, mas não fecha a conta: o mesmo nível pode ser lido como preparo ou como ameaça, e essa leitura integra o estado que determina o resultado.',
-       ew:'A curva é uma boa descrição, não uma lei determinística. Ativação igual não garante desempenho igual porque a <strong>interpretação</strong> daquela ativação participa do estado — e estado é o que a prova cobra.'},
+      {q:'Qual é a função principal da amígdala?',
+       o:['Consolidar as memórias de longo prazo antes de transferi-las para o córtex','Detectar e avaliar relevância emocional, sobretudo ameaças, muito rápido','Controlar o ritmo circadiano e a hora de dormir todos os dias','Produzir a fala e organizar a gramática das frases'], c:1,
+       er:'Isso. A amígdala é o <strong>detector rápido de ameaça</strong> — avalia em milissegundos, antes da consciência. Sob ameaça intensa, pode "sequestrar" a resposta antes do córtex racional agir.',
+       ew:'A amígdala é o <strong>detector rápido de relevância emocional</strong>, especialmente ameaças. Ela avalia estímulos em milissegundos — antes da consciência — o que explica reações emocionais que "vêm antes" do raciocínio.'},
+      {q:'Segundo a lei de Yerkes-Dodson, como a ativação se relaciona com o desempenho?',
+       o:['Quanto maior a ativação, melhor o desempenho, sem nenhum limite superior','Em U invertido: há um ponto ótimo intermediário, e o excesso piora','A ativação não tem efeito algum sobre o desempenho da pessoa','Só a ausência total de ativação produz um bom desempenho'], c:1,
+       er:'Exato. É um <strong>U invertido</strong>: pouca ativação = apatia; ativação média = pico de desempenho; excesso = despencada. O ideal é o ponto do meio.',
+       ew:'A relação é um <strong>U invertido</strong>, não uma linha reta. Pouca ativação deixa apático, ativação intermediária é o pico, e ativação excessiva <strong>derruba</strong> o desempenho. Mais nem sempre é melhor.'},
       {q:'Qual é o efeito do cortisol CRÔNICO sobre o cérebro?',
        o:['Melhora permanentemente a memória','Prejudica o hipocampo e o córtex pré-frontal','Não tem nenhum efeito','Aumenta o número de neurônios indefinidamente'], c:1,
        er:'Correto. O estresse agudo é útil, mas o cortisol <strong>crônico corrói o hipocampo</strong> (memória) e o <strong>pré-frontal</strong> (controle e foco) — justo as áreas que você mais precisa para pensar.',
@@ -2315,14 +2309,14 @@ const MODULES = [
        o:['O sono REM','O sono de ondas lentas (sono profundo)','O estágio N1 (adormecer)','Nenhum — a consolidação só ocorre acordado'], c:1,
        er:'Isso. O <strong>sono de ondas lentas</strong> (profundo, N3) consolida a memória declarativa. O REM tem outro papel: memória procedural e processamento emocional.',
        ew:'É o <strong>sono de ondas lentas</strong> (o sono profundo). O REM importa também, mas mais para habilidades procedurais e emoção — a consolidação de fatos e eventos se apoia no sono profundo.'},
-      {lvl:2,q:'Por que uma noite cortada pela metade prejudica mais do que a conta de horas perdidas sugere?',
-       o:['Porque o sono perdido é sempre irrecuperável','Porque os processos não se distribuem igualmente: os ciclos mudam de composição ao longo da noite, e cortar o fim remove justamente o que ali predominava','Porque acordar cedo eleva o cortisol de forma permanente','Porque o sistema glinfático só funciona nas duas primeiras horas'], c:1,
-       er:'Isso. A noite <strong>não é homogênea</strong>: sono profundo domina no começo, REM ganha espaço no fim. Perder as últimas horas não corta uma fatia proporcional — corta um tipo específico de trabalho.',
-       ew:'Não é sobre irrecuperabilidade nem sobre cortisol. É sobre <strong>composição</strong>: os ciclos mudam de perfil ao longo da noite, e cortar o fim remove seletivamente o que estava concentrado ali.'},
-      {lvl:2,q:'Uma pessoa dorme 8 horas, mas sempre das 4h às 12h, e continua se sentindo mal. Se a quantidade está certa, o que está errado?',
-       o:['Nada — 8 horas é 8 horas, o horário é indiferente','A pressão do sono e o ritmo circadiano estão desalinhados, e dormir fora de fase muda a qualidade e a distribuição dos estágios','Ela precisa de 10 horas por causa da idade','O sistema glinfático não funciona durante o dia'], c:1,
-       er:'Exato. São <strong>dois reguladores</strong>: a pressão que se acumula com a vigília e o relógio circadiano. Dormir contra o relógio entrega horas, mas não entrega os estágios na proporção certa.',
-       ew:'Quantidade não é a única variável. A pressão do sono e o <strong>ritmo circadiano</strong> precisam estar em fase — dormir fora de fase altera a distribuição dos estágios, e o resultado não é o mesmo.'},
+      {q:'O que o sistema glinfático faz durante o sono?',
+       o:['Produz a melatonina que induz o sono no fim da tarde','Remove resíduos metabólicos acumulados no cérebro','Bloqueia os receptores de adenosina no cérebro','Fortalece diretamente todas as sinapses do córtex'], c:1,
+       er:'Exato. É a "faxina" noturna: o sistema glinfático <strong>remove resíduos metabólicos</strong> acumulados na vigília. Dormir mal deixa esses subprodutos se acumularem.',
+       ew:'O sistema glinfático faz a <strong>limpeza de resíduos metabólicos</strong> do cérebro durante o sono. Privar-se de sono trava essa faxina, deixando subprodutos acumulados — não é só cansaço.'},
+      {q:'Como a cafeína age no cérebro para reduzir a sensação de sono?',
+       o:['Elimina toda a adenosina já acumulada no organismo durante o dia','Bloqueia os receptores de adenosina, mascarando o cansaço','Faz o corpo produzir muito mais melatonina que o normal','Consolida as memórias que ficaram pendentes do dia'], c:1,
+       er:'Correto. A cafeína <strong>bloqueia os receptores de adenosina</strong> — ela mascara o sinal de cansaço, mas a adenosina continua acumulando. Quando a cafeína passa, o cansaço represado volta.',
+       ew:'A cafeína não elimina nada — ela <strong>bloqueia os receptores de adenosina</strong>, mascarando o sinal de sono. A adenosina segue se acumulando por trás, e o cansaço volta de uma vez quando o efeito passa.'},
       {q:'Qual é a duração aproximada de um ciclo de sono?',
        o:['Cerca de 10 minutos','Cerca de 90 minutos','Cerca de 6 horas','Não há ciclos, o sono é uniforme'], c:1,
        er:'Isso mesmo. Cada ciclo dura cerca de <strong>90 minutos</strong> e passa por diferentes estágios. Uma noite completa encadeia vários — e cortar horas corta justamente as fases que consolidam.',
@@ -3119,7 +3113,7 @@ function answerReview(k){
   const fb = document.getElementById('rv-fb');
   fb.innerHTML = `<div class="mq-verd" style="color:${right?'var(--good)':'var(--bad)'}">${right?'✓ Lembrou':'✕ Escapou'}${right?' · +'+XP.review+' XP':''}</div><p>${right?q.er:q.ew}</p>
     <div class="fbnav"><button class="bigbtn" onclick="nextReview()">${!last?'Próxima':(lastTopic?'Concluir revisão':'Próximo tópico')}</button></div>`;
-  glossifyFeedback(fb);
+  if(typeof linkGlossaryTerms === 'function') linkGlossaryTerms(fb);
   if(right) awardXP(XP.review, {currentTarget:fb}); else saveState();
   revealAfterAnswer('rv-fb');
 }
@@ -6626,12 +6620,7 @@ function glossify(root){
    ===================================================================== */
 let tmOpener = null;
 
-function toggleGloss(btn, key){
-  /* Mesmo botão, dois destinos, decididos pelo lugar. No texto da aula a
-     janela flutuante está certa: o aluno está lendo, não respondendo. No
-     feedback de um quiz ele está no meio de uma sequência de questões, e
-     cobrir a tela ali custa o lugar dele. */
-  if(btn && btn.closest && btn.closest(FB_HOSTS)) return expandirTermoInline(btn, key);
+function toggleGloss(btn, key){   // agora abre a janela flutuante
   openTermModal(key, btn);
 }
 
@@ -8315,9 +8304,7 @@ function openModule(i){
           <span class="readtag">${read?'✓ estudada':'Teste rápido ou marque quando terminar'}</span>
           <div class="mini-actions">
             <button class="readbtn" ${read?'disabled':''} onclick="markRead(${idx},event)">${read?'Concluída':'Marcar como estudada'}</button>
-            ${(MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][idx] && MINI_QUIZZES[m.id][idx].length)
-              ? `<button class="readbtn alt" onclick="startMiniQuiz(${idx})">Mini quiz</button>`
-              : ''}
+            <button class="readbtn alt" onclick="startMiniQuiz(${idx})">Mini quiz</button>
           </div>
         </div>
         <div id="mini-${idx}"></div>
@@ -8391,33 +8378,65 @@ function renderMiniQuestion(){
 
    Só depois de responder. Antes da resposta isso trocaria recordação por
    consulta, e o valor do quiz vem do esforço de lembrar.
-
-   A marcação é a mesma do texto da aula: glossify(). A primeira versão
-   disto tinha um localizador próprio, que redescobria — pior — o que
-   glossify já fazia: travessia por nós de texto, fronteira de palavra que
-   entende acento, uma ocorrência por termo. Aquele laço percorria os 110
-   termos por nó; glossify usa uma regex única montada em buildGloss.
-
-   O que muda aqui é só o destino do clique, tratado em toggleGloss.
    ===================================================================== */
 
-/* glossify desiste se já marcou o elemento antes, e os containers de
-   feedback são reaproveitados a cada questão: innerHTML troca os filhos e
-   deixa o data-glossed para trás. Sem limpar, só a primeira questão de
-   cada sessão ganharia termos clicáveis. */
-function glossifyFeedback(el){
-  if(!el || typeof glossify !== 'function') return;
-  el.removeAttribute('data-glossed');
-  glossify(el);
-}
-/* Dentro do feedback de quiz a explicação nasce embutida e empurra o resto,
-   em vez de cobrir. Modal sobre a questão 2 de 3 faz o aluno perder o lugar
-   — e este app já teve painel abrindo atrás de painel por disputa de
-   sobreposição. Quem quiser a janela cheia tem o botão no fim do bloco:
-   aí a troca de tela é escolha, não acidente. */
-const FB_HOSTS = '.mq-feedback, #rv-fb, #qz-fb';
+/* Trabalha sobre nós de texto já no DOM, não sobre a string de HTML. O
+   feedback traz <strong> dentro, e expressão regular em cima de marcação
+   cedo ou tarde quebra um atributo. Andando pelos nós de texto, o que é
+   marcação nunca é visitado. */
+const FBTERM_LETRA = /[0-9A-Za-zÀ-ÖØ-öø-ÿ]/;
 
-function expandirTermoInline(btn, termo){
+function linkGlossaryTerms(root){
+  if(!root || typeof GLOSSARY !== 'object') return;
+  /* Mais longos primeiro: "memória de trabalho" tem de ganhar de "memória",
+     senão o termo curto consome o começo do longo e sobra um caco. */
+  const termos = Object.keys(GLOSSARY).sort((a,b)=>b.length-a.length);
+  const usados = new Set();
+  for(const termo of termos){
+    if(usados.has(termo)) continue;
+    /* Um nó por vez, sempre relendo: cada ligação parte o nó em três e
+       invalida a lista anterior. */
+    const nos = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(n){
+        if(!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        /* Não liga dentro do que já é botão, link ou termo ligado. */
+        for(let p=n.parentNode; p && p!==root; p=p.parentNode){
+          const t=(p.tagName||'').toLowerCase();
+          if(t==='button' || t==='a' || (p.classList && p.classList.contains('fbterm-exp'))) return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    let n; while((n = walker.nextNode())) nos.push(n);
+
+    for(const no of nos){
+      const texto = no.nodeValue;
+      const i = texto.toLowerCase().indexOf(termo.toLowerCase());
+      if(i < 0) continue;
+      /* Fronteira de palavra feita à mão: o \b do JS trata letra acentuada
+         como não-palavra, então "córtex" casaria no meio de outra coisa. */
+      const antes = i > 0 ? texto[i-1] : '';
+      const depois = i+termo.length < texto.length ? texto[i+termo.length] : '';
+      if((antes && FBTERM_LETRA.test(antes)) || (depois && FBTERM_LETRA.test(depois))) continue;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'fbterm';
+      btn.setAttribute('aria-expanded','false');
+      btn.textContent = texto.slice(i, i+termo.length);
+      btn.onclick = function(){ toggleFbTerm(this, termo); };
+
+      const fim = no.splitText(i);
+      fim.nodeValue = fim.nodeValue.slice(termo.length);
+      no.parentNode.insertBefore(btn, fim);
+      usados.add(termo);
+      break; /* uma ocorrência por termo; ligar todas vira campo minado */
+    }
+  }
+}
+
+function toggleFbTerm(btn, termo){
   const aberto = btn.getAttribute('aria-expanded') === 'true';
   const bloco = btn.parentNode.querySelector('.fbterm-exp[data-t="'+termo+'"]');
   if(aberto){
@@ -8427,8 +8446,8 @@ function expandirTermoInline(btn, termo){
   }
   /* Um aberto por vez dentro do mesmo feedback: dois ou três empilhados
      afastam o botão de continuar da mão do aluno. */
-  const host = btn.closest(FB_HOSTS) || btn.parentNode;
-  host.querySelectorAll('.gterm[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'));
+  const host = btn.closest('.mq-feedback, #rv-fb') || btn.parentNode;
+  host.querySelectorAll('.fbterm[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'));
   host.querySelectorAll('.fbterm-exp').forEach(e=>e.remove());
 
   const def = GLOSSARY[termo];
@@ -8480,7 +8499,7 @@ function answerMini(k){
     ${deepOn()
       ? selfRateHTML('mq'+miniQuiz.lesson, 'M:'+mk+':'+miniQuiz.i, 'nextMini', nlabel)
       : `<div class="fbnav"><button class="bigbtn" onclick="nextMini()">${nlabel}</button></div>`}`;
-  glossifyFeedback(fb);
+  linkGlossaryTerms(fb);
   if(gained>0) awardXP(gained,{currentTarget:fb}); else saveState();
   revealAfterAnswer('mq-fb-'+miniQuiz.lesson);
 }
@@ -8600,7 +8619,6 @@ function answer(k){
     ${deepOn()
       ? selfRateHTML('qz','Q:'+m.id+':'+quiz.i,'nextQ', quiz.i+1<m.quiz.length?'Próxima questão':'Ver resultado')
       : `<div class="fbnav"><button class="bigbtn" onclick="nextQ()">${quiz.i+1<m.quiz.length?'Próxima questão':'Ver resultado'}</button></div>`}`;
-  glossifyFeedback(fb);
   if(gained>0){
     const btn=document.querySelector('#qz-fb .xppill');
     awardXP(gained,{currentTarget:btn});

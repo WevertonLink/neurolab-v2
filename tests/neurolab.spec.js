@@ -953,7 +953,7 @@ test('@smoke o termo no feedback do quiz abre explicação embutida, não modal'
         const b = document.querySelector(`#mini-${i} .mq-options button`);
         if (b) b.click();
       }, li);
-      if (await box.locator('.mq-feedback .gterm').count() > 0) { host = box; break; }
+      if (await box.locator('.mq-feedback .fbterm').count() > 0) { host = box; break; }
       const avancou = await page.evaluate((i) => {
         const b = document.querySelector(`#mini-${i} .mq-feedback .fbnav .bigbtn`);
         if (!b) return false;
@@ -966,7 +966,7 @@ test('@smoke o termo no feedback do quiz abre explicação embutida, não modal'
 
   expect(host, 'nenhum feedback do módulo 01 ligou termo do glossário').not.toBeNull();
 
-  const termo = host.locator('.mq-feedback .gterm').first();
+  const termo = host.locator('.mq-feedback .fbterm').first();
   await expect(termo).toHaveAttribute('aria-expanded', 'false');
   await expect(host.locator('.fbterm-exp')).toHaveCount(0);
 
@@ -979,69 +979,4 @@ test('@smoke o termo no feedback do quiz abre explicação embutida, não modal'
   await termo.click();
   await expect(host.locator('.fbterm-exp')).toHaveCount(0);
   await expect(termo).toHaveAttribute('aria-expanded', 'false');
-});
-
-// O botão "Mini quiz" era renderizado em toda aula de todo módulo, mas só 6 dos 16
-// têm questões de tópico — e renderMiniQuestion sai calado quando não há nenhuma.
-// Eram 40 botões que não faziam nada. A regra vale nos dois sentidos: aparece onde
-// há questões, some onde não há.
-test('@smoke o botão de mini quiz só existe onde há mini quiz', async ({ page }) => {
-  const mapa = await page.evaluate(() =>
-    MODULES.map((m, i) => ({
-      i,
-      id: m.id,
-      tem: Boolean(typeof MINI_QUIZZES !== 'undefined' && MINI_QUIZZES[m.id] && Object.keys(MINI_QUIZZES[m.id]).length)
-    })));
-
-  const com = mapa.find((x) => x.tem);
-  expect(com, 'nenhum módulo tem mini quiz').toBeTruthy();
-
-  await openModule(page, com.i);
-  await expect(page.locator('#md-lessons .mini-actions .readbtn.alt').first()).toBeVisible();
-
-  // Quando todos os módulos tiverem mini quiz esta metade deixa de ter o que
-  // exercitar. Não falha por isso: o objetivo é não haver botão morto, e nesse
-  // dia não haverá nenhum.
-  const sem = mapa.find((x) => !x.tem);
-  if (sem) {
-    await openModule(page, sem.i);
-    await expect(page.locator('#md-lessons .mini-actions .readbtn.alt')).toHaveCount(0);
-  }
-});
-
-// Os três quizzes — tópico, revisão e módulo — precisam se comportar igual no
-// feedback. O de módulo ficou de fora na primeira implementação, e como 10 dos 16
-// módulos só têm ele, isso significava nenhum termo clicável em mais da metade do app.
-test('@smoke o feedback do quiz de módulo liga termos e expande embutido', async ({ page }) => {
-  await openModule(page, 0);
-  await page.evaluate(() => startQuiz());
-
-  let achou = false;
-  for (let n = 0; n < 4 && !achou; n++) {
-    await page.evaluate(() => {
-      const b = document.querySelector('#qz-opts .opt');
-      if (b) b.click();
-    });
-    achou = (await page.locator('#qz-fb .gterm').count()) > 0;
-    if (achou) break;
-    const avancou = await page.evaluate(() => {
-      const b = document.querySelector('#qz-fb .fbnav .bigbtn');
-      if (!b) return false;
-      b.click();
-      return true;
-    });
-    if (!avancou) break;
-  }
-
-  expect(achou, 'nenhum feedback do quiz do módulo 01 ligou termo do glossário').toBe(true);
-
-  const termo = page.locator('#qz-fb .gterm').first();
-  await expect(page.locator('#qz-fb .fbterm-exp')).toHaveCount(0);
-
-  await termo.click();
-  await expect(page.locator('#qz-fb .fbterm-exp')).toHaveCount(1);
-  await expect(page.locator('#term-modal')).toBeHidden();
-
-  await termo.click();
-  await expect(page.locator('#qz-fb .fbterm-exp')).toHaveCount(0);
 });
