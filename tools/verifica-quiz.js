@@ -43,11 +43,18 @@ const vm = require('node:vm');
 const ARQUIVO = process.argv[2] || path.join(__dirname, '..', 'index.html');
 
 /* Sobreposição a partir da qual uma questão de módulo vira suspeita de
-   repetir uma de tópico. 0.5 é onde as reescritas quase literais caem
-   ("O que a regra de Hebb descreve?" contra "A regra de Hebb resume-se
-   a:" dá 0.78). Abaixo disso ainda há parentesco temático legítimo: dois
-   itens podem tocar o mesmo assunto sem cobrar a mesma coisa. */
-const LIMITE_SOBREPOSICAO = 0.5;
+   repetir uma de tópico.
+
+   Começou em 0.5, que era onde caíam as reescritas quase literais ("O que
+   a regra de Hebb descreve?" contra "A regra de Hebb resume-se a:" dava
+   0.78). Depois que as 21 questões sobrepostas foram reescritas, a maior
+   sobreposição do conjunto passou a ser 0.333 — parentesco temático
+   legítimo, dois itens tocando o mesmo assunto sem cobrar a mesma coisa.
+
+   0.40 fica acima desse teto com folga para não disparar à toa, e bem
+   abaixo do 0.5 que deixava nove passarem. Se subir de novo, é regressão
+   de conteúdo, não ruído. */
+const LIMITE_SOBREPOSICAO = 0.40;
 
 const STOP = new Set(`a o as os um uma uns umas de do da dos das em no na nos nas por para com sem sobre entre
 ate que quem qual quais quando onde como porque pois se nao nem e ou mas tambem ja so apenas mesmo mesma
