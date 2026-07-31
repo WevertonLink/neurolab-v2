@@ -7,7 +7,7 @@
    Ao publicar uma versão nova do conteúdo, incremente VERSION. É isso que
    dispara o precache do index.html novo e apaga o cache anterior.
    ===================================================================== */
-const VERSION = 'neurolab-v9-0';
+const VERSION = 'neurolab-v9-1';
 
 const ASSETS = [
   './',
