@@ -33,9 +33,8 @@
    AVISO = candidato a defeito que precisa de leitura humana.
    ===================================================================== */
 
-const fs = require('node:fs');
 const path = require('node:path');
-const vm = require('node:vm');
+const { extrair } = require('./extrai-app.js');
 
 /* Sem argumento, lê o index.html do projeto. Com um caminho, lê aquele —
    é assim que se testa o próprio verificador, apontando-o para uma cópia
@@ -82,76 +81,9 @@ const jaccard = (a, b) => {
    determina se uma é repetição da outra. */
 const assinatura = (q) => lexico(q.q + ' ' + (q.o && q.o[q.c] ? q.o[q.c] : ''));
 
-/* ---------------------------------------------------------------------
-   Extração: roda o app num contexto vm com um DOM que não faz nada.
-   O objetivo é só deixar os blocos <script> executarem até o fim para
-   que as estruturas existam; nada do que é renderizado importa aqui.
-   ------------------------------------------------------------------ */
-function extrair() {
-  const src = fs.readFileSync(ARQUIVO, 'utf8');
-  const blocos = [...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
-  if (!blocos.length) throw new Error('nenhum bloco <script> encontrado em index.html');
-
-  const noh = new Proxy(function () {}, {
-    get: (_t, p) => {
-      if (p === 'style' || p === 'dataset' || p === 'classList') return new Proxy({}, { get: () => () => {}, set: () => true });
-      if (p === 'children' || p === 'childNodes') return [];
-      if (p === 'parentNode' || p === 'firstChild') return null;
-      if (p === 'hasAttribute') return () => false;
-      if (p === 'textContent' || p === 'innerHTML' || p === 'value' || p === 'id') return '';
-      if (p === Symbol.toPrimitive) return () => '';
-      return typeof p === 'string' ? () => noh : undefined;
-    },
-    set: () => true,
-    apply: () => noh,
-  });
-
-  const doc = {
-    getElementById: () => null, querySelector: () => null, querySelectorAll: () => [],
-    createElement: () => noh, createTextNode: () => noh, addEventListener: () => {},
-    body: noh, head: noh, documentElement: noh, readyState: 'loading',
-  };
-
-  const ctx = {
-    document: doc,
-    console: { log() {}, warn() {}, error() {} },
-    localStorage: { getItem: () => null, setItem: () => {}, removeItem: () => {} },
-    navigator: { onLine: true, userAgent: 'node', serviceWorker: { register: () => ({ then: () => ({ catch: () => {} }) }) } },
-    location: { href: 'file:///index.html', hash: '', search: '' },
-    history: { pushState: () => {}, replaceState: () => {} },
-    setTimeout: () => 0, clearTimeout: () => {}, setInterval: () => 0, requestAnimationFrame: () => 0,
-    matchMedia: () => ({ matches: false, addEventListener: () => {} }),
-    addEventListener: () => {}, screen: {}, performance: { now: () => 0 },
-    alert: () => {}, CustomEvent: function () {}, Image: function () {}, fetch: () => Promise.resolve(),
-  };
-  ctx.window = ctx; ctx.globalThis = ctx; ctx.self = ctx;
-
-  /* O init() do app dispara de forma assíncrona e falha ao tocar o DOM
-     falso. Não importa: as estruturas já foram definidas no caminho
-     síncrono, que é tudo que se lê aqui. */
-  process.on('uncaughtException', () => {});
-
-  vm.createContext(ctx);
-  for (const b of blocos) {
-    try { vm.runInContext(b, ctx, { timeout: 30000 }); } catch (e) { /* idem */ }
-  }
-
-  /* const e let de topo não viram propriedades do sandbox: ficam no
-     escopo léxico global do contexto. Avaliar o nome os alcança. */
-  const ler = (nome) => {
-    try { return vm.runInContext(nome, ctx); } catch (e) { return undefined; }
-  };
-
-  const dados = {
-    MODULES: ler('MODULES'),
-    MINI_QUIZZES: ler('MINI_QUIZZES'),
-    MINI_LEVELS: ler('MINI_LEVELS'),
-  };
-  for (const [nome, v] of Object.entries(dados)) {
-    if (!v) throw new Error(`${nome} não foi encontrado após executar os blocos <script>`);
-  }
-  return dados;
-}
+/* A leitura do app vive em tools/extrai-app.js, compartilhada com as
+   outras ferramentas. O comentario grande sobre por que nao se extrai por
+   regex esta la. */
 
 function verificar({ MODULES, MINI_QUIZZES, MINI_LEVELS }) {
   const achados = [];
@@ -251,7 +183,7 @@ function verificar({ MODULES, MINI_QUIZZES, MINI_LEVELS }) {
   return achados;
 }
 
-const dados = extrair();
+const dados = extrair(['MODULES', 'MINI_QUIZZES', 'MINI_LEVELS'], ARQUIVO);
 const achados = verificar(dados);
 const erros = achados.filter((a) => a.nivel === 'ERRO');
 const avisos = achados.filter((a) => a.nivel === 'AVISO');

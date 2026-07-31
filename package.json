@@ -4,9 +4,10 @@
   "private": true,
   "description": "Auditoria automatizada do NeuroLab V2 com visão integrada nos 16 módulos, mecanismo vertical, cobertura contextual e testes móveis.",
   "scripts": {
-    "test": "npm run check:metaforas && npm run check:quiz && playwright test",
+    "test": "npm run check:metaforas && npm run check:quiz && npm run check:cadeias && playwright test",
     "check:metaforas": "node tools/verifica-metaforas.js",
     "check:quiz": "node tools/verifica-quiz.js",
+    "check:cadeias": "node tools/verifica-cadeias.js",
     "test:smoke": "playwright test --grep @smoke",
     "test:coverage": "playwright test --grep @coverage --project=mobile-chromium",
     "test:visual": "playwright test --grep @visual --project=mobile-chromium",
