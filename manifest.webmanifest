@@ -1,7 +1,7 @@
 {
-  "name": "NeuroLab V2",
+  "name": "NeuroLab — Estudo Interativo de Neurociência",
   "short_name": "NeuroLab",
-  "description": "Estudo interativo de neurociência, cognição e estado mental.",
+  "description": "Estudo interativo de neurociência com percurso, revisão espaçada e Modo Domínio pós-curso.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -28,5 +28,6 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "version": "1.7.2"
 }

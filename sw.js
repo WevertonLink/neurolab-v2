@@ -1,17 +1,29 @@
 /* =====================================================================
-   NeuroLab V2 · service worker
+   NeuroLab · service worker
 
-   O app inteiro é o index.html — as fontes estão embutidas nele, então
-   aqui só precisamos garantir o casco: o HTML, o manifesto e os ícones.
+   O aplicativo é composto pelo HTML, folhas de estilo, scripts e assets.
+   Todos os arquivos essenciais entram no precache para manter o uso offline.
 
    Ao publicar uma versão nova do conteúdo, incremente VERSION. É isso que
    dispara o precache do index.html novo e apaga o cache anterior.
    ===================================================================== */
-const VERSION = 'neurolab-v9-1';
+const VERSION = 'neurolab-v1-7-2';
 
 const ASSETS = [
   './',
   './index.html',
+  './styles/base.css',
+  './styles/features.css',
+  './styles/domain-mode.css',
+  './src/01-metaphors.js',
+  './src/02-integrated-visuals.js',
+  './src/03-context-mechanisms.js',
+  './src/04-learning-model.js',
+  './src/04b-domain-mode.js',
+  './src/04c-domain-guided.js',
+  './src/05-app.js',
+  './src/06-service-worker-register.js',
+  './privacidade.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',

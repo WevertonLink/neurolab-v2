@@ -20,7 +20,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ARQUIVO = path.join(__dirname, '..', 'index.html');
+const ARQUIVO = path.join(__dirname, '..', 'src', '01-metaphors.js');
 
 const STOP = new Set(`a o as os um uma uns umas de do da dos das em no na nos nas por para com sem sobre entre
 ate que quem qual quais quando onde como porque pois se nao nem e ou mas tambem ja so apenas mesmo mesma
@@ -49,7 +49,7 @@ function nucleoDoTitulo(titulo) {
   return raiz(norm(t.split(/[\s,]+/)[0]).replace(/[^a-z0-9]/g, ''));
 }
 
-/* Sem argumento, lê o IMAGINE_DATA_V2 do index.html. Com um caminho de .json,
+/* Sem argumento, lê o IMAGINE_DATA_V2 de src/01-metaphors.js. Com um caminho de .json,
    verifica uma proposta antes de ela virar código — que é onde a checagem
    custa menos: reprovar no documento evita implementar e desimplementar. */
 function carregarDados() {
@@ -57,7 +57,7 @@ function carregarDados() {
   if (alt) return JSON.parse(fs.readFileSync(alt, 'utf8'));
   const src = fs.readFileSync(ARQUIVO, 'utf8');
   const m = src.match(/const IMAGINE_DATA_V2 = (\{.*?\});/s);
-  if (!m) throw new Error('IMAGINE_DATA_V2 não encontrado em index.html');
+  if (!m) throw new Error('IMAGINE_DATA_V2 não encontrado em src/01-metaphors.js');
   return JSON.parse(m[1]);
 }
 
@@ -146,7 +146,7 @@ const erros = achados.filter((a) => a.nivel === 'ERRO');
 const avisos = achados.filter((a) => a.nivel === 'AVISO');
 
 console.log(`Verificando ${Object.keys(dados).length} metáforas de IMAGINE_DATA_V2`);
-console.log('(plasticidade fica de fora: é HTML escrito à mão, sem campos estruturados)\n');
+console.log('(as 16 metáforas possuem representação estruturada para auditoria)\n');
 
 for (const mod of Object.keys(dados)) {
   const meus = achados.filter((a) => a.mod === mod);
@@ -157,7 +157,7 @@ for (const mod of Object.keys(dados)) {
 }
 
 console.log(`\n${erros.length} erro(s), ${avisos.length} aviso(s)`);
-if (erros.length) {
-  console.log('\nErros reprovam: são defeitos mecânicos, sem ambiguidade.');
+if (erros.length || avisos.length) {
+  console.log('\nErros e avisos reprovam: toda metáfora precisa sair limpa antes da publicação.');
   process.exit(1);
 }

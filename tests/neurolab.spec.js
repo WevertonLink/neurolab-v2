@@ -220,8 +220,8 @@ test.afterEach(async ({ page }, testInfo) => {
   const audit = runtimeAudit.get(page);
   if (!audit) return;
 
-  // O index.html é o aplicativo: as fontes estão embutidas nele e não há mais
-  // nenhuma dependência de terceiros. Medir isso em todos os testes é o que
+  // O aplicativo usa apenas arquivos da própria origem e não tem dependências
+  // de terceiros em tempo de execução. Medir isso em todos os testes é o que
   // impede a dependência externa de voltar sem ninguém notar.
   let external = [];
   try {
@@ -241,9 +241,24 @@ test.afterEach(async ({ page }, testInfo) => {
   }
 });
 
+
+
+test('@smoke módulo oferece navegação local livre e alcançável', async ({ page }) => {
+  await openModule(page, 0);
+  const nav = page.locator('#md-section-nav');
+  await expect(nav).toBeVisible();
+  await expect(nav.locator('button')).toHaveCount(9); // visuais + 4 aulas + metáfora + mapa + fontes + teste
+
+  const lessonButton = nav.locator('button').filter({ hasText: '2 ·' }).first();
+  await expect(lessonButton).toBeVisible();
+  await lessonButton.click();
+  await page.waitForTimeout(250);
+  const distance = await page.locator('#lesson-1').evaluate((el) => Math.abs(el.getBoundingClientRect().top));
+  expect(distance, 'a navegação não aproximou a segunda aula da área visível').toBeLessThan(260);
+});
 test('@smoke dashboard, metadados e navegação principal', async ({ page }) => {
   await expect(page).toHaveTitle(/NeuroLab/i);
-  await expect(page).toHaveTitle(/Fase 9/i);
+  await expect(page).toHaveTitle(/Estudo Interativo de Neurociência/i);
   await expect(page.locator('.card')).toHaveCount(MODULE_COUNT);
   await expect(page.locator('#vis-tab-anatomy')).toHaveText(/Anatomia/i);
   await expect(page.locator('#vis-tab-functional')).toHaveText(/Mecanismo/i);
@@ -979,4 +994,143 @@ test('@smoke o termo no feedback do quiz abre explicação embutida, não modal'
   await termo.click();
   await expect(host.locator('.fbterm-exp')).toHaveCount(0);
   await expect(termo).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('@smoke Modo Domínio existe desde a prévia e não bloqueia o percurso', async ({ page }) => {
+  const entry = page.locator('#db-domain-entry');
+  await expect(entry).toBeVisible();
+  await expect(entry).toContainText(/Modo Domínio/i);
+  await expect(entry).toContainText(/prévia/i);
+
+  await entry.locator('button').click();
+  await expect(page.locator('#view-domain')).toHaveClass(/active/);
+  await expect(page.locator('#dm-nav button')).toHaveCount(7);
+  await expect(page.locator('.dm-metric')).toHaveCount(5);
+  await expect(page.locator('.dm-action')).toHaveCount(4);
+
+  await page.locator('#dm-nav button').filter({ hasText: 'Trilhas' }).click();
+  await expect(page.locator('.dm-trail')).toHaveCount(4);
+
+  await page.locator('#view-domain .backbtn').click();
+  await expect(page.locator('#view-dashboard')).toHaveClass(/active/);
+  await expect(page.locator('.card')).toHaveCount(MODULE_COUNT);
+});
+
+test('@smoke Modo Domínio registra resposta, mostra veredito e reconstrói sem repetir alternativas', async ({ page }) => {
+  await page.evaluate(() => {
+    MODULES.slice(0, 14).forEach((module) => {
+      module.lessons.forEach((_, lessonIndex) => {
+        const key = `${module.id}-${lessonIndex}`;
+        state.lessons[key] = true;
+        state.topicMastery[key] = 0.8;
+      });
+      state.mastery[module.id] = 0.8;
+      state.doneQuiz[module.id] = true;
+    });
+    renderDashboard();
+  });
+  await page.locator('#db-domain-entry button').click();
+  await page.locator('#dm-nav button').filter({ hasText: 'Casos' }).click();
+  await page.locator('.dm-case-card').first().locator('button').click();
+  await page.locator('.dm-options button').first().click();
+
+  const feedback = page.locator('.dm-feedback');
+  await expect(feedback).toBeVisible();
+  await expect(feedback).toContainText(/cadeia ficou de pé/i);
+  await expect(feedback.locator('.dm-choice-diagnosis')).toBeVisible();
+  await expect(feedback.locator('.dm-choice-diagnosis')).toContainText(/SUA ESCOLHA/i);
+  await feedback.locator('.dm-option-audit summary').click();
+  await expect(feedback.locator('.dm-option-audit article')).toHaveCount(4);
+  await expect(feedback.locator('.dm-option-audit article.right')).toHaveCount(1);
+  const feedbackPosition = await feedback.evaluate((el) => ({ top: el.getBoundingClientRect().top, height: innerHeight }));
+  expect(feedbackPosition.top).toBeGreaterThanOrEqual(0);
+  expect(feedbackPosition.top).toBeLessThan(feedbackPosition.height * 0.6);
+
+  await feedback.locator('.dm-reconstruct-btn').click();
+  await expect(page.locator('.dm-reconstruct')).toBeVisible();
+  await expect(page.locator('.dm-options')).toHaveCount(0);
+  await expect(page.locator('.dm-reconstruct')).toContainText(/A pergunta anterior não é repetida/i);
+
+  const order = await page.evaluate(() => {
+    const r = DOMAIN_SESSION.reconstruction;
+    const item = DOMAIN_CASES.find(x => x.id === r.id);
+    return item.chain.map(step => r.available.findIndex(entry => entry.text === step));
+  });
+  for (const position of order) await page.locator('.dm-chain-pool button').nth(position).click();
+  await expect(page.locator('.dm-reconstruct-result.right')).toBeVisible();
+
+  const saved = await page.evaluate(() => ({
+    rec: state.domain.cases['noite-decisao'],
+    log: state.domain.activityLog
+  }));
+  expect(saved.rec.attempts).toBe(1);
+  expect(saved.rec.lastResult).toBe(1);
+  expect(saved.rec.reconBest).toBe(1);
+  expect(saved.log.some(row => row.kind === 'reconstruction' && row.result === 1)).toBe(true);
+});
+
+test('@coverage banco do Modo Domínio mantém padrão adversarial', async ({ page }) => {
+  const report = await page.evaluate(() => {
+    const items = [...DOMAIN_COUNTERFACTUALS, ...DOMAIN_CASES];
+    const positions = [0, 0, 0, 0];
+    items.forEach((item) => { positions[item.correct] += 1; });
+    return {
+      total: items.length,
+      positions,
+      allFour: items.every((item) => item.options.length === 4 && item.optionFeedback.length === 4),
+      unique: items.every((item) => new Set(item.options).size === 4),
+      counterModules: new Set(DOMAIN_COUNTERFACTUALS.map((item) => item.module)).size,
+      integratedCases: DOMAIN_CASES.every((item) => item.modules.length >= 3)
+    };
+  });
+  expect(report.total).toBe(24);
+  expect(report.positions).toEqual([6, 6, 6, 6]);
+  expect(report.allFour).toBe(true);
+  expect(report.unique).toBe(true);
+  expect(report.counterModules).toBe(16);
+  expect(report.integratedCases).toBe(true);
+});
+
+test('@smoke sessão guiada mantém foco, avança linearmente e registra o bloco', async ({ page }) => {
+  await page.locator('#db-domain-entry button').click();
+  await expect(page.locator('.dm-focus-card')).toBeVisible();
+  await page.locator('.dm-focus-card button').click();
+  await expect(page.locator('#view-domain')).toHaveClass(/focus-session/);
+  await expect(page.locator('.dm-focus-rail')).toContainText(/1 de 4/i);
+  await expect(page.locator('#dm-nav')).toBeHidden();
+  const firstItem = await page.evaluate(() => domainCurrentFocus().current);
+
+  await page.locator('.dm-options button').first().click();
+  await expect(page.locator('.dm-feedback')).toBeVisible();
+  await page.locator('.dm-next').click();
+  await expect(page.locator('.dm-focus-rail')).toContainText(/2 de 4/i);
+
+  const session = await page.evaluate(() => state.domain.currentSession);
+  expect(session.index).toBe(1);
+  expect(session.completed).toHaveLength(1);
+  expect(session.queue[session.index]).not.toEqual(firstItem);
+  await expect(page.locator('.dm-detail')).toHaveAttribute(
+    'data-focus-item',
+    `${session.queue[session.index].type}:${session.queue[session.index].id}`
+  );
+
+  // A barra sticky não pode esconder o contexto da nova atividade. O título e
+  // o enunciado devem começar abaixo dela, especialmente em viewport mobile.
+  const placement = await page.evaluate(() => {
+    const rail = document.querySelector('.dm-focus-rail')?.getBoundingClientRect();
+    const kicker = document.querySelector('.dm-detail-k')?.getBoundingClientRect();
+    const heading = document.querySelector('.dm-detail > h3')?.getBoundingClientRect();
+    const scenario = document.querySelector('.dm-detail .dm-scenario')?.getBoundingClientRect();
+    return {
+      railBottom: rail?.bottom ?? 0,
+      kickerTop: kicker?.top ?? -1,
+      headingTop: heading?.top ?? -1,
+      scenarioTop: scenario?.top ?? -1,
+      viewport: innerHeight
+    };
+  });
+  expect(placement.kickerTop, 'o cabeçalho da atividade ficou atrás da barra da sessão').toBeGreaterThanOrEqual(placement.railBottom + 8);
+  expect(placement.headingTop, 'o título da atividade não ficou visível').toBeGreaterThan(placement.kickerTop);
+  expect(placement.scenarioTop, 'o enunciado da atividade não ficou visível').toBeGreaterThan(placement.headingTop);
+  expect(placement.headingTop).toBeLessThan(placement.viewport * 0.7);
 });
