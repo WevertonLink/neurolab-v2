@@ -10,6 +10,7 @@
 <!-- NEUROLAB · estudo interativo de neurociência -->
 <link rel="stylesheet" href="styles/base.css">
 <link rel="stylesheet" href="styles/features.css">
+<link rel="stylesheet" href="styles/domain-mode.css">
 
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -85,6 +86,7 @@
     <div class="lab-stats" id="db-stats"></div>
     <div class="twoscores" id="db-links"></div>
     <div class="lab-panel review-panel" id="db-review" style="display:none"></div>
+    <div id="db-domain-entry"></div>
 
     <div class="sec-label">Os módulos</div>
     <div class="cards" id="db-cards"></div>
@@ -104,6 +106,15 @@
       <div class="bkstatus" id="bk-status" aria-live="polite"></div>
       <div class="bkinfo" id="bk-info"></div>
     </div>
+  </section>
+
+
+  <!-- ================= MODO DOMÍNIO ================= -->
+  <section class="view" id="view-domain">
+    <button class="backbtn" onclick="go('dashboard')">← voltar ao mapa</button>
+    <div class="dm-head" id="dm-head"></div>
+    <nav class="dm-nav" id="dm-nav" aria-label="Áreas do Modo Domínio"></nav>
+    <div class="dm-body" id="dm-body"></div>
   </section>
 
   <!-- ================= MODULE ================= -->
@@ -223,6 +234,8 @@
 <script src="src/02-integrated-visuals.js"></script>
 <script src="src/03-context-mechanisms.js"></script>
 <script src="src/04-learning-model.js"></script>
+<script src="src/04b-domain-mode.js"></script>
+<script src="src/04c-domain-guided.js"></script>
 <script src="src/05-app.js"></script>
 <script src="src/06-service-worker-register.js"></script>
 </body>

@@ -1,8 +1,8 @@
 {
   "name": "neurolab-v2-playwright-audit",
-  "version": "1.5.0",
+  "version": "1.7.2",
   "private": true,
-  "description": "Auditoria automatizada do NeuroLab: 16 módulos, metáforas verificadas, acessibilidade móvel, cobertura contextual e funcionamento offline.",
+  "description": "Auditoria automatizada do NeuroLab 1.7.2: Modo Domínio com banco adversarial, diagnósticos por alternativa, sessão guiada, reconstrução causal e funcionamento offline.",
   "scripts": {
     "test": "npm run check:metaforas && npm run check:content && playwright test",
     "check:metaforas": "node tools/verifica-metaforas.js",

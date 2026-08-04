@@ -81,7 +81,7 @@ function evidenceRecord(scope, dim){
   return state.dimensionEvidence[scope][dim];
 }
 function evidenceWeight(source){
-  return ({review:.48,'module-quiz':.34,'mini-quiz':.38,'self-rate':.22,prediction:.16}[source]||.28);
+  return ({review:.48,'module-quiz':.34,'mini-quiz':.38,'self-rate':.22,prediction:.16,'domain-case':.30,counterfactual:.32}[source]||.28);
 }
 function recordDimensionEvidence(scope, dim, result, source, meta){
   if(!scope||!KNOWLEDGE_DIM_IDS.includes(dim)) return;

@@ -352,7 +352,7 @@ const LEVELS = [
 
 const XP = { lesson:15, correct:25, wrong:5, complete:50, mini:12, review:10, predict:4 };
 const STORE_KEY = 'neurolab-state-v1';
-const STATE_VERSION = 3;
+const STATE_VERSION = 4;
 const DAY = 86400000;
 const SRS_INTERVALS = [1, 3, 7, 14, 30, 60, 120, 240]; // dias por caixa (Leitner expandido)
 const SRS_PASS = 0.8;      // acerto mínimo p/ promover a caixa
@@ -367,7 +367,8 @@ function defaultState(){
   return { v:STATE_VERSION, xp:0, deepMode:true, selfRate:{}, topicExplain:{}, predCredit:{},
            lessons:{}, mastery:{}, topicMastery:{}, doneQuiz:{}, dimensionEvidence:{}, questionHistory:{},
     creditC:{}, creditW:{}, miniCredit:{}, miniWrong:{}, srs:{},
-    attempts:0, correctTotal:0, wrongTotal:0, lastModule:null, lastStudiedAt:0 };
+    attempts:0, correctTotal:0, wrongTotal:0, lastModule:null, lastStudiedAt:0,
+    domain:(typeof domainDefaultState==='function'?domainDefaultState():{}) };
 }
 /* =====================================================================
    INTEGRIDADE DA PERSISTÊNCIA
@@ -479,6 +480,7 @@ function migrateState(raw){
   });
   if(typeof out.lastModule!=='number' || !MODULES[out.lastModule]) out.lastModule=null;
   if(typeof out.deepMode !== 'boolean') out.deepMode = true;
+  out.domain = (typeof normalizeDomainState==='function') ? normalizeDomainState(out.domain) : (out.domain||{});
   // v1 -> v2: registros de revisão antigos podem estar incompletos ou fora de faixa
   Object.keys(out.srs).forEach(k=>{
     const r=out.srs[k];
@@ -756,6 +758,7 @@ function renderDashboard(){
   renderInsight(op);
   renderDashboardStats();
   renderReview();
+  if(typeof renderDomainEntry==='function') renderDomainEntry();
   // cards
   const wrap=document.getElementById('db-cards');
   wrap.innerHTML='';

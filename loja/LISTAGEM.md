@@ -13,10 +13,10 @@ o número entre parênteses é o quanto o texto ocupa do máximo permitido.
 NeuroLab — Neurociência
 ```
 
-**Descrição curta** (72/80)
+**Descrição curta** (74/80)
 
 ```
-Neurociência em 16 módulos: anatomia, mecanismos e quizzes. Sem internet.
+Neurociência em 16 módulos, revisão e Modo Domínio. Funciona offline.
 ```
 
 **Categoria:** Educação
@@ -49,13 +49,15 @@ O QUE MAIS TEM DENTRO
 
 • Progresso e níveis: acompanhe o domínio de cada tópico e a experiência acumulada ao longo do percurso.
 
+• Modo Domínio: continue com conceitos frágeis, casos integrados e contrafactuais cujas alternativas representam modelos causais plausíveis — não respostas absurdas fáceis de eliminar.
+
 FUNCIONA OFFLINE, DE VERDADE
 
-Todo o conteúdo — textos, ilustrações e até as fontes tipográficas — está dentro do aplicativo. Depois da primeira abertura você pode ficar sem sinal, no metrô ou no avião, que nada deixa de funcionar.
+Todo o conteúdo essencial — textos, ilustrações e fontes tipográficas — fica disponível para uso offline. Quando existe conexão, o aplicativo pode consultar apenas a própria origem para baixar atualizações dos seus arquivos.
 
 SEU PROGRESSO É SEU
 
-Sem cadastro, sem login, sem anúncios. O NeuroLab não faz nenhuma requisição à internet depois de carregado e não coleta absolutamente nada: seu progresso fica no seu aparelho e em nenhum outro lugar. Você pode exportar tudo num arquivo de backup, restaurar em outro aparelho ou apagar quando quiser.
+Sem cadastro, sem login e sem anúncios. O NeuroLab não envia progresso, respostas ou identificadores ao autor ou a terceiros: esses dados ficam no seu aparelho e em nenhum outro lugar. Você pode exportar tudo num arquivo de backup, restaurar em outro aparelho ou apagar quando quiser.
 
 PARA QUEM É
 
