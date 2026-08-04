@@ -220,8 +220,8 @@ test.afterEach(async ({ page }, testInfo) => {
   const audit = runtimeAudit.get(page);
   if (!audit) return;
 
-  // O index.html é o aplicativo: as fontes estão embutidas nele e não há mais
-  // nenhuma dependência de terceiros. Medir isso em todos os testes é o que
+  // O aplicativo usa apenas arquivos da própria origem e não tem dependências
+  // de terceiros em tempo de execução. Medir isso em todos os testes é o que
   // impede a dependência externa de voltar sem ninguém notar.
   let external = [];
   try {
@@ -241,9 +241,24 @@ test.afterEach(async ({ page }, testInfo) => {
   }
 });
 
+
+
+test('@smoke módulo oferece navegação local livre e alcançável', async ({ page }) => {
+  await openModule(page, 0);
+  const nav = page.locator('#md-section-nav');
+  await expect(nav).toBeVisible();
+  await expect(nav.locator('button')).toHaveCount(9); // visuais + 4 aulas + metáfora + mapa + fontes + teste
+
+  const lessonButton = nav.locator('button').filter({ hasText: '2 ·' }).first();
+  await expect(lessonButton).toBeVisible();
+  await lessonButton.click();
+  await page.waitForTimeout(250);
+  const distance = await page.locator('#lesson-1').evaluate((el) => Math.abs(el.getBoundingClientRect().top));
+  expect(distance, 'a navegação não aproximou a segunda aula da área visível').toBeLessThan(260);
+});
 test('@smoke dashboard, metadados e navegação principal', async ({ page }) => {
   await expect(page).toHaveTitle(/NeuroLab/i);
-  await expect(page).toHaveTitle(/Fase 9/i);
+  await expect(page).toHaveTitle(/Estudo Interativo de Neurociência/i);
   await expect(page.locator('.card')).toHaveCount(MODULE_COUNT);
   await expect(page.locator('#vis-tab-anatomy')).toHaveText(/Anatomia/i);
   await expect(page.locator('#vis-tab-functional')).toHaveText(/Mecanismo/i);

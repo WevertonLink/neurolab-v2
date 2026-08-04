@@ -1,0 +1,199 @@
+/* NeuroLab V2 · Fase 3 · domínio multidimensional e revisão transparente */
+const KNOWLEDGE_DIMS = [
+  {id:'recognition', label:'Reconhecimento', short:'Reconhecer', desc:'Identificar termos, definições e distinções básicas.'},
+  {id:'location', label:'Localização', short:'Localizar', desc:'Saber onde uma estrutura, célula ou processo se encontra.'},
+  {id:'causality', label:'Explicação causal', short:'Explicar', desc:'Reconstruir por que uma etapa leva à seguinte.'},
+  {id:'application', label:'Aplicação', short:'Aplicar', desc:'Usar o conhecimento em uma situação nova.'}
+];
+const KNOWLEDGE_DIM_IDS = KNOWLEDGE_DIMS.map(d=>d.id);
+
+function clampKnowledge(v){ v=Number(v); return isFinite(v)?Math.max(0,Math.min(1,v)):0; }
+function dimMeta(id){ return KNOWLEDGE_DIMS.find(d=>d.id===id)||KNOWLEDGE_DIMS[0]; }
+function topicScope(key){ return 'T:'+key; }
+function moduleScope(id){ return 'M:'+id; }
+function normalizeQuestionText(v){
+  return String(v||'').replace(/<[^>]*>/g,' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function inferQuestionDimension(q, context){
+  if(q && KNOWLEDGE_DIM_IDS.includes(q.dim)) return q.dim;
+  const t=normalizeQuestionText(q&&q.q);
+  const strongLocation=/(onde\b|em qual (?:regiao|estrutura|lobo|nucleo|parte|area)|qual estrutura|localizad|fica\b|membrana (?:pre|pos)|pre-sinaptic|pos-sinaptic)/;
+  const causal=/(por que|porque|mecanismo|caus|consequ|o que acontece|o que ocorr|se .*?(?:bloque|inib|les|aument|diminu|remov)|leva a|resulta|permite|depende|sequencia|primeiro.*depois|feedback|erro de previsao|como .*? produz)/;
+  const application=/(caso\b|cenario|paciente|uma pessoa|durante\b|situacao|qual seria|prever|aplicar|exemplo|comparad|tende a|diante de|ao encontrar|na pratica)/;
+  if(strongLocation.test(t)) return 'location';
+  if(causal.test(t)) return 'causality';
+  if(application.test(t)) return 'application';
+  const lvl=Number(q&&q.lvl)||0;
+  if(lvl>=2) return 'causality';
+  if(lvl===1) return 'application';
+  return 'recognition';
+}
+
+function blankEvidence(){ return {score:0, attempts:0, correct:0, best:0, last:0, updatedAt:0, sources:{}}; }
+function normalizeEvidence(rec){
+  const out=Object.assign(blankEvidence(), rec&&typeof rec==='object'?rec:{});
+  ['score','best','last'].forEach(k=>out[k]=clampKnowledge(out[k]));
+  out.correct=Math.max(0,Number(out.correct)||0);
+  out.attempts=Math.max(0,Number(out.attempts)||0);
+  out.updatedAt=Math.max(0,Number(out.updatedAt)||0);
+  if(!out.sources||typeof out.sources!=='object'||Array.isArray(out.sources)) out.sources={};
+  return out;
+}
+function ensureEvidenceContainer(target){
+  if(!target.dimensionEvidence||typeof target.dimensionEvidence!=='object'||Array.isArray(target.dimensionEvidence)) target.dimensionEvidence={};
+  if(!target.questionHistory||typeof target.questionHistory!=='object'||Array.isArray(target.questionHistory)) target.questionHistory={};
+  Object.keys(target.dimensionEvidence).forEach(scope=>{
+    const group=target.dimensionEvidence[scope];
+    if(!group||typeof group!=='object'||Array.isArray(group)){ delete target.dimensionEvidence[scope]; return; }
+    KNOWLEDGE_DIM_IDS.forEach(id=>{ if(group[id]) group[id]=normalizeEvidence(group[id]); });
+  });
+}
+function legacySeed(target, scope, dim, value, touched, source){
+  if(!touched) return;
+  const score=clampKnowledge(value);
+  if(!target.dimensionEvidence[scope]) target.dimensionEvidence[scope]={};
+  if(target.dimensionEvidence[scope][dim]) return;
+  target.dimensionEvidence[scope][dim]={score,attempts:1,correct:score,best:score,last:score,updatedAt:0,legacy:true,sources:{[source]:1}};
+}
+function migrateDimensionsFromLegacy(target){
+  ensureEvidenceContainer(target);
+  if(typeof MODULES==='undefined') return target;
+  MODULES.forEach(m=>{
+    const mtouched=Object.prototype.hasOwnProperty.call(target.mastery||{},m.id);
+    legacySeed(target,moduleScope(m.id),'recognition',(target.mastery||{})[m.id],mtouched,'legacy-module-quiz');
+    m.lessons.forEach((_,li)=>{
+      const key=(typeof topicKey==='function')?topicKey(m.id,li):(m.id+'-'+li);
+      const rt=Object.prototype.hasOwnProperty.call(target.topicMastery||{},key);
+      legacySeed(target,topicScope(key),'recognition',(target.topicMastery||{})[key],rt,'legacy-mini-quiz');
+      const ct=Object.prototype.hasOwnProperty.call(target.topicExplain||{},key);
+      legacySeed(target,topicScope(key),'causality',(target.topicExplain||{})[key],ct,'legacy-self-explanation');
+    });
+  });
+  return target;
+}
+
+function evidenceRecord(scope, dim){
+  if(!state.dimensionEvidence) state.dimensionEvidence={};
+  if(!state.dimensionEvidence[scope]) state.dimensionEvidence[scope]={};
+  if(!state.dimensionEvidence[scope][dim]) state.dimensionEvidence[scope][dim]=blankEvidence();
+  state.dimensionEvidence[scope][dim]=normalizeEvidence(state.dimensionEvidence[scope][dim]);
+  return state.dimensionEvidence[scope][dim];
+}
+function evidenceWeight(source){
+  return ({review:.48,'module-quiz':.34,'mini-quiz':.38,'self-rate':.22,prediction:.16}[source]||.28);
+}
+function recordDimensionEvidence(scope, dim, result, source, meta){
+  if(!scope||!KNOWLEDGE_DIM_IDS.includes(dim)) return;
+  result=clampKnowledge(result);
+  const rec=evidenceRecord(scope,dim);
+  const w=evidenceWeight(source);
+  rec.score=rec.attempts===0?result:(rec.score*(1-w)+result*w);
+  rec.attempts+=1;
+  rec.correct+=result;
+  rec.best=Math.max(rec.best,result);
+  rec.last=result;
+  rec.updatedAt=Date.now();
+  rec.legacy=false;
+  rec.sources[source]=(rec.sources[source]||0)+1;
+  if(meta&&meta.questionId){
+    if(!state.questionHistory) state.questionHistory={};
+    state.questionHistory[meta.questionId]={scope,dim,result,source,at:rec.updatedAt};
+  }
+}
+function scopeDimensionScore(scope, dim){
+  const group=state.dimensionEvidence&&state.dimensionEvidence[scope];
+  const rec=group&&group[dim];
+  return rec&&Number(rec.attempts)>0?clampKnowledge(rec.score):null;
+}
+function topicDimensionScores(key){
+  const out={}; KNOWLEDGE_DIM_IDS.forEach(id=>out[id]=scopeDimensionScore(topicScope(key),id)); return out;
+}
+function weakestDimensionForTopic(key){
+  const scores=topicDimensionScores(key);
+  const tried=KNOWLEDGE_DIMS.filter(d=>scores[d.id]!==null);
+  if(!tried.length) return Object.assign({},KNOWLEDGE_DIMS[0],{score:null});
+  const d=tried.sort((a,b)=>scores[a.id]-scores[b.id])[0];
+  return Object.assign({},d,{score:scores[d.id]});
+}
+function formatKnowledgeScore(v){ return v===null?'—':Math.round(v*100)+'%'; }
+function knowledgeTone(v){ if(v===null)return 'empty'; if(v>=.78)return 'strong'; if(v>=.5)return 'forming'; return 'fragile'; }
+function dimensionChipHTML(q, context){
+  const id=inferQuestionDimension(q,context); const d=dimMeta(id);
+  return `<span class="dim-chip dim-${id}">${d.label}</span>`;
+}
+function topicDimensionStripHTML(moduleId, lessonIdx){
+  const key=moduleId+'-'+lessonIdx; const scores=topicDimensionScores(key);
+  return `<div class="topic-dims" id="topic-dims-${moduleId}-${lessonIdx}" aria-label="Domínio por dimensão deste tópico">${KNOWLEDGE_DIMS.map(d=>{const v=scores[d.id];return `<span class="topic-dim ${knowledgeTone(v)}"><small>${d.short}</small><b>${formatKnowledgeScore(v)}</b></span>`;}).join('')}</div>`;
+}
+function refreshTopicKnowledge(moduleId,lessonIdx){
+  const el=document.getElementById('topic-dims-'+moduleId+'-'+lessonIdx);
+  if(el) el.outerHTML=topicDimensionStripHTML(moduleId,lessonIdx);
+}
+
+function resolveQuestionContextFromKey(key){
+  let m;
+  let hit=String(key||'').match(/^M:(.+)-(\d+):(\d+)$/);
+  if(hit){
+    m=MODULES.find(x=>x.id===hit[1]); const li=Number(hit[2]), qi=Number(hit[3]);
+    const q=m&&MINI_QUIZZES[m.id]&&MINI_QUIZZES[m.id][li]&&MINI_QUIZZES[m.id][li][qi];
+    return q?{q,scope:topicScope(m.id+'-'+li),questionId:key,context:{module:m,lessonIndex:li,source:'mini'}}:null;
+  }
+  hit=String(key||'').match(/^Q:([^:]+):(\d+)$/);
+  if(hit){
+    m=MODULES.find(x=>x.id===hit[1]); const qi=Number(hit[2]); const q=m&&m.quiz[qi];
+    return q?{q,scope:moduleScope(m.id),questionId:key,context:{module:m,source:'module'}}:null;
+  }
+  return null;
+}
+function recordSelfRateEvidence(key,val){
+  const ctx=resolveQuestionContextFromKey(key); if(!ctx) return;
+  const map=(typeof RATE_VAL!=='undefined')?RATE_VAL:{clear:1,partial:.5,none:0};
+  const dim=inferQuestionDimension(ctx.q,ctx.context);
+  recordDimensionEvidence(ctx.scope,dim,map[val]||0,'self-rate',{questionId:'S:'+ctx.questionId});
+  if(ctx.context&&ctx.context.source==='mini') refreshTopicKnowledge(ctx.context.module.id,ctx.context.lessonIndex);
+}
+
+function setSrsReason(rec, code, key, score){
+  rec.reason=code;
+  rec.reasonAt=Date.now();
+  rec.lastScore=typeof score==='number'?clampKnowledge(score):null;
+  rec.weakDimension=weakestDimensionForTopic(key).id;
+  rec.reasonInterval=SRS_INTERVALS[Math.max(0,Math.min(SRS_INTERVALS.length-1,Number(rec.box)||0))];
+}
+function normalizeSrsReason(rec,key){
+  if(!rec.reason){
+    if((rec.lapses||0)>0) rec.reason='lapse';
+    else if((rec.reps||0)===0) rec.reason='first';
+    else rec.reason='interval';
+  }
+  if(!KNOWLEDGE_DIM_IDS.includes(rec.weakDimension)) rec.weakDimension=weakestDimensionForTopic(key).id;
+  if(!rec.reasonInterval) rec.reasonInterval=SRS_INTERVALS[Math.max(0,Math.min(SRS_INTERVALS.length-1,Number(rec.box)||0))];
+  return rec;
+}
+function normalizeAllSrsReasons(){
+  if(!state.srs||typeof state.srs!=='object') return;
+  Object.keys(state.srs).forEach(key=>normalizeSrsReason(state.srs[key],key));
+}
+function reviewReasonData(topic){
+  const rec=normalizeSrsReason((state.srs&&state.srs[topic.key])||{},topic.key);
+  const currentWeak=weakestDimensionForTopic(topic.key);
+  const weak=currentWeak.score!==null?currentWeak:dimMeta(rec.weakDimension||currentWeak.id);
+  let title,body;
+  if(topic.overdue>0){ title='O intervalo já terminou'; body=`Este tópico venceu há ${topic.overdue} dia${topic.overdue!==1?'s':''}. Recuperar agora mede o que permaneceu sem apoio.`; }
+  else if(rec.reason==='lapse'){ title='Volta mais cedo após uma dificuldade'; body='A última recuperação teve erro ou explicação incompleta, então o intervalo foi encurtado para reconstruir a memória.'; }
+  else if(rec.reason==='first'){ title='Primeira recuperação depois do estudo'; body='A primeira volta acontece cedo para transformar familiaridade em lembrança recuperável.'; }
+  else { title='O intervalo programado terminou'; body=`O tópico ficou ${rec.reasonInterval||SRS_INTERVALS[rec.box||0]} dia${(rec.reasonInterval||SRS_INTERVALS[rec.box||0])!==1?'s':''} sem apoio. Agora é o momento de testar retenção.`; }
+  return {title,body,weak};
+}
+// Versão de uma linha, usada na lista de revisão do dashboard. O bloco extenso
+// que existia dentro de cada questão saiu: repetia este mesmo texto — que o
+// aluno já lê na lista, antes de começar — uma vez por pergunta do tópico.
+function reviewReasonText(topic){ const r=reviewReasonData(topic); return `${r.title} · foco mais frágil: ${r.weak.label}`; }
+function orderReviewQuestions(qs,key){
+  const weak=weakestDimensionForTopic(key).id;
+  return qs.map((q,i)=>Object.assign({_reviewIndex:i},q)).sort((a,b)=>{
+    const aw=inferQuestionDimension(a)==weak?0:1, bw=inferQuestionDimension(b)==weak?0:1;
+    return aw-bw || (Number(b.lvl||0)-Number(a.lvl||0)) || (a._reviewIndex-b._reviewIndex);
+  });
+}

@@ -1,7 +1,7 @@
 {
   "packageId": "io.github.wevertonlink.neurolab",
   "host": "wevertonlink.github.io",
-  "name": "NeuroLab V2",
+  "name": "NeuroLab — Estudo Interativo de Neurociência",
   "launcherName": "NeuroLab",
   "display": "standalone",
   "orientation": "portrait",

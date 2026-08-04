@@ -1,33 +1,46 @@
-# NeuroLab V2 — Fase 9
+# NeuroLab — Estudo Interativo de Neurociência
 
-Aplicação educacional móvel de neurociência com 16 módulos, anatomia interativa, mecanismos causais, glossário contextual, metáforas didáticas e quizzes.
+Aplicação educacional móvel com 16 módulos, anatomia interativa, mecanismos causais, glossário contextual, metáforas didáticas, revisão e quizzes.
 
-## Novidade da Fase 9
+## Versão 1.5 — qualidade, clareza e manutenção
 
-A **Visão integrada** agora está disponível nos **16 módulos**. Cada módulo recebeu um infográfico vertical próprio, uma miniatura otimizada, ampliação em tela cheia, explicações complementares em HTML e uma distinção conceitual específica.
+Esta versão preserva a experiência existente e melhora a base do projeto:
 
-O mesmo botão abre e fecha a visão, preservando a navegação livre entre Anatomia, Mecanismo e Visão integrada. Todos os 32 assets WebP — miniatura e versão ampliada de cada módulo — entram no cache offline do PWA.
+- CSS e JavaScript foram retirados do `index.html` e organizados em `styles/` e `src/`;
+- os 16 módulos continuam carregados em scripts clássicos, na mesma ordem, sem framework e sem dependências em tempo de execução;
+- as 16 metáforas agora têm representação estruturada e a auditoria reprova erros **e avisos**;
+- a metáfora de Atenção foi refeita com uma restrição concreta de capacidade;
+- textos sobre atenção, consolidação da memória e linguagem foram qualificados para evitar modelos excessivamente localizacionistas;
+- cada módulo recebeu uma barra de navegação local livre entre visuais, aulas, metáfora, mapa, fontes e teste;
+- fontes pequenas e alvos de toque críticos foram ampliados;
+- a política de privacidade passou a descrever corretamente as atualizações de arquivos na própria origem;
+- o service worker armazena o novo conjunto de CSS e scripts para uso offline.
 
-## Fases anteriores preservadas
+Detalhes: `docs/CHANGELOG_QUALIDADE_2026-07-31.md`.
 
-- mecanismo contextual por tópico e por módulo;
-- glossário clicável e relações termo → mecanismo;
-- 78 componentes anatômicos interativos;
-- mini quizzes por tópico e avaliação integrada;
-- metáforas didáticas e modo profundo;
-- auditoria Playwright para múltiplos tamanhos de tela em retrato.
+## Estrutura principal
 
-## Executar a auditoria
+```text
+index.html                 casco semântico da aplicação
+styles/base.css            identidade visual e componentes-base
+styles/features.css        recursos avançados e acessibilidade
+src/01-metaphors.js        metáforas e renderização “Imagine assim”
+src/02-integrated-visuals.js
+src/03-context-mechanisms.js
+src/04-learning-model.js
+src/05-app.js              dados dos módulos e aplicação principal
+src/06-service-worker-register.js
+sw.js                      cache offline
+```
+
+## Executar as verificações
 
 ```bash
 npm ci
+npm run check:metaforas
+npm run check:content
 npx playwright install chromium
 npm test
 ```
 
-Consulte:
-
-- `docs/CHANGELOG_FASE8.md` — abertura e fechamento pelo mesmo controle;
-- `docs/CHANGELOG_FASE7.md` — integração visual detalhada;
-- `docs/CONTEXT_AUDIT.md` — auditoria termo → mecanismo;
-- `docs/context-coverage.csv` — cobertura contextual.
+No Android/Termux, o Playwright não oferece suporte nativo ao Chromium. As duas auditorias em Node funcionam no Termux; a suíte Playwright deve rodar no GitHub Actions ou em um computador compatível.

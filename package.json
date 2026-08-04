@@ -1,17 +1,16 @@
 {
   "name": "neurolab-v2-playwright-audit",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
-  "description": "Auditoria automatizada do NeuroLab V2 com visão integrada nos 16 módulos, mecanismo vertical, cobertura contextual e testes móveis.",
+  "description": "Auditoria automatizada do NeuroLab: 16 módulos, metáforas verificadas, acessibilidade móvel, cobertura contextual e funcionamento offline.",
   "scripts": {
-    "test": "npm run check:metaforas && npm run check:quiz && npm run check:cadeias && playwright test",
+    "test": "npm run check:metaforas && npm run check:content && playwright test",
     "check:metaforas": "node tools/verifica-metaforas.js",
-    "check:quiz": "node tools/verifica-quiz.js",
-    "check:cadeias": "node tools/verifica-cadeias.js",
     "test:smoke": "playwright test --grep @smoke",
     "test:coverage": "playwright test --grep @coverage --project=mobile-chromium",
     "test:visual": "playwright test --grep @visual --project=mobile-chromium",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "check:content": "node tools/audit-content.js"
   },
   "devDependencies": {
     "@playwright/test": "1.61.1"
