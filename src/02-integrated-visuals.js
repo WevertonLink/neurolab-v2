@@ -355,7 +355,14 @@ function selectFunctionalStep(i,focus=true){
     const on=n===_funcStep;
     b.classList.toggle('active',on);
     b.setAttribute('aria-current',on?'step':'false');
-    if(on){ try{ b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'}); }catch(e){} }
+    if(on){
+      try{
+        const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // Chamadas programáticas (focus=false), como o salto vindo do modal,
+        // precisam posicionar a etapa antes de devolver o controle à interface.
+        b.scrollIntoView({behavior:(!focus||reduced)?'auto':'smooth',block:'center'});
+      }catch(e){}
+    }
   });
   const current=d.chain[_funcStep];
   const prev=_funcStep>0?d.chain[_funcStep-1]:null;

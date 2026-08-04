@@ -6140,7 +6140,9 @@ function scrollModuleSection(id){
   if(!el) return;
   const offset=(document.querySelector('.top')?.getBoundingClientRect().height||0)+76;
   const top=window.scrollY+el.getBoundingClientRect().top-offset;
-  window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+  // Saltos de navegação precisam terminar no mesmo quadro. Em páginas longas,
+  // a animação suave ainda estava em curso quando o aluno já esperava estar na seção.
+  window.scrollTo({top:Math.max(0,top),behavior:'auto'});
   if(/^lesson-\d+$/.test(id)){
     el.classList.add('jumped');
     setTimeout(()=>el.classList.remove('jumped'),1200);
