@@ -38,13 +38,18 @@ const DOMAIN_COUNTERFACTUALS = [
       "Ignora que a permeabilidade só produz uma voltagem de equilíbrio porque existem concentrações diferentes de íons nos dois lados.",
       "Prevê apenas aumento de atividade e desconsidera a perda progressiva dos gradientes e os limites impostos pela refratariedade."
     ],
-    "explanation": "A bomba não produz cada disparo. Ela recompõe os gradientes consumidos pelos fluxos iônicos; por isso, sua ausência causa uma deterioração progressiva, não um desligamento instantâneo.",
+    "explanation": "A bomba não é o motor do disparo — é a manutenção. O tempo todo há um vazamento: Na⁺ escorrega para dentro e K⁺ para fora, e cada disparo gasta mais um pouco do gradiente. A bomba repõe esse gasto em segundo plano, 3 Na⁺ para fora e 2 K⁺ para dentro, à custa de ATP. Pare a bomba e nada muda no instante: os canais ainda têm gradiente estocado para disparar. Mas o vazamento continua e ninguém mais o compensa — a cada ciclo o gradiente encolhe, o repouso deriva, o limiar fica errático, até o disparo não se sustentar.",
     "chain": [
-      "bomba deixa de restaurar gradientes",
-      "fluxos pelos canais continuam consumindo diferenças",
-      "repouso e excitabilidade perdem estabilidade",
-      "disparos normais deixam de ser sustentáveis"
-    ]
+      "a bomba para, mas o gradiente estocado ainda existe — os canais disparam por um tempo",
+      "cada disparo e o vazamento consomem esse gradiente, e agora nada o repõe",
+      "o repouso sobe e o limiar deixa de ser confiável",
+      "o ciclo regenerativo do Na⁺ perde a base de que depende",
+      "os disparos deixam de se sustentar — some devagar, não de vez"
+    ],
+    "extend": {
+      "q": "E se, em vez da bomba, você bloqueasse os canais de Na⁺ dependentes de voltagem?",
+      "a": "Aí o disparo para na hora — porque esses canais são o motor da despolarização, não a manutenção. O contraste fixa a distinção: a bomba é reposição lenta em segundo plano; os canais são a geração imediata do sinal."
+    }
   },
   {
     "id": "plasticidade-nmda",
@@ -65,13 +70,18 @@ const DOMAIN_COUNTERFACTUALS = [
       "Inverte o papel do cálcio relevante para a indução de LTP e trata a ausência de sinalização como proteção da memória.",
       "Confunde receptores distintos: AMPA pode sustentar transmissão rápida mesmo quando a sinalização pelo NMDA está prejudicada."
     ],
-    "explanation": "O NMDA participa tanto da coincidência quanto da entrada de um sinal intracelular. Se a porta abre mas o cálcio quase não entra, a transmissão existente pode permanecer enquanto a indução de fortalecimento duradouro perde força.",
+    "explanation": "O NMDA faz duas coisas ao mesmo tempo, e o exercício separa uma da outra. Ele é a porta lógica E: só abre com glutamato E a membrana já despolarizada — é assim que detecta que o neurônio de antes e o de depois dispararam juntos (a coincidência de Hebb). E, ao abrir, deixa entrar cálcio, que aciona a CaMKII e instala mais receptores AMPA — é isso que fortalece a sinapse. Se a porta abre mas quase não entra cálcio, a coincidência ainda é detectada e a transmissão por AMPA continua, mas falta o mensageiro que transforma coincidência em fortalecimento duradouro. Detectar não é o mesmo que gravar.",
     "chain": [
-      "coincidência pré-pós ainda é detectada",
-      "entrada de cálcio fica pequena",
-      "cascatas de plasticidade recebem pouco sinal",
-      "fortalecimento duradouro fica limitado"
-    ]
+      "glutamato + membrana despolarizada abrem a porta E do NMDA",
+      "a coincidência pré-pós é detectada — a parte 'Hebb' funciona",
+      "mas quase nenhum cálcio entra, e o cálcio era o mensageiro",
+      "sem cálcio, a CaMKII não instala AMPA extra",
+      "a transmissão segue, mas a LTP não se induz"
+    ],
+    "extend": {
+      "q": "E se, em vez de reduzir o cálcio, você removesse a rolha de magnésio do NMDA?",
+      "a": "Aí o NMDA abriria com qualquer glutamato, mesmo com a célula em repouso — a porta E viraria uma porta sempre-ligada. Toda sinapse ativa se fortaleceria, coincidindo ou não, e o cérebro perderia a capacidade de distinguir causa de coincidência. É o oposto deste caso: aqui sobra detecção e falta gravação; lá sobraria gravação sem discriminação."
+    }
   },
   {
     "id": "recompensa-previsto",
@@ -509,14 +519,18 @@ const DOMAIN_CASES = [
       "Iguala formas de prática e reduz sono a energia subjetiva, ignorando processos ligados à memória.",
       "Reduz o espaçamento a motivação e retira o mecanismo central de recuperação entre intervalos."
     ],
-    "explanation": "Reconhecer enquanto o material permanece recente mede familiaridade e disponibilidade de pistas. Retenção futura exige recuperação independente e é influenciada pelo estado atencional e pelo sono posterior.",
+    "explanation": "O caso separa duas coisas que parecem a mesma: ir bem durante o estudo e reter depois. Reconhecer quase todas as frases no fim da noite mede familiaridade — o material está recente e cheio de pistas na tela. Mas reter e reconstruir dois dias depois exige recuperação independente, sem pistas, e isso a releitura quase não treinou. Somam-se dois fatores de estado: a atenção caiu ao longo de seis horas, degradando a codificação, e o sono curto cortou a consolidação que estabilizaria o traço à noite. Não é um fator só — é familiaridade confundida com memória, sobre uma base mal codificada e não consolidada.",
     "chain": [
-      "releitura aumenta familiaridade imediata",
-      "pouca recuperação testa o traço",
-      "fadiga reduz qualidade do processamento",
-      "sono curto limita estabilização",
-      "reconstrução futura fica fraca"
-    ]
+      "seis horas de releitura elevam a familiaridade imediata",
+      "quase não houve recuperação ativa — o traço nunca foi testado sem pistas",
+      "a atenção cai ao longo das horas e a codificação perde qualidade",
+      "o sono curto corta a janela de consolidação da noite",
+      "dois dias depois, sem pistas e sem consolidação, a reconstrução falha"
+    ],
+    "extend": {
+      "q": "E se ele trocasse duas das seis horas por recuperações espaçadas em três dias, dormindo bem?",
+      "a": "Reconheceria menos frases no calor da hora, mas reconstruiria mais dois dias depois. Cada recuperação no limiar do esquecimento reengaja a maquinaria de consolidação, e o sono entre as sessões estabiliza o traço. É o princípio da própria fila de revisão do NeuroLab: menos brilho imediato, mais memória durável."
+    }
   },
   {
     "id": "habito-deixa",
@@ -1064,7 +1078,7 @@ function domainActivityFeedback(type,item,rec){
   const right=rec.lastResult===1;
   const clarity=typeof rec.clarity==='number'?rec.clarity:null;
   const buttons=[['1','Consegui reconstruir'],['0.5','Faltou uma ligação'],['0','Só reconheci depois']];
-  return `<div class="dm-feedback ${right?'right':'wrong'}"><div class="dm-verdict">${right?'✓ A cadeia ficou de pé':'✕ A primeira ruptura foi outra'}</div><p>${item.explanation}</p><ol>${item.chain.map(x=>`<li>${x}</li>`).join('')}</ol>
+  return `<div class="dm-feedback ${right?'right':'wrong'}"><div class="dm-verdict">${right?'✓ A cadeia ficou de pé':'✕ A primeira ruptura foi outra'}</div><p>${item.explanation}</p><ol>${item.chain.map(x=>`<li>${x}</li>`).join('')}</ol>${item.extend?`<div class="dm-extend"><span>Estenda a cadeia</span><p><b>${item.extend.q}</b> ${item.extend.a}</p></div>`:''}
     <div class="dm-clarity"><span>Sem olhar, você conseguiria reconstruir a cadeia?</span><div>${buttons.map(([v,l])=>`<button class="${clarity!==null&&Number(v)===clarity?'picked':''}" onclick="domainRateActivity('${type}','${item.id}',${v})">${l}</button>`).join('')}</div></div>
     <button class="bigbtn ghost dm-retry" style="--mc:var(--violet)" onclick="domainRetryActivity('${type}','${item.id}')">Tentar novamente sem apoio</button>
   </div>`;
