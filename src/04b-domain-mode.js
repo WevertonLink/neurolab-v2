@@ -1023,6 +1023,7 @@ function domainOpenCase(id){
   state.domain.activeTab='cases'; saveState();
   const body=document.getElementById('dm-body'); if(!body){ openDomainMode('cases'); return; }
   body.innerHTML=domainRenderCaseDetail(c);
+  domainGlossifyDetail(body);
   window.scrollTo({top:0,behavior:'auto'});
 }
 function domainRenderCaseDetail(c){
@@ -1056,6 +1057,7 @@ function domainOpenCounter(id){
   ensureDomainState(); state.domain.activeTab='counter'; saveState();
   const body=document.getElementById('dm-body'); if(!body){ openDomainMode('counter'); return; }
   body.innerHTML=domainRenderCounterDetail(c);
+  domainGlossifyDetail(body);
   window.scrollTo({top:0,behavior:'auto'});
 }
 function domainRenderCounterDetail(c){
@@ -1082,6 +1084,20 @@ function domainActivityFeedback(type,item,rec){
     <div class="dm-clarity"><span>Sem olhar, você conseguiria reconstruir a cadeia?</span><div>${buttons.map(([v,l])=>`<button class="${clarity!==null&&Number(v)===clarity?'picked':''}" onclick="domainRateActivity('${type}','${item.id}',${v})">${l}</button>`).join('')}</div></div>
     <button class="bigbtn ghost dm-retry" style="--mc:var(--violet)" onclick="domainRetryActivity('${type}','${item.id}')">Tentar novamente sem apoio</button>
   </div>`;
+}
+function domainGlossifyDetail(body){
+  // Torna os termos clicaveis (abrindo a janela do glossario) nas superficies
+  // de leitura do detalhe: cenario/enunciado, pergunta do caso e o feedback
+  // (explicacao, cadeia e "Estenda a cadeia"). Nunca nas alternativas, que ja
+  // sao botoes — aninhar botao dentro de botao seria invalido.
+  if(!body || typeof glossify!=='function') return;
+  body.querySelectorAll('.dm-scenario, .dm-question h4').forEach(el=>glossify(el));
+  const fb=body.querySelector('.dm-feedback');
+  if(fb){
+    const p=fb.querySelector(':scope > p'); if(p) glossify(p);
+    const ol=fb.querySelector(':scope > ol'); if(ol) glossify(ol);
+    const ex=fb.querySelector('.dm-extend'); if(ex) glossify(ex);
+  }
 }
 function domainRateActivity(type,id,value){
   ensureDomainState(); const bucket=type==='case'?state.domain.cases:state.domain.counterfactual;

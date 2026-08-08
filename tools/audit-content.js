@@ -168,7 +168,7 @@ if (!errors.length) {
     'política não descreve as atualizações na própria origem');
   ok(!/não faz nenhuma requisição à internet/i.test(privacy),
     'política voltou a afirmar ausência absoluta de requisições');
-  ok(/neurolab-v1-7-3/.test(sw), 'versão do cache offline não foi atualizada');
+  ok(/neurolab-v1-7-4/.test(sw), 'versão do cache offline não foi atualizada');
   required.filter((f) => f.startsWith('styles/') || f.startsWith('src/'))
     .forEach((f) => ok(sw.includes(`'./${f}'`), `arquivo não incluído no precache: ${f}`));
 
