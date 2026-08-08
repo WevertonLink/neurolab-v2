@@ -40,11 +40,11 @@ const DOMAIN_COUNTERFACTUALS = [
     ],
     "explanation": "A bomba não é o motor do disparo — é a manutenção. O tempo todo há um vazamento: Na⁺ escorrega para dentro e K⁺ para fora, e cada disparo gasta mais um pouco do gradiente. A bomba repõe esse gasto em segundo plano, 3 Na⁺ para fora e 2 K⁺ para dentro, à custa de ATP. Pare a bomba e nada muda no instante: os canais ainda têm gradiente estocado para disparar. Mas o vazamento continua e ninguém mais o compensa — a cada ciclo o gradiente encolhe, o repouso deriva, o limiar fica errático, até o disparo não se sustentar.",
     "chain": [
-      "a bomba para, mas o gradiente estocado ainda existe — os canais disparam por um tempo",
-      "cada disparo e o vazamento consomem esse gradiente, e agora nada o repõe",
-      "o repouso sobe e o limiar deixa de ser confiável",
-      "o ciclo regenerativo do Na⁺ perde a base de que depende",
-      "os disparos deixam de se sustentar — some devagar, não de vez"
+      "gradiente iônico ainda estocado",
+      "fluxos e vazamento consomem o gradiente sem reposição",
+      "potencial de repouso sobe",
+      "limiar fica errático",
+      "disparo deixa de se sustentar"
     ],
     "extend": {
       "q": "E se, em vez da bomba, você bloqueasse os canais de Na⁺ dependentes de voltagem?",
@@ -72,11 +72,11 @@ const DOMAIN_COUNTERFACTUALS = [
     ],
     "explanation": "O NMDA faz duas coisas ao mesmo tempo, e o exercício separa uma da outra. Ele é a porta lógica E: só abre com glutamato E a membrana já despolarizada — é assim que detecta que o neurônio de antes e o de depois dispararam juntos (a coincidência de Hebb). E, ao abrir, deixa entrar cálcio, que aciona a CaMKII e instala mais receptores AMPA — é isso que fortalece a sinapse. Se a porta abre mas quase não entra cálcio, a coincidência ainda é detectada e a transmissão por AMPA continua, mas falta o mensageiro que transforma coincidência em fortalecimento duradouro. Detectar não é o mesmo que gravar.",
     "chain": [
-      "glutamato + membrana despolarizada abrem a porta E do NMDA",
-      "a coincidência pré-pós é detectada — a parte 'Hebb' funciona",
-      "mas quase nenhum cálcio entra, e o cálcio era o mensageiro",
-      "sem cálcio, a CaMKII não instala AMPA extra",
-      "a transmissão segue, mas a LTP não se induz"
+      "porta E do NMDA se abre",
+      "coincidência pré-pós é detectada",
+      "entrada de cálcio fica muito reduzida",
+      "CaMKII não instala AMPA extra",
+      "LTP não se induz"
     ],
     "extend": {
       "q": "E se, em vez de reduzir o cálcio, você removesse a rolha de magnésio do NMDA?",
@@ -102,13 +102,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Esta opção distingue o sinal na pista do sinal no resultado e representa a diferença próxima de zero no momento esperado.",
       "Generaliza um componente fásico específico para toda a atividade dopaminérgica e para todas as funções do sistema."
     ],
-    "explanation": "Erro de previsão representa discrepância. Depois do aprendizado, a pista passa a carregar informação preditiva; quando o resultado confirma exatamente a expectativa, há pouco a atualizar naquele momento.",
+    "explanation": "O neurônio de dopamina não sinaliza a recompensa — sinaliza a surpresa: a diferença entre o que veio e o que era esperado. Quando uma pista já aprendida prevê certinho o momento e o tamanho do prêmio, o resultado não traz nada de novo para atualizar, então a resposta fásica no prêmio quase some. E ela não sumiu do circuito: migrou para trás, para a pista que passou a carregar a informação preditiva. Erro de previsão baixo não é dopamina desligada — é previsão já aprendida.",
     "chain": [
       "pista adquire valor preditivo",
       "expectativa se forma antes do resultado",
       "resultado coincide com a previsão",
       "erro no resultado fica pequeno"
-    ]
+    ],
+    "extend": {"q": "E se, depois de tudo aprendido, o prêmio esperado simplesmente não vier?", "a": "A dopamina cai abaixo do basal no exato momento em que ele era esperado — um erro de previsão negativo, o sinal de 'piorou em relação ao previsto'. É a mesma régua (recebido menos esperado) medindo agora uma ausência. Por isso frustração e recompensa surpresa usam o mesmo mecanismo, em direções opostas."}
   },
   {
     "id": "decisao-valor-antigo",
@@ -129,13 +130,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Subestima a força do valor aprendido: uma estimativa antiga tende a enviesar a escolha, não a torná-la sem direção.",
       "Esta opção mantém percepção e ação possíveis, mas mostra como uma representação desatualizada orienta escolhas persistentes."
     ],
-    "explanation": "Decisão depende de valores estimados, não apenas do resultado presente. Quando a atualização falha, a escolha pode ser coerente com o modelo interno e inadequada ao ambiente atual.",
+    "explanation": "A escolha não compara os resultados de agora — compara valores estimados, guardados de experiências passadas. Esses valores são corrigidos pelo erro de previsão a cada resultado; se essa atualização falha, a estimativa antiga continua vencendo a comparação mesmo depois de o resultado real ter piorado. A pessoa vê o prejuízo, mas o número interno que guia a decisão ainda é o velho. Escolher mal aqui não é não perceber — é decidir com um valor desatualizado.",
     "chain": [
       "resultado da opção se modifica",
       "estimativa interna não acompanha a mudança",
       "comparação usa valor antigo",
       "escolha persiste apesar do prejuízo"
-    ]
+    ],
+    "extend": {"q": "E se a atualização de valor funcionasse normalmente?", "a": "Cada resultado ruim empurraria a estimativa para baixo, via erro de previsão negativo, e em poucas tentativas a opção deixaria de ser escolhida. É exatamente essa correção que o aprendizado por reforço faz — e é a ausência dela, não falta de percepção, que prende a escolha no valor antigo."}
   },
   {
     "id": "atencao-supressao",
@@ -156,13 +158,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Reduz a interferência a tempo de resposta e exclui efeitos previsíveis sobre seleção, erros e trocas.",
       "Transforma esforço em compensação ilimitada e desconsidera limites de carga e competição."
     ],
-    "explanation": "Saber o que fazer e proteger a execução são operações relacionadas, mas não idênticas. A meta pode permanecer disponível enquanto a seleção oscila diante de competidores.",
+    "explanation": "Manter a meta e proteger a meta são duas operações diferentes. A memória de trabalho pode segurar 'foco nisto' com clareza, enquanto o mecanismo que inclina a competição contra os distratores falha — e aí estímulos irrelevantes continuam fortes e vencem a seleção. Saber o que fazer não impede a intrusão; é preciso um segundo processo que enfraqueça ativamente os concorrentes. Por isso a meta pode estar intacta e a execução, instável.",
     "chain": [
       "meta continua representada",
       "estímulos irrelevantes mantêm força competitiva",
       "seleção sofre intrusões e trocas",
       "execução fica menos estável"
-    ]
+    ],
+    "extend": {"q": "E se, em vez da meta, fosse a manutenção que falhasse — a meta escorregando da memória de trabalho?", "a": "O padrão se inverte: a pessoa se distrai não porque o distrator venceu, mas porque o alvo se apagou e não há mais o que proteger. Até distratores fracos assumem, porque não há meta competindo. Distinguir os dois casos muda a intervenção: reforçar a meta versus reduzir a interferência."}
   },
   {
     "id": "emocao-sem-contexto",
@@ -183,13 +186,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Confunde rapidez com precisão; remover contexto tende a ampliar generalização, não a torná-la específica.",
       "Restringe o hipocampo à linguagem e ignora seu papel na organização contextual e episódica."
     ],
-    "explanation": "Relevância e contexto contribuem de modos diferentes. Um estímulo pode mobilizar resposta sem que o sistema discrimine adequadamente em quais circunstâncias aquela resposta é apropriada.",
+    "explanation": "A amígdala avalia relevância rápido; o hipocampo fornece o contexto — onde, quando, em que circunstância. São contribuições paralelas, não uma dependente da outra. Se a relevância é sinalizada mas o contexto vem pobre, a resposta ainda dispara, só que sem a etiqueta situacional que diria 'aqui sim, ali não'. O resultado é generalização: a reação vaza para situações apenas parecidas. Não é medo a mais nem a menos — é medo sem endereço.",
     "chain": [
       "relevância é sinalizada",
       "contexto episódico fica incompleto",
       "situações semelhantes são menos discriminadas",
       "resposta tende a generalizar"
-    ]
+    ],
+    "extend": {"q": "E se fosse o contrário — contexto rico, mas a amígdala pouco reativa?", "a": "A pessoa saberia perfeitamente onde e quando algo acontece, mas sem o peso de relevância que faz aquilo importar e mobilizar o corpo. Discriminação boa, prioridade fraca. É o par oposto deste caso: aqui falta o 'onde'; lá faltaria o 'quanto importa'."}
   },
   {
     "id": "autonomo-recuperacao",
@@ -210,13 +214,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Esta opção reconhece que mobilização e retorno ao basal são etapas regulatórias distintas.",
       "Separa indevidamente experiência e fisiologia, embora a recuperação autonômica envolva parâmetros corporais mensuráveis."
     ],
-    "explanation": "O desaparecimento do desencadeador não completa automaticamente o retorno ao basal. A recuperação envolve mudanças regulatórias que reduzem a mobilização mantida.",
+    "explanation": "Desligar a mobilização não é o mesmo que ela acabar sozinha quando a ameaça some. O retorno ao basal é ativo: depende da retomada parassimpática — o freio vagal — reduzindo a frequência cardíaca e reativando a recuperação. Se esse freio volta devagar, o corpo continua mobilizado mesmo com o ambiente já seguro. Fim da ameaça e recuperação corporal são etapas separadas: uma é o gatilho parar, a outra é o sistema se recompor.",
     "chain": [
       "ameaça deixa de estar presente",
       "retirada da ativação é insuficiente",
       "recuperação parassimpática permanece fraca",
       "retorno ao basal fica prolongado"
-    ]
+    ],
+    "extend": {"q": "E se a ameaça continuar, mas o freio parassimpático estiver forte?", "a": "A recuperação compete com a mobilização em tempo real — é a base da regulação por respiração lenta, que aumenta o tônus vagal e puxa o corpo de volta mesmo sob estímulo. Mostra que mobilizar e recuperar são vias distintas, que podem operar ao mesmo tempo, e não um interruptor único."}
   },
   {
     "id": "sono-fragmentado",
@@ -237,13 +242,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Restringe o efeito a sonhos e exclui processos dependentes da arquitetura do sono.",
       "Esta opção mantém a distinção entre tempo total e qualidade/continuidade da arquitetura do sono."
     ],
-    "explanation": "Duração e continuidade são dimensões diferentes. Muitas horas na cama não garantem que os estágios tenham se organizado com a estabilidade necessária.",
+    "explanation": "O sono não vale pelo total de horas, e sim pela arquitetura — ciclos de cerca de 90 min encadeando sono profundo (N3) e REM, cada estágio com sua função. Despertar repetido reinicia e interrompe essas transições antes de elas se organizarem; o relógio marca oito horas, mas os estágios não chegam a fazer o trabalho. Duração e continuidade são eixos diferentes. Tempo na cama não é tempo de sono estruturado.",
     "chain": [
       "tempo total parece preservado",
       "despertares interrompem a arquitetura",
       "processos dependentes de continuidade ficam menos estáveis",
       "recuperação e consolidação podem diminuir"
-    ]
+    ],
+    "extend": {"q": "E se a pessoa dormisse seis horas seguidas, sem interrupção, em vez de oito fragmentadas?", "a": "Provavelmente consolidaria mais: ciclos inteiros completam as transições entre N3 e REM que a fragmentação corta. Menos horas contínuas podem render mais que mais horas picadas — porque o que consolida é a estrutura preservada, não o total acumulado."}
   },
   {
     "id": "neuroanatomia-conexao",
@@ -264,13 +270,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Transforma compensação possível em substituição imediata e completa.",
       "Reduz conectividade a velocidade e ignora efeitos sobre sincronização e integração."
     ],
-    "explanation": "Uma rede depende dos componentes e das conexões. A interrupção de uma via pode poupar habilidades locais e comprometer exatamente as tarefas que exigem cooperação.",
+    "explanation": "Uma função pode morar na região ou na conexão entre regiões — e lesões dissociam as duas. Se o tecido local de duas áreas está preservado, mas o feixe de substância branca que as liga é cortado, cada área ainda faz o seu; o que quebra é qualquer tarefa que dependa de elas trocarem informação a tempo. Isso é uma síndrome de desconexão: nós intactos, cabo rompido. Preservar as peças não preserva a cooperação entre elas.",
     "chain": [
       "regiões locais permanecem funcionais",
       "via entre elas é interrompida",
       "troca e sincronização se degradam",
       "função integrada fica prejudicada"
-    ]
+    ],
+    "extend": {"q": "E se, em vez do feixe, um dos nós (uma das regiões) fosse lesado, com as vias intactas?", "a": "Aí some a função local daquela região, e não a comunicação em si. O contraste localiza o déficit: dano no nó apaga uma competência específica; dano no cabo preserva as competências, mas impede combiná-las. Mesma rede, dois tipos de falha bem diferentes."}
   },
   {
     "id": "sensorial-talamo",
@@ -291,13 +298,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Generaliza vias alternativas e ignora a importância da retransmissão talâmica para o fluxo visual normal.",
       "Separa reflexo e percepção de forma rígida e subestima o impacto cortical da interrupção da via."
     ],
-    "explanation": "Captar luz não garante percepção. A informação precisa atravessar etapas de transmissão e retransmissão antes de participar do processamento cortical normal.",
+    "explanation": "Perceber é uma cadeia: transdução (a retina vira luz em sinal), retransmissão (o tálamo, no núcleo geniculado lateral, repassa ao córtex) e processamento cortical. O tálamo não é um fio passivo: é a estação obrigatória que dá acesso ao córtex visual. Se a transdução na retina está intacta mas essa retransmissão falha, o sinal nasce e não chega para virar percepção. Captar luz não é ver — ver depende de o sinal completar o caminho.",
     "chain": [
       "luz é transduzida na retina",
       "sinal entra na via visual",
       "retransmissão é interrompida",
       "processamento cortical normal recebe informação incompleta"
-    ]
+    ],
+    "extend": {"q": "E se a retina fosse lesada e o tálamo e o córtex ficassem intactos?", "a": "A cadeia falharia na entrada: sem transdução, não há sinal para retransmitir, e o córtex visual, perfeito, fica sem matéria-prima. O contraste mostra que cada etapa é necessária — a falha muda de lugar, mas o resultado (percepção incompleta) pode parecer o mesmo por fora. Localizar exige separar as etapas."}
   },
   {
     "id": "motor-cerebelo",
@@ -318,13 +326,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Esta opção mantém a iniciação e localiza o prejuízo na comparação e nos ajustes em curso.",
       "Confunde coordenação com geração de força e prevê o padrão inverso do esperado."
     ],
-    "explanation": "Iniciar e afinar uma ação são contribuições diferentes. A comparação entre intenção e resultado permite ajustes de timing, trajetória e erro durante o gesto.",
+    "explanation": "Iniciar um movimento e afiná-lo são trabalhos de estruturas diferentes: o córtex motor dispara o comando; o cerebelo compara o movimento previsto com o realizado e corrige timing e trajetória em tempo real. Se essa comparação falha, o gesto ainda começa — a ordem descendente sai normal — mas vai acumulando erro sem correção, ficando descoordenado. Começar não garante acertar. A coordenação é a calibração contínua, não o disparo inicial.",
     "chain": [
       "comando motor é iniciado",
       "previsão e feedback deixam de ser comparados adequadamente",
       "correções ficam imprecisas",
       "movimento perde coordenação"
-    ]
+    ],
+    "extend": {"q": "E se, em vez do cerebelo, fosse a via corticoespinhal (o próprio comando) que falhasse?", "a": "Aí o movimento nem começaria direito — faltaria força ou iniciação, não coordenação. O contraste separa as contribuições: sem comando, não há gesto; sem cerebelo, há gesto impreciso. Duas falhas que parecem 'não conseguir mover', mas por motivos opostos."}
   },
   {
     "id": "desenvolvimento-poda",
@@ -345,13 +354,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Exagera a consequência para colapso imediato e ignora redundância e compensação parcial.",
       "Esta opção reconhece que poda pode ajudar ou prejudicar conforme preserve os caminhos funcionalmente relevantes."
     ],
-    "explanation": "Poda é seleção, não simples subtração. Remover conexões pouco úteis pode refinar uma rede; remover conexões funcionais em excesso pode reduzir capacidade e flexibilidade.",
+    "explanation": "Poda sináptica é seleção, não subtração cega: eliminar conexões pouco usadas refina a rede e reduz ruído. Mas o benefício depende de quais conexões saem. Se a poda remove, em excesso, conexões que ainda carregavam função, a rede perde capacidade e flexibilidade — menos é melhor só até onde o que se corta era realmente dispensável. Eficiência não é ter menos sinapses; é preservar as relevantes. Cortar demais custa tanto quanto não cortar.",
     "chain": [
       "conexões funcionais são removidas",
       "redundância e rotas úteis diminuem",
       "algumas operações perdem suporte",
       "desempenho ou flexibilidade podem cair"
-    ]
+    ],
+    "extend": {"q": "E se a poda quase não ocorresse, mantendo conexões em excesso?", "a": "A rede ficaria ruidosa e pouco especializada — sinal e concorrência misturados, sem o ganho de eficiência da poda seletiva. É o extremo oposto: aqui o problema é cortar demais; lá seria cortar de menos. O ótimo é a seleção certa, não o máximo nem o mínimo de conexões."}
   },
   {
     "id": "linguagem-arqueado",
@@ -372,13 +382,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Move a lesão cortical para a periferia auditiva, apesar de a transdução não depender desse feixe.",
       "Transforma compensação parcial por outras rotas em preservação completa de repetição."
     ],
-    "explanation": "O padrão é de desconexão: componentes locais podem operar, mas uma tarefa que depende de transmissão precisa entre eles se torna desproporcionalmente difícil.",
+    "explanation": "A linguagem é uma rede distribuída, não dois centros: regiões temporais dão conta da compreensão, regiões frontais da produção, e um feixe dorsal (o fascículo arqueado) faz a transferência fonológica precisa entre elas. Se as pontas estão preservadas mas o feixe é lesado, compreensão e fala espontânea seguem — o que despenca é justamente o que exige carregar a forma sonora de uma ponta à outra: repetir. É desconexão, não perda de um 'centro da repetição'. A tarefa que quebra é a que depende do cabo.",
     "chain": [
       "compreensão local permanece relativamente funcional",
       "produção espontânea continua possível",
       "transferência fonológica perde precisão",
       "repetição fica mais prejudicada"
-    ]
+    ],
+    "extend": {"q": "E se a lesão fosse na região temporal de compreensão, e não no feixe?", "a": "Aí a compreensão em si se degradaria, e a fala tenderia a ficar fluente mas sem controle de significado. O contraste mostra por que 'não repetir' e 'não compreender' são déficits distintos: um é o cabo entre redes; o outro é uma das redes. Reduzir tudo a um centro perde essa distinção."}
   },
   {
     "id": "clinica-penumbra",
@@ -399,13 +410,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Separa sintoma de tecido e ignora que reperfusão em tempo útil pode preservar células ainda viáveis.",
       "Transforma estados dinâmicos de perfusão e dano em regiões anatômicas invariáveis."
     ],
-    "explanation": "A utilidade da intervenção depende da existência de tecido ainda viável. Tempo e perfusão influenciam quais áreas podem recuperar função e quais já ultrapassaram o limite de reversibilidade.",
+    "explanation": "Num AVC isquêmico há dois territórios: o núcleo, onde o fluxo caiu tanto que o tecido já morreu, e a penumbra, o tecido em volta que perdeu função mas ainda está vivo, sustentado por fluxo colateral. É a penumbra que a reperfusão em tempo útil pode salvar — o núcleo não responde do mesmo modo. E esses territórios são dinâmicos: dependem de tempo, perfusão e demanda, não de coordenadas fixas. Restaurar o fluxo ajuda quem ainda é viável; por isso 'tempo é cérebro'.",
     "chain": [
       "fluxo reduzido compromete função",
       "parte do tecido permanece viável",
       "reperfusão ocorre em tempo útil",
       "função pode ser preservada nessa região"
-    ]
+    ],
+    "extend": {"q": "E se o fluxo só voltasse muito depois, com a penumbra já convertida em núcleo?", "a": "A reperfusão encontraria tecido já morto e pouca função a recuperar — e ainda poderia lesar por reperfusão. É o mesmo procedimento com resultado oposto, decidido pelo relógio: a viabilidade do alvo, e não o gesto de reabrir o vaso, é o que determina o ganho."}
   },
   {
     "id": "farmacologia-receptor",
@@ -426,13 +438,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Esta opção separa quantidade de mensageiro da capacidade do alvo de responder.",
       "Generaliza o bloqueio de um conjunto de receptores para todas as ações do neurotransmissor."
     ],
-    "explanation": "Recaptação e recepção são etapas diferentes. Mais transmissor disponível não garante o efeito desejado quando o alvo responsável por mediá-lo está bloqueado.",
+    "explanation": "Ter mais mensageiro na fenda e conseguir entregar a mensagem são etapas separadas. Bloquear a recaptação faz o neurotransmissor se acumular — mas o efeito depende de ele encaixar no receptor que o medeia. Se esse receptor está ocupado por um antagonista, a concentração sobe e a resposta por aquela via continua limitada: a chave sobra, mas a fechadura está tampada. Disponibilidade não é resposta. O gargalo é o alvo, não a quantidade.",
     "chain": [
       "recaptação é reduzida",
       "transmissor permanece mais tempo na fenda",
       "receptores de interesse estão indisponíveis",
       "resposta por essa via fica limitada"
-    ]
+    ],
+    "extend": {"q": "E se, em vez de bloquear o receptor, a droga o tornasse mais sensível (potencializando a resposta)?", "a": "Aí o mesmo acúmulo de transmissor produziria efeito ampliado — disponibilidade e alvo respondendo juntos. O contraste isola as duas alavancas independentes da farmacologia: quanto mensageiro há na fenda e quão capaz o receptor está de responder. Mexer numa não substitui a outra."}
   },
   {
     "id": "metodos-eeg-local",
@@ -453,13 +466,14 @@ const DOMAIN_COUNTERFACTUALS = [
       "Atribui ao EEG uma especificidade química que o sinal de campo não fornece.",
       "Esta opção distingue o que é medido diretamente no tempo do que precisa ser inferido no espaço."
     ],
-    "explanation": "Métodos possuem perfis diferentes. O EEG é sensível à dinâmica temporal, mas a mistura de fontes e a condução pelo tecido tornam a localização um problema inverso.",
+    "explanation": "Todo método tem um perfil de resolução, e o do EEG é assimétrico: ótimo no tempo (capta mudanças em milissegundos), fraco no espaço. O potencial no couro cabeludo é a soma de muitas fontes, borrada pela condução através de crânio e tecido — daí localizar a origem ser um problema inverso: muitas configurações internas poderiam gerar o mesmo registro externo. Dá para estimar a fonte com modelos e anatomia, mas com incerteza. Medir quando com precisão não é medir onde com precisão.",
     "chain": [
       "atividade elétrica muda rapidamente",
       "EEG registra o momento com boa resolução",
       "fontes se somam no couro cabeludo",
       "origem espacial precisa ser inferida"
-    ]
+    ],
+    "extend": {"q": "E se a pergunta fosse 'onde exatamente', e não 'quando'?", "a": "Aí o EEG seria a ferramenta errada, e algo como a fMRI — boa no espaço, lenta no tempo — encaixaria melhor. Nenhum método é completo: escolher o método é escolher em qual eixo (tempo ou espaço) você pode confiar. Combinar métodos de perfis opostos é como se cobre a lacuna de cada um."}
   }
 ];
 
@@ -488,13 +502,14 @@ const DOMAIN_CASES = [
       "Usa aumento de ativação como melhora uniforme de controle e transforma dopamina em causa independente do contexto.",
       "Identifica saliência, mas a trata como causa suficiente e remove justamente as interações propostas pelo caso."
     ],
-    "explanation": "O caso separa possuir conhecimento de conseguir mantê-lo funcionalmente ativo durante uma decisão. Sono insuficiente e pressão podem tornar o controle e a representação das metas futuras menos estáveis, deslocando a competição em favor do imediato.",
+    "explanation": "O caso separa ter o conhecimento de conseguir usá-lo na hora. As consequências futuras a pessoa sabe descrever — o conteúdo está lá. Mas manter uma meta futura viva durante a decisão depende do controle pré-frontal e da memória de trabalho, e sono curto somado à pressão deixa esses sistemas menos estáveis. Com a meta futura enfraquecida na competição, os sinais de recompensa imediata ganham peso relativo e vencem. Não é ignorância nem falta de valor da meta: é a meta competindo em desvantagem por causa do estado.",
     "chain": [
       "sono e pressão alteram o estado",
       "manutenção da meta futura fica menos estável",
       "sinais imediatos competem com maior vantagem",
       "avaliação se orienta mais para o presente"
-    ]
+    ],
+    "extend": {"q": "E se a mesma pessoa decidisse descansada e sem pressão?", "a": "A meta futura se manteria estável na memória de trabalho e competiria de igual para igual — ou com vantagem — contra o imediato, e a escolha provavelmente mudaria. Mostra que o conhecimento era o mesmo; o que mudou foi a estabilidade do controle, um fator de estado, não de saber."}
   },
   {
     "id": "estudo-maratona",
@@ -521,11 +536,11 @@ const DOMAIN_CASES = [
     ],
     "explanation": "O caso separa duas coisas que parecem a mesma: ir bem durante o estudo e reter depois. Reconhecer quase todas as frases no fim da noite mede familiaridade — o material está recente e cheio de pistas na tela. Mas reter e reconstruir dois dias depois exige recuperação independente, sem pistas, e isso a releitura quase não treinou. Somam-se dois fatores de estado: a atenção caiu ao longo de seis horas, degradando a codificação, e o sono curto cortou a consolidação que estabilizaria o traço à noite. Não é um fator só — é familiaridade confundida com memória, sobre uma base mal codificada e não consolidada.",
     "chain": [
-      "seis horas de releitura elevam a familiaridade imediata",
-      "quase não houve recuperação ativa — o traço nunca foi testado sem pistas",
-      "a atenção cai ao longo das horas e a codificação perde qualidade",
-      "o sono curto corta a janela de consolidação da noite",
-      "dois dias depois, sem pistas e sem consolidação, a reconstrução falha"
+      "familiaridade imediata sobe com a releitura",
+      "recuperação ativa quase não ocorre",
+      "atenção cai e a codificação piora",
+      "sono curto corta a consolidação noturna",
+      "reconstrução sem pistas falha depois"
     ],
     "extend": {
       "q": "E se ele trocasse duas das seis horas por recuperações espaçadas em três dias, dormindo bem?",
@@ -555,13 +570,14 @@ const DOMAIN_CASES = [
       "Esta opção descreve a mudança de controle de ação orientada por resultado para resposta mais dependente da deixa.",
       "Trata desvalorização como extinção imediata e ignora que hábitos podem persistir apesar da mudança do resultado."
     ],
-    "explanation": "A recompensa pode ser decisiva para adquirir o comportamento sem continuar sendo consultada com a mesma profundidade em cada execução. A repetição fortalece o poder da deixa sobre a sequência.",
+    "explanation": "Um comportamento pode ser adquirido pela recompensa sem continuar sendo consultado por ela a cada execução. Com a repetição, o controle migra de ação orientada por resultado (estriado ventral, 'vale a pena?') para resposta disparada por deixa (estriado dorsal, 'aconteceu o gatilho, execute'). Por isso a sequência persiste mesmo depois de o prêmio perder valor: quem a dispara agora é a deixa ambiental, não uma reavaliação do resultado. O hábito não é falta de vontade — é controle que deixou de passar pela recompensa.",
     "chain": [
       "recompensa favorece a aprendizagem inicial",
       "repetição estabiliza a sequência",
       "deixa ganha controle sobre a resposta",
       "ação ocorre com menor reavaliação do resultado"
-    ]
+    ],
+    "extend": {"q": "E se, em vez de esperar a força de vontade, a pessoa removesse a deixa do ambiente?", "a": "A sequência tende a não disparar, porque o que a sustenta é o gatilho, não o valor do prêmio. Mudar o ambiente ataca o controle onde ele realmente está (a deixa), em vez de brigar com a reavaliação, que já não comanda a ação. É a intervenção que o modelo do hábito prevê."}
   },
   {
     "id": "fala-repeticao",
@@ -586,13 +602,14 @@ const DOMAIN_CASES = [
       "Confunde conexão com armazenamento do conteúdo lexical e promete leitura direta da representação.",
       "Esta opção formula uma hipótese de rede e combina método anatômico com comportamento, sem tratar o exame como resposta completa."
     ],
-    "explanation": "O contraste entre compreensão, fala espontânea e repetição sugere investigar a cooperação entre redes. Métodos estruturais ou de difusão podem testar conectividade, mas o significado depende do padrão comportamental.",
+    "explanation": "O perfil — compreende, fala espontaneamente, mas falha ao repetir — aponta para uma falha de cooperação entre redes, não para um centro perdido. Compreensão (temporal) e produção (frontal) estão preservadas; repetir exige carregar a forma sonora de uma à outra pela via dorsal, e é essa transferência que fica vulnerável. A boa hipótese é de conectividade, e a boa investigação combina método (imagem estrutural ou de difusão para testar a via) com o padrão comportamental — nenhum exame sozinho 'lê' o déficit. Rede, não caixa isolada.",
     "chain": [
       "compreensão permanece relativamente funcional",
       "produção espontânea continua possível",
       "repetição exige transferência fonológica precisa",
       "conectividade frontal-temporal vira hipótese testável"
-    ]
+    ],
+    "extend": {"q": "E se a imagem de difusão mostrasse o feixe dorsal intacto?", "a": "A hipótese de desconexão enfraqueceria, e valeria olhar para as próprias redes ou para o timing entre elas. É assim que método e comportamento se corrigem: o exame testa a hipótese, mas é o padrão comportamental que dá sentido ao achado — e um resultado negativo redireciona, não encerra."}
   },
   {
     "id": "movimento-farmaco",
@@ -617,13 +634,14 @@ const DOMAIN_CASES = [
       "Confunde semelhança fenotípica com identidade etiológica e desconsidera a intervenção recente.",
       "Usa uma leitura linear de inibição e ignora a organização relativa das vias dos gânglios da base."
     ],
-    "explanation": "A mesma molécula participa de circuitos diferentes. Alterar sinalização dopaminérgica nos gânglios da base pode produzir sinais motores, mas esses sinais não identificam sozinhos a causa clínica.",
+    "explanation": "A mesma molécula — dopamina — participa de circuitos diferentes, então um efeito motor não aponta sozinho para uma doença. Bloquear receptores dopaminérgicos nos gânglios da base desequilibra as vias que selecionam e iniciam o movimento, produzindo lentificação e rigidez parecidas com parkinsonismo. Mas isso é o mecanismo farmacológico; o diagnóstico exige contexto (a substância foi usada há pouco?). Semelhança de sintoma não é identidade de causa. Ler o efeito é conectar receptor, circuito e sinal, sem pular para o rótulo clínico.",
     "chain": [
       "receptores dopaminérgicos são bloqueados",
       "equilíbrio das vias dos gânglios da base se modifica",
       "seleção e iniciação ficam mais difíceis",
       "sinais motores surgem e requerem contexto"
-    ]
+    ],
+    "extend": {"q": "E se os mesmos sinais aparecessem sem nenhuma droga envolvida?", "a": "Aí a hipótese se desloca para uma alteração própria do circuito dopaminérgico (como na doença de Parkinson), e o contexto passa a favorecer causa neurodegenerativa. Mesmo fenótipo motor, etiologias diferentes — o que separa é o contexto, não o sintoma. Por isso o mecanismo não vira diagnóstico automático."}
   },
   {
     "id": "avc-sensorial",
@@ -648,13 +666,14 @@ const DOMAIN_CASES = [
       "Contradiz a evidência de transdução periférica preservada e exige uma lesão mais ampla que o cenário.",
       "Reduz percepção a resposta verbal e ignora alterações reais em vias e mapas sensoriais."
     ],
-    "explanation": "Percepção consciente emerge de uma cadeia. Um receptor funcional não garante que o sinal atravesse vias centrais, alcance mapas corticais e contribua normalmente para a experiência.",
+    "explanation": "A percepção consciente é o fim de uma cadeia: receptores da pele transduzem, vias centrais transmitem e mapas corticais processam. Se os receptores ainda respondem mas uma lesão vascular atinge vias centrais ou o mapa cortical, o sinal nasce e não completa o caminho até virar experiência. Por isso a perda é real mesmo com a periferia intacta — e não se explica por 'menos atenção' nem por morte dos nervos periféricos. Transdução, transmissão e percepção são etapas distintas; a falha aqui é central.",
     "chain": [
       "receptores periféricos transduzem o estímulo",
       "sinal inicia a transmissão",
       "via ou mapa central é lesionado",
       "percepção consciente fica incompleta"
-    ]
+    ],
+    "extend": {"q": "E se a lesão poupasse o mapa cortical e atingisse só uma via de passagem?", "a": "A percepção ainda cairia, porque o sinal não chegaria ao mapa — mas a área de destino estaria pronta, o que muda o prognóstico e a reabilitação. Localizar a ruptura na cadeia (via versus mapa) importa: o sintoma pode ser parecido, o alvo terapêutico não."}
   },
   {
     "id": "adolescencia-risco",
@@ -679,13 +698,14 @@ const DOMAIN_CASES = [
       "Esta opção trata desenvolvimento como mudança de probabilidades e incorpora o valor social da situação.",
       "Separa biologia e contexto como alternativas excludentes, quando ambos podem interagir."
     ],
-    "explanation": "Desenvolvimento modifica sensibilidade a contexto, recompensa e controle, mas não determina uma resposta única. Conhecimento, experiência e consequências continuam capazes de alterar o comportamento.",
+    "explanation": "O adolescente compreende o risco — o conhecimento declarativo existe. Mas a decisão acontece num cérebro em que as redes de controle ainda se refinam enquanto a sensibilidade à recompensa e ao valor social está alta; diante dos amigos, o peso da recompensa imediata sobe e desloca a competição entre as opções. Isso muda probabilidades, não determina incapacidade nem destino: experiência, consequências e contexto continuam capazes de alterar a escolha. Nem 'não sabe', nem 'não tem jeito' — é a balança momentaneamente inclinada.",
     "chain": [
       "redes de controle e valor ainda se refinam",
       "contexto social aumenta o valor imediato",
       "competição entre opções se desloca",
       "escolha muda, mas permanece modificável"
-    ]
+    ],
+    "extend": {"q": "E se a mesma decisão fosse tomada sozinho, sem a plateia dos amigos?", "a": "O valor social imediato cai, a balança se reequilibra e o controle em desenvolvimento tem mais chance de prevalecer. Mostra que o fator decisivo foi o contexto somado ao estágio de desenvolvimento — não uma incapacidade fixa. O mesmo cérebro escolhe diferente quando o peso social muda."}
   },
   {
     "id": "apresentacao-estresse",
@@ -711,13 +731,14 @@ const DOMAIN_CASES = [
       "Isola um parâmetro corporal como causa direta e exclui processos atencionais e de ameaça.",
       "Esta opção distingue armazenamento de desempenho e integra estado corporal, atenção e recuperação."
     ],
-    "explanation": "O estado de estresse pode alterar a competição por atenção e a organização da recuperação sem apagar o conteúdo aprendido. Saber, acessar e expressar são etapas relacionadas, mas não idênticas.",
+    "explanation": "O caso separa armazenar o conhecimento de acessá-lo e organizá-lo sob estresse. Em casa a pessoa explica bem — a plasticidade que sustenta o conteúdo está lá. Diante da plateia, a ameaça dispara ativação autonômica intensa e estreita a atenção; recuperar e sequenciar as ideias, que depende de controle e memória de trabalho, fica menos estável. O conteúdo não foi apagado — o acesso ficou instável. Saber, acessar e expressar são etapas relacionadas, mas não a mesma coisa.",
     "chain": [
       "situação é avaliada como ameaçadora",
       "ativação autonômica e competição aumentam",
       "atenção e sequência ficam menos estáveis",
       "recuperação organizada se deteriora"
-    ]
+    ],
+    "extend": {"q": "E se a pessoa reduzisse a ativação antes de começar — respiração lenta, reavaliação da situação?", "a": "O estado muda a montante: menos ativação e ameaça liberam atenção e memória de trabalho, e o mesmo conhecimento volta a ser acessível e organizável. Confirma que o gargalo era o acesso dependente de estado, não o armazenamento — regular o estado é parte de recuperar o que já se sabe."}
   }
 ];
 
@@ -1023,7 +1044,6 @@ function domainOpenCase(id){
   state.domain.activeTab='cases'; saveState();
   const body=document.getElementById('dm-body'); if(!body){ openDomainMode('cases'); return; }
   body.innerHTML=domainRenderCaseDetail(c);
-  domainGlossifyDetail(body);
   window.scrollTo({top:0,behavior:'auto'});
 }
 function domainRenderCaseDetail(c){
@@ -1057,7 +1077,6 @@ function domainOpenCounter(id){
   ensureDomainState(); state.domain.activeTab='counter'; saveState();
   const body=document.getElementById('dm-body'); if(!body){ openDomainMode('counter'); return; }
   body.innerHTML=domainRenderCounterDetail(c);
-  domainGlossifyDetail(body);
   window.scrollTo({top:0,behavior:'auto'});
 }
 function domainRenderCounterDetail(c){
@@ -1080,7 +1099,7 @@ function domainActivityFeedback(type,item,rec){
   const right=rec.lastResult===1;
   const clarity=typeof rec.clarity==='number'?rec.clarity:null;
   const buttons=[['1','Consegui reconstruir'],['0.5','Faltou uma ligação'],['0','Só reconheci depois']];
-  return `<div class="dm-feedback ${right?'right':'wrong'}"><div class="dm-verdict">${right?'✓ A cadeia ficou de pé':'✕ A primeira ruptura foi outra'}</div><p>${item.explanation}</p><ol>${item.chain.map(x=>`<li>${x}</li>`).join('')}</ol>${item.extend?`<div class="dm-extend"><span>Estenda a cadeia</span><p><b>${item.extend.q}</b> ${item.extend.a}</p></div>`:''}
+  return `<div class="dm-feedback ${right?'right':'wrong'}"><div class="dm-verdict">${right?'✓ A cadeia ficou de pé':'✕ A primeira ruptura foi outra'}</div><p>${item.explanation}</p><ol>${item.chain.map(x=>`<li>${x}</li>`).join('')}</ol>
     <div class="dm-clarity"><span>Sem olhar, você conseguiria reconstruir a cadeia?</span><div>${buttons.map(([v,l])=>`<button class="${clarity!==null&&Number(v)===clarity?'picked':''}" onclick="domainRateActivity('${type}','${item.id}',${v})">${l}</button>`).join('')}</div></div>
     <button class="bigbtn ghost dm-retry" style="--mc:var(--violet)" onclick="domainRetryActivity('${type}','${item.id}')">Tentar novamente sem apoio</button>
   </div>`;

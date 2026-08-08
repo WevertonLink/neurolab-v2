@@ -488,7 +488,7 @@ domainOpenCase = function(id,focus='top'){
   const previousY=window.scrollY;
   state.domain.activeTab='cases';saveState();
   const body=document.getElementById('dm-body');if(!body){openDomainMode('cases');return;}
-  body.innerHTML=domainRenderCaseDetail(item);domainSyncFocusClass();domainScrollAfterRender(focus,previousY);
+  body.innerHTML=domainRenderCaseDetail(item);domainGlossifyDetail(body);domainSyncFocusClass();domainScrollAfterRender(focus,previousY);
 };
 domainOpenCounter = function(id,focus='top'){
   ensureDomainState();
@@ -496,7 +496,7 @@ domainOpenCounter = function(id,focus='top'){
   const previousY=window.scrollY;
   state.domain.activeTab='counter';saveState();
   const body=document.getElementById('dm-body');if(!body){openDomainMode('counter');return;}
-  body.innerHTML=domainRenderCounterDetail(item);domainSyncFocusClass();domainScrollAfterRender(focus,previousY);
+  body.innerHTML=domainRenderCounterDetail(item);domainGlossifyDetail(body);domainSyncFocusClass();domainScrollAfterRender(focus,previousY);
 };
 
 domainAnswerCase = function(id,choice){
@@ -536,7 +536,7 @@ function domainOptionAudit(item,rec){
 domainActivityFeedback = function(type,item,rec){
   const right=rec.lastResult===1,clarity=typeof rec.clarity==='number'?rec.clarity:null;
   const buttons=[['1','Consegui reconstruir'],['0.5','Faltou uma ligação'],['0','Só reconheci depois']];
-  return `<div class="dm-feedback ${right?'right':'wrong'}"><div class="dm-verdict">${right?'✓ A cadeia ficou de pé':'✕ A primeira ruptura foi outra'}</div><p>${item.explanation}</p><ol>${item.chain.map(step=>`<li>${step}</li>`).join('')}</ol>
+  return `<div class="dm-feedback ${right?'right':'wrong'}"><div class="dm-verdict">${right?'✓ A cadeia ficou de pé':'✕ A primeira ruptura foi outra'}</div><p>${item.explanation}</p><ol>${item.chain.map(step=>`<li>${step}</li>`).join('')}</ol>${item.extend?`<div class="dm-extend"><span>Estenda a cadeia</span><p><b>${item.extend.q}</b> ${item.extend.a}</p></div>`:''}
     ${domainOptionAudit(item,rec)}
     <div class="dm-clarity"><span>Sem olhar, você conseguiria reconstruir a cadeia?</span><div>${buttons.map(([value,label])=>`<button class="${clarity!==null&&Number(value)===clarity?'picked':''}" onclick="domainRateActivity('${type}','${item.id}',${value})">${label}</button>`).join('')}</div></div>
     ${domainLinearActions(type,item.id,false)}
