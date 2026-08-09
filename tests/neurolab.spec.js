@@ -1039,12 +1039,12 @@ test('@smoke Modo Domínio registra resposta, mostra veredito e reconstrói sem 
   await expect(feedback).toContainText(/cadeia ficou de pé/i);
   await expect(feedback.locator('.dm-choice-diagnosis')).toBeVisible();
   await expect(feedback.locator('.dm-choice-diagnosis')).toContainText(/SUA ESCOLHA/i);
-  await feedback.locator('.dm-option-audit summary').click();
-  await expect(feedback.locator('.dm-option-audit article')).toHaveCount(4);
-  await expect(feedback.locator('.dm-option-audit article.right')).toHaveCount(1);
   const feedbackPosition = await feedback.evaluate((el) => ({ top: el.getBoundingClientRect().top, height: innerHeight }));
   expect(feedbackPosition.top).toBeGreaterThanOrEqual(0);
   expect(feedbackPosition.top).toBeLessThan(feedbackPosition.height * 0.6);
+  await feedback.locator('.dm-option-audit summary').click();
+  await expect(feedback.locator('.dm-option-audit article')).toHaveCount(4);
+  await expect(feedback.locator('.dm-option-audit article.right')).toHaveCount(1);
 
   await feedback.locator('.dm-reconstruct-btn').click();
   await expect(page.locator('.dm-reconstruct')).toBeVisible();
