@@ -5220,7 +5220,8 @@ sono:[
  {s:["Acordado, você acumula sinapses fortalecidas e resíduos","Dormindo, o cérebro REABRE o que aprendeu (replay)","Reorganiza o traço entre hipocampo e redes corticais","Reescalona TODAS as sinapses para baixo","O que era forte continua forte em relação ao resto; o ruído some"], h:3,
   hn:"A dobradiça é contraintuitiva: dormir ENFRAQUECE sinapses. Mas enfraquece todas proporcionalmente — então o sinal se mantém e o ruído desaparece. Não é apagar: é AUMENTAR O CONTRASTE.",
   w:"E se você nunca reescalonasse?",
-  wa:"As sinapses saturariam — e tudo forte é o mesmo que nada forte. O cérebro perderia faixa dinâmica para aprender amanhã. Dormir é o que devolve espaço."},
+  wa:"As sinapses saturariam — e tudo forte é o mesmo que nada forte. O cérebro perderia faixa dinâmica para aprender amanhã. Dormir é o que devolve espaço.",
+  lim:"O passo 4 é a <b>hipótese</b> da homeostase sináptica, não um fato assentado. Ela concorre com a consolidação ativa, que explica a reorganização do passo 3 sem exigir que TODAS as sinapses baixem. Há evidência para as duas, e ainda não se sabe qual pesa mais — ou se descrevem partes do mesmo processo."},
  {s:["A noite é feita de ciclos de cerca de 90 minutos","O sono profundo domina as PRIMEIRAS horas","O REM domina as ÚLTIMAS horas","Cada fase consolida coisas diferentes","Cortar o fim da noite corta seletivamente o REM"], h:4,
   hn:"Dormir menos não encolhe a noite proporcionalmente: AMPUTA o fim dela. Cinco horas não são oito com menos intensidade — são oito SEM AS TRÊS ÚLTIMAS, que são justamente as mais ricas em REM. A perda é dirigida, não diluída.",
   w:"E se você dormir 8 horas, mas fragmentadas?",
@@ -6050,6 +6051,7 @@ function chainHTML(mid, idx){
     </div>
     <button class="cwhat" onclick="toggleWhatIf(${idx},event)" aria-expanded="false">${c.w} <span class="chev">\u25be</span></button>
     <div class="cwhat-a" id="whatif-${idx}" hidden><p>${c.wa}</p></div>
+    ${c.lim ? `<div class="clim"><div class="clim-h">Até onde a ciência sabe</div><p>${c.lim}</p></div>` : ''}
   </div>`;
 }
 function toggleWhatIf(idx, ev){

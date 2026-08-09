@@ -587,6 +587,9 @@ ol.csteps{list-style:none;margin:0;padding:0}
 .cwhat .chev{float:right;transition:transform .18s}
 .cwhat.open .chev{transform:rotate(180deg)}
 .cwhat-a{margin-top:9px;padding:13px;border-radius:10px;background:var(--panel);border:1px solid var(--line)}
+.clim{margin-top:11px;padding:12px 13px;border-radius:10px;border:1px dashed color-mix(in srgb,var(--ink-3) 45%,var(--line));background:color-mix(in srgb,var(--ink-3) 4%,transparent)}
+.clim-h{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px}
+.clim p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink-2)}
 .cwhat-a p{margin:0;font-size:14px;line-height:1.6;color:var(--ink-2)}
 .lnk-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:12px 0}
 .lnk-k{font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
