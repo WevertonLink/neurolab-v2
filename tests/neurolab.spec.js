@@ -953,8 +953,16 @@ test('@smoke reiniciar de propósito não é desfeito pela cópia interna', asyn
   expect(await page.evaluate((k) => Boolean(localStorage.getItem(k)), SNAP_KEY)).toBe(true);
 
   await page.evaluate(() => { window.confirm = () => true; resetProgress(); });
-  expect(await page.evaluate((k) => localStorage.getItem(k), SNAP_KEY),
-    'a cópia interna sobreviveu ao reiniciar e desfaria a decisão do aluno').toBeNull();
+
+  // A chave volta a existir na mesma hora: reiniciar apaga a cópia e o saveNow
+  // seguinte já grava a nova linha de base. O que não pode voltar é o progresso
+  // antigo dentro dela — é isso que desfaria a decisão do aluno.
+  const copia = await page.evaluate((k) => {
+    const bruto = localStorage.getItem(k);
+    return bruto === null ? null : JSON.parse(bruto).xp;
+  }, SNAP_KEY);
+  expect([null, 0], 'a cópia interna guardou o progresso que o aluno mandou apagar')
+    .toContain(copia);
 
   const reaberta = await context.newPage();
   await reaberta.goto('./?audit=1', { waitUntil: 'domcontentloaded' });
