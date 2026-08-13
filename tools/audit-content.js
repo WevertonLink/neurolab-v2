@@ -168,7 +168,17 @@ if (!errors.length) {
     'política não descreve as atualizações na própria origem');
   ok(!/não faz nenhuma requisição à internet/i.test(privacy),
     'política voltou a afirmar ausência absoluta de requisições');
-  ok(/neurolab-v1-7-6/.test(sw), 'versão do cache offline não foi atualizada');
+  ok(/neurolab-v1-7-7/.test(sw), 'versão do cache offline não foi atualizada');
+
+  // O progresso do aluno é irrecuperável, e a forma de perdê-lo era silenciosa:
+  // a janela aberta em segundo plano gravava seu retrato velho por cima do
+  // trabalho feito na outra. Estas três guardas travam o caminho de volta.
+  ok(/function salvarAoSair\(\)/.test(app) && /if\(!_mudouDesdeCarga\) return;/.test(app),
+    'a gravação ao esconder a janela voltou a ser incondicional');
+  ok(!/addEventListener\('pagehide', saveNow\)/.test(app),
+    'pagehide voltou a gravar direto, sem checar se houve mudança');
+  ok(/addEventListener\('storage'/.test(app) && /const SNAP_KEY/.test(app),
+    'sincronismo entre janelas ou cópia interna do estado ausentes');
   required.filter((f) => f.startsWith('styles/') || f.startsWith('src/'))
     .forEach((f) => ok(sw.includes(`'./${f}'`), `arquivo não incluído no precache: ${f}`));
 

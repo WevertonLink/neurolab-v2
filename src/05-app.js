@@ -352,6 +352,13 @@ const LEVELS = [
 
 const XP = { lesson:15, correct:25, wrong:5, complete:50, mini:12, review:10, predict:4 };
 const STORE_KEY = 'neurolab-state-v1';
+/* Cópia interna do último estado bom conhecido, e o contador de revisão que
+   permite a duas janelas do app perceberem uma à outra. Ver a seção
+   "PERDA SILENCIOSA ENTRE JANELAS", abaixo. */
+const SNAP_KEY = STORE_KEY + ':ultimo-bom';
+const SNAP_PESO_KEY = SNAP_KEY + ':peso';
+const REV_KEY  = STORE_KEY + ':rev';
+const CONFLITO_KEY = STORE_KEY + ':conflito';
 const STATE_VERSION = 4;
 const DAY = 86400000;
 const SRS_INTERVALS = [1, 3, 7, 14, 30, 60, 120, 240]; // dias por caixa (Leitner expandido)
@@ -364,7 +371,7 @@ const SESSION_CAP = 8;
    ===================================================================== */
 let state = defaultState();
 function defaultState(){
-  return { v:STATE_VERSION, xp:0, deepMode:true, selfRate:{}, topicExplain:{}, predCredit:{},
+  return { v:STATE_VERSION, rev:0, xp:0, deepMode:true, selfRate:{}, topicExplain:{}, predCredit:{},
            lessons:{}, mastery:{}, topicMastery:{}, doneQuiz:{}, dimensionEvidence:{}, questionHistory:{},
     creditC:{}, creditW:{}, miniCredit:{}, miniWrong:{}, srs:{},
     attempts:0, correctTotal:0, wrongTotal:0, lastModule:null, lastStudiedAt:0,
@@ -432,19 +439,43 @@ async function loadState(){
     }
   }catch(e){ /* chave ainda inexistente — segue para o fallback */ }
   // 2) localStorage (persistência quando o app é publicado fora do Claude).
+  let principal = null;
   try{
     const raw = localStorage.getItem(STORE_KEY);
     if(raw){
       const lido = readSavedState(raw);
-      if(lido.ok){ _falhaLeitura = null; return lido.state; }
-      _falhaLeitura = {motivo:lido.motivo, quarentena:quarentenarEstado(raw)};
+      if(lido.ok) _falhaLeitura = null;
+      else {
+        _falhaLeitura = {motivo:lido.motivo, quarentena:quarentenarEstado(raw)};
+        limparQuarentenas(2);
+      }
+      if(lido.ok) principal = lido.state;
     }
   }catch(e){
     // getItem lançou: storage indisponível. Não há blob para preservar, mas a
     // escrita também não vai funcionar — a sondagem confirma e o aviso aparece.
     _falhaEscrita = true;
+    return defaultState();
   }
-  return defaultState();
+  return comRedeDeSeguranca(principal);
+}
+
+/* Última linha de defesa, e a única que funciona seja qual for a causa: se o
+   principal sumiu, ficou ilegível ou voltou como uma fração do que já foi, a
+   cópia interna assume e o aluno é avisado do que aconteceu.
+
+   Reiniciar e importar apagam a cópia, então quem zerou de propósito não é
+   "recuperado" à força, e quem importou um backup antigo continua com ele. */
+function comRedeDeSeguranca(principal){
+  const snap = lerSnapshot();
+  _pesoSnapshot = snap ? pesoProgresso(snap) : -1;
+  if(!snap) return principal || defaultState();
+  const pesoAtual = pesoProgresso(principal);
+  if(!principal || pesoAtual * 2 < _pesoSnapshot){
+    _recuperado = {peso:_pesoSnapshot, anterior:pesoAtual, tinhaPrincipal:!!principal};
+    return snap;
+  }
+  return principal;
 }
 
 /* Grava/lê/remove uma chave descartável. Detecta storage indisponível já na
@@ -465,6 +496,117 @@ function sondarArmazenamento(){
 function podeGravar(){
   return !(_falhaLeitura && _falhaLeitura.quarentena === 'falhou');
 }
+
+/* =====================================================================
+   PERDA SILENCIOSA ENTRE JANELAS
+
+   O app pode estar aberto duas vezes ao mesmo tempo: o atalho instalado e
+   uma aba do navegador, ou uma aba que o Android manteve viva em segundo
+   plano por dias. Cada uma carrega o estado UMA vez, na abertura, e o
+   mantém em memória.
+
+   O 'visibilitychange' gravava sem perguntar. Bastava a janela velha voltar
+   a ficar visível e depois ser escondida para ela escrever o retrato do dia
+   em que foi aberta por cima do progresso real — sem erro, sem aviso, sem
+   nada para o aluno ver além do próprio progresso menor.
+
+   Três defesas, da mais barata para a mais cara:
+
+   1. quem não mudou nada não grava. Uma janela ociosa não tem o que
+      persistir, e era exatamente ela a que sobrescrevia;
+   2. 'rev' cresce a cada gravação, então uma janela sabe se o disco andou
+      sem ela — e o evento 'storage' faz a janela ociosa adotar na hora o
+      que a outra acabou de salvar;
+   3. antes de sobrescrever um disco mais novo (caso em que as duas janelas
+      trabalharam de verdade e não há como fundir), o blob mais novo vai
+      para CONFLITO_KEY em vez de evaporar.
+
+   Independente disso, SNAP_KEY guarda a última cópia boa: se o principal
+   sumir ou voltar muito menor do que já foi, a carga restaura e avisa.
+   ===================================================================== */
+
+// false enquanto esta janela não mudou nada desde que carregou.
+let _mudouDesdeCarga = false;
+// {peso, de} quando a carga precisou restaurar a cópia interna.
+let _recuperado = null;
+let _pesoSnapshot = -1;
+
+/* Medida grosseira de "quanto progresso existe aqui". Só precisa ser
+   monotônica no uso normal: serve para reconhecer uma regressão brutal,
+   não para comparar dois estados parecidos. */
+function pesoProgresso(s){
+  if(!s || typeof s!=='object') return 0;
+  const n = o => (o && typeof o==='object') ? Object.keys(o).length : 0;
+  return (Number(s.xp)||0) + (Number(s.attempts)||0)*10
+       + n(s.lessons)*100 + n(s.doneQuiz)*100 + n(s.srs)*20;
+}
+
+function lerSnapshot(){
+  try{
+    const raw = localStorage.getItem(SNAP_KEY);
+    if(!raw) return null;
+    const lido = readSavedState(raw);
+    return lido.ok ? lido.state : null;
+  }catch(e){ return null; }
+}
+
+/* A cópia interna só avança: nunca é substituída por um estado menor do que
+   ela mesma. Quem apaga de propósito (reiniciar, importar) apaga junto.
+
+   A comparação é contra o peso GRAVADO, não contra o que esta janela viu ao
+   abrir: uma janela velha tem um _pesoSnapshot velho e, confiando nele,
+   rebaixaria a cópia justamente no caso que ela existe para cobrir. Guardar o
+   peso numa chave à parte evita reparsear o estado inteiro a cada gravação. */
+function atualizarSnapshot(payload){
+  try{
+    const peso = pesoProgresso(state);
+    const gravado = localStorage.getItem(SNAP_KEY) ? Number(localStorage.getItem(SNAP_PESO_KEY)) : -1;
+    if(isFinite(gravado) && peso < gravado) return;
+    localStorage.setItem(SNAP_KEY, payload);
+    localStorage.setItem(SNAP_PESO_KEY, String(peso));
+    _pesoSnapshot = peso;
+  }catch(e){ /* cota: o principal é que importa, a cópia é luxo */ }
+}
+
+function esquecerSnapshot(){
+  try{
+    localStorage.removeItem(SNAP_KEY);
+    localStorage.removeItem(SNAP_PESO_KEY);
+    localStorage.removeItem(CONFLITO_KEY);
+  }catch(e){}
+  _pesoSnapshot = -1;
+}
+
+function revNoDisco(){
+  try{ return Number(localStorage.getItem(REV_KEY)) || 0; }catch(e){ return 0; }
+}
+
+// true quando outra janela gravou depois que esta carregou.
+function discoMaisNovo(){
+  return revNoDisco() > (Number(state.rev)||0);
+}
+
+/* Guarda o blob que está prestes a ser sobrescrito por uma janela que também
+   trabalhou. Uma chave só, sempre a mais recente — não é histórico, é rede. */
+function preservarConflito(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw) localStorage.setItem(CONFLITO_KEY, raw);
+  }catch(e){}
+}
+
+/* Quarentenas antigas são cópias inteiras do estado. Acumuladas, estouram a
+   cota e transformam "não consegui ler" em "não consigo mais gravar". */
+function limparQuarentenas(manter){
+  try{
+    const chaves = Object.keys(localStorage)
+      .filter(k => k.startsWith(STORE_KEY+':corrompido:'))
+      .sort();
+    chaves.slice(0, Math.max(0, chaves.length - (manter||2)))
+          .forEach(k => localStorage.removeItem(k));
+  }catch(e){}
+}
+
 let saveTimer=null;
 function migrateState(raw){
   if(!raw || typeof raw!=='object' || Array.isArray(raw)) return defaultState();
@@ -475,7 +617,7 @@ function migrateState(raw){
     if(!out[k] || typeof out[k]!=='object' || Array.isArray(out[k])) out[k]={};
   });
   // números: descarta NaN/Infinity/lixo
-  ['xp','attempts','correctTotal','wrongTotal','lastStudiedAt'].forEach(k=>{
+  ['xp','attempts','correctTotal','wrongTotal','lastStudiedAt','rev'].forEach(k=>{
     const n=Number(out[k]); out[k] = isFinite(n) && n>=0 ? n : 0;
   });
   if(typeof out.lastModule!=='number' || !MODULES[out.lastModule]) out.lastModule=null;
@@ -501,6 +643,8 @@ function migrateState(raw){
 function gravarLocal(payload){
   try{
     localStorage.setItem(STORE_KEY, payload);
+    try{ localStorage.setItem(REV_KEY, String(Number(state.rev)||0)); }catch(_){}
+    atualizarSnapshot(payload);
     _falhaEscrita = false;
     return true;
   }catch(e){
@@ -510,22 +654,65 @@ function gravarLocal(payload){
   }
 }
 
+/* Serializa o estado marcando a gravação. O 'rev' entra no próprio blob: é
+   assim que a outra janela descobre que este é mais novo que o dela. */
+function empacotarEstado(){
+  // A checagem vem ANTES de incrementar: comparar o rev já incrementado com o
+  // do disco empata justamente no caso que interessa. E partir do maior dos
+  // dois garante que esta gravação seja reconhecida como a mais nova pela
+  // outra janela — um rev que só cresce localmente pode nascer atrasado.
+  if(discoMaisNovo()) preservarConflito();
+  state.rev = Math.max(Number(state.rev)||0, revNoDisco()) + 1;
+  try{ return JSON.stringify(state); }
+  catch(e){ return null; }   // circular ou não-serializável: não derruba o handler
+}
+
 // grava JÁ, sem esperar o debounce (usado ao fechar o app e no backup)
 function saveNow(){
   clearTimeout(saveTimer);
   if(!podeGravar()) return;
-  const payload=JSON.stringify(state);
+  _mudouDesdeCarga = true;
+  const payload=empacotarEstado();
+  if(payload===null) return;
   gravarLocal(payload);
   try{ if(window.storage && window.storage.set) window.storage.set(STORE_KEY, payload, false); }catch(e){}
 }
-window.addEventListener('pagehide', saveNow);
-document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') saveNow(); });
+
+/* Fechar ou esconder a janela não é motivo para gravar: só é motivo para
+   não perder o que ficou pendente. Uma janela que não mudou nada desde que
+   carregou não tem nada a persistir — e é justamente ela que, gravando,
+   apagaria o trabalho feito na outra. */
+function salvarAoSair(){
+  if(!_mudouDesdeCarga) return;
+  saveNow();
+}
+window.addEventListener('pagehide', salvarAoSair);
+document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') salvarAoSair(); });
+
+/* A outra janela acabou de gravar. Se esta aqui não tem trabalho próprio
+   pendente, adotar é de graça e elimina a divergência na origem. Se tem, a
+   gravação seguinte resolve — e preservarConflito guarda o que for perdido. */
+window.addEventListener('storage', function(e){
+  if(e.key !== STORE_KEY || !e.newValue) return;
+  if(_mudouDesdeCarga) return;
+  const lido = readSavedState(e.newValue);
+  if(!lido.ok) return;
+  if((Number(lido.state.rev)||0) <= (Number(state.rev)||0)) return;
+  state = lido.state;
+  try{
+    lastLevel = levelInfo().num;
+    renderHeader();
+    renderDashboard();
+  }catch(_){}
+});
 
 function saveState(){
   clearTimeout(saveTimer);
   if(!podeGravar()) return;
+  _mudouDesdeCarga = true;
   saveTimer=setTimeout(async()=>{
-    const payload=JSON.stringify(state);
+    const payload=empacotarEstado();
+    if(payload===null) return;
     try{
       if(window.storage && window.storage.set){ await window.storage.set(STORE_KEY, payload, false); }
     }catch(e){}
@@ -6637,6 +6824,10 @@ function applyImportedState(text){
   if(!parsed || typeof parsed!=='object' || typeof parsed.xp!=='number' || !parsed.lessons){
     return {ok:false, err:'Isso não parece um backup do NeuroLab.'};
   }
+  // O backup escolhido passa a ser a referência, mesmo que seja menor que a
+  // cópia interna — importar é uma decisão explícita e vence a rede.
+  esquecerSnapshot();
+  _recuperado = null;
   state=migrateState(parsed);
   lastLevel=levelInfo().num;
   saveNow();
@@ -6706,6 +6897,8 @@ function renderBackupInfo(){
   let l3 = '';
   if(_falhaEscrita)
     l3 = '<br><span class="warn">Este navegador não está salvando nada. Exporte um backup antes de fechar.</span>';
+  else if(_recuperado)
+    l3 = '<br><span class="warn">O progresso foi restaurado de uma cópia interna nesta abertura.</span>';
   else if(_falhaLeitura)
     l3 = '<br><span class="warn">O progresso salvo não pôde ser lido'
        + (_falhaLeitura.quarentena === 'ok' ? ' — uma cópia foi preservada neste aparelho.' : '.')
@@ -6728,10 +6921,19 @@ function avisoIntegridade(){
   const antigo = document.getElementById('bk-integridade');
   if(antigo) antigo.remove();
   if(!host || _integridadeFechada) return;
-  if(!_falhaEscrita && !_falhaLeitura) return;
+  if(!_falhaEscrita && !_falhaLeitura && !_recuperado) return;
 
   let texto, botoes, grave = '';
-  if(_falhaEscrita){
+  if(_recuperado && !_falhaEscrita){
+    // Aconteceu e foi consertado. O aluno precisa saber, porque a diferença
+    // entre a cópia e o que ele fez depois dela é o que ficou pelo caminho.
+    texto = '<b>Seu progresso foi restaurado automaticamente.</b> O registro principal '
+          + (_recuperado.tinhaPrincipal ? 'voltou muito menor do que deveria' : 'sumiu deste aparelho')
+          + ', e o NeuroLab recolocou a cópia interna mais recente no lugar. '
+          + 'Se você tem um backup mais novo, importe — e exporte um agora, por segurança.';
+    botoes = '<button type="button" onclick="exportProgress()">Exportar backup</button>'
+           + '<button type="button" onclick="document.getElementById(\'bk-file\').click()">Importar backup</button>';
+  } else if(_falhaEscrita){
     // Mais urgente que a leitura: o que está em risco é a sessão de agora.
     // Exportar continua funcionando — usa Blob, não depende do localStorage.
     grave = ' grave';
@@ -6787,6 +6989,10 @@ function avisoBackup(){
 if(typeof exportProgress === 'function'){
   const _exportOriginal = exportProgress;
   exportProgress = function(){
+    // Antes o carimbo vinha depois de serializar, então todo arquivo exportado
+    // carregava a data do backup ANTERIOR — e uma gravação perdida aqui era
+    // invisível justamente no dado que serviria para percebê-la.
+    state.lastBackupAt = Date.now();
     const r = _exportOriginal.apply(this, arguments);
     try{ marcarBackupFeito(); }catch(e){}
     return r;
@@ -6819,6 +7025,10 @@ if(typeof renderDashboard === 'function'){
 
 function resetProgress(){
   if(!confirm('Reiniciar todo o progresso? Seu XP, domínio e aulas estudadas serão zerados. Esta ação não pode ser desfeita.')) return;
+  // A cópia interna some junto: zerar é uma decisão do aluno, e a rede de
+  // segurança da próxima carga desfaria exatamente essa decisão.
+  esquecerSnapshot();
+  _recuperado = null;
   state=defaultState(); lastLevel=1;
   saveNow();
   renderHeader(); renderDashboard(); go('dashboard');

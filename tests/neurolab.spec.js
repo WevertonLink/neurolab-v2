@@ -867,6 +867,122 @@ test('@smoke estado saudável carrega sem aviso de integridade', async ({ page }
   expect(gravado, 'a gravação normal parou de funcionar').toBe(700);
 });
 
+/* O app pode estar aberto duas vezes: o atalho instalado e uma aba que o
+   Android manteve viva em segundo plano. Cada janela carrega o estado uma vez
+   e o guarda em memória; o 'visibilitychange' gravava sem perguntar. Bastava a
+   janela velha ser escondida para ela escrever o retrato do dia em que abriu
+   por cima do progresso real — em silêncio, e sem nada para o aluno ver além
+   do próprio progresso menor. */
+
+const SNAP_KEY = STORE_KEY + ':ultimo-bom';
+
+test('@smoke janela ociosa não sobrescreve o progresso feito na outra', async ({ page, context }) => {
+  const inicial = JSON.stringify({ v: 4, rev: 1, xp: 1000, attempts: 200, lessons: { 'neuronio-0': true } });
+  await bootComArmazenamento(page, ([k, v]) => { localStorage.setItem(k, v); }, [STORE_KEY, inicial]);
+
+  // A segunda janela é a que fica em segundo plano: carrega e não faz mais nada.
+  // newPage não herda o addInitScript de limpeza, então ela lê o mesmo storage.
+  const ociosa = await context.newPage();
+  await ociosa.goto('./?audit=1', { waitUntil: 'domcontentloaded' });
+  await expect(ociosa.locator('#view-dashboard')).toHaveClass(/active/);
+  expect(await ociosa.evaluate(() => state.xp)).toBe(1000);
+
+  // A janela ativa estuda de verdade.
+  await page.evaluate(() => { state.xp = 2500; state.attempts = 400; saveNow(); });
+  expect(await page.evaluate((k) => JSON.parse(localStorage.getItem(k)).xp, STORE_KEY)).toBe(2500);
+
+  // Retrato velho preso na memória da janela ociosa, como acontece quando ela
+  // ficou aberta desde ontem. Nada aqui foi mudado pelo aluno.
+  await ociosa.evaluate(() => { state.xp = 1000; state.rev = 1; });
+  await ociosa.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+    window.dispatchEvent(new Event('pagehide'));
+  });
+
+  const gravado = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)).xp, STORE_KEY);
+  expect(gravado, 'a janela ociosa sobrescreveu o progresso da janela ativa').toBe(2500);
+  await ociosa.close();
+});
+
+test('@smoke a janela em segundo plano adota o que a outra acabou de salvar', async ({ page, context }) => {
+  const inicial = JSON.stringify({ v: 4, rev: 1, xp: 1000, attempts: 200, lessons: { 'neuronio-0': true } });
+  await bootComArmazenamento(page, ([k, v]) => { localStorage.setItem(k, v); }, [STORE_KEY, inicial]);
+
+  const ociosa = await context.newPage();
+  await ociosa.goto('./?audit=1', { waitUntil: 'domcontentloaded' });
+  await expect(ociosa.locator('#view-dashboard')).toHaveClass(/active/);
+
+  await page.evaluate(() => { state.xp = 2500; saveNow(); });
+
+  // O evento 'storage' chega na outra janela: divergir deixa de ser possível.
+  await expect.poll(() => ociosa.evaluate(() => state.xp), { timeout: 10_000 }).toBe(2500);
+  await expect(ociosa.locator('#hd-xp')).toHaveText('2500');
+  await ociosa.close();
+});
+
+test('@smoke progresso apagado do storage volta pela cópia interna', async ({ page, context }) => {
+  const salvo = JSON.stringify({
+    v: 4, xp: 1800, attempts: 300,
+    lessons: { 'neuronio-0': true, 'neuronio-1': true }, doneQuiz: { neuronio: true }
+  });
+  await bootComArmazenamento(page, ([k, v]) => { localStorage.setItem(k, v); }, [STORE_KEY, salvo]);
+
+  // A cópia interna nasce na primeira gravação, não na carga.
+  await page.evaluate(() => saveNow());
+  expect(await page.evaluate((k) => Boolean(localStorage.getItem(k)), SNAP_KEY)).toBe(true);
+
+  // O registro principal some: evicção do sistema, limpeza, cota — tanto faz.
+  await page.evaluate((k) => localStorage.removeItem(k), STORE_KEY);
+
+  const reaberta = await context.newPage();
+  await reaberta.goto('./?audit=1', { waitUntil: 'domcontentloaded' });
+  await expect(reaberta.locator('#view-dashboard')).toHaveClass(/active/);
+
+  expect(await reaberta.evaluate(() => state.xp), 'a cópia interna não foi usada').toBe(1800);
+  await expect(reaberta.locator('#hd-xp')).toHaveText('1800');
+  await expect(reaberta.locator('#bk-integridade')).toContainText('restaurado automaticamente');
+  await expect(reaberta.locator('#bk-info')).toContainText('cópia interna');
+  await reaberta.close();
+});
+
+test('@smoke reiniciar de propósito não é desfeito pela cópia interna', async ({ page, context }) => {
+  const salvo = JSON.stringify({ v: 4, xp: 1800, attempts: 300, lessons: { 'neuronio-0': true } });
+  await bootComArmazenamento(page, ([k, v]) => { localStorage.setItem(k, v); }, [STORE_KEY, salvo]);
+  await page.evaluate(() => saveNow());
+  expect(await page.evaluate((k) => Boolean(localStorage.getItem(k)), SNAP_KEY)).toBe(true);
+
+  await page.evaluate(() => { window.confirm = () => true; resetProgress(); });
+  expect(await page.evaluate((k) => localStorage.getItem(k), SNAP_KEY),
+    'a cópia interna sobreviveu ao reiniciar e desfaria a decisão do aluno').toBeNull();
+
+  const reaberta = await context.newPage();
+  await reaberta.goto('./?audit=1', { waitUntil: 'domcontentloaded' });
+  await expect(reaberta.locator('#view-dashboard')).toHaveClass(/active/);
+  expect(await reaberta.evaluate(() => state.xp)).toBe(0);
+  await expect(reaberta.locator('#bk-integridade')).toHaveCount(0);
+  await reaberta.close();
+});
+
+test('@smoke o backup exportado carrega a própria data', async ({ page }) => {
+  const salvo = JSON.stringify({ v: 4, xp: 900, lessons: { 'neuronio-0': true }, lastBackupAt: 1 });
+  await bootComArmazenamento(page, ([k, v]) => { localStorage.setItem(k, v); }, [STORE_KEY, salvo]);
+
+  const antes = Date.now();
+  const download = page.waitForEvent('download', { timeout: 10_000 });
+  await page.evaluate(() => exportProgress());
+  const stream = await (await download).createReadStream();
+  let texto = '';
+  for await (const chunk of stream) texto += chunk;
+
+  // O carimbo era aplicado depois de serializar, então todo arquivo saía com a
+  // data do backup anterior — e uma gravação perdida ficava invisível bem no
+  // dado que serviria para percebê-la.
+  const exportado = JSON.parse(texto);
+  expect(exportado.lastBackupAt, 'o arquivo saiu com a data do backup anterior')
+    .toBeGreaterThanOrEqual(antes);
+});
+
 /* MEDIÇÃO — alcance do botão "Próxima" na revisão.
 
    O relato foi que, depois de responder, é preciso rolar a tela para chegar ao
