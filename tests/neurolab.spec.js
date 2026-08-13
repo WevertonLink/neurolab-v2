@@ -1193,6 +1193,65 @@ test('@smoke Modo Domínio registra resposta, mostra veredito e reconstrói sem 
   expect(saved.log.some(row => row.kind === 'reconstruction' && row.result === 1)).toBe(true);
 });
 
+/* A reconstrução só tinha uma saída: acertar. Quem travava ficava permutando
+   os passos, o que não treina nada, e quem tinha dez minutos ficava preso. A
+   saída existe agora — e o que ela não pode fazer é virar um atalho: ver a
+   cadeia não pode marcar reconBest nem deixar o pool clicável com a resposta
+   na tela, senão o registro passa a dizer "reconstruiu" para quem copiou. */
+test('@smoke quem trava pode ver a cadeia, e ver não conta como reconstruir', async ({ page }) => {
+  await page.evaluate(() => {
+    MODULES.slice(0, 14).forEach((module) => {
+      module.lessons.forEach((_, lessonIndex) => {
+        const key = `${module.id}-${lessonIndex}`;
+        state.lessons[key] = true;
+        state.topicMastery[key] = 0.8;
+      });
+      state.mastery[module.id] = 0.8;
+      state.doneQuiz[module.id] = true;
+    });
+    renderDashboard();
+  });
+  await page.locator('#db-domain-entry button').click();
+  await page.locator('#dm-nav button').filter({ hasText: 'Casos' }).click();
+  await page.locator('.dm-case-card').first().locator('button').click();
+  await page.locator('.dm-options button').first().click();
+  await page.locator('.dm-feedback .dm-reconstruct-btn').click();
+  await expect(page.locator('.dm-reconstruct')).toBeVisible();
+
+  // A saída não é a primeira coisa que aparece: só depois de encostar na tarefa.
+  await expect(page.locator('.dm-reveal-link')).toHaveCount(0);
+  await page.locator('.dm-chain-pool button').first().click();
+  await expect(page.locator('.dm-reveal-link')).toBeVisible();
+
+  await page.locator('.dm-reveal-link').click();
+  const revelada = page.locator('.dm-reconstruct-result.revealed');
+  await expect(revelada).toBeVisible();
+  await expect(revelada).toContainText('Ver não é reconstruir');
+
+  // A cadeia aparece inteira e na ordem do dado, não na ordem embaralhada.
+  const mostrada = await revelada.locator('.dm-selected-chain li span').allTextContents();
+  const esperada = await page.evaluate(() => {
+    const r = DOMAIN_SESSION.reconstruction;
+    return DOMAIN_CASES.find((x) => x.id === r.id).chain;
+  });
+  expect(mostrada).toEqual(esperada);
+
+  // Com a resposta na tela, montar deixa de ser possível.
+  await expect(page.locator('.dm-chain-pool button:not([disabled])')).toHaveCount(0);
+
+  const saved = await page.evaluate(() => ({
+    rec: state.domain.cases['noite-decisao'],
+    log: state.domain.activityLog
+  }));
+  expect(saved.rec.reconRevealed, 'a cadeia vista não ficou registrada').toBe(true);
+  expect(saved.rec.reconBest, 'ver a cadeia contou como reconstruir').not.toBe(1);
+  expect(saved.log.some((row) => row.kind === 'reconstruction-reveal')).toBe(true);
+
+  // E a lista passa a dizer o que aconteceu, em vez de omitir.
+  await page.locator('#dm-nav button').filter({ hasText: 'Casos' }).click();
+  await expect(page.locator('.dm-case-card').first()).toContainText('cadeia vista, não reconstruída');
+});
+
 test('@coverage banco do Modo Domínio mantém padrão adversarial', async ({ page }) => {
   const report = await page.evaluate(() => {
     const items = [...DOMAIN_COUNTERFACTUALS, ...DOMAIN_CASES];

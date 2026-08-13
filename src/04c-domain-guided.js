@@ -325,7 +325,12 @@ function domainRecordMeta(type,id){
   const attempts=Number(rec.attempts)||0;
   if(!attempts) return '<span class="dm-practice-meta empty">ainda não praticado</span>';
   const clarity=typeof rec.clarity==='number'?` · explicação ${domainPct(rec.clarity)}`:'';
-  const recon=Number(rec.reconBest)===1?' · cadeia reconstruída':'';
+  // Ter visto a cadeia fica no registro para sempre. Não é punição: é a
+  // diferença entre "eu montei isso" e "eu li isso pronto", que some da
+  // memória em dois dias e é exatamente o que a lista precisa mostrar.
+  const recon=Number(rec.reconBest)===1
+    ? (rec.reconRevealed?' · cadeia reconstruída, depois de ver':' · cadeia reconstruída')
+    : (rec.reconRevealed?' · cadeia vista, não reconstruída':'');
   return `<span class="dm-practice-meta">${attempts} tentativa${attempts!==1?'s':''}${clarity}${recon}</span>`;
 }
 domainRenderCases = function(){
@@ -370,7 +375,10 @@ function domainReconstructionState(type,id){
   return r&&r.type===type&&r.id===id?r:null;
 }
 function domainPickChainStep(type,id,position){
-  const r=domainReconstructionState(type,id); if(!r||r.result!==null) return;
+  // r.revealed trava o pool: sem isso, quem viu a cadeia continuaria montando
+  // com ela na tela e domainCheckReconstruction marcaria reconBest=1 por
+  // cópia — o registro passaria a dizer "reconstruiu" para quem só copiou.
+  const r=domainReconstructionState(type,id); if(!r||r.result!==null||r.revealed) return;
   const pos=Number(position),entry=r.available[pos];
   if(!entry||r.selected.includes(pos)) return;
   r.selected.push(pos);
@@ -384,8 +392,33 @@ function domainUndoChainStep(type,id){
 }
 function domainResetReconstruction(type,id){
   const r=domainReconstructionState(type,id); if(!r) return;
-  r.selected=[];r.result=null;
+  r.selected=[];r.result=null;r.revealed=false;
   if(type==='case') domainOpenCase(id,'question'); else domainOpenCounter(id,'question');
+}
+
+/* Saída para quem travou. Antes a única forma de sair da reconstrução era
+   acertar, e ficar tentando permutação atrás de permutação não ensina nada —
+   é o oposto do que a atividade existe para treinar, e trava quem abriu o app
+   com dez minutos.
+
+   Ver NÃO conta como reconstruir: nada aqui toca reconBest, e nenhuma
+   evidência de dimensão é registrada. Se a pessoa já tinha errado, aquele
+   resultado já foi gravado por domainCheckReconstruction e continua valendo;
+   se ela nem tentou, não inventamos um erro que não houve. O que fica é a
+   marca de que a cadeia foi vista, para a atividade voltar. */
+function domainRevealChain(type,id){
+  const item=domainActivityItem(type,id),r=domainReconstructionState(type,id);
+  if(!item||!r||r.result===1||r.revealed) return;
+  r.revealed=true;
+  const bucket=domainActivityBucket(type),old=domainSafeRecord(bucket[id]);
+  bucket[id]=Object.assign({},old,{
+    reconRevealed:true,
+    reconRevealedAt:Date.now(),
+    history:domainBoundHistory([...(old.history||[]),{at:Date.now(),mode:'reconstruction',result:0,revealed:true}],30)
+  });
+  domainLogActivity({kind:'reconstruction-reveal',type,itemId:id,sessionId:domainCurrentFocus()?.session.id||null});
+  saveNow();
+  if(type==='case') domainOpenCase(id,'preserve'); else domainOpenCounter(id,'preserve');
 }
 function domainCheckReconstruction(type,id){
   const item=domainActivityItem(type,id),r=domainReconstructionState(type,id); if(!item||!r) return;
@@ -409,14 +442,16 @@ function domainCheckReconstruction(type,id){
 function domainRenderReconstruction(type,item){
   const r=domainReconstructionState(type,item.id); if(!r) return '';
   const selected=r.selected.map((pos,index)=>`<li><b>${index+1}</b><span>${r.available[pos].text}</span></li>`).join('');
-  const options=r.available.map((entry,pos)=>`<button type="button" ${r.selected.includes(pos)||r.result!==null?'disabled':''} onclick="domainPickChainStep('${type}','${item.id}',${pos})"><b>+</b><span>${entry.text}</span></button>`).join('');
+  const options=r.available.map((entry,pos)=>`<button type="button" ${r.selected.includes(pos)||r.result!==null||r.revealed?'disabled':''} onclick="domainPickChainStep('${type}','${item.id}',${pos})"><b>+</b><span>${entry.text}</span></button>`).join('');
   let result='';
   if(r.result===1) result=`<div class="dm-reconstruct-result right"><b>✓ Você remontou a cadeia sem as alternativas.</b><p>Agora o registro distingue reconhecer a resposta de reconstruir a sequência causal.</p>${domainLinearActions(type,item.id,true)}</div>`;
-  if(r.result===0) result=`<div class="dm-reconstruct-result wrong"><b>✕ A ordem ainda não fecha causalmente.</b><p>Nenhuma resposta foi apagada. Tente localizar qual passo depende de outro antes de reorganizar.</p><button class="bigbtn ghost" style="--mc:var(--violet)" onclick="domainResetReconstruction('${type}','${item.id}')">Reorganizar os passos</button></div>`;
+  if(r.result===0) result=`<div class="dm-reconstruct-result wrong"><b>✕ A ordem ainda não fecha causalmente.</b><p>Nenhuma resposta foi apagada. Tente localizar qual passo depende de outro antes de reorganizar.</p><button class="bigbtn ghost" style="--mc:var(--violet)" onclick="domainResetReconstruction('${type}','${item.id}')">Reorganizar os passos</button><button class="dm-reveal-link" onclick="domainRevealChain('${type}','${item.id}')">não estou conseguindo — ver a cadeia</button></div>`;
+  if(r.revealed) result=`<div class="dm-reconstruct-result revealed"><b>A cadeia correta</b><ol class="dm-selected-chain">${item.chain.map((step,index)=>`<li><b>${index+1}</b><span>${step}</span></li>`).join('')}</ol><p>Ver não é reconstruir: esta atividade continua marcada como pendente e volta para você refazer sem ajuda. Leia procurando de qual passo cada um depende — é essa dependência que você vai precisar reproduzir.</p>${domainLinearActions(type,item.id,false)}</div>`;
   return `<div class="dm-reconstruct"><div class="dm-reconstruct-head"><span>RECONSTRUÇÃO SEM ALTERNATIVAS</span><h4>Toque nos passos na ordem causal.</h4><p>A pergunta anterior não é repetida. Agora o teste é montar a cadeia usando apenas seus componentes.</p></div>
     <ol class="dm-selected-chain">${selected||'<li class="placeholder">A sequência aparecerá aqui.</li>'}</ol>
     <div class="dm-chain-pool">${options}</div>
-    ${r.selected.length&&r.result===null?`<button class="dm-undo" onclick="domainUndoChainStep('${type}','${item.id}')">← desfazer último passo</button>`:''}
+    ${r.selected.length&&r.result===null&&!r.revealed?`<button class="dm-undo" onclick="domainUndoChainStep('${type}','${item.id}')">← desfazer último passo</button>
+    <button class="dm-reveal-link" onclick="domainRevealChain('${type}','${item.id}')">não estou conseguindo — ver a cadeia</button>`:''}
     ${result}
   </div>`;
 }
