@@ -1,9 +1,9 @@
 # NeuroLab — arquitetura de conteúdo e aprendizagem
 
 *Levantamento original de 2026-08-14 sobre `4711259` (v1.7.2). Atualizado no
-mesmo dia até a Fase 2 do cronograma por dimensão — descreve o estado em
-`29dca75` (v1.8.1), com os três portões locais verdes: `verifica-metaforas`,
-`audit-content` e `test-srs` (65 verificações).*
+mesmo dia até as Fases 2 e 1 do cronograma por dimensão (v1.9.0), com os três
+portões locais verdes: `verifica-metaforas`, `audit-content` e `test-srs`
+(92 verificações).*
 
 Documento de referência para mudanças futuras. Descreve **como os módulos são
 estruturados**, **como eles alimentam a revisão espaçada**, **o que do conteúdo
@@ -164,18 +164,22 @@ a caixa 0 fica intocada, então a primeira volta é sempre exatamente amanhã.
 
 `measurableDimensions(moduleId, lessonIndex)` (`04`) é **derivada do conteúdo,
 nunca gravada**: uma dimensão só ganha caixa se este tópico tem como medi-la.
-Hoje isso dá **188 caixas das 256 possíveis** —
+Hoje isso dá **189 caixas das 256 possíveis** —
 
 ```
-recognition  50/64 tópicos      causality    63/64 tópicos
+recognition  50/64 tópicos      causality    64/64 tópicos
 location     11/64 tópicos      application  64/64 tópicos
 ```
 
-— porque as fontes por tópico ainda são só duas: o mini quiz, e a prova de
-previsão (`PREDICT`), que a Fase 2 ligou e que sozinha levou `application` de
-40 para 64. É essa função que faz as fases seguintes serem baratas: quando a
-reconstrução de `CHAIN` valer para os 64 tópicos, `causality` entra aqui e as
-caixas nascem sozinhas, **sem migração nova**. O schema não muda de novo.
+— porque as fontes por tópico são três: o mini quiz; a prova de previsão
+(`PREDICT`), que a Fase 2 ligou e que sozinha levou `application` de 40 para 64;
+e a cadeia (`CHAIN`), que a Fase 1 ligou. A cadeia acrescentou só **uma** caixa,
+porque causalidade já estava em 63/64 — o que ela mudou não foi o alcance, foi a
+qualidade da medida (ver 4.8).
+
+É essa função que faz as fases seguintes serem baratas: quando a Localização
+ganhar sua forma de medição, ela entra aqui e as caixas nascem sozinhas, **sem
+migração nova**. O schema não muda desde a Fase 0.
 
 ### 4.3 Quem escreve no cronograma — **e quem não escreve**
 
@@ -261,6 +265,29 @@ depois de consolidar Reconhecimento) não limita a fila — reduziu de 99 para 6
 não para o número de tópicos, porque dimensão consolidada continua em rotação.
 Pode ter mérito pedagógico, mas não é ferramenta de volume.
 
+### 4.8 Como cada dimensão é cobrada na revisão
+
+O item da fila é uma dimensão, e a forma da pergunta segue o que aquela
+dimensão é:
+
+| dimensão | o que a revisão pede | fonte |
+|---|---|---|
+| Reconhecimento | múltipla escolha | `MINI_QUIZZES` |
+| Aplicação | múltipla escolha, alternando entre a previsão e as mini-questões pela paridade de `reps` | `PREDICT` + `MINI_QUIZZES` |
+| Explicação causal | **remontar a cadeia na ordem**, sem alternativas | `CHAIN.s` |
+| Localização | ainda sem forma própria | — |
+
+A reconstrução é a razão de ser da Fase 1, e ela **não** foi um ganho de
+cobertura: causalidade já estava em 63/64 pelo mini quiz, e a cadeia acrescentou
+uma caixa. O que mudou foi o que a nota significa. Antes, "explicação causal" era
+uma múltipla escolha que um regex classificou como causal — mede reconhecer a
+alternativa certa entre quatro. Depois, é reproduzir de qual etapa cada uma
+depende, sem nada para reconhecer e sem 1/4 de chance no chute.
+
+Ver a cadeia é permitido e **não conta**: não grava evidência, não agenda, e o
+item continua vencido. Ficar tentando permutação atrás de permutação não treina
+nada — é o oposto do que a atividade existe para exercitar.
+
 ---
 
 ## 5. O modelo de dimensões (`src/04-learning-model.js`)
@@ -280,16 +307,23 @@ Cada evidência é uma média móvel exponencial por escopo × dimensão
 (`evidenceWeight`, `04:83`):
 
 ```
-review .48 · mini-quiz .38 · module-quiz .34 · prediction .34
-counterfactual .32 · domain-case .30 · self-rate .22 · (não listado) .28
+review .48 · reconstruction .48 · mini-quiz .38 · domain-reconstruction .40
+module-quiz .34 · prediction .34 · counterfactual .32 · domain-case .30
+self-rate .22 · (não listado) .28
 ```
 
-Duas observações sobre esse mapa. `prediction` tem **dois papéis opostos**: no
-primeiro contato a previsão não registra evidência nenhuma — `commitPredict`
-grava só `predCredit` e XP —, porque ali ela é pré-teste e errar é o objetivo;
-já respondida dentro da revisão, com a aula lida, ela é prova de verdade e entra
-com peso `.34`, o mesmo do quiz de módulo. Era `.16` e peso morto até a Fase 2.
-E `domain-reconstruction` (`04c`) **não está no mapa**, caindo no default `.28`.
+Duas observações sobre esse mapa. **Reconstruir a cadeia pesa no topo** — `.48`,
+junto com a revisão: acontece dentro dela e é a única prova sem alternativa para
+reconhecer, então não há chute com 1/4 de chance. Pela mesma razão a versão do
+Modo Domínio passou a ser declarada em `.40`; antes ela caía no default `.28` por
+omissão, valendo menos que um contrafactual de múltipla escolha, o que era o
+inverso do razoável.
+
+E `prediction` tem **dois papéis opostos**: no primeiro contato a previsão não
+registra evidência nenhuma — `commitPredict` grava só `predCredit` e XP —, porque
+ali ela é pré-teste e errar é o objetivo; já respondida dentro da revisão, com a
+aula lida, ela é prova de verdade e entra com `.34`. Era `.16` e peso morto até a
+Fase 2.
 
 ### 5.1 Como a dimensão de cada questão é decidida — e por que isso importa
 
@@ -573,6 +607,8 @@ id). Acertar a reconstrução registra evidência com fonte
 | marcar aula estudada | ✅ | — | — | ✅ seed | — | 15 |
 | prova de previsão (1º contato) | — | — | — | ❌ nunca | ❌ nunca — é pré-teste | 4, uma vez |
 | previsão respondida na revisão | — | ✅ max | — | ✅ `application` | ✅ `T:` application, fonte `prediction` | 10 por acerto |
+| reconstruir a cadeia na revisão | — | — ³ | — | ✅ `causality` | ✅ `T:` causality, fonte `reconstruction` | 10 por acerto |
+| ver a cadeia em vez de reconstruir | — | — | — | ❌ nada | ❌ nada — o item continua vencido | — |
 | mini quiz | ✅ ≥50% | ✅ max | — | ✅ | ✅ `T:` | 12 por acerto, uma vez² |
 | auto-avaliação (modo profundo) | — | — | — | indireto¹ | ✅ `T:` self-rate | — |
 | quiz do módulo | — | — | ✅ max | ❌ | ✅ `M:` | 25 acerto / 5 erro, uma vez² + 50 na 1ª conclusão |
@@ -586,6 +622,11 @@ id). Acertar a reconstrução registra evidência com fonte
 ² travado por questão em `state.miniCredit` / `creditC` / `creditW`; repetir o
 quiz não repontua. A revisão é a única atividade que paga XP toda vez — o que
 faz sentido, já que é a única desenhada para repetir.
+³ a reconstrução deliberadamente **não** mexe em `topicMastery`. Aquele escalar
+nasceu da fração de acertos do mini quiz; jogar nele um resultado binário de
+outra natureza misturaria duas escalas num número que o dashboard e
+`domainWeakTopics` ainda leem. A reconstrução alimenta o que ela existe para
+alimentar: a evidência por dimensão e o cronograma.
 
 ---
 
@@ -614,11 +655,12 @@ Sem juízo de valor — são fatos medidos, cada um com o local exato:
    de anatomia nem o banco do Modo Domínio (`buildSearchIndex`, 4303).
 7. **24 termos coloridos não abrem nada** — marcados com `<span class="term">`
    sem verbete correspondente.
-8. ~~**`prediction: .16` é peso morto.**~~ **Resolvido na Fase 2.** A previsão
-   virou banco de perguntas dos itens de Aplicação na revisão, com peso `.34`.
-   Continua sem registrar nada no primeiro contato, de propósito — ver 5.
-   `domain-reconstruction` segue fora do mapa, caindo em `.28`
-   (`evidenceWeight`, `04`).
+8. ~~**`prediction: .16` é peso morto; `domain-reconstruction` fora do mapa.**~~
+   **Resolvido nas Fases 2 e 1.** A previsão virou banco de perguntas dos itens
+   de Aplicação na revisão, com peso `.34`, e continua sem registrar nada no
+   primeiro contato, de propósito. `domain-reconstruction` passou a ser
+   declarada em `.40`. Hoje nenhuma fonte real cai no default por omissão — há
+   portão para isso (`test-srs`, bloco 18).
 9. **Dois rankings paralelos de fragilidade** — `domainWeakTopics` (`04b`) e a
    fila do SRS. `weakTopics()` (05) parecia um terceiro, mas **não tem nenhum
    chamador**: é código morto, removido na Fase 4.

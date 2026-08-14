@@ -593,6 +593,25 @@ const reset = ()=>ev('state = defaultState();');
      '17. ver depois de errar não apaga o erro que já foi gravado');
 }
 
+/* ---------- 18. pesos: nenhuma fonte real cai no default por omissão ---------- */
+{
+  eq(ev(`evidenceWeight('reconstruction')`), .48,
+     '18. reconstrução pesa como revisão: acontece nela e não tem alternativa para reconhecer');
+  eq(ev(`evidenceWeight('domain-reconstruction')`), .40,
+     '18. domain-reconstruction tem de ser declarada, não cair no default');
+  ok(ev(`evidenceWeight('domain-reconstruction') > evidenceWeight('counterfactual')`),
+     '18. reconstruir tem de pesar mais que escolher a alternativa certa');
+
+  // toda fonte que o app realmente usa precisa estar no mapa
+  const foraDoMapa = ev(`(function(){
+    const usadas=['review','reconstruction','mini-quiz','module-quiz','prediction',
+                  'domain-reconstruction','counterfactual','domain-case','self-rate'];
+    return usadas.filter(s=>evidenceWeight(s)===.28 && s!=='__default__');
+  })()`);
+  eq(foraDoMapa.length, 0,
+     '18. fontes caindo no default .28 por omissão: ' + foraDoMapa.join(', '));
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');

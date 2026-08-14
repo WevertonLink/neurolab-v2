@@ -84,8 +84,15 @@ function evidenceRecord(scope, dim){
    o objetivo e não deveria mover a nota. Na revisão ela é prova de verdade, com
    a aula já lida — .34, o mesmo do quiz de módulo, que é a outra múltipla
    escolha respondida em contexto de avaliação. */
+/* reconstruction pesa como review (.48) por acontecer dentro da revisão e ser
+   a prova mais exigente que existe aqui: remontar a cadeia não tem alternativa
+   para reconhecer nem chute com 1/4 de chance.
+   domain-reconstruction passa a ser DECLARADA. Antes caía no default .28 por
+   omissão — a mesma atividade valendo menos que um contrafactual de múltipla
+   escolha (.32), o que era o inverso do razoável. */
 function evidenceWeight(source){
-  return ({review:.48,'module-quiz':.34,'mini-quiz':.38,'self-rate':.22,prediction:.34,'domain-case':.30,counterfactual:.32}[source]||.28);
+  return ({review:.48,reconstruction:.48,'mini-quiz':.38,'module-quiz':.34,prediction:.34,
+           'domain-reconstruction':.40,counterfactual:.32,'domain-case':.30,'self-rate':.22}[source]||.28);
 }
 function recordDimensionEvidence(scope, dim, result, source, meta){
   if(!scope||!KNOWLEDGE_DIM_IDS.includes(dim)) return;
