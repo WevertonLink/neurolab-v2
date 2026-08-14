@@ -377,6 +377,21 @@ const reset = ()=>ev('state = defaultState();');
      '12. o histórico tem de guardar a origem');
 }
 
+/* ---------- 13. o pré-teste continua sendo pré-teste ---------- */
+{
+  reset();
+  ev(`currentModule = 0`);
+  const antes = ev(`JSON.stringify({e:state.dimensionEvidence, s:state.srs, h:state.questionHistory})`);
+  ev(`commitPredict(0, PREDICT['neuronio'][0].c, null)`);
+  const depois = ev(`JSON.stringify({e:state.dimensionEvidence, s:state.srs, h:state.questionHistory})`);
+  eq(depois, antes,
+     '13. a previsão no PRIMEIRO CONTATO não pode registrar evidência nem agendar: ' +
+     'ali ela é pré-teste, e errar é o objetivo — é o erro de previsão que abre a ' +
+     'janela para o conteúdo entrar. Ela só vira evidência dentro da revisão.');
+  ok(ev(`state.predCredit['P:neuronio:0'] !== undefined`),
+     '13. mas o crédito de XP da previsão tem de continuar sendo registrado');
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');

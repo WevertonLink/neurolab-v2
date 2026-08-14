@@ -162,17 +162,18 @@ a caixa 0 fica intocada, então a primeira volta é sempre exatamente amanhã.
 
 `measurableDimensions(moduleId, lessonIndex)` (`04`) é **derivada do conteúdo,
 nunca gravada**: uma dimensão só ganha caixa se este tópico tem como medi-la.
-Hoje isso dá **164 caixas das 256 possíveis** —
+Hoje isso dá **188 caixas das 256 possíveis** —
 
 ```
 recognition  50/64 tópicos      causality    63/64 tópicos
-location     11/64 tópicos      application  40/64 tópicos
+location     11/64 tópicos      application  64/64 tópicos
 ```
 
-— porque a única fonte por tópico ainda é o mini quiz. É essa função que faz as
-fases seguintes serem baratas: quando a reconstrução de `CHAIN` valer para os 64
-tópicos, `causality` entra aqui e as caixas nascem sozinhas, **sem migração
-nova**. O schema não muda de novo.
+— porque as fontes por tópico ainda são só duas: o mini quiz, e a prova de
+previsão (`PREDICT`), que a Fase 2 ligou e que sozinha levou `application` de
+40 para 64. É essa função que faz as fases seguintes serem baratas: quando a
+reconstrução de `CHAIN` valer para os 64 tópicos, `causality` entra aqui e as
+caixas nascem sozinhas, **sem migração nova**. O schema não muda de novo.
 
 ### 4.3 Quem escreve no cronograma — **e quem não escreve**
 
@@ -566,7 +567,8 @@ id). Acertar a reconstrução registra evidência com fonte
 | ação do aluno | `lessons` | `topicMastery` | `mastery` | `srs` | `dimensionEvidence` | XP |
 |---------------|:---------:|:--------------:|:---------:|:-----:|:-------------------:|:--:|
 | marcar aula estudada | ✅ | — | — | ✅ seed | — | 15 |
-| prova de previsão | — | — | — | — | — | 4, uma vez |
+| prova de previsão (1º contato) | — | — | — | ❌ nunca | ❌ nunca — é pré-teste | 4, uma vez |
+| previsão respondida na revisão | — | ✅ max | — | ✅ `application` | ✅ `T:` application, fonte `prediction` | 10 por acerto |
 | mini quiz | ✅ ≥50% | ✅ max | — | ✅ | ✅ `T:` | 12 por acerto, uma vez² |
 | auto-avaliação (modo profundo) | — | — | — | indireto¹ | ✅ `T:` self-rate | — |
 | quiz do módulo | — | — | ✅ max | ❌ | ✅ `M:` | 25 acerto / 5 erro, uma vez² + 50 na 1ª conclusão |
