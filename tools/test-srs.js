@@ -358,6 +358,25 @@ const reset = ()=>ev('state = defaultState();');
   eq(malformadas.length, 0, '11. previsões malformadas: ' + malformadas.slice(0,5).join(' | '));
 }
 
+/* ---------- 12. fonte e peso da evidência de previsão ---------- */
+{
+  eq(ev(`evidenceWeight('prediction')`), .34,
+     '12. na revisão a previsão é prova real; .16 era o peso do pré-teste');
+  ok(ev(`evidenceWeight('prediction')`) > ev(`evidenceWeight('self-rate')`),
+     '12. responder uma previsão pesa mais que se auto-avaliar');
+
+  reset();
+  ev(`beginEvidenceBatch();
+      recordDimensionEvidence(topicScope('neuronio-0'),'application',1,'prediction',{questionId:'RP:neuronio-0'});
+      commitEvidenceBatch();`);
+  eq(ev(`state.dimensionEvidence['T:neuronio-0'].application.sources.prediction`), 1,
+     '12. a fonte prediction tem de ser contabilizada separadamente');
+  eq(ev(`state.srs['neuronio-0'].dims.application.reps`), 1,
+     '12. e tem de agendar a caixa de Aplicação');
+  eq(ev(`state.questionHistory['RP:neuronio-0'].source`), 'prediction',
+     '12. o histórico tem de guardar a origem');
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');

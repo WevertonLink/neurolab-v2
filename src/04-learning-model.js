@@ -80,8 +80,12 @@ function evidenceRecord(scope, dim){
   state.dimensionEvidence[scope][dim]=normalizeEvidence(state.dimensionEvidence[scope][dim]);
   return state.dimensionEvidence[scope][dim];
 }
+/* prediction era .16 quando a previsão só existia como pré-teste, onde errar é
+   o objetivo e não deveria mover a nota. Na revisão ela é prova de verdade, com
+   a aula já lida — .34, o mesmo do quiz de módulo, que é a outra múltipla
+   escolha respondida em contexto de avaliação. */
 function evidenceWeight(source){
-  return ({review:.48,'module-quiz':.34,'mini-quiz':.38,'self-rate':.22,prediction:.16,'domain-case':.30,counterfactual:.32}[source]||.28);
+  return ({review:.48,'module-quiz':.34,'mini-quiz':.38,'self-rate':.22,prediction:.34,'domain-case':.30,counterfactual:.32}[source]||.28);
 }
 function recordDimensionEvidence(scope, dim, result, source, meta){
   if(!scope||!KNOWLEDGE_DIM_IDS.includes(dim)) return;

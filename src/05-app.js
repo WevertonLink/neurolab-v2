@@ -1289,7 +1289,17 @@ function answerReview(k){
     else if(kk===k) btn.classList.add('wrong');
   });
   if(right) review.topicCorrect++;
-  if(typeof recordDimensionEvidence==='function'){ const t=review.queue[review.ti]; const dim=inferQuestionDimension(q,{source:'review'}); recordDimensionEvidence(topicScope(t.key),dim,right?1:0,'review',{questionId:'R:'+t.key+':'+(q._reviewIndex!==undefined?q._reviewIndex:review.qi)}); }
+  if(typeof recordDimensionEvidence==='function'){
+    const t=review.queue[review.ti];
+    const dim=inferQuestionDimension(q,{source:'review'});
+    // a previsão carrega a própria origem, para dar para separar na telemetria
+    // depois o que veio de banco de revisão e o que veio de prova de previsão
+    const fonte = q._source || 'review';
+    const qid = q._source==='prediction'
+      ? 'RP:'+t.key
+      : 'R:'+t.key+':'+(q._reviewIndex!==undefined?q._reviewIndex:review.qi);
+    recordDimensionEvidence(topicScope(t.key),dim,right?1:0,fonte,{questionId:qid});
+  }
   state.attempts=(state.attempts||0)+1;
   if(right){ state.correctTotal=(state.correctTotal||0)+1; } else { state.wrongTotal=(state.wrongTotal||0)+1; }
   const last = review.qi+1 >= review.topicQs.length;
