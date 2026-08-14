@@ -59,7 +59,14 @@ const sandbox = {
   navigator:{ serviceWorker:{register(){ return Promise.resolve(); }}, userAgent:'node', onLine:true },
   location:{ href:'http://localhost/', hash:'', search:'', reload(){} },
   history:{ pushState(){}, replaceState(){}, back(){}, state:null },
-  setTimeout, clearTimeout, setInterval, clearInterval,
+  /* Temporizadores são STUBS de propósito, e isso é load-bearing: o app usa
+     setTimeout para o save debounced (saveState -> setTimeout 120ms), e um
+     temporizador real disparando depois do corpo do teste cairia em
+     unhandledRejection, onde este portão tolera em silêncio. Com stub, nada
+     assíncrono nasce do corpo do teste — que é a premissa do try/catch lá
+     embaixo. Nenhum teste afere persistência, então não perder o save custa
+     nada aqui. */
+  setTimeout(){ return 0; }, clearTimeout(){}, setInterval(){ return 0; }, clearInterval(){},
   requestAnimationFrame(){ return 0; }, cancelAnimationFrame(){},
   matchMedia(){ return {matches:false, addEventListener(){}, addListener(){}}; },
   fetch(){ return Promise.resolve({ok:false, json(){ return Promise.resolve({}); }}); },
@@ -87,15 +94,24 @@ sandbox.window = sandbox; sandbox.self = sandbox; sandbox.globalThis = sandbox;
 // dois fazem a exceção cair no ramo de tolerância — o padrão errado para um
 // portão cujo objetivo é nunca deixar passar calado.
 //
-// A saída não é consertar a heurística: é não precisar dela. Este arquivo
-// não tem NADA assíncrono — nenhum await, then ou setTimeout com efeito
-// observável no corpo do teste. A única coisa assíncrona em todo o universo
-// que este processo carrega é a continuação do init(). Então a origem não é
-// adivinhada por texto de stack: o try/catch lá embaixo envolve o corpo do
-// teste inteiro (tudo síncrono) e intercepta qualquer exceção sua — Error
-// ou não, stack raso ou fundo, sem ler string nenhuma. O que sobra para
-// uncaughtException/unhandledRejection só pode ser a continuação órfã do
-// init(), por construção do próprio arquivo, não por suposição sobre ela.
+// A saída não é consertar a heurística: é não precisar dela. O try/catch lá
+// embaixo envolve o corpo do teste inteiro e intercepta qualquer exceção
+// síncrona sua — Error ou não, stack raso ou fundo, sem ler string nenhuma.
+// O que sobra para uncaughtException/unhandledRejection é a continuação órfã
+// do init().
+//
+// Isso vale sob DUAS condições, e as duas são construídas, não supostas:
+//   1. o corpo do teste é síncrono — nenhum await ou then aqui embaixo;
+//   2. nada que o corpo do teste alcança pode agendar trabalho assíncrono —
+//      garantido pelo stub de setTimeout/setInterval no sandbox, lá em cima.
+//
+// A condição 2 não é hipotética: o bloco 13 chama commitPredict, que passa
+// por awardXP -> saveState, e saveState agenda um setTimeout. Com o
+// temporizador real exposto ao sandbox, esse callback dispararia depois do
+// corpo do teste e qualquer exceção nele seria tolerada em silêncio — o
+// buraco exato que este desenho existe para fechar. Ao acrescentar bloco
+// novo, se ele precisar de assincronia de verdade, este raciocínio precisa
+// ser refeito; não basta acrescentar o teste.
 const failLoud = (e)=>{ console.error('ERRO (teste): ' + (e && e.stack ? e.stack : e)); process.exit(1); };
 const tolerate = (e)=>{ console.error('(ruído tolerado do app carregado, fora do corpo do teste): ' + (e && e.message || e)); };
 process.on('uncaughtException', tolerate);
@@ -390,6 +406,41 @@ const reset = ()=>ev('state = defaultState();');
      'janela para o conteúdo entrar. Ela só vira evidência dentro da revisão.');
   ok(ev(`state.predCredit['P:neuronio:0'] !== undefined`),
      '13. mas o crédito de XP da previsão tem de continuar sendo registrado');
+}
+
+/* ---------- 14. answerReview de verdade: a origem da questão decide fonte e id ---------- */
+/* Os blocos 12 e 13 aferem as peças isoladas. Este dirige o ponto de entrada
+   real — se o ternário de fonte/id em answerReview for invertido ou o nome
+   _source for digitado errado, nada mais neste arquivo percebe. */
+{
+  const montarSessao = `(function(m, li, q, dim){
+    const key = topicKey(m.id, li);
+    seedTopic(key);
+    review = { queue:[{mi:0, li:li, key:key, dim:dim, title:m.lessons[li].t,
+                       mn:m.n, color:m.color, due:0, box:0, overdue:0}],
+               ti:0, qi:0, topicQs:[q], topicCorrect:0, answered:false,
+               opts:shuffleOptions(q.o, q.c), results:[] };
+    beginEvidenceBatch();
+    answerReview(review.opts.findIndex(o=>o.correct));
+    commitEvidenceBatch();
+  })`;
+
+  // metade positiva: o item de Aplicação servido pela previsão
+  reset();
+  ev(`${montarSessao}(MODULES[0], 0, predictAsReviewQuestion('neuronio',0), 'application')`);
+  eq(ev(`(state.questionHistory['RP:neuronio-0']||{}).source`), 'prediction',
+     '14. resposta vinda da previsão grava fonte prediction sob o id RP:<tópico>');
+  eq(ev(`state.dimensionEvidence['T:neuronio-0'].application.sources.prediction`), 1,
+     '14. e conta na fonte prediction da dimensão Aplicação');
+
+  // metade negativa: mini-questão comum, pelo mesmo caminho
+  reset();
+  ev(`${montarSessao}(MODULES[0], 0, MINI_QUIZZES['neuronio'][0][0],
+        inferQuestionDimension(MINI_QUIZZES['neuronio'][0][0],{source:'review'}))`);
+  eq(ev(`(state.questionHistory['R:neuronio-0:0']||{}).source`), 'review',
+     '14. mini-questão mantém fonte review e id R:<tópico>:<índice>');
+  eq(ev(`Object.keys(state.questionHistory).filter(k=>k.indexOf('RP:')===0).length`), 0,
+     '14. e não pode gravar id de previsão');
 }
 
 /* ---------- resultado ---------- */

@@ -278,14 +278,16 @@ Cada evidência é uma média móvel exponencial por escopo × dimensão
 (`evidenceWeight`, `04:83`):
 
 ```
-review .48 · mini-quiz .38 · module-quiz .34 · counterfactual .32
-domain-case .30 · self-rate .22 · prediction .16 · (não listado) .28
+review .48 · mini-quiz .38 · module-quiz .34 · prediction .34
+counterfactual .32 · domain-case .30 · self-rate .22 · (não listado) .28
 ```
 
-Duas observações sobre esse mapa: `prediction` **nunca é usado** —
-`commitPredict` (5300) grava `predCredit` e XP, mas não registra evidência; e
-`domain-reconstruction` (`04c:437-438`) **não está no mapa**, caindo no
-default `.28`.
+Duas observações sobre esse mapa. `prediction` tem **dois papéis opostos**: no
+primeiro contato a previsão não registra evidência nenhuma — `commitPredict`
+grava só `predCredit` e XP —, porque ali ela é pré-teste e errar é o objetivo;
+já respondida dentro da revisão, com a aula lida, ela é prova de verdade e entra
+com peso `.34`, o mesmo do quiz de módulo. Era `.16` e peso morto até a Fase 2.
+E `domain-reconstruction` (`04c`) **não está no mapa**, caindo no default `.28`.
 
 ### 5.1 Como a dimensão de cada questão é decidida — e por que isso importa
 
@@ -610,8 +612,11 @@ Sem juízo de valor — são fatos medidos, cada um com o local exato:
    de anatomia nem o banco do Modo Domínio (`buildSearchIndex`, 4303).
 7. **24 termos coloridos não abrem nada** — marcados com `<span class="term">`
    sem verbete correspondente.
-8. **`prediction: .16` é peso morto**; `domain-reconstruction` não está no mapa e
-   cai em `.28` (`evidenceWeight`, `04:83`).
+8. ~~**`prediction: .16` é peso morto.**~~ **Resolvido na Fase 2.** A previsão
+   virou banco de perguntas dos itens de Aplicação na revisão, com peso `.34`.
+   Continua sem registrar nada no primeiro contato, de propósito — ver 5.
+   `domain-reconstruction` segue fora do mapa, caindo em `.28`
+   (`evidenceWeight`, `04`).
 9. **Dois rankings paralelos de fragilidade** — `domainWeakTopics` (`04b`) e a
    fila do SRS. `weakTopics()` (05) parecia um terceiro, mas **não tem nenhum
    chamador**: é código morto, removido na Fase 4.
