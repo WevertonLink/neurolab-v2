@@ -136,7 +136,7 @@ segurança, quarentena de leitura corrompida e detecção de conflito entre abas
 SRS_INTERVALS  = [1, 3, 7, 14, 30, 60, 120, 240]  // Leitner de 8 caixas, em dias
 SRS_PASS       = 0.8   // acerto mínimo para promover
 SRS_LAPSE_CAP  = 2     // ao errar, nunca fica acima da caixa 2 (7 dias)
-SESSION_CAP    = 8     // tópicos por sessão de revisão
+SESSION_CAP    = 16    // ITENS (tópico × dimensão) por sessão — ver 4.7
 ```
 
 **O cronograma agenda tópico × dimensão, não o tópico em bloco** (v5, Fase 0):
@@ -230,8 +230,33 @@ específica: na prática ~1 pergunta por item, onde antes o tópico trazia 3.
 Consequência medida na migração de um estado com 40 tópicos estudados: a fila
 sai de **28 itens vencidos (v4) para 99 (v5)**, enquanto o trabalho do dia cai
 de ~24 perguntas para ~8. Por isso o letreiro do painel mostra o tamanho da
-**sessão**, não da fila, com o excedente declarado logo abaixo. A política de
-volume definitiva ainda não foi desenhada.
+**sessão**, não da fila, com o excedente declarado logo abaixo.
+
+### 4.7 Por que `SESSION_CAP` é 16
+
+Simulação de 180 dias com o escalonador real, 2 aulas/dia, semente fixa:
+
+| acerto | cap | pico da fila | fila no dia 180 | média dias 150-180 | itens/dia feitos |
+|---|---:|---:|---:|---:|---:|
+| 85% | 8 | 131 | 2 | 4,0 | 6,7 |
+| 85% | 16 | 79 | 2 | 3,1 | 7,4 |
+| 70% | 8 | 138 | 19 | 34,3 | 7,9 |
+| 70% | 16 | 112 | 1 | 5,8 | 10,5 |
+| 60% | 8 | 151 | **72** | **80,7** | 7,9 |
+| 60% | 16 | 118 | 16 | 10,2 | 13,3 |
+
+O teto de 8 foi calibrado quando um item era um tópico com 3 perguntas. Com
+164 caixas em intervalos iniciais de 1 a 3 dias, ele virou gargalo de vazão: a
+60% de acerto o aluno **nunca alcança a fila**. Quem mais precisa da revisão
+seria justamente quem ela soterra.
+
+O teto é válvula, não cota — na maioria dos dias a fila é menor que ele. Por
+isso dobrá-lo custa ~1 item/dia de trabalho médio e derruba o pico em 40%.
+
+Descartado com medição: "progressão por dependência" (só cobrar Aplicação
+depois de consolidar Reconhecimento) não limita a fila — reduziu de 99 para 65,
+não para o número de tópicos, porque dimensão consolidada continua em rotação.
+Pode ter mérito pedagógico, mas não é ferramenta de volume.
 
 ---
 

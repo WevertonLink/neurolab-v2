@@ -364,7 +364,15 @@ const DAY = 86400000;
 const SRS_INTERVALS = [1, 3, 7, 14, 30, 60, 120, 240]; // dias por caixa (Leitner expandido)
 const SRS_PASS = 0.8;      // acerto mínimo p/ promover a caixa
 const SRS_LAPSE_CAP = 2;   // ao errar, cai no máximo até esta caixa (7 dias) e reconstrói
-const SESSION_CAP = 8;
+/* Teto da sessão, em ITENS (tópico × dimensão) — não em tópicos.
+   Era 8 quando um item era um tópico inteiro com 3 perguntas. Agora um item
+   traz cerca de uma pergunta, e 8 virou gargalo de vazão: simulando 180 dias
+   com 2 aulas/dia, um aluno com 60% de acerto terminava com 72 itens
+   pendentes e 81/dia de média — nunca alcançava a fila. Com 16 ele drena.
+   O teto não é cota: é válvula. Na maioria dos dias a fila é menor que ele,
+   então subir de 8 para 16 muda o trabalho médio real de 6,7 para 7,4 itens
+   por dia a 85% de acerto — e derruba o pico da fila de 131 para 79. */
+const SESSION_CAP = 16;
 
 /* =====================================================================
    Estado + persistência
