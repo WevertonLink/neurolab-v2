@@ -231,6 +231,40 @@ function commitEvidenceBatch(){
   return feito;
 }
 
+/* ---------------------------------------------------------------------
+   Reconstrução de cadeia — o núcleo puro
+
+   Remontar a sequência causal na ordem certa é a prova mais exigente que o
+   app tem: não existe alternativa para reconhecer. Nasceu no Modo Domínio,
+   presa aos 24 itens dele; estas duas funções são a parte que não depende
+   de tela nem de qual atividade está chamando, para a revisão poder usar a
+   mesma coisa nos 64 tópicos.
+   --------------------------------------------------------------------- */
+
+/* Embaralha determinístico pelo id: o mesmo tópico devolve sempre a mesma
+   ordem, o que torna a atividade reproduzível e testável. A guarda do fim é
+   o que impede a tarefa de virar brinde — sem ela, um id cuja soma de
+   caracteres cai numa permutação identidade entregaria a cadeia já montada. */
+function chainShuffle(chain, id){
+  const list = chain.map((text,index)=>({text:text, index:index}));
+  let seed = Array.from(String(id)).reduce((sum,ch)=>sum+ch.charCodeAt(0), 0);
+  for(let i=list.length-1; i>0; i--){
+    seed = (seed*9301+49297) % 233280;
+    const j = Math.floor(seed/233280*(i+1));
+    const tmp = list[i]; list[i] = list[j]; list[j] = tmp;
+  }
+  if(list.every((x,i)=>x.index===i) && list.length>1) list.push(list.shift());
+  return list;
+}
+
+/* Compara por TEXTO, não por índice: duas etapas com o mesmo texto seriam
+   intercambiáveis e ambas as ordens estariam causalmente certas. */
+function chainIsCorrect(selectedTexts, chain){
+  return Array.isArray(selectedTexts)
+      && selectedTexts.length === chain.length
+      && selectedTexts.every((text,index)=>text === chain[index]);
+}
+
 function setSrsReason(rec, code, key, score){
   rec.reason=code;
   rec.reasonAt=Date.now();

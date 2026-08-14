@@ -353,17 +353,11 @@ domainRenderCounter = function(){
     }).join('')).join('')}</div></section>`;
 };
 
-function domainDeterministicShuffle(chain,id){
-  const list=chain.map((text,index)=>({text,index}));
-  let seed=Array.from(id).reduce((sum,ch)=>sum+ch.charCodeAt(0),0);
-  for(let i=list.length-1;i>0;i--){
-    seed=(seed*9301+49297)%233280;
-    const j=Math.floor(seed/233280*(i+1));
-    [list[i],list[j]]=[list[j],list[i]];
-  }
-  if(list.every((x,i)=>x.index===i)&&list.length>1) list.push(list.shift());
-  return list;
-}
+// O algoritmo saiu daqui para 04-learning-model.js (chainShuffle), porque a
+// revisão passou a precisar dele nos 64 tópicos. Este nome fica como apelido:
+// é o que o resto deste arquivo chama, e trocar todos os pontos de uso seria
+// mexer em fluxo do Modo Domínio que esta fase não tem por que tocar.
+function domainDeterministicShuffle(chain,id){ return chainShuffle(chain,id); }
 function domainStartReconstruction(type,id){
   const item=domainActivityItem(type,id); if(!item) return;
   DOMAIN_SESSION.reconstruction={type,id,available:domainDeterministicShuffle(item.chain,id),selected:[],result:null};
@@ -423,7 +417,7 @@ function domainRevealChain(type,id){
 function domainCheckReconstruction(type,id){
   const item=domainActivityItem(type,id),r=domainReconstructionState(type,id); if(!item||!r) return;
   const selected=r.selected.map(pos=>r.available[pos].text);
-  const right=selected.length===item.chain.length&&selected.every((text,index)=>text===item.chain[index]);
+  const right=chainIsCorrect(selected,item.chain);
   r.result=right?1:0;
   const bucket=domainActivityBucket(type),old=domainSafeRecord(bucket[id]);
   bucket[id]=Object.assign({},old,{

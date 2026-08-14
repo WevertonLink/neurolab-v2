@@ -443,6 +443,71 @@ const reset = ()=>ev('state = defaultState();');
      '14. e não pode gravar id de previsão');
 }
 
+/* ---------- 15. núcleo da reconstrução de cadeia ---------- */
+{
+  // é permutação de verdade: mesmos textos, mesma multiplicidade
+  const permutacaoOk = ev(`(function(){
+    const ruins=[];
+    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
+      const c=CHAIN[m.id] && CHAIN[m.id][li];
+      if(!c || !Array.isArray(c.s)) { ruins.push(m.id+'-'+li+': sem cadeia'); return; }
+      const emb=chainShuffle(c.s, topicKey(m.id,li)).map(x=>x.text).slice().sort();
+      const orig=c.s.slice().sort();
+      if(emb.length!==orig.length || emb.some((t,i)=>t!==orig[i])) ruins.push(m.id+'-'+li+': nao e permutacao');
+    }));
+    return ruins;
+  })()`);
+  eq(permutacaoOk.length, 0, '15. embaralhamento tem de preservar exatamente os textos: ' + permutacaoOk.slice(0,3).join(' | '));
+
+  // NUNCA a ordem original — é isso que impede a tarefa de virar brinde
+  const identidades = ev(`(function(){
+    const ruins=[];
+    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
+      const c=CHAIN[m.id] && CHAIN[m.id][li]; if(!c||!Array.isArray(c.s)) return;
+      if(chainShuffle(c.s, topicKey(m.id,li)).every((x,i)=>x.index===i)) ruins.push(m.id+'-'+li);
+    }));
+    DOMAIN_COUNTERFACTUALS.concat(DOMAIN_CASES).forEach(it=>{
+      if(chainShuffle(it.chain, it.id).every((x,i)=>x.index===i)) ruins.push(it.id);
+    });
+    return ruins;
+  })()`);
+  eq(identidades.length, 0,
+     '15. o embaralhamento NUNCA pode devolver a ordem original — a cadeia sairia ' +
+     'montada e a reconstrução viraria brinde. Casos: ' + identidades.slice(0,5).join(', '));
+
+  /* O teste acima verifica a PROPRIEDADE nas 88 cadeias reais, mas não protege
+     a GUARDA: medi que nenhuma delas cai em identidade nem sem ela, então
+     removê-la não faria nada falhar. E a guarda não é decorativa — cerca de 2%
+     dos ids caem em identidade (182 em 10.000 sintéticos). Este caso exercita
+     a guarda diretamente: comprimento 4 com o id "aab" é uma identidade sem
+     ela. Se alguém remover a guarda, isto falha. */
+  ok(ev(`!chainShuffle(['p0','p1','p2','p3'],'aab').every((x,i)=>x.index===i)`),
+     '15. a guarda anti-identidade tem de agir no caso que a alcança (4 passos, id "aab")');
+
+  // determinístico: o mesmo id devolve sempre a mesma ordem
+  eq(ev(`JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))`),
+     ev(`JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))`),
+     '15. mesmo id tem de dar sempre a mesma ordem');
+  ok(ev(`JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))
+        !== JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-1').map(x=>x.index))`),
+     '15. ids diferentes devem embaralhar diferente');
+
+  // comparação
+  ok(ev(`chainIsCorrect(CHAIN.neuronio[0].s.slice(), CHAIN.neuronio[0].s)`),
+     '15. a ordem certa tem de passar');
+  ok(ev(`(function(){ const c=CHAIN.neuronio[0].s.slice();
+           const t=c[0]; c[0]=c[1]; c[1]=t;   // troca dois passos vizinhos
+           return !chainIsCorrect(c, CHAIN.neuronio[0].s); })()`),
+     '15. trocar dois passos vizinhos tem de reprovar');
+  ok(ev(`!chainIsCorrect(CHAIN.neuronio[0].s.slice(0,-1), CHAIN.neuronio[0].s)`),
+     '15. cadeia incompleta tem de reprovar');
+
+  // o apelido do Modo Domínio continua funcionando
+  eq(ev(`JSON.stringify(domainDeterministicShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))`),
+     ev(`JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))`),
+     '15. domainDeterministicShuffle tem de continuar sendo o mesmo algoritmo');
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');
