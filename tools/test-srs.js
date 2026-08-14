@@ -305,6 +305,30 @@ const reset = ()=>ev('state = defaultState();');
   eq(semMini, 'prediction', '10. sem mini-questão de aplicação, o banco é sempre a previsão');
 }
 
+/* ---------- 11. Aplicação cobre os 64 tópicos, e o banco é bem formado ---------- */
+{
+  const app = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'application')?1:0),0),0)`);
+  eq(app, 64, '11. toda aula tem previsão, então Aplicação deveria cobrir 64/64');
+
+  const total = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`);
+  ok(total >= 188, '11. o total de caixas deveria subir de 164 para ~188, veio ' + total);
+
+  // se a caixa de Aplicação existe, tem de haver com o que alimentá-la
+  const malformadas = ev(`(function(){
+    const r=[];
+    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
+      const p = PREDICT[m.id] && PREDICT[m.id][li];
+      const id = m.id+'-'+li;
+      if(!p){ r.push(id+': sem previsão'); return; }
+      if(!Array.isArray(p.o) || p.o.length < 3) r.push(id+': menos de 3 alternativas');
+      if(!(Number.isInteger(p.c) && p.c >= 0 && p.c < (p.o||[]).length)) r.push(id+': índice correto fora da faixa');
+      if(!p.after || !String(p.after).trim()) r.push(id+': sem fechamento');
+    }));
+    return r;
+  })()`);
+  eq(malformadas.length, 0, '11. previsões malformadas: ' + malformadas.slice(0,5).join(' | '));
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');

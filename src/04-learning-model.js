@@ -176,6 +176,9 @@ function measurableDimensions(moduleId, lessonIndex){
   // o contrafactual do Modo Domínio mede explicação causal neste tópico
   if(typeof DOMAIN_COUNTERFACTUALS !== 'undefined' &&
      DOMAIN_COUNTERFACTUALS.some(c=>c.module===moduleId && c.lesson===lessonIndex)) found.causality = 1;
+  // a previsão do tópico é prova de Aplicação — mas só na revisão, nunca no
+  // primeiro contato, onde ela é pré-teste (ver predictAsReviewQuestion)
+  if(typeof PREDICT !== 'undefined' && PREDICT[moduleId] && PREDICT[moduleId][lessonIndex]) found.application = 1;
   const list = KNOWLEDGE_DIM_IDS.filter(d=>found[d]);
   _measurableCache[ck] = list;
   return list;
