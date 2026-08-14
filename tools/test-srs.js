@@ -12,6 +12,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+// Só afeta o que aparece impresso quando failLoud() dispara — a correção de
+// falhar alto não depende mais de ler stack (ver comentário mais abaixo),
+// mas um stack cortado em 10 quadros (padrão do V8) empobrece o diagnóstico
+// de uma falha profunda. Custa nada num teste de ~1s.
+Error.stackTraceLimit = Infinity;
 
 const ROOT = path.join(__dirname, '..');
 const FILES = ['01-metaphors.js', '02-integrated-visuals.js', '03-context-mechanisms.js',
@@ -71,37 +76,46 @@ sandbox.window = sandbox; sandbox.self = sandbox; sandbox.globalThis = sandbox;
 
 // init() do app é uma IIFE assíncrona sem .catch (ver 05-app.js): quando
 // renderHeader()/renderDashboard() batem no DOM stubado, a exceção nasce
-// numa continuação pós-await — sem relação de chamada síncrona com este
-// arquivo — e vira unhandledRejection. É ruído esperado do app carregado.
+// numa continuação pós-await e vira unhandledRejection. É ruído esperado
+// do app carregado.
 //
-// Um handler cego para o resto do processo também engolia exceção do CORPO
-// do teste: um `throw` solto saía com exit code 0, e o portão só conseguia
-// falhar por asserção, nunca por exceção.
+// Uma rodada anterior tentou separar esse ruído de uma exceção do CORPO do
+// teste farejando o nome deste arquivo em e.stack — e isso falha CALADO
+// exatamente nos dois casos que mais importam: um `throw` de valor que não
+// é Error não tem .stack; e uma pilha mais funda que Error.stackTraceLimit
+// (10 por padrão do V8) trunca o texto antes de mencionar este arquivo. Os
+// dois fazem a exceção cair no ramo de tolerância — o padrão errado para um
+// portão cujo objetivo é nunca deixar passar calado.
 //
-// Uma janela por TEMPO não resolve: a continuação do init() só é drenada
-// depois que a pilha síncrona esvazia — ou seja, depois do `for` de carga E
-// de todo o corpo do teste, porque vm.runInContext não força checkpoint de
-// microtask entre chamadas (comprovado empiricamente). Qualquer prazo que
-// cobrisse o init() real cobriria o corpo do teste inteiro junto.
-//
-// Por isso a distinção é por ORIGEM, não por tempo: quando o corpo do teste
-// chama `ev(...)` e algo síncrono explode no caminho, o stack carrega um
-// frame deste arquivo (a chamada a `ev` continua na pilha). Já a
-// continuação do init() roda desacoplada de qualquer chamada síncrona
-// daqui, e seu stack nunca menciona este arquivo.
-const TEST_FILE = path.basename(__filename);
-const fromTestBody = (e)=> e && typeof e.stack === 'string' && e.stack.indexOf(TEST_FILE) > -1;
+// A saída não é consertar a heurística: é não precisar dela. Este arquivo
+// não tem NADA assíncrono — nenhum await, then ou setTimeout com efeito
+// observável no corpo do teste. A única coisa assíncrona em todo o universo
+// que este processo carrega é a continuação do init(). Então a origem não é
+// adivinhada por texto de stack: o try/catch lá embaixo envolve o corpo do
+// teste inteiro (tudo síncrono) e intercepta qualquer exceção sua — Error
+// ou não, stack raso ou fundo, sem ler string nenhuma. O que sobra para
+// uncaughtException/unhandledRejection só pode ser a continuação órfã do
+// init(), por construção do próprio arquivo, não por suposição sobre ela.
 const failLoud = (e)=>{ console.error('ERRO (teste): ' + (e && e.stack ? e.stack : e)); process.exit(1); };
 const tolerate = (e)=>{ console.error('(ruído tolerado do app carregado, fora do corpo do teste): ' + (e && e.message || e)); };
-process.on('uncaughtException', (e)=>{ if(fromTestBody(e)) failLoud(e); else tolerate(e); });
-process.on('unhandledRejection', (e)=>{ if(fromTestBody(e)) failLoud(e); else tolerate(e); });
+process.on('uncaughtException', tolerate);
+process.on('unhandledRejection', tolerate);
 
 const ctx = vm.createContext(sandbox);
+// O contexto vm tem seu próprio Error, separado do desta realm — ajustar
+// Error.stackTraceLimit aqui fora não alcança uma exceção construída lá
+// dentro (é o caso comum: quase tudo que o teste alcança roda via ev()).
+vm.runInContext('Error.stackTraceLimit = Infinity;', ctx);
 for(const f of FILES){
   try{ vm.runInContext(fs.readFileSync(path.join(ROOT,'src',f),'utf8'), ctx, {filename:f}); }
   catch(e){ console.error('ERRO ao carregar '+f+': '+e.message); process.exit(1); }
 }
 const ev = (code)=>vm.runInContext(code, ctx);
+
+// Tudo daqui até o fim do arquivo é síncrono. O catch no fim decide sozinho,
+// pela própria estrutura do arquivo, que qualquer exceção que chegue aqui é
+// do corpo do teste — ver o comentário grande lá em cima.
+try{
 
 /* ---------- asserções ---------- */
 const errors = [];
@@ -352,3 +366,5 @@ if(errors.length){
 }
 console.log('Cronograma por dimensão: ok');
 console.log('  ' + checks + ' verificações — derivação, semeadura, promoção, rebaixamento, lote, escopo, fila e migração v4→v5');
+
+}catch(e){ failLoud(e); }
