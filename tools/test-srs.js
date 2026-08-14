@@ -69,23 +69,38 @@ const sandbox = {
 };
 sandbox.window = sandbox; sandbox.self = sandbox; sandbox.globalThis = sandbox;
 
-// init() do app roda num microtask e estoura no DOM stubado durante a carga
-// dos src/*.js — ruído esperado, que não interessa aqui. Mas um handler cego
-// para o resto da execução do processo também engole exceção do CORPO do
-// teste: um `throw` solto depois da carga saía com exit code 0, e o portão
-// não conseguia falhar por exceção, só por asserção. `loading` limita o
-// perdão à janela real de carga; depois dela, qualquer exceção é do teste.
-let loading = true;
+// init() do app é uma IIFE assíncrona sem .catch (ver 05-app.js): quando
+// renderHeader()/renderDashboard() batem no DOM stubado, a exceção nasce
+// numa continuação pós-await — sem relação de chamada síncrona com este
+// arquivo — e vira unhandledRejection. É ruído esperado do app carregado.
+//
+// Um handler cego para o resto do processo também engolia exceção do CORPO
+// do teste: um `throw` solto saía com exit code 0, e o portão só conseguia
+// falhar por asserção, nunca por exceção.
+//
+// Uma janela por TEMPO não resolve: a continuação do init() só é drenada
+// depois que a pilha síncrona esvazia — ou seja, depois do `for` de carga E
+// de todo o corpo do teste, porque vm.runInContext não força checkpoint de
+// microtask entre chamadas (comprovado empiricamente). Qualquer prazo que
+// cobrisse o init() real cobriria o corpo do teste inteiro junto.
+//
+// Por isso a distinção é por ORIGEM, não por tempo: quando o corpo do teste
+// chama `ev(...)` e algo síncrono explode no caminho, o stack carrega um
+// frame deste arquivo (a chamada a `ev` continua na pilha). Já a
+// continuação do init() roda desacoplada de qualquer chamada síncrona
+// daqui, e seu stack nunca menciona este arquivo.
+const TEST_FILE = path.basename(__filename);
+const fromTestBody = (e)=> e && typeof e.stack === 'string' && e.stack.indexOf(TEST_FILE) > -1;
 const failLoud = (e)=>{ console.error('ERRO (teste): ' + (e && e.stack ? e.stack : e)); process.exit(1); };
-process.on('uncaughtException', (e)=>{ if(!loading) failLoud(e); });
-process.on('unhandledRejection', (e)=>{ if(!loading) failLoud(e); });
+const tolerate = (e)=>{ console.error('(ruído tolerado do app carregado, fora do corpo do teste): ' + (e && e.message || e)); };
+process.on('uncaughtException', (e)=>{ if(fromTestBody(e)) failLoud(e); else tolerate(e); });
+process.on('unhandledRejection', (e)=>{ if(fromTestBody(e)) failLoud(e); else tolerate(e); });
 
 const ctx = vm.createContext(sandbox);
 for(const f of FILES){
   try{ vm.runInContext(fs.readFileSync(path.join(ROOT,'src',f),'utf8'), ctx, {filename:f}); }
   catch(e){ console.error('ERRO ao carregar '+f+': '+e.message); process.exit(1); }
 }
-loading = false;
 const ev = (code)=>vm.runInContext(code, ctx);
 
 /* ---------- asserções ---------- */
@@ -321,7 +336,7 @@ const reset = ()=>ev('state = defaultState();');
       const id = m.id+'-'+li;
       if(!p){ r.push(id+': sem previsão'); return; }
       if(!Array.isArray(p.o) || p.o.length < 3) r.push(id+': menos de 3 alternativas');
-      if(!(Number.isInteger(p.c) && p.c >= 0 && p.c < (p.o||[]).length)) r.push(id+': índice correto fora da faixa');
+      else if(!(Number.isInteger(p.c) && p.c >= 0 && p.c < p.o.length)) r.push(id+': índice correto fora da faixa');
       if(!p.after || !String(p.after).trim()) r.push(id+': sem fechamento');
     }));
     return r;
