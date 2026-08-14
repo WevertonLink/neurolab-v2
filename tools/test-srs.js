@@ -263,6 +263,40 @@ const reset = ()=>ev('state = defaultState();');
   ok(true, '9. splitTopicKey ida e volta em todos os 64 tópicos');
 }
 
+/* ---------- 10. a previsão vira questão de revisão ---------- */
+{
+  reset();
+  const q = ev(`predictAsReviewQuestion('neuronio',0)`);
+  ok(q && q.q, '10. deveria produzir uma questão a partir da previsão de neuronio-0');
+  eq(q.dim, 'application', '10. a previsão DECLARA a dimensão, em vez de deixar o regex inferir');
+  eq(q._source, 'prediction', '10. a origem precisa viajar junto com a questão');
+  ok(Array.isArray(q.o) && q.o.length >= 3, '10. as alternativas têm de vir junto');
+  ok(Boolean(q.er) && Boolean(q.ew), '10. o fechamento serve de feedback para acerto e para erro');
+  eq(ev(`inferQuestionDimension(predictAsReviewQuestion('neuronio',0),{source:'review'})`),
+     'application', '10. dimensão declarada tem de vencer o classificador por regex');
+  eq(ev(`predictAsReviewQuestion('naoexiste',0)`), null, '10. tópico sem previsão devolve null');
+
+  // o banco alterna pela paridade de reps da própria caixa, sem estado novo
+  reset();
+  ev(`seedTopic('neuronio-0')`);
+  const par = ev(`applicationBank(MODULES[0],0,'neuronio-0').map(q=>q._source||'mini')`);
+  eq(par.join(','), 'prediction', '10. reps 0 (par) começa pela previsão');
+  ev(`state.srs['neuronio-0'].dims.application.reps = 1`);
+  const impar = ev(`applicationBank(MODULES[0],0,'neuronio-0').map(q=>q._source||'mini')`);
+  ok(impar.length > 0 && impar.every(s=>s==='mini'), '10. reps ímpar alterna para as mini-questões');
+
+  // tópico sem mini-questão de aplicação usa a previsão sempre
+  const semMini = ev(`(function(){
+    const alvo = MODULES.flatMap((m,mi)=>m.lessons.map((_,li)=>({m:m,mi:mi,li:li})))
+      .find(x=>!(MINI_QUIZZES[x.m.id][x.li]||[]).some(q=>inferQuestionDimension(q,{module:x.m,lessonIndex:x.li,source:'review'})==='application'));
+    if(!alvo) return 'nenhum';
+    const k = topicKey(alvo.m.id, alvo.li);
+    ensureSrsTopic(k);
+    return applicationBank(alvo.m, alvo.li, k).map(q=>q._source||'mini').join(',');
+  })()`);
+  eq(semMini, 'prediction', '10. sem mini-questão de aplicação, o banco é sempre a previsão');
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');

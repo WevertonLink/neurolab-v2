@@ -1235,7 +1235,12 @@ function loadReviewTopic(){
   const todas = (MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][t.li]) || [];
   // o item da fila é uma DIMENSÃO: só entram as perguntas que medem aquilo.
   // Volta mais curta e mais específica do que revisar o tópico em bloco.
-  let qs = todas.filter(q=>inferQuestionDimension(q,{module:m, lessonIndex:t.li, source:'review'}) === t.dim);
+  let qs;
+  if(t.dim === 'application'){
+    qs = applicationBank(m, t.li, t.key);
+  } else {
+    qs = todas.filter(q=>inferQuestionDimension(q,{module:m, lessonIndex:t.li, source:'review'}) === t.dim);
+  }
   if(!qs.length) qs = todas;
   if(typeof orderReviewQuestions==='function') qs = orderReviewQuestions(qs, t.key);
   review.topicQs = qs; review.qi = 0; review.topicCorrect = 0;
@@ -5385,6 +5390,40 @@ metodos:[
 function predKey(mid, idx){ return 'P:'+mid+':'+idx; }
 function predOf(mid, idx){ return (PREDICT[mid] && PREDICT[mid][idx]) || null; }
 function predAnswered(mid, idx){ return state.predCredit && state.predCredit[predKey(mid,idx)] !== undefined; }
+
+/* A previsão foi escrita como PRÉ-teste: aparece antes do corpo da aula, com o
+   texto velado até a resposta, porque é o erro de previsão que abre a janela
+   para o conteúdo entrar. Por isso ela não registra evidência ali — ver
+   commitPredict. Na revisão, porém, a aula já foi lida, e a mesma pergunta
+   passa a ser uma prova legítima de Aplicação. Esta função a converte para o
+   formato que a tela de revisão já consome.
+
+   dim:'application' é DECLARADA de propósito: inferQuestionDimension respeita
+   q.dim quando existe, então esta é a única questão do app que não depende do
+   classificador por regex para saber o que mede. */
+function predictAsReviewQuestion(moduleId, lessonIndex){
+  const p = predOf(moduleId, lessonIndex);
+  if(!p || !Array.isArray(p.o) || !p.o.length) return null;
+  return { q:p.q, o:p.o, c:p.c,
+           er:p.after, ew:p.after,   // o fechamento serve para acerto e para erro
+           lvl:1, dim:'application', _source:'prediction' };
+}
+
+/* Banco de perguntas do item de Aplicação. Alterna entre a previsão e as
+   mini-questões pela paridade de reps da própria caixa — sem campo novo no
+   estado, e determinístico, que é o que torna isso testável. Começa pela
+   previsão porque ela é a prova mais forte das duas: pede antecipar o
+   comportamento do mecanismo, não reconhecer a alternativa certa. */
+function applicationBank(m, lessonIndex, key){
+  const pred = predictAsReviewQuestion(m.id, lessonIndex);
+  const minis = ((typeof MINI_QUIZZES!=='undefined' && MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][lessonIndex]) || [])
+    .filter(q=>inferQuestionDimension(q,{module:m, lessonIndex:lessonIndex, source:'review'}) === 'application');
+  if(!pred) return minis;
+  if(!minis.length) return [pred];
+  const reps = ((srsDims(key) || {}).application || {}).reps || 0;
+  return reps % 2 === 0 ? [pred] : minis;
+}
+
 function predVeiled(mid, idx){ return deepOn() && !!predOf(mid,idx) && !predAnswered(mid,idx); }
 
 function predictHTML(mid, idx){
