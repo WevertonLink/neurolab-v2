@@ -183,6 +183,13 @@ function measurableDimensions(moduleId, lessonIndex){
   // a previsão do tópico é prova de Aplicação — mas só na revisão, nunca no
   // primeiro contato, onde ela é pré-teste (ver predictAsReviewQuestion)
   if(typeof PREDICT !== 'undefined' && PREDICT[moduleId] && PREDICT[moduleId][lessonIndex]) found.application = 1;
+  // a cadeia do tópico é prova de Explicação causal: remontá-la na ordem é a
+  // prova mais exigente que o app tem, porque não há alternativa para
+  // reconhecer. Exige 4 etapas ou mais — abaixo disso a permutação é pequena
+  // demais para distinguir quem entendeu de quem chutou.
+  if(typeof CHAIN !== 'undefined' && CHAIN[moduleId] && CHAIN[moduleId][lessonIndex]
+     && Array.isArray(CHAIN[moduleId][lessonIndex].s)
+     && CHAIN[moduleId][lessonIndex].s.length >= 4) found.causality = 1;
   const list = KNOWLEDGE_DIM_IDS.filter(d=>found[d]);
   _measurableCache[ck] = list;
   return list;

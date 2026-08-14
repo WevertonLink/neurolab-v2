@@ -508,6 +508,31 @@ const reset = ()=>ev('state = defaultState();');
      '15. domainDeterministicShuffle tem de continuar sendo o mesmo algoritmo');
 }
 
+/* ---------- 16. a cadeia cobre Explicação causal nos 64 tópicos ---------- */
+{
+  const cau = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'causality')?1:0),0),0)`);
+  eq(cau, 64, '16. toda aula tem cadeia com 4+ etapas, então Explicação causal deveria cobrir 64/64');
+
+  const total = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`);
+  eq(total, 189, '16. o total de caixas deveria ir de 188 para 189');
+
+  // se a caixa de causalidade existe, tem de haver com o que alimentá-la
+  const malformadas = ev(`(function(){
+    const r=[];
+    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
+      const c = CHAIN[m.id] && CHAIN[m.id][li];
+      const id = m.id+'-'+li;
+      if(!c){ r.push(id+': sem cadeia'); return; }
+      if(!Array.isArray(c.s) || c.s.length < 4) r.push(id+': menos de 4 etapas');
+      else if(c.s.some(t=>!t || !String(t).trim())) r.push(id+': etapa vazia');
+      if(!(Number.isInteger(c.h) && c.h >= 0 && c.h < (c.s||[]).length)) r.push(id+': dobradica fora da faixa');
+      if(!c.w || !String(c.w).trim() || !c.wa || !String(c.wa).trim()) r.push(id+': sem "e se"');
+    }));
+    return r;
+  })()`);
+  eq(malformadas.length, 0, '16. cadeias malformadas: ' + malformadas.slice(0,5).join(' | '));
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');
