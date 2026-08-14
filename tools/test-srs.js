@@ -69,15 +69,23 @@ const sandbox = {
 };
 sandbox.window = sandbox; sandbox.self = sandbox; sandbox.globalThis = sandbox;
 
-// init() do app roda num microtask e estoura no DOM stubado; não interessa aqui.
-process.on('uncaughtException', ()=>{});
-process.on('unhandledRejection', ()=>{});
+// init() do app roda num microtask e estoura no DOM stubado durante a carga
+// dos src/*.js — ruído esperado, que não interessa aqui. Mas um handler cego
+// para o resto da execução do processo também engole exceção do CORPO do
+// teste: um `throw` solto depois da carga saía com exit code 0, e o portão
+// não conseguia falhar por exceção, só por asserção. `loading` limita o
+// perdão à janela real de carga; depois dela, qualquer exceção é do teste.
+let loading = true;
+const failLoud = (e)=>{ console.error('ERRO (teste): ' + (e && e.stack ? e.stack : e)); process.exit(1); };
+process.on('uncaughtException', (e)=>{ if(!loading) failLoud(e); });
+process.on('unhandledRejection', (e)=>{ if(!loading) failLoud(e); });
 
 const ctx = vm.createContext(sandbox);
 for(const f of FILES){
   try{ vm.runInContext(fs.readFileSync(path.join(ROOT,'src',f),'utf8'), ctx, {filename:f}); }
   catch(e){ console.error('ERRO ao carregar '+f+': '+e.message); process.exit(1); }
 }
+loading = false;
 const ev = (code)=>vm.runInContext(code, ctx);
 
 /* ---------- asserções ---------- */
