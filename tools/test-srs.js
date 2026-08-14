@@ -533,6 +533,66 @@ const reset = ()=>ev('state = defaultState();');
   eq(malformadas.length, 0, '16. cadeias malformadas: ' + malformadas.slice(0,5).join(' | '));
 }
 
+/* ---------- 17. o item de causalidade na revisão é reconstrução ---------- */
+{
+  const abrirItem = `(function(dim){
+    const m=MODULES[0], li=0, key=topicKey(m.id,li);
+    seedTopic(key);
+    review = { queue:[{mi:0, li:li, key:key, dim:dim, title:m.lessons[li].t,
+                       mn:m.n, color:m.color, due:0, box:0, overdue:0}],
+               ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] };
+    loadReviewTopic();
+  })`;
+  const montarNaOrdem = `(function(certo){
+    const r=review.recon;
+    const ordem = certo
+      ? r.chain.map(txt=>r.available.findIndex(a=>a.text===txt))
+      : (function(){ const idx=r.chain.map(txt=>r.available.findIndex(a=>a.text===txt));
+                     const t=idx[0]; idx[0]=idx[1]; idx[1]=t; return idx; })();
+    ordem.forEach(p=>pickReviewChainStep(p));
+  })`;
+
+  // um item de causalidade abre reconstrução, não múltipla escolha
+  reset();
+  ev(`${abrirItem}('causality')`);
+  ok(ev(`!!review.recon`), '17. item de causalidade tem de abrir reconstrução');
+  eq(ev(`review.topicQs.length`), 0, '17. e não deve montar banco de múltipla escolha');
+  eq(ev(`review.recon.available.length`), ev(`CHAIN.neuronio[0].s.length`),
+     '17. o pool tem de ter todas as etapas da cadeia');
+  ok(ev(`!review.recon.available.every((x,i)=>x.index===i)`),
+     '17. e não pode vir na ordem original');
+
+  // ordem certa: evidência com fonte reconstruction, e a caixa anda
+  reset();
+  ev(`${abrirItem}('causality'); ${montarNaOrdem}(true); nextReview();`);
+  eq(ev(`(state.questionHistory['RC:neuronio-0']||{}).source`), 'reconstruction',
+     '17. acerto grava evidência com fonte reconstruction');
+  eq(ev(`state.dimensionEvidence['T:neuronio-0'].causality.sources.reconstruction`), 1,
+     '17. e conta na dimensão de Explicação causal');
+  eq(ev(`state.srs['neuronio-0'].dims.causality.reps`), 1,
+     '17. e a caixa de causalidade tem de registrar a tentativa');
+
+  // ordem errada: reprova
+  reset();
+  ev(`${abrirItem}('causality'); ${montarNaOrdem}(false); nextReview();`);
+  eq(ev(`state.dimensionEvidence['T:neuronio-0'].causality.last`), 0,
+     '17. trocar duas etapas vizinhas tem de reprovar');
+
+  // ver a cadeia não conta como reconstruir: nada gravado, nada agendado
+  reset();
+  ev(`${abrirItem}('causality'); revealReviewChain(); nextReview();`);
+  eq(ev(`state.questionHistory['RC:neuronio-0'] === undefined`), true,
+     '17. ver a cadeia NÃO pode gravar evidência — o item tem de continuar vencido');
+  eq(ev(`(((state.srs['neuronio-0']||{}).dims||{}).causality||{}).reps`), 0,
+     '17. e não pode contar tentativa na caixa');
+
+  // ver depois de errar não apaga o erro já registrado
+  reset();
+  ev(`${abrirItem}('causality'); ${montarNaOrdem}(false); revealReviewChain(); nextReview();`);
+  eq(ev(`state.dimensionEvidence['T:neuronio-0'].causality.attempts`), 1,
+     '17. ver depois de errar não apaga o erro que já foi gravado');
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');

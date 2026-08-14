@@ -1233,6 +1233,19 @@ function loadReviewTopic(){
   const t = review.queue[review.ti];
   const m = MODULES[t.mi];
   const todas = (MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][t.li]) || [];
+  review.recon = null;
+  /* Explicação causal não é medida por alternativa: o item vira reconstrução
+     da cadeia. Ver renderReviewReconstruction. */
+  const cadeia = chainDoTopico(m.id, t.li);
+  if(t.dim === 'causality' && cadeia){
+    review.recon = { chain:cadeia, available:chainShuffle(cadeia, t.key),
+                     selected:[], result:null, revealed:false };
+    review.topicQs = []; review.qi = 0; review.topicCorrect = 0;
+    if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
+    renderReviewHead();
+    renderReviewReconstruction();
+    return;
+  }
   // o item da fila é uma DIMENSÃO: só entram as perguntas que medem aquilo.
   // Volta mais curta e mais específica do que revisar o tópico em bloco.
   let qs;
@@ -1311,7 +1324,126 @@ function answerReview(k){
   if(right) awardXP(XP.review, {currentTarget:fb}); else saveState();
   revealAfterAnswer('rv-fb');
 }
+/* =====================================================================
+   RECONSTRUÇÃO DA CADEIA NA REVISÃO
+
+   O item de Explicação causal deixa de ser múltipla escolha e passa a pedir
+   a sequência de CHAIN remontada na ordem. É a prova mais exigente do app,
+   porque não existe alternativa para reconhecer — ou a dependência entre as
+   etapas está no lugar, ou não está.
+
+   O estado mora no próprio objeto `review`, não num slot global. O Modo
+   Domínio usa um slot único em DOMAIN_SESSION e por isso só consegue ter
+   uma reconstrução viva por vez; a sessão de revisão já é uma máquina de
+   estado com fila, e um segundo global seria a mesma armadilha.
+   ===================================================================== */
+function chainDoTopico(moduleId, lessonIndex){
+  const c = (typeof CHAIN!=='undefined' && CHAIN[moduleId] && CHAIN[moduleId][lessonIndex]) || null;
+  return (c && Array.isArray(c.s) && c.s.length >= 4) ? c.s : null;
+}
+function renderReviewReconstruction(){
+  const t = review.queue[review.ti];
+  const r = review.recon; if(!r) return;
+  const escolhidos = r.selected.map((pos,i)=>`<li><b>${i+1}</b><span>${escHtml(r.available[pos].text)}</span></li>`).join('');
+  const travado = r.result!==null || r.revealed;
+  const pool = r.available.map((entry,pos)=>
+    `<button type="button" ${r.selected.includes(pos)||travado?'disabled':''} onclick="pickReviewChainStep(${pos})"><b>+</b><span>${escHtml(entry.text)}</span></button>`).join('');
+
+  let fecho = '';
+  if(r.result===1){
+    fecho = `<div class="dm-reconstruct-result right"><b>✓ Você remontou o mecanismo sem alternativas.</b>
+      <p>Isso é diferente de reconhecer a resposta certa: você reproduziu de qual etapa cada uma depende.</p>
+      <button class="bigbtn" onclick="nextReview()">Continuar</button></div>`;
+  } else if(r.result===0){
+    fecho = `<div class="dm-reconstruct-result wrong"><b>✕ A ordem ainda não fecha causalmente.</b>
+      <p>Procure qual etapa depende de outra antes de reorganizar.</p>
+      <button class="bigbtn ghost" onclick="resetReviewReconstruction()">Reorganizar os passos</button>
+      <button class="dm-reveal-link" onclick="revealReviewChain()">não estou conseguindo — ver a cadeia</button>
+      <button class="bigbtn" onclick="nextReview()">Continuar</button></div>`;
+  }
+  if(r.revealed){
+    fecho = `<div class="dm-reconstruct-result revealed"><b>A cadeia correta</b>
+      <ol class="dm-selected-chain">${r.chain.map((s,i)=>`<li><b>${i+1}</b><span>${escHtml(s)}</span></li>`).join('')}</ol>
+      <p>Ver não é reconstruir: este item continua vencido e volta para você refazer sem ajuda. Leia procurando de qual etapa cada uma depende.</p>
+      <button class="bigbtn" onclick="nextReview()">Continuar</button></div>`;
+  }
+
+  document.getElementById('rv-body').innerHTML = `
+    <div class="miniquiz-card rv-card">
+      <div class="mq-k">Módulo ${t.mn} · ${t.title} · ${dimMeta(t.dim).label}</div>
+      <div class="dm-reconstruct">
+        <div class="dm-reconstruct-head"><span>RECONSTRUÇÃO SEM ALTERNATIVAS</span>
+          <h4>Toque nas etapas na ordem causal.</h4>
+          <p>Não há alternativa para reconhecer: o teste é montar a sequência usando só os componentes dela.</p></div>
+        <ol class="dm-selected-chain">${escolhidos||'<li class="placeholder">A sequência aparecerá aqui.</li>'}</ol>
+        <div class="dm-chain-pool">${pool}</div>
+        ${r.selected.length && !travado ? `<button class="dm-undo" onclick="undoReviewChainStep()">← desfazer última etapa</button>
+        <button class="dm-reveal-link" onclick="revealReviewChain()">não estou conseguindo — ver a cadeia</button>`:''}
+        ${fecho}
+      </div>
+    </div>`;
+  focusCardTop('#rv-body .rv-card');
+}
+function pickReviewChainStep(pos){
+  const r = review.recon;
+  if(!r || r.result!==null || r.revealed) return;   // ver a cadeia trava o pool
+  pos = Number(pos);
+  if(!r.available[pos] || r.selected.includes(pos)) return;
+  r.selected.push(pos);
+  if(r.selected.length === r.available.length) checkReviewReconstruction();
+  else renderReviewReconstruction();
+}
+function undoReviewChainStep(){
+  const r = review.recon;
+  if(!r || !r.selected.length || r.result!==null || r.revealed) return;
+  r.selected.pop();
+  renderReviewReconstruction();
+}
+function resetReviewReconstruction(){
+  const r = review.recon; if(!r || r.revealed) return;
+  r.selected = []; r.result = null;
+  renderReviewReconstruction();
+}
+/* Saída para quem travou. Ver NÃO conta como reconstruir: não grava evidência
+   e não agenda nada, então o item continua vencido e volta. Ficar tentando
+   permutação atrás de permutação não ensina — é o oposto do que a atividade
+   treina. */
+function revealReviewChain(){
+  const r = review.recon;
+  if(!r || r.result===1 || r.revealed) return;
+  r.revealed = true;
+  renderReviewReconstruction();
+}
+function checkReviewReconstruction(){
+  const t = review.queue[review.ti], r = review.recon; if(!r) return;
+  const certo = chainIsCorrect(r.selected.map(pos=>r.available[pos].text), r.chain);
+  r.result = certo ? 1 : 0;
+  state.attempts = (state.attempts||0)+1;
+  if(certo){ state.correctTotal = (state.correctTotal||0)+1; } else { state.wrongTotal = (state.wrongTotal||0)+1; }
+  recordDimensionEvidence(topicScope(t.key), 'causality', certo?1:0, 'reconstruction', {questionId:'RC:'+t.key});
+  if(certo) awardXP(XP.review, null); else saveState();
+  renderReviewReconstruction();
+}
+
 function nextReview(){
+  if(review.recon){
+    /* Reconstrução: uma tentativa por item, sem `topicQs`. Quem viu a cadeia
+       sai sem resultado — e sem agendamento, para o item continuar vencido. */
+    const t = review.queue[review.ti];
+    const r = review.recon;
+    const agendadas = (typeof commitEvidenceBatch==='function') ? commitEvidenceBatch() : [];
+    if(r.result!==null && !agendadas.some(a=>a.key===t.key && a.dim===t.dim)){
+      scheduleDimension(t.key, t.dim, r.result);
+    }
+    if(r.result!==null){
+      const rec = (srsDims(t.key)||{})[t.dim] || {box:0};
+      review.results.push({ key:t.key, title:t.title, mn:t.mn, color:t.color, dim:t.dim,
+                            passed:r.result===1, box:rec.box||0 });
+    }
+    review.recon = null;
+    advanceReviewTopic();
+    return;
+  }
   if(review.qi+1 < review.topicQs.length){ review.qi++; renderReviewQuestion(); return; }
   const t = review.queue[review.ti];
   const score = review.topicQs.length? review.topicCorrect/review.topicQs.length : 0;
