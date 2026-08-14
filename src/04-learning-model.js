@@ -100,6 +100,9 @@ function recordDimensionEvidence(scope, dim, result, source, meta){
     if(!state.questionHistory) state.questionHistory={};
     state.questionHistory[meta.questionId]={scope,dim,result,source,at:rec.updatedAt};
   }
+  // gravar evidência é o que agenda: se houver um lote aberto, esta evidência
+  // entra no cálculo do próximo intervalo desta dimensão.
+  bufferEvidence(scope, dim, result);
 }
 function scopeDimensionScore(scope, dim){
   const group=state.dimensionEvidence&&state.dimensionEvidence[scope];
@@ -154,6 +157,73 @@ function recordSelfRateEvidence(key,val){
   if(ctx.context&&ctx.context.source==='mini') refreshTopicKnowledge(ctx.context.module.id,ctx.context.lessonIndex);
 }
 
+/* ---------------------------------------------------------------------
+   Quais dimensões este tópico consegue medir
+
+   Derivada do conteúdo, nunca gravada no estado. É ela que decide quais
+   caixas do cronograma existem — e é por isso que acrescentar uma forma
+   nova de medição não exige migração: quando a reconstrução da cadeia
+   passar a valer para os 64 tópicos, 'causality' entra aqui e as caixas
+   nascem sozinhas na próxima interação.
+   --------------------------------------------------------------------- */
+const _measurableCache = {};
+function measurableDimensions(moduleId, lessonIndex){
+  const ck = moduleId + '-' + lessonIndex;
+  if(_measurableCache[ck]) return _measurableCache[ck];
+  const found = {};
+  const qs = (typeof MINI_QUIZZES !== 'undefined' && MINI_QUIZZES[moduleId] && MINI_QUIZZES[moduleId][lessonIndex]) || [];
+  qs.forEach(q=>{ found[inferQuestionDimension(q,{module:moduleId, lessonIndex:lessonIndex, source:'mini'})] = 1; });
+  // o contrafactual do Modo Domínio mede explicação causal neste tópico
+  if(typeof DOMAIN_COUNTERFACTUALS !== 'undefined' &&
+     DOMAIN_COUNTERFACTUALS.some(c=>c.module===moduleId && c.lesson===lessonIndex)) found.causality = 1;
+  const list = KNOWLEDGE_DIM_IDS.filter(d=>found[d]);
+  _measurableCache[ck] = list;
+  return list;
+}
+function canMeasure(moduleId, lessonIndex, dim){
+  return measurableDimensions(moduleId, lessonIndex).indexOf(dim) > -1;
+}
+
+/* ---------------------------------------------------------------------
+   Acúmulo por atividade
+
+   Uma atividade produz várias evidências da mesma dimensão — o mini quiz
+   tem 3 perguntas. Promover a caixa uma vez por evidência faria o
+   intervalo saltar de 1 para 14 dias numa sentada só, corrompendo o
+   Leitner em silêncio. Então a evidência acumula aqui e o agendamento é
+   confirmado uma vez por dimensão, no fim.
+
+   Atividade que NÃO abre um lote não agenda nada — é assim que o quiz de
+   módulo e os casos integrados continuam medindo o módulo sem creditar
+   tópico errado. O escopo M: também é descartado no commit, por garantia.
+   --------------------------------------------------------------------- */
+let _evidenceBatch = null;
+function beginEvidenceBatch(){ _evidenceBatch = {}; }
+function bufferEvidence(scope, dim, result){
+  if(!_evidenceBatch || !scope) return;
+  if(!_evidenceBatch[scope]) _evidenceBatch[scope] = {};
+  const b = _evidenceBatch[scope][dim] || (_evidenceBatch[scope][dim] = {sum:0, n:0});
+  b.sum += clampKnowledge(result);
+  b.n += 1;
+}
+function commitEvidenceBatch(){
+  const buf = _evidenceBatch;
+  _evidenceBatch = null;
+  if(!buf) return [];
+  const feito = [];
+  Object.keys(buf).forEach(scope=>{
+    if(scope.indexOf('T:') !== 0) return;   // só tópico entra no cronograma
+    const key = scope.slice(2);
+    Object.keys(buf[scope]).forEach(dim=>{
+      const b = buf[scope][dim];
+      const score = b.n ? b.sum / b.n : 0;
+      if(typeof scheduleDimension === 'function') scheduleDimension(key, dim, score);
+      feito.push({key:key, dim:dim, score:score});
+    });
+  });
+  return feito;
+}
+
 function setSrsReason(rec, code, key, score){
   rec.reason=code;
   rec.reasonAt=Date.now();
@@ -173,12 +243,19 @@ function normalizeSrsReason(rec,key){
 }
 function normalizeAllSrsReasons(){
   if(!state.srs||typeof state.srs!=='object') return;
-  Object.keys(state.srs).forEach(key=>normalizeSrsReason(state.srs[key],key));
+  Object.keys(state.srs).forEach(key=>{
+    const dims=state.srs[key]&&state.srs[key].dims;
+    if(!dims||typeof dims!=='object') return;
+    Object.keys(dims).forEach(d=>normalizeSrsReason(dims[d],key));
+  });
 }
 function reviewReasonData(topic){
-  const rec=normalizeSrsReason((state.srs&&state.srs[topic.key])||{},topic.key);
-  const currentWeak=weakestDimensionForTopic(topic.key);
-  const weak=currentWeak.score!==null?currentWeak:dimMeta(rec.weakDimension||currentWeak.id);
+  const dims=(state.srs&&state.srs[topic.key]&&state.srs[topic.key].dims)||{};
+  const rec=normalizeSrsReason(dims[topic.dim]||{},topic.key);
+  // o item agora É uma dimensão, então o foco não precisa mais ser adivinhado
+  const weak=KNOWLEDGE_DIM_IDS.includes(topic.dim)
+    ? Object.assign({},dimMeta(topic.dim),{score:scopeDimensionScore(topicScope(topic.key),topic.dim)})
+    : weakestDimensionForTopic(topic.key);
   let title,body;
   if(topic.overdue>0){ title='O intervalo já terminou'; body=`Este tópico venceu há ${topic.overdue} dia${topic.overdue!==1?'s':''}. Recuperar agora mede o que permaneceu sem apoio.`; }
   else if(rec.reason==='lapse'){ title='Volta mais cedo após uma dificuldade'; body='A última recuperação teve erro ou explicação incompleta, então o intervalo foi encurtado para reconstruir a memória.'; }
@@ -189,7 +266,7 @@ function reviewReasonData(topic){
 // Versão de uma linha, usada na lista de revisão do dashboard. O bloco extenso
 // que existia dentro de cada questão saiu: repetia este mesmo texto — que o
 // aluno já lê na lista, antes de começar — uma vez por pergunta do tópico.
-function reviewReasonText(topic){ const r=reviewReasonData(topic); return `${r.title} · foco mais frágil: ${r.weak.label}`; }
+function reviewReasonText(topic){ const r=reviewReasonData(topic); return `${r.title} · ${r.weak.label}`; }
 function orderReviewQuestions(qs,key){
   const weak=weakestDimensionForTopic(key).id;
   return qs.map((q,i)=>Object.assign({_reviewIndex:i},q)).sort((a,b)=>{

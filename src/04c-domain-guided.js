@@ -434,8 +434,13 @@ function domainCheckReconstruction(type,id){
     history:domainBoundHistory([...(old.history||[]),{at:Date.now(),mode:'reconstruction',result:right?1:0}],30)
   });
   domainLogActivity({kind:'reconstruction',type,itemId:id,result:right?1:0,sessionId:domainCurrentFocus()?.session.id||null});
+  // lote aberto: a reconstrução de um contrafactual agenda a caixa de
+  // explicação causal daquele tópico. O caso integrado mede o módulo, e
+  // escopo M: é descartado no commit — não credita tópico nenhum.
+  if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
   if(type==='case') item.modules.forEach(mid=>recordDimensionEvidence(moduleScope(mid),'application',right?1:0,'domain-reconstruction',{questionId:'DRECON:'+id+':'+mid}));
   else recordDimensionEvidence(topicScope(topicKey(item.module,item.lesson)),'causality',right?1:0,'domain-reconstruction',{questionId:'DRECON:'+id});
+  if(typeof commitEvidenceBatch==='function') commitEvidenceBatch();
   saveNow();
   if(type==='case') domainOpenCase(id,'reconstruction'); else domainOpenCounter(id,'reconstruction');
 }
@@ -546,7 +551,9 @@ domainAnswerCounter = function(id,choice){
   const item=DOMAIN_COUNTERFACTUALS.find(x=>x.id===id);if(!item)return;
   ensureDomainState();const bucket=state.domain.counterfactual,old=domainSafeRecord(bucket[id]),right=choice===item.correct,firstTry=!(Number(old.attempts)>0);
   bucket[id]=Object.assign({},old,{attempts:(Number(old.attempts)||0)+1,lastChoice:choice,lastResult:right?1:0,best:Math.max(Number(old.best)||0,right?1:0),lastAt:Date.now(),history:domainBoundHistory([...(old.history||[]),{at:Date.now(),mode:'choice',result:right?1:0,choice,firstTry}],30)});
+  if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
   recordDimensionEvidence(topicScope(topicKey(item.module,item.lesson)),'causality',right?1:0,'counterfactual',{questionId:'DCF:'+id});
+  if(typeof commitEvidenceBatch==='function') commitEvidenceBatch();
   domainLogActivity({kind:'answer',type:'counter',itemId:id,result:right?1:0,firstTry,sessionId:domainCurrentFocus()?.session.id||null});
   DOMAIN_SESSION.counterRetry[id]=false;DOMAIN_SESSION.reconstruction=null;saveNow();domainOpenCounter(id,'feedback');
 };

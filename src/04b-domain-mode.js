@@ -820,10 +820,14 @@ function domainAverageDimension(dim){
 function domainRetentionMetric(){
   const vals=[];
   Object.keys(state.srs||{}).forEach(key=>{
-    const r=state.srs[key];
-    if(!r||Number(r.reps||0)<1) return;
-    if(typeof r.lastScore==='number') vals.push(domainClamp(r.lastScore));
-    else if(Number(r.box||0)>0) vals.push(Math.min(.95,.55+Number(r.box||0)*.07));
+    const dims=state.srs[key]&&state.srs[key].dims;
+    if(!dims||typeof dims!=='object') return;
+    Object.keys(dims).forEach(dim=>{
+      const r=dims[dim];
+      if(!r||Number(r.reps||0)<1) return;
+      if(typeof r.lastScore==='number') vals.push(domainClamp(r.lastScore));
+      else if(Number(r.box||0)>0) vals.push(Math.min(.95,.55+Number(r.box||0)*.07));
+    });
   });
   if(!vals.length) return {value:null,n:0};
   return {value:vals.reduce((a,b)=>a+b,0)/vals.length,n:vals.length};
@@ -866,8 +870,9 @@ function domainWeakTopics(limit){
     const weak=weakestDimensionForTopic(key);
     const tm=domainClamp(state.topicMastery[key]||0);
     const misses=Math.max(0,Number(state.miniWrong[key])||0);
-    const rec=state.srs&&state.srs[key];
-    const overdue=rec&&rec.due<=startOfDay(Date.now());
+    const dims=state.srs&&state.srs[key]&&state.srs[key].dims;
+    const hoje=startOfDay(Date.now());
+    const overdue=Boolean(dims&&Object.keys(dims).some(d=>dims[d]&&dims[d].due<=hoje));
     const weakGap=weak.score===null?.45:(1-domainClamp(weak.score));
     const score=weakGap*.52+(1-tm)*.25+Math.min(1,misses/3)*.16+(overdue?.07:0);
     const reasons=[];
@@ -1092,7 +1097,9 @@ function domainAnswerCounter(id,choice){
   const c=DOMAIN_COUNTERFACTUALS.find(x=>x.id===id); if(!c) return;
   ensureDomainState(); const old=state.domain.counterfactual[id]||{}; const right=choice===c.correct;
   state.domain.counterfactual[id]=Object.assign({},old,{attempts:(old.attempts||0)+1,lastChoice:choice,lastResult:right?1:0,best:Math.max(old.best||0,right?1:0),lastAt:Date.now()});
+  if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
   recordDimensionEvidence(topicScope(topicKey(c.module,c.lesson)),'causality',right?1:0,'counterfactual',{questionId:'DCF:'+id});
+  if(typeof commitEvidenceBatch==='function') commitEvidenceBatch();
   DOMAIN_SESSION.counterRetry[id]=false; saveNow(); domainOpenCounter(id);
 }
 function domainActivityFeedback(type,item,rec){

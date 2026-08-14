@@ -123,7 +123,7 @@ deles exige migração em `migrateState` (611).
 | questão | `M:neuronio-0:2`, `Q:neuronio:1`, `R:…`, `S:…`, `DCASE:…`, `DCF:…`, `DRECON:…` | vários | `questionHistory`, `selfRate` |
 
 `state` (24 chaves, `defaultState` em 373) vai inteiro para
-`localStorage['neurolab-state-v1']`, `STATE_VERSION = 4`, com snapshot de
+`localStorage['neurolab-state-v1']`, `STATE_VERSION = 5`, com snapshot de
 segurança, quarentena de leitura corrompida e detecção de conflito entre abas.
 
 ---
@@ -139,61 +139,99 @@ SRS_LAPSE_CAP  = 2     // ao errar, nunca fica acima da caixa 2 (7 dias)
 SESSION_CAP    = 8     // tópicos por sessão de revisão
 ```
 
-Registro por tópico: `{ box, due, last, reps, lapses, reason, reasonAt,
-lastScore, weakDimension, reasonInterval }`.
+**O cronograma agenda tópico × dimensão, não o tópico em bloco** (v5, Fase 0):
+
+```js
+srs['neuronio-0'] = {
+  seededAt: 1754870400000,
+  dims: {
+    recognition: { box, due, last, reps, lapses, reason, reasonAt, lastScore, reasonInterval },
+    causality:   { … },
+    application: { … }        // location ausente: este tópico não sabe medi-la
+  }
+}
+```
+
+Cada `dims[d]` carrega os mesmos campos do registro plano antigo, e a mecânica
+de Leitner é literalmente a mesma — mudou o endereço, não a regra.
 
 `srsJitteredDays` (1004) espalha vencimentos em ±15% para intervalos > 1 dia —
 a caixa 0 fica intocada, então a primeira volta é sempre exatamente amanhã.
 
-### 4.2 Quem escreve no cronograma — **e quem não escreve**
+### 4.2 Quais caixas existem
+
+`measurableDimensions(moduleId, lessonIndex)` (`04`) é **derivada do conteúdo,
+nunca gravada**: uma dimensão só ganha caixa se este tópico tem como medi-la.
+Hoje isso dá **164 caixas das 256 possíveis** —
+
+```
+recognition  50/64 tópicos      causality    63/64 tópicos
+location     11/64 tópicos      application  40/64 tópicos
+```
+
+— porque a única fonte por tópico ainda é o mini quiz. É essa função que faz as
+fases seguintes serem baratas: quando a reconstrução de `CHAIN` valer para os 64
+tópicos, `causality` entra aqui e as caixas nascem sozinhas, **sem migração
+nova**. O schema não muda de novo.
+
+### 4.3 Quem escreve no cronograma — **e quem não escreve**
 
 | gatilho | função | efeito |
 |---------|--------|--------|
-| marcar aula como estudada | `markRead` (6633) → `seedTopic` (1009) | cria o registro, caixa 0, vence em 1 dia |
-| terminar mini quiz | `finishMiniQuiz` (6609) → `scheduleTopic` (1016) | promove / rebaixa |
-| terminar tópico na revisão | `nextReview` (1187) → `scheduleTopic` | promove / rebaixa |
-| abrir o app | `seedSrsFromHistory` (1064) | enfileira tópicos antigos com domínio registrado, vencendo hoje |
-| **quiz do módulo** | `finishQuiz` (6733) | **não toca no SRS** — só `state.mastery` e `doneQuiz` |
-| **Modo Domínio** (casos, contrafactuais, reconstrução) | `04b`/`04c` | **não toca no SRS** — só `dimensionEvidence` |
+| marcar aula como estudada | `markRead` → `seedTopic` | cria uma caixa por dimensão mensurável, vencendo em 1 dia |
+| terminar mini quiz | `finishMiniQuiz` → `commitEvidenceBatch` | uma promoção **por dimensão medida** |
+| terminar item na revisão | `nextReview` → `commitEvidenceBatch` | promove / rebaixa a dimensão daquele item |
+| contrafactual do Domínio | `domainAnswerCounter` (`04c`) | promove / rebaixa `causality` do tópico alvo |
+| reconstrução da cadeia | `domainAdvanceFocus` (`04c`) | idem |
+| abrir o app | `seedSrsFromHistory` | enfileira tópicos com domínio registrado |
+| **quiz do módulo** | `finishQuiz` | **não agenda tópico** — ver abaixo |
+| **caso integrado** | `04b`/`04c` | **não agenda tópico** — ver abaixo |
 
-Essa é a assimetria estrutural mais importante do sistema: **o cronograma só
-enxerga o mini quiz e a própria revisão.** As duas atividades mais exigentes do
-app (quiz do módulo e Modo Domínio) não adiam nem antecipam nada.
+Quiz de módulo e casos integrados escrevem em escopo `M:` e continuam medindo o
+módulo. Não agendam tópico porque **o mapeamento questão→aula não é posicional**:
+medido por TF-IDF sobre os 64 pares e conferido à mão, `plasticidade`, `sono`,
+`motor` e `metodos` sequer testam a aula 0 no quiz do módulo. Atribuir por
+posição creditaria a aula errada.
 
-### 4.3 A regra de promoção (`scheduleTopic`, 1016)
+### 4.4 A regra de promoção (`scheduleDimension`)
 
 ```
-score < 0.8 ................ box = max(0, min(box-1, 2)); lapses++; reagenda
-registro novo .............. box = 0; vence em 1 dia
-score ≥ 0.8 E já vencido ... box++; reagenda com jitter
-score ≥ 0.8 E ainda no prazo ... nada muda
+dimensão não mensurável ....... não agenda nada
+score < 0.8 ................... box = max(0, min(box-1, 2)); lapses++; reagenda
+caixa nova .................... box = 0; vence em 1 dia
+score ≥ 0.8 E já vencido ...... box++; reagenda com jitter
+score ≥ 0.8 E ainda no prazo .. nada muda
 ```
 
-O último caso é deliberado e vale registrar: **treinar antes da hora não
-avança** a caixa. Quem revisa cedo ganha XP e evidência de dimensão, mas não
-alonga o intervalo.
+**Treinar antes da hora não avança** a caixa — deliberado, preservado do v4.
 
-A nota que entra em `scheduleTopic` vinda do mini quiz **não é o acerto**
-(`finishMiniQuiz`, 6609): se o aluno auto-avaliou todas as 3 questões
-(modo profundo), `srsScore = min(acerto, explicação)`. Ou seja, o intervalo só
-cresce se ele acertou **e** disse que saberia explicar.
+### 4.5 O lote por atividade
 
-### 4.4 A sessão de revisão (1113–1220)
+Uma atividade produz várias evidências da mesma dimensão. Promover a caixa uma
+vez por evidência faria o intervalo saltar de 1 para 14 dias numa sentada só.
+Então:
 
-`startReview` pega `dueTopics()` (1043, ordenado por vencimento e depois por
-caixa), corta em `SESSION_CAP = 8` e percorre tópico a tópico. Cada tópico usa
-**as mesmas 3 mini-questões da aula** — não existe banco separado de revisão.
+```
+beginEvidenceBatch()   → abre o lote
+recordDimensionEvidence(...) × N  → acumula por (escopo, dimensão)
+commitEvidenceBatch()  → uma decisão de intervalo por dimensão; descarta escopo M:
+```
 
-`orderReviewQuestions` (`04:193`) reordena essas 3: primeiro a que mede a
-dimensão mais frágil do tópico, depois por `lvl` decrescente.
+**Atividade que não abre lote não agenda nada** — é assim, e não por uma lista
+de exceções, que o quiz de módulo e os casos ficam de fora.
 
-Aprovação é binária e severa: `passed = acertou as 3`. Duas de três já rebaixa
-a caixa.
+### 4.6 A sessão de revisão
 
-O painel do dashboard (`renderReview`, 1222) mostra 5 itens, avisa quantos
-sobram para a próxima sessão, e cada item traz a razão (`reviewReasonText`,
-`04:192`) no formato *"O intervalo programado terminou · foco mais frágil:
-Explicação causal"*.
+`startReview` pega `dueTopics()` — que agora devolve **um item por dimensão
+vencida** — corta em `SESSION_CAP = 8` e percorre item a item. Cada item usa só
+as mini-questões que medem aquela dimensão, então a volta é mais curta e mais
+específica: na prática ~1 pergunta por item, onde antes o tópico trazia 3.
+
+Consequência medida na migração de um estado com 40 tópicos estudados: a fila
+sai de **28 itens vencidos (v4) para 99 (v5)**, enquanto o trabalho do dia cai
+de ~24 perguntas para ~8. Por isso o letreiro do painel mostra o tamanho da
+**sessão**, não da fila, com o excedente declarado logo abaixo. A política de
+volume definitiva ainda não foi desenhada.
 
 ---
 
@@ -508,9 +546,9 @@ id). Acertar a reconstrução registra evidência com fonte
 | auto-avaliação (modo profundo) | — | — | — | indireto¹ | ✅ `T:` self-rate | — |
 | quiz do módulo | — | — | ✅ max | ❌ | ✅ `M:` | 25 acerto / 5 erro, uma vez² + 50 na 1ª conclusão |
 | sessão de revisão | — | ✅ max | — | ✅ | ✅ `T:` | 10 por acerto, **sem trava** |
-| caso integrado | — | — | — | ❌ | ✅ `M:` application | — |
-| contrafactual | — | — | — | ❌ | ✅ `T:` causality | — |
-| reconstrução da cadeia | — | — | — | ❌ | ✅ peso default | — |
+| caso integrado | — | — | — | ❌ escopo `M:` | ✅ `M:` application | — |
+| contrafactual | — | — | — | ✅ `causality` | ✅ `T:` causality | — |
+| reconstrução da cadeia | — | — | — | ✅ (só contrafactual) | ✅ peso default | — |
 | busca | — | — | — | ❌ | ❌ | — |
 
 ¹ entra via `srsScore = min(acerto, explicação)` em `finishMiniQuiz`.
@@ -524,15 +562,21 @@ faz sentido, já que é a única desenhada para repetir.
 
 Sem juízo de valor — são fatos medidos, cada um com o local exato:
 
-1. **O SRS só ouve o mini quiz.** Quiz de módulo e Modo Domínio inteiro não
-   agendam nada (`scheduleTopic` tem 3 chamadores, 1016).
+1. ~~**O SRS só ouve o mini quiz.**~~ **Resolvido na Fase 0.** O cronograma
+   passou a agendar por tópico × dimensão, e gravar evidência é o que agenda.
+   Contrafactual e reconstrução entraram. Quiz de módulo e casos integrados
+   continuam fora **de propósito**, por não haver mapeamento questão→aula
+   confiável (ver 4.3).
 2. **Nenhuma das 256 questões declara `dim`.** A dimensão vem de regex, e
    desfaz 24/64 dos rótulos "Aplicação" e 62/64 dos "Integração"
    (`inferQuestionDimension`, `04:18`).
 3. **53 de 64 tópicos não conseguem medir Localização** pelo mini quiz, mas a
-   tira mostra os 4 chips sempre (`04:125`).
-4. **Aprovação binária na revisão:** 2 de 3 rebaixa a caixa igual a 0 de 3
-   (`nextReview`, 1187).
+   tira mostra os 4 chips sempre (`04:125`). Desde a Fase 0 isso deixou de
+   gerar agendamento falso — `measurableDimensions` simplesmente não cria a
+   caixa —, mas a Localização segue sem fonte própria até a Fase 3.
+4. **Aprovação binária na revisão:** errar 1 de 2 rebaixa a caixa igual a errar
+   tudo (`nextReview`). Menos grave desde que os itens encolheram para ~1
+   pergunta, mas a regra continua de tudo-ou-nada.
 5. **40 verbetes sem âncora de módulo** caem em `MODULES[currentModule]` no
    painel de mecanismo aberto pela busca (`ctxModule`, `03:27`).
 6. **A busca não alcança** mini quizzes, DEEP, CHAIN, PREDICT, IMAGINE, partes
@@ -558,6 +602,7 @@ Sem juízo de valor — são fatos medidos, cada um com o local exato:
 |--------|-----------------|----------|
 | `node tools/audit-content.js` | ✅ | estrutura, 24 atividades do Domínio, equilíbrio 6/6/6/6 das alternativas, pistas de tamanho, feedback por alternativa, 356 termos de `CONTEXT_REQUIRED`, 32 imagens, 49 arquivos de precache, acessibilidade, ciência, privacidade |
 | `node tools/verifica-metaforas.js` | ✅ | as 16 metáforas |
+| `node tools/test-srs.js` | ✅ ~1s | o cronograma por dimensão: derivação de `measurableDimensions`, semeadura, promoção, rebaixamento, lote por atividade, descarte do escopo `M:`, fila e migração v4→v5 (41 verificações) |
 | `playwright test` (`tests/neurolab.spec.js`, 62 KB) | ❌ só CI, ~5 min | o resto |
 
 Ao publicar conteúdo, `VERSION` no `sw.js` **e** a string literal correspondente

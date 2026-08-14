@@ -359,7 +359,7 @@ const SNAP_KEY = STORE_KEY + ':ultimo-bom';
 const SNAP_PESO_KEY = SNAP_KEY + ':peso';
 const REV_KEY  = STORE_KEY + ':rev';
 const CONFLITO_KEY = STORE_KEY + ':conflito';
-const STATE_VERSION = 4;
+const STATE_VERSION = 5;   // v5: cronograma por tópico × dimensão (ver migrateState)
 const DAY = 86400000;
 const SRS_INTERVALS = [1, 3, 7, 14, 30, 60, 120, 240]; // dias por caixa (Leitner expandido)
 const SRS_PASS = 0.8;      // acerto mínimo p/ promover a caixa
@@ -623,17 +623,57 @@ function migrateState(raw){
   if(typeof out.lastModule!=='number' || !MODULES[out.lastModule]) out.lastModule=null;
   if(typeof out.deepMode !== 'boolean') out.deepMode = true;
   out.domain = (typeof normalizeDomainState==='function') ? normalizeDomainState(out.domain) : (out.domain||{});
-  // v1 -> v2: registros de revisão antigos podem estar incompletos ou fora de faixa
+  /* v4 -> v5: uma caixa por tópico vira uma caixa por tópico × dimensão.
+     O registro antigo é preservado inteiro como 'recognition' — ninguém
+     perde intervalo conquistado. As outras dimensões não são inventadas:
+     nascem só onde já existe evidência gravada de verdade. */
+  const saneDim = (d)=>{
+    d.box    = Math.max(0, Math.min(SRS_INTERVALS.length-1, Number(d.box)||0));
+    d.due    = Number(d.due)||0;
+    d.last   = Number(d.last)||0;
+    d.reps   = Number(d.reps)||0;
+    d.lapses = Number(d.lapses)||0;
+    return d;
+  };
   Object.keys(out.srs).forEach(k=>{
-    const r=out.srs[k];
-    if(!r || typeof r!=='object'){ delete out.srs[k]; return; }
-    r.box   = Math.max(0, Math.min(SRS_INTERVALS.length-1, Number(r.box)||0));
-    r.due   = Number(r.due)||0;
-    r.last  = Number(r.last)||0;
-    r.reps  = Number(r.reps)||0;
-    r.lapses= Number(r.lapses)||0;
+    const r = out.srs[k];
+    if(!r || typeof r!=='object' || Array.isArray(r)){ delete out.srs[k]; return; }
+    if(r.dims && typeof r.dims==='object' && !Array.isArray(r.dims)){
+      Object.keys(r.dims).forEach(dim=>{
+        if(!KNOWLEDGE_DIM_IDS.includes(dim) || !r.dims[dim] || typeof r.dims[dim]!=='object'){ delete r.dims[dim]; return; }
+        saneDim(r.dims[dim]);
+      });
+      r.seededAt = Number(r.seededAt)||0;
+      return;
+    }
+    out.srs[k] = { seededAt: Number(r.last)||0, dims:{ recognition: saneDim(r) } };
   });
   if(typeof migrateDimensionsFromLegacy==='function') migrateDimensionsFromLegacy(out);
+  /* Semeia as demais dimensões a partir de dimensionEvidence, que já existe
+     desde o v4. Só entra quem tem tentativa real com data: os registros
+     semeados por migrateDimensionsFromLegacy têm updatedAt 0 e ficariam
+     vencidos desde 1970. Caixa 1 quando a evidência passou, 0 quando não —
+     nunca mais que isso, porque evidência retroativa não é intervalo ganho. */
+  if(typeof measurableDimensions==='function'){
+    Object.keys(out.srs).forEach(k=>{
+      const r = out.srs[k];
+      const ev = out.dimensionEvidence && out.dimensionEvidence['T:'+k];
+      if(!ev) return;
+      const parts = splitTopicKey(k);
+      measurableDimensions(parts[0], parts[1]).forEach(dim=>{
+        if(r.dims[dim]) return;
+        const rec = ev[dim];
+        const quando = Number(rec && rec.updatedAt)||0;
+        if(!rec || !(Number(rec.attempts)>0) || !quando) return;
+        const box = Number(rec.score) >= SRS_PASS ? 1 : 0;
+        r.dims[dim] = { box: box,
+                        due: startOfDay(quando) + SRS_INTERVALS[box]*DAY,
+                        last: quando,
+                        reps: Math.max(1, Math.round(Number(rec.attempts)||1)),
+                        lapses: 0 };
+      });
+    });
+  }
   out.v = STATE_VERSION;
   return out;
 }
@@ -1006,61 +1046,118 @@ function srsJitteredDays(intervalDays){
   const factor = 0.85 + Math.random() * 0.30;
   return Math.max(1, Math.round(intervalDays * factor));
 }
+/* ---------------------------------------------------------------------
+   O cronograma agenda TÓPICO × DIMENSÃO, não o tópico em bloco.
+
+   A mecânica de Leitner abaixo é a mesma de antes — promove quando venceu
+   e acertou, rebaixa uma caixa limitada por SRS_LAPSE_CAP quando errou.
+   O que mudou foi o endereço: cada dimensão tem sua própria caixa, então
+   o que você reconhece bem some do radar enquanto o que você não explica
+   continua voltando.
+
+     srs['neuronio-0'] = { seededAt, dims: { recognition:{box,due,…}, … } }
+
+   Uma caixa só existe se measurableDimensions() disser que este tópico tem
+   como medir aquela dimensão. Agendar o que não se sabe medir produziria
+   uma fila que nada consegue satisfazer.
+   --------------------------------------------------------------------- */
+function splitTopicKey(key){
+  const s = String(key||''), i = s.lastIndexOf('-');
+  return i < 0 ? [s, 0] : [s.slice(0,i), Number(s.slice(i+1))||0];
+}
+function blankDimRecord(){ return { box:0, due:0, last:0, reps:0, lapses:0 }; }
+function ensureSrsTopic(key){
+  let r = state.srs[key];
+  if(!r || typeof r !== 'object' || Array.isArray(r)) r = state.srs[key] = { seededAt:Date.now(), dims:{} };
+  if(!r.dims || typeof r.dims !== 'object' || Array.isArray(r.dims)) r.dims = {};
+  return r;
+}
+function srsDims(key){ const r = state.srs[key]; return (r && r.dims) || null; }
+
 function seedTopic(key){
-  // aula concluída -> entra na fila, primeira revisão em 1 dia (não mexe em agendamento existente)
-  if(state.srs[key]) return;
-  state.srs[key] = { box:0, due:startOfDay(Date.now())+SRS_INTERVALS[0]*DAY, last:Date.now(), reps:0, lapses:0 };
-  if(typeof setSrsReason==='function') setSrsReason(state.srs[key],'first',key,null);
+  // aula concluída -> cada dimensão mensurável entra na fila, primeira volta em 1 dia
+  const parts = splitTopicKey(key);
+  const r = ensureSrsTopic(key);
+  let novas = 0;
+  measurableDimensions(parts[0], parts[1]).forEach(dim=>{
+    if(r.dims[dim]) return;               // não mexe em agendamento existente
+    const d = r.dims[dim] = blankDimRecord();
+    d.due = startOfDay(Date.now()) + SRS_INTERVALS[0]*DAY;
+    d.last = Date.now();
+    if(typeof setSrsReason==='function') setSrsReason(d,'first',key,null);
+    novas++;
+  });
+  return novas;
 }
 
-function scheduleTopic(key, score){
+function scheduleDimension(key, dim, score){
+  if(!KNOWLEDGE_DIM_IDS.includes(dim)) return;
+  const parts = splitTopicKey(key);
+  if(!canMeasure(parts[0], parts[1], dim)) return;
   if(typeof score === 'boolean') score = score?1:0;
-  const isNew = !state.srs[key];
-  let r = state.srs[key] || { box:0, due:0, last:0, reps:0, lapses:0 };
+  score = Math.max(0, Math.min(1, Number(score)||0));
+  const r = ensureSrsTopic(key);
+  const isNew = !r.dims[dim];
+  const d = r.dims[dim] || (r.dims[dim] = blankDimRecord());
   const passed = score >= SRS_PASS;
-  const wasDue = Date.now() >= (r.due||0);
-  r.reps = (r.reps||0)+1;
-  r.last = Date.now();
+  const wasDue = Date.now() >= (d.due||0);
+  d.reps = (d.reps||0)+1;
+  d.last = Date.now();
   if(!passed){
     // erro rebaixa UMA caixa (não zera tudo) e reagenda mais cedo
-    if((r.box||0) > 0) r.lapses = (r.lapses||0)+1;
+    if((d.box||0) > 0) d.lapses = (d.lapses||0)+1;
     // erro = o intervalo estava longo demais. Cai uma caixa, mas nunca fica acima da caixa de reconstrução.
-    r.box = Math.max(0, Math.min((r.box||0)-1, SRS_LAPSE_CAP));
-    r.due = startOfDay(Date.now()) + srsJitteredDays(SRS_INTERVALS[r.box])*DAY;
-    if(typeof setSrsReason==='function') setSrsReason(r,'lapse',key,score);
+    d.box = Math.max(0, Math.min((d.box||0)-1, SRS_LAPSE_CAP));
+    d.due = startOfDay(Date.now()) + srsJitteredDays(SRS_INTERVALS[d.box])*DAY;
+    if(typeof setSrsReason==='function') setSrsReason(d,'lapse',key,score);
   } else if(isNew){
-    r.box = 0;
-    r.due = startOfDay(Date.now()) + SRS_INTERVALS[0]*DAY;
-    if(typeof setSrsReason==='function') setSrsReason(r,'first',key,score);
+    d.box = 0;
+    d.due = startOfDay(Date.now()) + SRS_INTERVALS[0]*DAY;
+    if(typeof setSrsReason==='function') setSrsReason(d,'first',key,score);
   } else if(wasDue){
     // só promove quando a revisão estava vencida (treinar antes da hora não avança)
-    r.box = Math.min((r.box||0)+1, SRS_INTERVALS.length-1);
-    r.due = startOfDay(Date.now()) + srsJitteredDays(SRS_INTERVALS[r.box])*DAY;
-    if(typeof setSrsReason==='function') setSrsReason(r,'interval',key,score);
+    d.box = Math.min((d.box||0)+1, SRS_INTERVALS.length-1);
+    d.due = startOfDay(Date.now()) + srsJitteredDays(SRS_INTERVALS[d.box])*DAY;
+    if(typeof setSrsReason==='function') setSrsReason(d,'interval',key,score);
   }
-  state.srs[key] = r;
 }
+
 function dueTopics(){
   const today = startOfDay(Date.now());
   const list = [];
   MODULES.forEach((m,mi)=>{
     m.lessons.forEach((l,li)=>{
       const key = topicKey(m.id, li);
-      const r = state.srs[key];
-      if(r && r.due <= today){
-        list.push({ mi, li, key, title:l.t, mn:m.n, color:m.color, due:r.due, box:r.box||0, overdue: Math.round((today - r.due)/DAY) });
-      }
+      const dims = srsDims(key);
+      if(!dims) return;
+      KNOWLEDGE_DIM_IDS.forEach(dim=>{
+        const d = dims[dim];
+        if(!d || !(d.due <= today)) return;
+        list.push({ mi, li, key, dim, title:l.t, mn:m.n, color:m.color,
+                    due:d.due, box:d.box||0, overdue: Math.round((today - d.due)/DAY) });
+      });
     });
   });
-  list.sort((a,b)=> (a.due - b.due) || (a.box - b.box));
+  list.sort((a,b)=> (a.due - b.due) || (a.box - b.box)
+                   || (KNOWLEDGE_DIM_IDS.indexOf(a.dim) - KNOWLEDGE_DIM_IDS.indexOf(b.dim)));
   return list;
 }
 function nextDueDate(){
   let next = null;
-  for(const k in state.srs){ const d = state.srs[k].due; if(d && (next===null || d<next)) next = d; }
+  Object.keys(state.srs||{}).forEach(k=>{
+    const dims = srsDims(k); if(!dims) return;
+    Object.keys(dims).forEach(dim=>{
+      const due = dims[dim].due;
+      if(due && (next===null || due<next)) next = due;
+    });
+  });
   return next;
 }
-function srsScheduledCount(){ return Object.keys(state.srs||{}).length; }
+function srsScheduledCount(){
+  let n = 0;
+  Object.keys(state.srs||{}).forEach(k=>{ const dims = srsDims(k); if(dims) n += Object.keys(dims).length; });
+  return n;
+}
 function seedSrsFromHistory(){
   // início a frio: todo tópico já testado (que tem domínio registrado) entra na fila, vencendo hoje
   const today = startOfDay(Date.now());
@@ -1068,11 +1165,15 @@ function seedSrsFromHistory(){
   MODULES.forEach(m=>{
     m.lessons.forEach((l,li)=>{
       const key = topicKey(m.id, li);
-      if(Object.prototype.hasOwnProperty.call(state.topicMastery, key) && !state.srs[key]){
-        state.srs[key] = { box:0, due:today, last:0, reps:0, lapses:0 };
-        if(typeof setSrsReason==='function') setSrsReason(state.srs[key],'first',key,null);
+      if(!Object.prototype.hasOwnProperty.call(state.topicMastery, key)) return;
+      if(srsDims(key) && Object.keys(srsDims(key)).length) return;
+      const r = ensureSrsTopic(key);
+      measurableDimensions(m.id, li).forEach(dim=>{
+        const d = r.dims[dim] = blankDimRecord();
+        d.due = today;
+        if(typeof setSrsReason==='function') setSrsReason(d,'first',key,null);
         seeded++;
-      }
+      });
     });
   });
   if(seeded) saveState();
@@ -1123,12 +1224,15 @@ function startReview(){
 function loadReviewTopic(){
   const t = review.queue[review.ti];
   const m = MODULES[t.mi];
-  const baseQs = (MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][t.li]) || [];
-  const qs = (typeof orderReviewQuestions==='function') ? orderReviewQuestions(baseQs,t.key) : baseQs;
+  const todas = (MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][t.li]) || [];
+  // o item da fila é uma DIMENSÃO: só entram as perguntas que medem aquilo.
+  // Volta mais curta e mais específica do que revisar o tópico em bloco.
+  let qs = todas.filter(q=>inferQuestionDimension(q,{module:m, lessonIndex:t.li, source:'review'}) === t.dim);
+  if(!qs.length) qs = todas;
+  if(typeof orderReviewQuestions==='function') qs = orderReviewQuestions(qs, t.key);
   review.topicQs = qs; review.qi = 0; review.topicCorrect = 0;
-  if(!qs.length){ scheduleTopic(t.key, true);
-    review.results.push({ key:t.key, title:t.title, mn:t.mn, color:t.color, passed:true, box:state.srs[t.key].box });
-    advanceReviewTopic(); return; }
+  if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
+  if(!qs.length){ advanceReviewTopic(); return; }
   renderReviewHead();
   renderReviewQuestion();
 }
@@ -1142,7 +1246,7 @@ function renderReviewHead(){
   document.documentElement.style.setProperty('--mc', m.color);
   const frac = review.ti / review.queue.length;
   document.getElementById('rv-head').innerHTML = `
-    <div class="rv-kick">Revisão espaçada · tópico ${review.ti+1} de ${review.queue.length}</div>
+    <div class="rv-kick">Revisão espaçada · ${review.ti+1} de ${review.queue.length} · ${dimMeta(t.dim).label}</div>
     <div class="rv-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(frac*100)}" aria-label="Progresso da revisão"><i style="width:${frac*100}%"></i></div>`;
 }
 function renderReviewQuestion(){
@@ -1191,8 +1295,13 @@ function nextReview(){
   const passed = review.topicCorrect === review.topicQs.length && review.topicQs.length>0;
   state.topicMastery[t.key] = Math.max(state.topicMastery[t.key]||0, score);
   if(!passed) state.miniWrong[t.key] = (state.miniWrong[t.key]||0)+1;
-  scheduleTopic(t.key, passed?1:0);
-  review.results.push({ key:t.key, title:t.title, mn:t.mn, color:t.color, passed, box: state.srs[t.key].box });
+  const agendadas = (typeof commitEvidenceBatch==='function') ? commitEvidenceBatch() : [];
+  /* Se as perguntas disponíveis mediam outra dimensão (só acontece no
+     fallback), a caixa DESTE item ainda precisa andar — senão ela vence de
+     novo amanhã, e de novo, para sempre. */
+  if(!agendadas.some(a=>a.key===t.key && a.dim===t.dim)) scheduleDimension(t.key, t.dim, passed?1:0);
+  const rec = (srsDims(t.key)||{})[t.dim] || {box:0};
+  review.results.push({ key:t.key, title:t.title, mn:t.mn, color:t.color, dim:t.dim, passed, box: rec.box||0 });
   advanceReviewTopic();
 }
 function finishReview(){
@@ -1204,14 +1313,14 @@ function finishReview(){
   document.getElementById('rv-head').innerHTML='';
   const rows = review.results.map(r=>`
     <div class="review-item">
-      <span style="display:flex;align-items:center;gap:9px;min-width:0"><span class="rdot" style="color:${r.color};background:${r.color}"></span><span style="min-width:0"><b>Módulo ${r.mn}</b> · ${r.title}</span></span>
-      <span class="rmeta">${r.passed? 'avançou · '+SRS_INTERVALS[r.box]+'d' : 'volta em 1 dia'}</span>
+      <span style="display:flex;align-items:center;gap:9px;min-width:0"><span class="rdot" style="color:${r.color};background:${r.color}"></span><span style="min-width:0"><b>Módulo ${r.mn}</b> · ${r.title}<br><span class="rmeta">${dimMeta(r.dim).label}</span></span></span>
+      <span class="rmeta">${r.passed? 'avançou · '+SRS_INTERVALS[r.box]+'d' : 'volta em '+SRS_INTERVALS[r.box]+'d'}</span>
     </div>`).join('');
   document.getElementById('rv-body').innerHTML = `
     <div class="rv-summary">
       <div class="rv-badge">✓</div>
       <h2>Revisão concluída</h2>
-      <p><b>${promoted}</b> de <b>${total}</b> tópico(s) avançaram no cronograma.${days!=null? ' Próxima revisão em <b>'+days+' dia'+(days!==1?'s':'')+'</b>.':''}</p>
+      <p><b>${promoted}</b> de <b>${total}</b> avançaram no cronograma.${days!=null? ' Próxima revisão em <b>'+days+' dia'+(days!==1?'s':'')+'</b>.':''}</p>
       <div class="review-list rv-results">${rows}</div>
       <button class="bigbtn" style="--mc:#22d3ee" onclick="backToMap()">Voltar ao mapa</button>
     </div>`;
@@ -1238,7 +1347,7 @@ function renderReview(){
     <div class="review-item">
       <div style="display:flex;align-items:center;gap:10px;min-width:0">
         <span class="rdot" style="color:${d.color};background:${d.color}"></span>
-        <span style="min-width:0"><b>Módulo ${d.mn}</b> · ${d.title}<br><span class="rmeta">${d.overdue>0? 'atrasado '+d.overdue+' dia'+(d.overdue!==1?'s':'') : 'vence hoje'} · intervalo atual ${SRS_INTERVALS[d.box]}d</span><span class="rwhy">${typeof reviewReasonText==='function'?reviewReasonText(d):''}</span></span>
+        <span style="min-width:0"><b>Módulo ${d.mn}</b> · ${d.title} — <b>${dimMeta(d.dim).label}</b><br><span class="rmeta">${d.overdue>0? 'atrasado '+d.overdue+' dia'+(d.overdue!==1?'s':'') : 'vence hoje'} · intervalo atual ${SRS_INTERVALS[d.box]}d</span><span class="rwhy">${typeof reviewReasonText==='function'?reviewReasonText(d):''}</span></span>
       </div>
     </div>`).join('');
   let more = '';
@@ -1248,7 +1357,11 @@ function renderReview(){
   if(overflow > 0){
     more += `<div class="rmeta" style="margin-top:5px;padding-left:2px;opacity:.75">faltam ${overflow} para a próxima sessão</div>`;
   }
-  el.innerHTML = `<h3>Revisão de hoje <span class="rcount">${due.length}</span></h3><p>Cada item agora explica por que reapareceu e qual dimensão está mais frágil. A ordem das questões prioriza essa dimensão.</p><div class="review-list">${items}</div>${more}<button class="bigbtn rv-start" onclick="startReview()">Revisar agora · ${sessionCount} ${sessionCount===1?'tópico':'tópicos'}</button>`;
+  /* O letreiro mostra a SESSÃO, não a fila inteira. Agendar por dimensão
+     multiplica a fila por ~3 sem aumentar o trabalho do dia — cada item
+     agora tem cerca de uma pergunta, onde antes o tópico trazia três. O
+     excedente continua declarado logo abaixo, em `more`. */
+  el.innerHTML = `<h3>Revisão de hoje <span class="rcount">${sessionCount}</span></h3><p>Cada item é um tipo de saber sobre um tópico, não o tópico inteiro. O que você reconhece bem sai do radar por semanas; o que você não explica volta em dias — cada um no seu próprio ritmo.</p><div class="review-list">${items}</div>${more}<button class="bigbtn rv-start" onclick="startReview()">Revisar agora · ${sessionCount} ${sessionCount===1?'item':'itens'}</button>`;
 }
 function reviewTopic(mi,li){
   openModule(mi);
@@ -6439,6 +6552,9 @@ function renderMindMap(m){
 let miniQuiz={ lesson:0, i:0, correct:0, answered:false, opts:[] };
 function startMiniQuiz(lessonIdx){
   miniQuiz={ lesson:lessonIdx, i:0, correct:0, answered:false, opts:[] };
+  // abre o lote: as evidências das 3 perguntas (e das auto-avaliações) viram
+  // um agendamento por dimensão em finishMiniQuiz, não um por resposta
+  if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
   renderMiniQuestion();
   const host=document.getElementById('mini-'+lessonIdx);
   if(host) host.scrollIntoView({behavior:'smooth',block:'center'});
@@ -6616,15 +6732,18 @@ function finishMiniQuiz(){
   if(score>=0.5 && !state.lessons[mk]){ state.lessons[mk]=true; }
 
   // nota de EXPLICAÇÃO desta aula, vinda da auto-avaliação
-  let srsScore = score;
   const keys = qs.map((_,i)=>'M:'+mk+':'+i);
   const rated = keys.filter(k=>state.selfRate && state.selfRate[k]!==undefined);
   if(rated.length === qs.length){
     const ex = keys.reduce((a,k)=>a+(RATE_VAL[state.selfRate[k]]||0),0)/qs.length;
     state.topicExplain[mk] = Math.max(state.topicExplain[mk]||0, ex);
-    srsScore = Math.min(score, ex);   // avança só se acertou E explicaria
   }
-  scheduleTopic(mk, srsScore);
+  /* O agendamento sai do lote: cada dimensão medida nesta sessão recebe uma
+     decisão de intervalo. A auto-avaliação já entrou no lote como evidência
+     'self-rate' quando foi respondida, então continua puxando o intervalo
+     para baixo quando o aluno diz que não saberia explicar — só que agora na
+     dimensão que aquela pergunta media, em vez de no tópico inteiro. */
+  if(typeof commitEvidenceBatch==='function') commitEvidenceBatch();
   saveState();
   const lessonIdx=miniQuiz.lesson;
   openModule(currentModule);

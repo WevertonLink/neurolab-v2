@@ -1015,7 +1015,10 @@ for (const viewport of REVIEW_VIEWPORTS) {
       const m = MODULES[0];
       const key = topicKey(m.id, 0);
       state.srs = {};
-      state.srs[key] = { box: 0, due: startOfDay(Date.now()) - DAY, last: 0, reps: 1, lapses: 0 };
+      // v5: o cronograma agenda tópico × dimensão, não o tópico em bloco
+      state.srs[key] = { seededAt: Date.now(), dims: {
+        recognition: { box: 0, due: startOfDay(Date.now()) - DAY, last: 0, reps: 1, lapses: 0 }
+      } };
       state.topicMastery[key] = 0.5;
       startReview();
     });
