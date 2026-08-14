@@ -610,8 +610,9 @@ Sem juízo de valor — são fatos medidos, cada um com o local exato:
    sem verbete correspondente.
 8. **`prediction: .16` é peso morto**; `domain-reconstruction` não está no mapa e
    cai em `.28` (`evidenceWeight`, `04:83`).
-9. **Três rankings paralelos de fragilidade**: `weakTopics` (757),
-   `domainWeakTopics` (`04b:861`) e a fila do SRS.
+9. **Dois rankings paralelos de fragilidade** — `domainWeakTopics` (`04b`) e a
+   fila do SRS. `weakTopics()` (05) parecia um terceiro, mas **não tem nenhum
+   chamador**: é código morto, removido na Fase 4.
 10. **Duas contas de progresso** decidem a liberação do Modo Domínio:
     `domainCoverageStats` e `overallProgress` (`04b:797`).
 11. **`neuronio` não aparece em nenhum caso integrado** — único módulo nessa
