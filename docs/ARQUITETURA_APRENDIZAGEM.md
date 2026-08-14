@@ -1,7 +1,9 @@
 # NeuroLab — arquitetura de conteúdo e aprendizagem
 
-*Levantamento de 2026-08-14. Base: `HEAD` em `4711259`, v1.7.2, árvore limpa,
-`node tools/audit-content.js` e `node tools/verifica-metaforas.js` verdes.*
+*Levantamento original de 2026-08-14 sobre `4711259` (v1.7.2). Atualizado no
+mesmo dia até a Fase 2 do cronograma por dimensão — descreve o estado em
+`29dca75` (v1.8.1), com os três portões locais verdes: `verifica-metaforas`,
+`audit-content` e `test-srs` (65 verificações).*
 
 Documento de referência para mudanças futuras. Descreve **como os módulos são
 estruturados**, **como eles alimentam a revisão espaçada**, **o que do conteúdo
