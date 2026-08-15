@@ -1134,7 +1134,14 @@ test('@smoke Localização na revisão responde no diagrama e não entrega a res
   const parte = await page.evaluate(() => review.loc.part);
   expect(parte, 'o item precisa de uma parte alvo').toBeTruthy();
 
-  await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().click();
+  /* `force: true` de propósito. O `.apart` tem `transition: filter .18s` e a
+     checagem de estabilidade do Playwright nunca assenta num <g> de SVG cuja
+     caixa é recalculada pelo filtro — o clique normal estoura os 15s de espera.
+     O evento continua sendo um clique real de mouse no centro do elemento,
+     então a rota (delegação global → handleAnatPartTap → resposta) é
+     exercitada de verdade. O que se perde é a checagem de "nada por cima". */
+  await page.waitForTimeout(400);
+  await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().click({ force: true });
 
   /* A asserção que mais importa aqui. Uma delegação global abre a ficha da
      estrutura ao toque em qualquer .apart, em qualquer lugar do documento —
@@ -1191,7 +1198,8 @@ for (const dim of ['causality', 'location']) {
         }
       } else {
         const parte = await page.evaluate(() => review.loc.part);
-        await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().click();
+        await page.waitForTimeout(400);   // ver o comentário no @smoke de Localização
+        await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().click({ force: true });
       }
 
       const botao = page.locator('#rv-body .rv-card .bigbtn').last();
