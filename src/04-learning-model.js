@@ -91,8 +91,8 @@ function evidenceRecord(scope, dim){
    omissão — a mesma atividade valendo menos que um contrafactual de múltipla
    escolha (.32), o que era o inverso do razoável. */
 function evidenceWeight(source){
-  return ({review:.48,reconstruction:.48,'mini-quiz':.38,'module-quiz':.34,prediction:.34,
-           'domain-reconstruction':.40,counterfactual:.32,'domain-case':.30,'self-rate':.22}[source]||.28);
+  return ({review:.48,reconstruction:.48,'domain-reconstruction':.40,'mini-quiz':.38,diagram:.38,
+           'module-quiz':.34,prediction:.34,counterfactual:.32,'domain-case':.30,'self-rate':.22}[source]||.28);
 }
 function recordDimensionEvidence(scope, dim, result, source, meta){
   if(!scope||!KNOWLEDGE_DIM_IDS.includes(dim)) return;

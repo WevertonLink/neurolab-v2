@@ -168,7 +168,7 @@ if (!errors.length) {
     'política não descreve as atualizações na própria origem');
   ok(!/não faz nenhuma requisição à internet/i.test(privacy),
     'política voltou a afirmar ausência absoluta de requisições');
-  ok(/neurolab-v1-9-0/.test(sw), 'versão do cache offline não foi atualizada');
+  ok(/neurolab-v1-10-0/.test(sw), 'versão do cache offline não foi atualizada');
 
   // O progresso do aluno é irrecuperável, e a forma de perdê-lo era silenciosa:
   // a janela aberta em segundo plano gravava seu retrato velho por cima do

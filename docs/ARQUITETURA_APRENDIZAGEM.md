@@ -1,9 +1,9 @@
 # NeuroLab — arquitetura de conteúdo e aprendizagem
 
-*Levantamento original de 2026-08-14 sobre `4711259` (v1.7.2). Atualizado no
-mesmo dia até as Fases 2 e 1 do cronograma por dimensão (v1.9.0), com os três
-portões locais verdes: `verifica-metaforas`, `audit-content` e `test-srs`
-(92 verificações).*
+*Levantamento original de 2026-08-14 sobre `4711259` (v1.7.2). Atualizado até
+as Fases 2, 1 e 3 do cronograma por dimensão (v1.10.0), com os três portões
+locais verdes: `verifica-metaforas`, `audit-content` e `test-srs`
+(114 verificações).*
 
 Documento de referência para mudanças futuras. Descreve **como os módulos são
 estruturados**, **como eles alimentam a revisão espaçada**, **o que do conteúdo
@@ -164,22 +164,29 @@ a caixa 0 fica intocada, então a primeira volta é sempre exatamente amanhã.
 
 `measurableDimensions(moduleId, lessonIndex)` (`04`) é **derivada do conteúdo,
 nunca gravada**: uma dimensão só ganha caixa se este tópico tem como medi-la.
-Hoje isso dá **189 caixas das 256 possíveis** —
+Hoje isso dá **236 caixas das 256 possíveis** —
 
 ```
 recognition  50/64 tópicos      causality    64/64 tópicos
-location     11/64 tópicos      application  64/64 tópicos
+location     58/64 tópicos      application  64/64 tópicos
 ```
 
-— porque as fontes por tópico são três: o mini quiz; a prova de previsão
-(`PREDICT`), que a Fase 2 ligou e que sozinha levou `application` de 40 para 64;
-e a cadeia (`CHAIN`), que a Fase 1 ligou. A cadeia acrescentou só **uma** caixa,
-porque causalidade já estava em 63/64 — o que ela mudou não foi o alcance, foi a
-qualidade da medida (ver 4.8).
+— e as fontes por tópico são quatro: o mini quiz; a prova de previsão
+(`PREDICT`, Fase 2), que sozinha levou `application` de 40 para 64; a cadeia
+(`CHAIN`, Fase 1), que acrescentou só **uma** caixa porque causalidade já estava
+em 63/64 — ali o ganho foi de qualidade, não de alcance (ver 4.8); e as âncoras
+do diagrama (`CONTEXT_TOPIC_TERMS` + `ANATOMY`, Fase 3), que levaram `location`
+de 11 para 58.
 
-É essa função que faz as fases seguintes serem baratas: quando a Localização
-ganhar sua forma de medição, ela entra aqui e as caixas nascem sozinhas, **sem
-migração nova**. O schema não muda desde a Fase 0.
+Sobre os 58: **56** vêm do diagrama, e **2** — `emocao-3` e `clinica-0` — já
+mediam Localização por uma mini-questão que o classificador leu como "onde
+fica". A âncora não é a única fonte, e o item de revisão sabe disso: sem âncora,
+ele cai na múltipla escolha. Os **6 restantes** ficam sem caixa por serem
+abstratos, onde "onde fica" não é pergunta com resposta.
+
+As 20 caixas que faltam para 256 são de Reconhecimento, em 14 tópicos sem
+mini-questão que o classificador leia como tal, e de Localização nesses 6.
+O schema não muda desde a Fase 0: cada fase só acrescentou fonte.
 
 ### 4.3 Quem escreve no cronograma — **e quem não escreve**
 
@@ -275,7 +282,7 @@ dimensão é:
 | Reconhecimento | múltipla escolha | `MINI_QUIZZES` |
 | Aplicação | múltipla escolha, alternando entre a previsão e as mini-questões pela paridade de `reps` | `PREDICT` + `MINI_QUIZZES` |
 | Explicação causal | **remontar a cadeia na ordem**, sem alternativas | `CHAIN.s` |
-| Localização | ainda sem forma própria | — |
+| Localização | **apontar a estrutura no diagrama**, com a legenda escondida | `CONTEXT_TOPIC_TERMS` → `ANATOMY.parts` |
 
 A reconstrução é a razão de ser da Fase 1, e ela **não** foi um ganho de
 cobertura: causalidade já estava em 63/64 pelo mini quiz, e a cadeia acrescentou
@@ -307,9 +314,9 @@ Cada evidência é uma média móvel exponencial por escopo × dimensão
 (`evidenceWeight`, `04:83`):
 
 ```
-review .48 · reconstruction .48 · mini-quiz .38 · domain-reconstruction .40
-module-quiz .34 · prediction .34 · counterfactual .32 · domain-case .30
-self-rate .22 · (não listado) .28
+review .48 · reconstruction .48 · domain-reconstruction .40
+mini-quiz .38 · diagram .38 · module-quiz .34 · prediction .34
+counterfactual .32 · domain-case .30 · self-rate .22 · (não listado) .28
 ```
 
 Duas observações sobre esse mapa. **Reconstruir a cadeia pesa no topo** — `.48`,
@@ -608,6 +615,7 @@ id). Acertar a reconstrução registra evidência com fonte
 | prova de previsão (1º contato) | — | — | — | ❌ nunca | ❌ nunca — é pré-teste | 4, uma vez |
 | previsão respondida na revisão | — | ✅ max | — | ✅ `application` | ✅ `T:` application, fonte `prediction` | 10 por acerto |
 | reconstruir a cadeia na revisão | — | — ³ | — | ✅ `causality` | ✅ `T:` causality, fonte `reconstruction` | 10 por acerto |
+| apontar no diagrama na revisão | — | — ³ | — | ✅ `location` | ✅ `T:` location, fonte `diagram` | 10 por acerto |
 | ver a cadeia em vez de reconstruir | — | — | — | ❌ nada | ❌ nada — o item continua vencido | — |
 | mini quiz | ✅ ≥50% | ✅ max | — | ✅ | ✅ `T:` | 12 por acerto, uma vez² |
 | auto-avaliação (modo profundo) | — | — | — | indireto¹ | ✅ `T:` self-rate | — |
