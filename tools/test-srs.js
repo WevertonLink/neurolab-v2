@@ -921,6 +921,66 @@ const reset = ()=>ev('state = defaultState();');
      '23. "depende" como palavra inteira continua sendo causalidade');
 }
 
+/* ---------- 24. a ponte de mão dupla entre aula e ficha ---------- */
+{
+  /* As fichas de CONCEPTS sempre souberam quais aulas explicam cada condição;
+     a aula não sabia de volta. Este índice inverte o mapa — sem conteúdo novo.
+     A catraca existe porque a cobertura só pode crescer: apagar o `m` de uma
+     ficha silenciosamente tiraria a condição de dentro da aula. */
+  const cobertas = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>
+    t+(conceitosQueUsam(m.id,li).length?1:0),0),0)`);
+  ok(cobertas >= 52, '24. o índice reverso cobria 52 das 64 aulas e caiu para ' + cobertas);
+
+  const comCondicao = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>
+    t+(conceitosQueUsam(m.id,li).some(k=>CONCEPTS[k].cat==='condicao')?1:0),0),0)`);
+  ok(comCondicao >= 33, '24. aulas citadas por ao menos uma condição caíram de 33 para ' + comCondicao);
+
+  // toda chave devolvida tem de existir
+  const fantasmas = ev(`(function(){
+    const r=[];
+    MODULES.forEach(m=>m.lessons.forEach((_,li)=>conceitosQueUsam(m.id,li).forEach(k=>{
+      if(!CONCEPTS[k]) r.push(m.id+'-'+li+' -> '+k);
+    })));
+    return r;
+  })()`);
+  eq(fantasmas.length, 0, '24. o índice devolveu chave que não existe: ' + fantasmas.slice(0,3).join(', '));
+
+  /* Condição antes de estado/queixa: quem tem diagnóstico procura por ele,
+     quem não tem procura pelo que sente. */
+  const foraDeOrdem = ev(`(function(){
+    const r=[];
+    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
+      const ks=conceitosQueUsam(m.id,li);
+      const pos=ks.map(k=>ORDEM_CATEGORIA.indexOf(CONCEPTS[k].cat));
+      for(let i=1;i<pos.length;i++) if(pos[i]<pos[i-1]){ r.push(m.id+'-'+li); break; }
+    }));
+    return r;
+  })()`);
+  eq(foraDeOrdem.length, 0, '24. ordem de categoria quebrada em: ' + foraDeOrdem.slice(0,3).join(', '));
+
+  /* Aviso clínico nas fichas de condição. A Dislexia estava sem, ao lado de
+     TDAH e Autismo que têm — corrigido.
+
+     Sobram 7 sem: insônia, Parkinson, Alzheimer, AVC, epilepsia, esclerose
+     múltipla e miastenia gravis. O padrão aparente é que as psiquiátricas e do
+     neurodesenvolvimento têm o aviso e as neurológicas clássicas não. Pode ser
+     critério editorial ou esquecimento — é decisão de conteúdo, não de código,
+     então aqui fica só a catraca: a lista não pode crescer. */
+  const SEM_AVISO_CONHECIDAS = ['insonia','parkinson','alzheimer','avc','epilepsia','esclerose','miastenia'];
+  const semAviso = ev(`Object.keys(CONCEPTS).filter(k=>CONCEPTS[k].cat==='condicao' && !CONCEPTS[k].nota)`);
+  const novas = semAviso.filter(k=>SEM_AVISO_CONHECIDAS.indexOf(k) < 0);
+  eq(novas.length, 0, '24. ficha de condição NOVA sem aviso clínico: ' + novas.join(', '));
+  ok(semAviso.length <= SEM_AVISO_CONHECIDAS.length,
+     '24. a lista de fichas sem aviso cresceu de ' + SEM_AVISO_CONHECIDAS.length + ' para ' + semAviso.length);
+  ok(ev(`Boolean(CONCEPTS.dislexia.nota && CONCEPTS.tdah.nota && CONCEPTS.autismo.nota)`),
+     '24. as três do neurodesenvolvimento precisam do aviso clínico');
+
+  // a aula que motivou tudo isto
+  const emAtencao2 = ev(`conceitosQueUsam('atencao',2).map(k=>CONCEPTS[k].n)`);
+  ok(emAtencao2.indexOf('TDAH') === 0,
+     '24. a aula do pré-frontal tem de abrir pela ficha de TDAH, e veio: ' + emAtencao2.slice(0,3).join(', '));
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');
