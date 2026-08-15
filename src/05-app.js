@@ -4403,7 +4403,7 @@ dislexia:{cat:'condicao', n:'Dislexia',
  a:'Ler é recente demais na evolução para ter circuito próprio — o cérebro faz <b>reciclagem neuronal</b>, recrutando uma região da visão que servia para reconhecer formas e conectando-a às áreas de som e linguagem. A dislexia é uma dificuldade nessa ponte entre a forma escrita e o som correspondente, não um problema de inteligência nem de esforço.',
  t:['reciclagem neuronal','área de Wernicke','área de Broca','fascículo arqueado','lobo occipital','períodos críticos'],
  m:[{m:'linguagem',l:3},{m:'linguagem',l:0},{m:'desenvolvimento',l:3}], k:['plasticidade'],
- s:['dificuldade de leitura','troca letras','ler devagar','alfabetizacao']},
+ s:['dificuldade de leitura','troca letras','ler devagar','alfabetizacao'], nota:1},
 
 esclerose:{cat:'condicao', n:'Esclerose múltipla',
  q:'Por que a doença atinge a velocidade do sinal e não o pensamento?',
@@ -6707,6 +6707,54 @@ function toggleWhatIf(idx, ev){
 }
 
 /* ---------- OS ELOS: como isto se liga a outras coisas ---------- */
+/* =====================================================================
+   O QUE ESTE MECANISMO EXPLICA
+
+   As 57 fichas de CONCEPTS já declaram, em `m`, quais aulas explicam cada
+   condição ou queixa. A ponte era de mão única: a ficha conhecia a aula, e
+   a aula não conhecia a ficha. Quem estudava o pré-frontal nunca ficava
+   sabendo que aquele mecanismo é o do próprio TDAH.
+
+   Isto inverte o mapa. Não há conteúdo novo — 52 das 64 aulas já são
+   citadas por alguma ficha, 33 delas por ao menos uma condição.
+   ===================================================================== */
+const ORDEM_CATEGORIA = ['condicao', 'estado', 'desempenho', 'fenomeno', 'substancia'];
+let _conceitosPorAula = null;
+function conceitosQueUsam(moduleId, lessonIndex){
+  if(!_conceitosPorAula){
+    _conceitosPorAula = {};
+    Object.keys(CONCEPTS).forEach(k=>{
+      (CONCEPTS[k].m || []).forEach(a=>{
+        const id = a.m + '-' + a.l;
+        (_conceitosPorAula[id] = _conceitosPorAula[id] || []).push(k);
+      });
+    });
+    /* Condição primeiro, depois estado/queixa. Quem tem diagnóstico procura
+       por ele; quem não tem procura pelo que sente. */
+    Object.keys(_conceitosPorAula).forEach(id=>{
+      _conceitosPorAula[id].sort((a,b)=>
+        ORDEM_CATEGORIA.indexOf(CONCEPTS[a].cat) - ORDEM_CATEGORIA.indexOf(CONCEPTS[b].cat));
+    });
+  }
+  return _conceitosPorAula[moduleId + '-' + lessonIndex] || [];
+}
+function explicaChipsHTML(mid, idx){
+  const ks = conceitosQueUsam(mid, idx);
+  if(!ks.length) return '';
+  /* Sem teto de propósito: a fileira quebra linha. Em clinica-3 são nove
+     fichas, e esconder parte delas numa aula que é justamente sobre
+     transtornos seria pior que uma fileira longa. */
+  return `<div class="lnk-row explica-row">
+    <span class="lnk-k">Explica</span>
+    ${ks.map(k=>`<button class="lnk-chip" style="--lc:var(--mc)" onclick="fromLessonToConcept('${esc1(k)}')">${escHtml(CONCEPTS[k].n)}</button>`).join('')}
+  </div>`;
+}
+// mesmo caminho que fromTermToConcept já usa: a ficha vive dentro da busca
+function fromLessonToConcept(k){
+  openSearch('');
+  setTimeout(()=>openConcept(k), 60);
+}
+
 function linksFor(mid, idx){
   const out = [];
   Object.keys(LINKS).forEach(k=>{
@@ -6851,6 +6899,7 @@ function openModule(i){
         ${(DEEP[m.id]&&DEEP[m.id][idx])?`<button class="deep-toggle" onclick="toggleDeep(${idx},event)" aria-expanded="false"><span class="deep-label">Aprofundar</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="deepdive" id="deep-${idx}" hidden>${deepBridge(m.id,idx)}${DEEP[m.id][idx]}</div>`:''}
         ${chainHTML(m.id, idx)}
         ${linkChipsHTML(m.id, idx)}
+        ${explicaChipsHTML(m.id, idx)}
         ${topicDimensionStripHTML(m.id,idx)}
         <div class="topic-meter"><span>melhor no tópico</span><div class="tmbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(tm*100)}" aria-label="Melhor resultado no tópico"><i style="width:${tm*100}%"></i></div><span class="tmpct">${Math.round(tm*100)}%</span></div>
         <div class="lesson-foot">

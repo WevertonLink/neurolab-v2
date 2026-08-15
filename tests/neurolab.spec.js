@@ -1247,6 +1247,37 @@ for (const dim of ['causality', 'location']) {
   }
 }
 
+/* A PONTE DE MÃO DUPLA ENTRE A AULA E A FICHA.
+
+   As fichas de CONCEPTS sempre souberam quais aulas explicam cada condição; a
+   aula não sabia de volta. Quem estudava o pré-frontal nunca ficava sabendo
+   que aquele mecanismo é o do próprio TDAH — a ficha existia, boa, e só era
+   alcançável por quem pensasse em procurá-la na lupa.
+
+   O teste guarda o caminho inteiro: a fileira aparece na aula, o primeiro chip
+   é a condição (e não uma queixa), e tocá-lo abre a ficha com o aviso de que
+   aquilo é conteúdo educativo, não diagnóstico. */
+test('@smoke a aula mostra o que o mecanismo dela explica, e o chip abre a ficha', async ({ page }) => {
+  const iAtencao = await page.evaluate(() => MODULES.findIndex((m) => m.id === 'atencao'));
+  expect(iAtencao, 'o módulo de atenção precisa existir').toBeGreaterThan(-1);
+  await openModule(page, iAtencao);
+
+  // aula 2: "O pré-frontal dentro de uma rede de controle"
+  const fileira = page.locator('#lesson-2 .explica-row');
+  await expect(fileira).toBeVisible();
+  await expect(fileira.locator('.lnk-k')).toHaveText('Explica');
+
+  // condição antes de queixa: quem tem diagnóstico procura por ele
+  await expect(fileira.locator('.lnk-chip').first()).toHaveText('TDAH');
+
+  await fileira.locator('.lnk-chip').first().click();
+
+  await expect(page.locator('#search-modal')).toBeVisible();
+  await expect(page.locator('#sc-body .sc-detail h3')).toHaveText('TDAH');
+  // a ficha de uma condição tem de trazer o aviso de conteúdo educativo
+  await expect(page.locator('#sc-body .sc-nota')).toBeVisible();
+});
+
 // Os termos já eram clicáveis no texto da aula, e não no feedback do quiz — quem
 // aprendia o gesto tentava usá-lo depois de responder e não acontecia nada.
 // O teste guarda as duas decisões de desenho: a explicação nasce embutida, e o
