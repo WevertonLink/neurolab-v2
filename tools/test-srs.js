@@ -658,9 +658,9 @@ const reset = ()=>ev('state = defaultState();');
      uma mini-questão que o classificador leu como "onde fica". A âncora não é a
      única fonte, e o item de revisão precisa saber disso (ver bloco 20). */
   const loc = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'location')?1:0),0),0)`);
-  eq(loc, 59, '19. Localização deveria cobrir 59/64 — 56 por diagrama, 2 por mini-questão, 1 por questão de módulo');
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 241,
-     '19. o total de caixas deveria ser 241');
+  eq(loc, 57, '19. Localização deveria cobrir 57/64 — 56 por diagrama, mais 1 por questão de módulo');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 243,
+     '19. o total de caixas deveria ser 243');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.
@@ -894,6 +894,31 @@ const reset = ()=>ev('state = defaultState();');
   })()`);
   ok(ev(`review.topicQs.length > 0`),
      '22. tópico que só mede Reconhecimento pela questão de módulo precisa ter o que perguntar');
+}
+
+/* ---------- 23. o classificador não pode casar dentro de outra palavra ---------- */
+{
+  /* `fica\b` casava em "codifica" e "significa"; `depende` casava em
+     "dependente". Seis questões definicionais eram lidas como localização ou
+     causalidade. Estes casos são a prova de que a fronteira da esquerda existe. */
+  const casos = [
+    ['Como o cérebro codifica a intensidade de um estímulo forte?', 'location'],
+    ['O desconto temporal significa que:', 'location'],
+    ["Memória 'dependente de estado' significa que:", 'causality'],
+    ['O que significa dizer que existe um tônus autonômico?', 'location'],
+    ['Evidência convergente significa:', 'location']
+  ];
+  casos.forEach(c=>{
+    const d = ev(`inferQuestionDimension({q:${JSON.stringify(c[0])}, lvl:0},{source:'x'})`);
+    ok(d !== c[1],
+       '23. "' + c[0].slice(0,42) + '..." não pode ser classificada como ' + c[1] +
+       ' — a palavra que dispara está dentro de outra (veio ' + d + ')');
+  });
+  // e as ocorrências legítimas continuam valendo
+  eq(ev(`inferQuestionDimension({q:'O córtex motor primário fica:', lvl:0},{source:'x'})`), 'location',
+     '23. "fica" como palavra inteira continua sendo localização');
+  eq(ev(`inferQuestionDimension({q:'A resposta depende de qual mecanismo?', lvl:0},{source:'x'})`), 'causality',
+     '23. "depende" como palavra inteira continua sendo causalidade');
 }
 
 /* ---------- resultado ---------- */

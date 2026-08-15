@@ -2,8 +2,9 @@
 
 *Levantamento original de 2026-08-14 sobre `4711259` (v1.7.2). Atualizado até
 as Fases 2, 1, 3 e 4 do cronograma por dimensão, mais a declaração de `l:` no
-quiz de módulo (v1.12.0), com os três portões locais verdes:
-`verifica-metaforas`, `audit-content` e `test-srs` (135 verificações).*
+quiz de módulo e a correção de fronteira no classificador (v1.13.0), com os
+três portões locais verdes: `verifica-metaforas`, `audit-content` e `test-srs`
+(142 verificações).*
 
 Documento de referência para mudanças futuras. Descreve **como os módulos são
 estruturados**, **como eles alimentam a revisão espaçada**, **o que do conteúdo
@@ -164,11 +165,11 @@ a caixa 0 fica intocada, então a primeira volta é sempre exatamente amanhã.
 
 `measurableDimensions(moduleId, lessonIndex)` (`04`) é **derivada do conteúdo,
 nunca gravada**: uma dimensão só ganha caixa se este tópico tem como medi-la.
-Hoje isso dá **241 caixas das 256 possíveis** —
+Hoje isso dá **243 caixas das 256 possíveis** —
 
 ```
-recognition  54/64 tópicos      causality    64/64 tópicos
-location     59/64 tópicos      application  64/64 tópicos
+recognition  58/64 tópicos      causality    64/64 tópicos
+location     57/64 tópicos      application  64/64 tópicos
 ```
 
 — e as fontes por tópico são quatro: o mini quiz; a prova de previsão
@@ -209,6 +210,15 @@ casos concretos.
 
 Ganho medido: Reconhecimento de 50 para 54 tópicos e Localização de 58 para 59,
 sem escrever conteúdo novo — só declarando o que a questão já cobrava.
+
+**Um defeito do classificador achado no caminho.** Os padrões `fica\b` e
+`depende` não tinham fronteira de palavra à esquerda: o primeiro casava dentro
+de "codi**fica**" e "signi**fica**", o segundo dentro de "**depende**nte". Seis
+questões de 256 — todas definicionais, do tipo "O que significa X?" — eram lidas
+como Localização ou Causalidade. Com `\bfica\b` e `\bdepende\b`,
+Reconhecimento vai de 54 para **58** e Localização **cai** de 59 para 57 — a
+queda é ganho de verdade: aqueles dois tópicos só tinham caixa de Localização
+por causa do erro. Portão no bloco 23.
 
 **8 aulas não são cobradas por nenhuma questão de módulo** (medido, não
 estimado): `plasticidade-0`, `atencao-0`, `emocao-1`, `sono-0`, `motor-0`,

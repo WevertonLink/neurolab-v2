@@ -18,8 +18,12 @@ function normalizeQuestionText(v){
 function inferQuestionDimension(q, context){
   if(q && KNOWLEDGE_DIM_IDS.includes(q.dim)) return q.dim;
   const t=normalizeQuestionText(q&&q.q);
-  const strongLocation=/(onde\b|em qual (?:regiao|estrutura|lobo|nucleo|parte|area)|qual estrutura|localizad|fica\b|membrana (?:pre|pos)|pre-sinaptic|pos-sinaptic)/;
-  const causal=/(por que|porque|mecanismo|caus|consequ|o que acontece|o que ocorr|se .*?(?:bloque|inib|les|aument|diminu|remov)|leva a|resulta|permite|depende|sequencia|primeiro.*depois|feedback|erro de previsao|como .*? produz)/;
+  /* `fica` e `depende` precisam de fronteira dos DOIS lados. Sem a da esquerda,
+     `fica\b` casava dentro de "codifica" e "significa", e `depende` dentro de
+     "dependente" — 6 questões de 256 iam para a dimensão errada, todas elas
+     perguntas definicionais ("O que significa X?") lidas como localização. */
+  const strongLocation=/(onde\b|em qual (?:regiao|estrutura|lobo|nucleo|parte|area)|qual estrutura|localizad|\bfica\b|membrana (?:pre|pos)|pre-sinaptic|pos-sinaptic)/;
+  const causal=/(por que|porque|mecanismo|caus|consequ|o que acontece|o que ocorr|se .*?(?:bloque|inib|les|aument|diminu|remov)|leva a|resulta|permite|\bdepende\b|sequencia|primeiro.*depois|feedback|erro de previsao|como .*? produz)/;
   const application=/(caso\b|cenario|paciente|uma pessoa|durante\b|situacao|qual seria|prever|aplicar|exemplo|comparad|tende a|diante de|ao encontrar|na pratica)/;
   if(strongLocation.test(t)) return 'location';
   if(causal.test(t)) return 'causality';
