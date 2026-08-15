@@ -1134,14 +1134,22 @@ test('@smoke Localização na revisão responde no diagrama e não entrega a res
   const parte = await page.evaluate(() => review.loc.part);
   expect(parte, 'o item precisa de uma parte alvo').toBeTruthy();
 
-  /* `force: true` de propósito. O `.apart` tem `transition: filter .18s` e a
-     checagem de estabilidade do Playwright nunca assenta num <g> de SVG cuja
-     caixa é recalculada pelo filtro — o clique normal estoura os 15s de espera.
-     O evento continua sendo um clique real de mouse no centro do elemento,
-     então a rota (delegação global → handleAnatPartTap → resposta) é
-     exercitada de verdade. O que se perde é a checagem de "nada por cima". */
-  await page.waitForTimeout(400);
-  await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().click({ force: true });
+  /* Duas tentativas anteriores ensinaram por que aqui é `dispatchEvent` e não
+     um clique posicional:
+
+     1. Clique normal estoura os 15s com "element is not stable" — o `.apart`
+        tem `transition: filter .18s` e a caixa do <g> é recalculada a cada
+        quadro, então a checagem de estabilidade nunca assenta.
+     2. Clique com `force` acerta o CENTRO da caixa do elemento — e as partes
+        da anatomia se aninham. O centro geométrico do soma é o núcleo, que é
+        desenhado dentro dele. O toque resolvia para a parte errada e a
+        resposta vinha como erro.
+
+     O ponto exato do toque não é o que este teste existe para provar: é a rota
+     (delegação global → handleAnatPartTap → resposta em vez de ficha) e a
+     guarda logo abaixo. dispatchEvent entrega o evento no elemento certo e
+     passa pelo mesmo caminho de delegação. */
+  await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().dispatchEvent('click');
 
   /* A asserção que mais importa aqui. Uma delegação global abre a ficha da
      estrutura ao toque em qualquer .apart, em qualquer lugar do documento —
@@ -1197,9 +1205,11 @@ for (const dim of ['causality', 'location']) {
           await page.locator('#rv-body .dm-chain-pool button').nth(pos).click();
         }
       } else {
+        // Aqui só interessa que HAJA resposta, para o bloco de resultado
+        // aparecer e o botão poder ser medido — se acertou ou errou é
+        // irrelevante. Ver o comentário no @smoke de Localização.
         const parte = await page.evaluate(() => review.loc.part);
-        await page.waitForTimeout(400);   // ver o comentário no @smoke de Localização
-        await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().click({ force: true });
+        await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().dispatchEvent('click');
       }
 
       const botao = page.locator('#rv-body .rv-card .bigbtn').last();
