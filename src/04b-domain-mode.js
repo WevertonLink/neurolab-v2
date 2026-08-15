@@ -913,6 +913,13 @@ function domainModulesHTML(ids){
 function renderDomainEntry(){
   const host=document.getElementById('db-domain-entry'); if(!host) return;
   ensureDomainState();
+  /* Com cronograma ativo, a porta do Modo Domínio já é o rodapé do painel de
+     revisão. Um segundo cartão logo abaixo dizendo coisa parecida era a
+     duplicação mais visível do dashboard. O cartão cheio fica para quem ainda
+     não tem nada agendado — ali ele é a única porta. */
+  if(typeof srsScheduledCount==='function' && srsScheduledCount() > 0){
+    host.innerHTML=''; return;
+  }
   const stage=domainStage(), pct=Math.round(domainCoverageStats().value*100);
   const due=dueTopics().length, weak=domainWeakTopics(99).length;
   const casesDone=Object.keys(state.domain.cases).filter(k=>state.domain.cases[k]&&state.domain.cases[k].attempts).length;
@@ -1017,11 +1024,18 @@ function domainRenderReviews(){
     const days=nd?Math.max(0,Math.round((nd-startOfDay(Date.now()))/DAY)):null;
     return `<section class="dm-empty"><div class="dm-empty-icon">✓</div><h3>Nada vence hoje</h3><p>${days!==null?`A próxima revisão está prevista para daqui a ${days} dia${days!==1?'s':''}.`:'O cronograma não possui uma próxima data.'} Voltar cedo demais pode medir familiaridade, não retenção.</p></section>`;
   }
-  return `<section class="dm-section"><div class="dm-section-head"><div><span>REVISÕES PENDENTES</span><h3>${due.length} tópico${due.length!==1?'s':''} no ponto de recuperação</h3></div><button class="bigbtn" style="--mc:var(--cyan)" onclick="startReview()">Iniciar sessão</button></div>
-    <div class="dm-list">${due.map(d=>{
+  /* Desde a Fase 0 cada item é um par tópico × dimensão, não um tópico — e com
+     236 caixas possíveis, listar a fila inteira vira uma parede. Mostra a
+     sessão e declara o excedente, como o painel do dashboard já faz. */
+  const naSessao = due.slice(0, SESSION_CAP);
+  const excedente = Math.max(0, due.length - SESSION_CAP);
+  return `<section class="dm-section"><div class="dm-section-head"><div><span>REVISÕES PENDENTES</span><h3>${naSessao.length} ${naSessao.length!==1?'itens':'item'} na próxima sessão</h3></div><button class="bigbtn" style="--mc:var(--violet)" onclick="startReview()">Revisar agora →</button></div>
+    <p class="dm-section-intro">Cada item é um tipo de saber sobre um tópico. O que você reconhece bem sai do radar por semanas; o que você não explica volta em dias.</p>
+    <div class="dm-list">${naSessao.map(d=>{
       const why=typeof reviewReasonData==='function'?reviewReasonData(d):null;
-      return `<article class="dm-row"><i style="--dot:${d.color}"></i><div><b>Módulo ${d.mn} · ${d.title}</b><p>${why?why.title:'Revisão vencida'} · ${d.overdue?`${d.overdue} dia${d.overdue!==1?'s':''} de atraso`:'vence hoje'} · intervalo ${SRS_INTERVALS[d.box]}d</p></div><button onclick="domainOpenTopic(${d.mi},${d.li})">ver tópico</button></article>`;
-    }).join('')}</div></section>`;
+      return `<article class="dm-row"><i style="--dot:${d.color}"></i><div><b>Módulo ${d.mn} · ${d.title} — ${dimMeta(d.dim).label}</b><p>${why?why.title:'Revisão vencida'} · ${d.overdue?`${d.overdue} dia${d.overdue!==1?'s':''} de atraso`:'vence hoje'} · intervalo ${SRS_INTERVALS[d.box]}d</p></div></article>`;
+    }).join('')}</div>
+    ${excedente?`<p class="dm-section-intro">Faltam ${excedente} para a sessão seguinte.</p>`:''}</section>`;
 }
 function domainRenderWeak(){
   const topics=domainWeakTopics(12);
@@ -1029,7 +1043,7 @@ function domainRenderWeak(){
   return `<section class="dm-section"><div class="dm-section-head"><div><span>CONCEITOS FRÁGEIS</span><h3>Onde o modelo ainda perde peças</h3></div></div>
     <p class="dm-section-intro">A ordem combina a dimensão mais fraca, erros registrados, domínio do mini quiz e revisões vencidas. Não é um julgamento sobre você; é uma fila de maior retorno.</p>
     <div class="dm-weak-grid">${topics.map((t,i)=>`<article class="dm-weak-card">
-      <div class="dm-rank">${String(i+1).padStart(2,'0')}</div><div class="dm-weak-main"><span>MÓDULO ${t.module.n}</span><h4>${t.title}</h4><p>${t.reasons.join(' · ')}</p></div>
+      <div class="dm-rank">${String(i+1).padStart(2,'0')}</div><div class="dm-weak-main"><span>MÓDULO ${t.module.n} · ${t.weak.label.toUpperCase()}</span><h4>${t.title}</h4><p>${t.reasons.join(' · ')}</p></div>
       <div class="dm-weak-score"><small>prioridade</small><b>${Math.round(t.score*100)}</b></div>
       <button onclick="domainOpenTopic(${t.mi},${t.li})">Reabrir aula e mecanismo →</button>
     </article>`).join('')}</div></section>`;

@@ -800,22 +800,26 @@ function dashboardStats(){
       if(topicMastery(m.id,i)>=0.75) masteredTopics++;
     }
   }
-  return { totalLessons, readLessons, masteredTopics, avg:Math.round(overallProgress()*100) };
+  const cx = consolidatedBoxes();
+  return { totalLessons, readLessons, masteredTopics, avg:Math.round(overallProgress()*100),
+           consolidadas:cx.feitas, caixas:cx.total };
 }
-function weakTopics(){
-  const list=[];
-  MODULES.forEach((m,mi)=>{
-    m.lessons.forEach((l,li)=>{
-      const key=topicKey(m.id,li);
-      const touched = Object.prototype.hasOwnProperty.call(state.topicMastery,key) || (state.miniWrong[key]||0)>0;
-      const tm = state.topicMastery[key]||0;
-      if(touched && tm<0.75){
-        list.push({mi, li, title:l.t, mn:m.n, color:m.color, tm, miss:state.miniWrong[key]||0});
-      }
-    });
+/* weakTopics() foi removido aqui na Fase 4: existia desde o começo com ZERO
+   chamadores. Era um terceiro ranking de fragilidade que ninguém via, com um
+   critério próprio (topicMastery < 0,75, top 3) competindo em silêncio com
+   domainWeakTopics. O ranking vivo é aquele. */
+/* Quantas caixas do cronograma já estão em intervalo de 14 dias ou mais.
+   Responde "quanto do que estudei já está estável na memória" — diferente de
+   "quanto percorri" (cobertura) e de "quanto acertei" (mastery). Nenhuma tela
+   mostrava isso, e ele só existe por causa do agendamento por dimensão. */
+const CAIXA_CONSOLIDADA = 3;   // SRS_INTERVALS[3] = 14 dias
+function consolidatedBoxes(){
+  let feitas = 0, total = 0;
+  Object.keys(state.srs||{}).forEach(k=>{
+    const dims = srsDims(k); if(!dims) return;
+    Object.keys(dims).forEach(d=>{ total++; if((dims[d].box||0) >= CAIXA_CONSOLIDADA) feitas++; });
   });
-  list.sort((a,b)=> (a.tm-b.tm) || (b.miss-a.miss));
-  return list.slice(0,3);
+  return { feitas: feitas, total: total };
 }
 function overallProgress(){
   let s=0; for(const m of MODULES) s+=moduleProgress(m); return s/MODULES.length;
@@ -990,7 +994,12 @@ function renderDashboard(){
   const _mc=document.getElementById('db-modcount'); if(_mc) _mc.textContent=MODULES.length;
   renderContinue();
   // overall
-  const op=overallProgress();
+  /* A barra se chama "Progresso geral do percurso" e media
+     0,25·aulas + 0,35·mini quiz + 0,40·quiz do módulo — dizia PERCURSO e media
+     DESEMPENHO, então dava para ler tudo e ainda ver 60%. Agora mede cobertura,
+     que é o que o rótulo sempre prometeu. A mistura continua onde faz sentido:
+     nas barras de cada cartão de módulo e no mapa sináptico (moduleProgress). */
+  const op=(typeof domainCoverageStats==='function') ? domainCoverageStats().value : overallProgress();
   document.getElementById('db-ofill').style.width=(op*100)+'%';
   document.getElementById('db-opct').textContent=Math.round(op*100)+'%';
   document.getElementById('db-mapstat').textContent=activeVias()+' / '+MODULES.length+' vias ativas';
@@ -1045,7 +1054,7 @@ function renderDashboardStats(){
     <div class="stat"><div class="sl">XP total</div><div class="sv">${state.xp}</div><div class="ss">nível ${levelInfo().num}</div></div>
     <div class="stat"><div class="sl">Aulas estudadas</div><div class="sv">${st.readLessons}/${st.totalLessons}</div><div class="ss">no percurso</div></div>
     <div class="stat"><div class="sl">Tópicos dominados</div><div class="sv">${st.masteredTopics}/${st.totalLessons}</div><div class="ss">gabaritou o mini-quiz</div></div>
-    <div class="stat"><div class="sl">Progresso médio</div><div class="sv">${st.avg}%</div><div class="ss">geral</div></div>`;
+    <div class="stat"><div class="sl">Já estável</div><div class="sv">${st.consolidadas}/${st.caixas||0}</div><div class="ss">em intervalo de 14 dias ou mais</div></div>`;
   renderLinkHub();
   const chk=document.getElementById('deep-chk'); if(chk) chk.checked = deepOn();
 }
@@ -1577,6 +1586,7 @@ function renderReview(){
     const nd = nextDueDate();
     const days = nd? Math.max(0, Math.round((nd - startOfDay(Date.now()))/DAY)) : null;
     el.innerHTML = `<h3>Revisão espaçada</h3><p>Nada vence hoje.${days!=null? ' Próxima revisão em <b>'+days+' dia'+(days!==1?'s':'')+'</b>.':''} Voltar cedo demais rende menos que voltar no ponto de esquecer — o cronograma cuida disso.</p>`;
+    el.innerHTML += `<button class="dm-list-link" onclick="openDomainMode()">Ver o diagnóstico completo no Modo Domínio →</button>`;
     return;
   }
   const sessionCount = Math.min(due.length, SESSION_CAP);
@@ -1600,7 +1610,12 @@ function renderReview(){
      multiplica a fila por ~3 sem aumentar o trabalho do dia — cada item
      agora tem cerca de uma pergunta, onde antes o tópico trazia três. O
      excedente continua declarado logo abaixo, em `more`. */
-  el.innerHTML = `<h3>Revisão de hoje <span class="rcount">${sessionCount}</span></h3><p>Cada item é um tipo de saber sobre um tópico, não o tópico inteiro. O que você reconhece bem sai do radar por semanas; o que você não explica volta em dias — cada um no seu próprio ritmo.</p><div class="review-list">${items}</div>${more}<button class="bigbtn rv-start" onclick="startReview()">Revisar agora · ${sessionCount} ${sessionCount===1?'item':'itens'}</button>`;
+  /* Uma porta só: com cronograma ativo, a entrada do Modo Domínio vira um
+     rodapé deste cartão em vez de um segundo cartão logo abaixo dizendo
+     coisa parecida. O cartão cheio de entrada continua existindo para quem
+     ainda não tem nada agendado — ver renderDomainEntry. */
+  const portaDominio = `<button class="dm-list-link" onclick="openDomainMode()">Ver o diagnóstico completo no Modo Domínio →</button>`;
+  el.innerHTML = `<h3>Revisão de hoje <span class="rcount">${sessionCount}</span></h3><p>Cada item é um tipo de saber sobre um tópico, não o tópico inteiro. O que você reconhece bem sai do radar por semanas; o que você não explica volta em dias — cada um no seu próprio ritmo.</p><div class="review-list">${items}</div>${more}<button class="bigbtn rv-start" onclick="startReview()">Revisar agora · ${sessionCount} ${sessionCount===1?'item':'itens'}</button>${portaDominio}`;
 }
 function reviewTopic(mi,li){
   openModule(mi);

@@ -768,6 +768,69 @@ const reset = ()=>ev('state = defaultState();');
   ok(ev(`review.topicQs.length > 0`), '20. ele cai no caminho de múltipla escolha');
 }
 
+/* ---------- 21. a tela mostra o que o motor sabe ---------- */
+{
+  // caixas consolidadas: só conta a partir de box 3 (intervalo de 14 dias)
+  reset();
+  ev(`seedTopic('neuronio-0')`);
+  const totalCaixas = ev(`measurableDimensions('neuronio',0).length`);
+  eq(ev(`consolidatedBoxes().total`), totalCaixas, '21. total tem de contar todas as caixas do tópico');
+  eq(ev(`consolidatedBoxes().feitas`), 0, '21. caixa recém-semeada não está consolidada');
+  ev(`state.srs['neuronio-0'].dims.recognition.box = 2`);
+  eq(ev(`consolidatedBoxes().feitas`), 0, '21. caixa 2 (7 dias) ainda não conta como estável');
+  ev(`state.srs['neuronio-0'].dims.recognition.box = 3`);
+  eq(ev(`consolidatedBoxes().feitas`), 1, '21. caixa 3 (14 dias) conta');
+  eq(ev(`dashboardStats().consolidadas`), 1, '21. e o stat do dashboard lê daí');
+
+  /* A barra do dashboard tem de bater com a COBERTURA, não com o desempenho:
+     o rótulo dela diz "Progresso geral do percurso".
+     Afere o que renderDashboard ESCREVE na barra, não o que as funções
+     devolvem — a primeira versão comparava domainCoverageStats() com
+     overallProgress() e passava mesmo com a barra ligada de volta na fonte
+     errada, porque não tocava em renderDashboard. */
+  reset();
+  ev(`MODULES.forEach(m=>m.lessons.forEach((_,li)=>{ state.lessons[topicKey(m.id,li)] = true; }))`);
+  eq(ev(`Math.round(domainCoverageStats().value*100)`), 80,
+     '21. 64 aulas de 80 etapas = 80% de cobertura');
+  ok(ev(`Math.round(domainCoverageStats().value*100) !== Math.round(overallProgress()*100)`),
+     '21. cobertura e desempenho precisam ser números distintos, senão este teste não distingue nada');
+  ev(`renderDashboard()`);
+  eq(ev(`document.getElementById('db-ofill').style.width`),
+     ev(`(domainCoverageStats().value*100)+'%'`),
+     '21. a barra tem de ser preenchida com a cobertura');
+  eq(ev(`document.getElementById('db-opct').textContent`),
+     ev(`Math.round(domainCoverageStats().value*100)+'%'`),
+     '21. e o número ao lado dela também');
+
+  // o ranking de fragilidade tem de expor QUAL dimensão, não só o tópico
+  reset();
+  ev(`state.topicMastery['neuronio-0'] = 0.4;
+      beginEvidenceBatch();
+      recordDimensionEvidence(topicScope('neuronio-0'),'causality',0,'review',{});
+      commitEvidenceBatch();`);
+  const fraco = ev(`domainWeakTopics(1)[0]`);
+  ok(fraco && fraco.weak && fraco.weak.label, '21. o item frágil tem de carregar a dimensão');
+  eq(fraco.weak.id, 'causality', '21. e apontar a que realmente está fraca');
+
+  // weakTopics() foi deletado: era um terceiro ranking sem chamador
+  eq(ev(`typeof weakTopics`), 'undefined', '21. weakTopics() não pode voltar a existir');
+
+  /* Uma porta só: com cronograma ativo, o cartão cheio do Modo Domínio não
+     pode aparecer junto do painel de revisão dizendo coisa parecida. */
+  reset();
+  ev(`seedTopic('neuronio-0'); renderReview(); renderDomainEntry();`);
+  eq(ev(`document.getElementById('db-domain-entry').innerHTML`), '',
+     '21. com cronograma ativo, o cartão de entrada do Domínio some');
+  ok(ev(`document.getElementById('db-review').innerHTML.indexOf('openDomainMode()') > -1`),
+     '21. e a porta passa a ser o rodapé do painel de revisão');
+
+  // sem nada agendado, o cartão cheio volta a ser a única porta
+  reset();
+  ev(`renderReview(); renderDomainEntry();`);
+  ok(ev(`document.getElementById('db-domain-entry').innerHTML.indexOf('openDomainMode()') > -1`),
+     '21. sem cronograma, o cartão de entrada tem de aparecer');
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');

@@ -1,9 +1,9 @@
 # NeuroLab — arquitetura de conteúdo e aprendizagem
 
 *Levantamento original de 2026-08-14 sobre `4711259` (v1.7.2). Atualizado até
-as Fases 2, 1 e 3 do cronograma por dimensão (v1.10.0), com os três portões
+as Fases 2, 1, 3 e 4 do cronograma por dimensão (v1.11.0), com os três portões
 locais verdes: `verifica-metaforas`, `audit-content` e `test-srs`
-(114 verificações).*
+(129 verificações).*
 
 Documento de referência para mudanças futuras. Descreve **como os módulos são
 estruturados**, **como eles alimentam a revisão espaçada**, **o que do conteúdo
@@ -669,11 +669,17 @@ Sem juízo de valor — são fatos medidos, cada um com o local exato:
    primeiro contato, de propósito. `domain-reconstruction` passou a ser
    declarada em `.40`. Hoje nenhuma fonte real cai no default por omissão — há
    portão para isso (`test-srs`, bloco 18).
-9. **Dois rankings paralelos de fragilidade** — `domainWeakTopics` (`04b`) e a
-   fila do SRS. `weakTopics()` (05) parecia um terceiro, mas **não tem nenhum
-   chamador**: é código morto, removido na Fase 4.
-10. **Duas contas de progresso** decidem a liberação do Modo Domínio:
-    `domainCoverageStats` e `overallProgress` (`04b:797`).
+9. ~~**Dois rankings paralelos de fragilidade.**~~ **Resolvido na Fase 4.**
+   `weakTopics()` era código morto sem chamador e foi deletado. Sobra
+   `domainWeakTopics`, que passou a expor **qual dimensão** está frágil, e a
+   fila do SRS — que não é ranking concorrente, é o cronograma.
+10. ~~**Duas contas de progresso competindo na tela.**~~ **Resolvido na Fase
+    4.** A barra do dashboard dizia "Progresso geral do percurso" e media
+    `0,25·aulas + 0,35·mini quiz + 0,40·quiz do módulo` — com as 64 aulas lidas
+    ela mostrava **25%**. Agora mede cobertura. `moduleProgress` continua nas
+    barras de cada cartão e no mapa, onde a mistura faz sentido, e a cláusula
+    `|| overallProgress() >= 0.70` em `domainStage` ficou de propósito: tirá-la
+    rebaixaria de "ativo" para "prévia" sem aviso.
 11. **`neuronio` não aparece em nenhum caso integrado** — único módulo nessa
     situação.
 12. **`linksFor` cobre 26 de 64 aulas**: 38 aulas não exibem nenhum chip de
