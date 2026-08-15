@@ -900,6 +900,11 @@ document.addEventListener('keydown', function(e){
 
 let navPop=false;
 function go(view){
+  /* Sair da revisão desarma o item em curso. Sem isto, um item de Localização
+     abandonado no meio deixaria `review.loc` armado, e a delegação global de
+     toque em `.apart` — que vale no documento inteiro — passaria a tratar
+     como resposta o toque num diagrama dentro do módulo. */
+  if(view !== 'review' && typeof review === 'object' && review){ review.loc = null; review.recon = null; }
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   const _v=document.getElementById('view-'+view);
   _v.classList.add('active');
@@ -1233,7 +1238,25 @@ function loadReviewTopic(){
   const t = review.queue[review.ti];
   const m = MODULES[t.mi];
   const todas = (MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][t.li]) || [];
-  review.recon = null;
+  review.recon = null; review.loc = null;
+  /* Localização é medida apontando no diagrama, quando o tópico tem termo
+     ancorado a uma parte dele. Dois tópicos medem Localização só por
+     mini-questão e caem no caminho de múltipla escolha, abaixo. A âncora
+     rotaciona por `reps`: o tópico cobra um termo diferente a cada volta,
+     sem campo novo no estado. */
+  if(t.dim === 'location'){
+    const ancoras = (typeof locationAnchorsOf==='function') ? locationAnchorsOf(m.id, t.li) : [];
+    if(ancoras.length){
+      const reps = ((srsDims(t.key)||{}).location||{}).reps || 0;
+      const a = ancoras[reps % ancoras.length];
+      review.loc = { term:a.term, part:a.part, anatId:m.id, answered:false, chosen:null };
+      review.topicQs = []; review.qi = 0; review.topicCorrect = 0;
+      if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
+      renderReviewHead();
+      renderReviewLocation();
+      return;
+    }
+  }
   /* Explicação causal não é medida por alternativa: o item vira reconstrução
      da cadeia. Ver renderReviewReconstruction. */
   const cadeia = chainDoTopico(m.id, t.li);
@@ -1425,7 +1448,68 @@ function checkReviewReconstruction(){
   renderReviewReconstruction();
 }
 
+/* =====================================================================
+   LOCALIZAÇÃO NA REVISÃO — apontar no diagrama
+
+   O item mostra o termo e o diagrama do módulo, e pede o toque na estrutura
+   onde aquele termo age. A legenda de partes fica de fora de propósito: ela
+   nomeia cada uma e entregaria a resposta.
+
+   O mapeamento termo -> parte já existia em CONTEXT_TOPIC_TERMS para
+   explicar "onde este termo entra no mecanismo". Nunca tinha sido cobrado.
+   ===================================================================== */
+function renderReviewLocation(){
+  const t = review.queue[review.ti], L = review.loc; if(!L) return;
+  const A = ANATOMY[L.anatId] || {};
+  const parte = (A.parts||[]).find(p=>p.id===L.part) || {label:L.part};
+  let fecho = '';
+  if(L.answered){
+    const certa = L.chosen === L.part;
+    const escolhida = (A.parts||[]).find(p=>p.id===L.chosen);
+    fecho = `<div class="mq-verd" style="color:${certa?'var(--good)':'var(--bad)'}">${certa?'✓ É ali'+' · +'+XP.review+' XP':'✕ Não é ali'}</div>
+      <p>${certa
+        ? `<strong>${escHtml(L.term)}</strong> age em <strong>${escHtml(parte.label)}</strong>.`
+        : `Você apontou ${escolhida?'<strong>'+escHtml(escolhida.label)+'</strong>':'outra estrutura'}. <strong>${escHtml(L.term)}</strong> age em <strong>${escHtml(parte.label)}</strong>.`}
+        ${parte.blurb?' '+parte.blurb:''}</p>
+      <div class="fbnav"><button class="bigbtn" onclick="nextReview()">Continuar</button></div>`;
+  }
+  document.getElementById('rv-body').innerHTML = `
+    <div class="miniquiz-card rv-card">
+      <div class="mq-k">Módulo ${t.mn} · ${t.title} · ${dimMeta(t.dim).label}</div>
+      <h4>Onde <strong>${escHtml(L.term)}</strong> age?</h4>
+      <p class="rmeta">Toque a estrutura no diagrama.</p>
+      <div class="anat-stage" id="rv-anat">${A.svg||''}</div>
+      <div class="mq-feedback" id="rv-fb" aria-live="polite">${fecho}</div>
+    </div>`;
+  if(L.answered) highlightAnatEverywhere(L.anatId, L.part);
+  focusCardTop('#rv-body .rv-card');
+}
+function answerReviewLocation(partId){
+  const L = review.loc; if(!L || L.answered) return;
+  const t = review.queue[review.ti];
+  L.answered = true; L.chosen = partId;
+  const certa = partId === L.part;
+  state.attempts = (state.attempts||0)+1;
+  if(certa){ state.correctTotal = (state.correctTotal||0)+1; } else { state.wrongTotal = (state.wrongTotal||0)+1; }
+  recordDimensionEvidence(topicScope(t.key), 'location', certa?1:0, 'diagram', {questionId:'RL:'+t.key+':'+L.part});
+  if(certa) awardXP(XP.review, null); else saveState();
+  renderReviewLocation();
+}
+
 function nextReview(){
+  if(review.loc){
+    const t = review.queue[review.ti], L = review.loc;
+    const agendadas = (typeof commitEvidenceBatch==='function') ? commitEvidenceBatch() : [];
+    if(L.answered){
+      if(!agendadas.some(a=>a.key===t.key && a.dim===t.dim)) scheduleDimension(t.key, t.dim, L.chosen===L.part?1:0);
+      const rec = (srsDims(t.key)||{})[t.dim] || {box:0};
+      review.results.push({ key:t.key, title:t.title, mn:t.mn, color:t.color, dim:t.dim,
+                            passed:L.chosen===L.part, box:rec.box||0 });
+    }
+    review.loc = null;
+    advanceReviewTopic();
+    return;
+  }
   if(review.recon){
     /* Reconstrução: uma tentativa por item, sem `topicQs`. Quem viu a cadeia
        sai sem resultado — e sem agendamento, para o item continuar vencido. */
@@ -1927,8 +2011,22 @@ document.addEventListener('click', function(e){
   const partId = g.dataset.struct;
   if(!anatId || !partId) return;
   e.stopPropagation();
-  openStructInfo(anatId, partId);
+  handleAnatPartTap(anatId, partId);
 });
+/* A decisão fica separada do listener de propósito: é ela que impede a
+   pergunta de entregar a própria resposta, e um listener registrado no
+   `document` não é alcançável por teste. Aqui é.
+
+   Durante um item de Localização na revisão, tocar uma parte É a resposta —
+   abrir a ficha da estrutura mostraria o nome dela, que é exatamente o que a
+   pergunta está cobrando. Depois de respondido, o toque volta ao normal. */
+function handleAnatPartTap(anatId, partId){
+  if(typeof review === 'object' && review && review.loc && !review.loc.answered){
+    answerReviewLocation(partId);
+    return;
+  }
+  openStructInfo(anatId, partId);
+}
 
 /* =====================================================================
    PROFUNDIDADE TÉCNICA — aprofundamento opcional por aula + fontes por módulo

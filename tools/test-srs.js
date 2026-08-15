@@ -686,6 +686,84 @@ const reset = ()=>ev('state = defaultState();');
   eq(semDistrator.length, 0, '19. módulo sem 3 partes para servirem de distrator: ' + semDistrator.join(', '));
 }
 
+/* ---------- 20. o item de Localização é o diagrama ---------- */
+{
+  const abrirLoc = `(function(mid, li){
+    const mi=MODULES.findIndex(x=>x.id===mid), m=MODULES[mi], key=topicKey(mid,li);
+    seedTopic(key);
+    review = { queue:[{mi:mi, li:li, key:key, dim:'location', title:m.lessons[li].t,
+                       mn:m.n, color:m.color, due:0, box:0, overdue:0}],
+               ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] };
+    loadReviewTopic();
+  })`;
+
+  reset();
+  ev(`${abrirLoc}('neuronio',0)`);
+  ok(ev(`!!review.loc`), '20. tópico com âncora tem de abrir o diagrama');
+  eq(ev(`review.topicQs.length`), 0, '20. e não montar múltipla escolha');
+  ok(ev(`locationAnchorsOf('neuronio',0).some(a=>a.term===review.loc.term && a.part===review.loc.part)`),
+     '20. o termo cobrado tem de ser uma âncora real do tópico');
+
+  // tocar a parte certa
+  reset();
+  ev(`${abrirLoc}('neuronio',0); answerReviewLocation(review.loc.part); nextReview();`);
+  eq(ev(`state.dimensionEvidence['T:neuronio-0'].location.sources.diagram`), 1,
+     '20. acerto grava evidência com fonte diagram');
+  eq(ev(`state.dimensionEvidence['T:neuronio-0'].location.last`), 1, '20. e como acerto');
+  eq(ev(`state.srs['neuronio-0'].dims.location.reps`), 1, '20. e a caixa de Localização anda');
+
+  // tocar uma parte errada
+  reset();
+  ev(`${abrirLoc}('neuronio',0);
+      answerReviewLocation((ANATOMY.neuronio.parts.find(p=>p.id!==review.loc.part)||{}).id);
+      nextReview();`);
+  eq(ev(`state.dimensionEvidence['T:neuronio-0'].location.last`), 0,
+     '20. apontar a estrutura errada tem de reprovar');
+
+  /* A guarda que impede a pergunta de entregar a própria resposta: existe uma
+     delegação global que abre a ficha da estrutura ao toque em qualquer
+     .apart[data-struct], no documento inteiro. Durante um item ativo, o toque
+     tem de virar resposta. */
+  reset();
+  ev(`${abrirLoc}('neuronio',0)`);
+  eq(ev(`review.loc.answered`), false, '20. o item começa sem resposta');
+  /* Exercita a FUNÇÃO REAL que a delegação chama, não uma cópia da lógica dela.
+     A primeira versão deste teste reimplementava o if/else inline e por isso
+     passava mesmo com a guarda removida do código — testava a si mesma. */
+  ok(ev(`(function(){
+      let abriu=false;
+      const orig=openStructInfo;
+      openStructInfo=function(){ abriu=true; };
+      handleAnatPartTap('neuronio', review.loc.part);
+      openStructInfo=orig;
+      return !abriu && review.loc.answered===true;
+    })()`),
+     '20. com item ativo, o toque numa parte é RESPOSTA — não pode abrir a ficha da estrutura');
+
+  // e sem item ativo, o toque volta ao comportamento normal
+  reset();
+  ok(ev(`(function(){
+      review = {queue:[], ti:0, qi:0, topicQs:[], results:[], loc:null, recon:null};
+      let abriu=false; const orig=openStructInfo;
+      openStructInfo=function(){ abriu=true; };
+      handleAnatPartTap('neuronio','soma');
+      openStructInfo=orig;
+      return abriu;
+    })()`),
+     '20. sem item ativo, o toque tem de voltar a abrir a ficha da estrutura');
+
+  // sair da revisão desarma o item, senão o toque no módulo viraria resposta
+  reset();
+  ev(`${abrirLoc}('neuronio',0); go('dashboard');`);
+  eq(ev(`review.loc`), null, '20. sair da revisão tem de desarmar o item de Localização');
+
+  // tópico que mede Localização só por mini-questão cai na múltipla escolha
+  reset();
+  ev(`${abrirLoc}('emocao',3)`);
+  eq(ev(`review.loc`), null, '20. tópico sem âncora não pode abrir diagrama');
+  ok(ev(`review.topicQs.length > 0`), '20. ele cai no caminho de múltipla escolha');
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');
