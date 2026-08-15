@@ -197,6 +197,15 @@ function measurableDimensions(moduleId, lessonIndex){
   if(typeof CHAIN !== 'undefined' && CHAIN[moduleId] && CHAIN[moduleId][lessonIndex]
      && Array.isArray(CHAIN[moduleId][lessonIndex].s)
      && CHAIN[moduleId][lessonIndex].s.length >= 4) found.causality = 1;
+  // Localização: só quando existe termo deste tópico ancorado a uma parte real
+  // do diagrama do próprio módulo, E o diagrama tem partes bastantes para
+  // servirem de distrator. Em 8 tópicos — os abstratos, como "transtornos
+  // psiquiátricos" — "onde fica" não é pergunta com resposta, e é certo que
+  // eles fiquem sem caixa em vez de ganharem uma que nada consegue satisfazer.
+  if(typeof locationAnchorsOf === 'function' && typeof ANATOMY !== 'undefined'){
+    const partes = (ANATOMY[moduleId] && ANATOMY[moduleId].parts) || [];
+    if(partes.length >= 3 && locationAnchorsOf(moduleId, lessonIndex).length) found.location = 1;
+  }
   const list = KNOWLEDGE_DIM_IDS.filter(d=>found[d]);
   _measurableCache[ck] = list;
   return list;

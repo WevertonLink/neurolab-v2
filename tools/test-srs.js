@@ -175,11 +175,22 @@ const reset = ()=>ev('state = defaultState();');
 /* ---------- 3. scheduleDimension recusa o que não sabe medir ---------- */
 {
   reset();
-  const podeLocation = ev(`canMeasure('neuronio',0,'location')`);
-  eq(podeLocation, false, '3. premissa do teste mudou: neuronio-0 passou a medir location');
-  ev(`scheduleDimension('neuronio-0','location',1)`);
-  const dims = ev(`(state.srs['neuronio-0'] && state.srs['neuronio-0'].dims) || {}`);
-  eq(Object.prototype.hasOwnProperty.call(dims,'location'), false, '3. agendou uma dimensão que o tópico não consegue medir');
+  /* Procura um par (tópico, dimensão) genuinamente não-mensurável em vez de
+     fixar um: as fases foram acrescentando fontes, e um par escolhido à mão
+     vira premissa falsa na fase seguinte — foi o que aconteceu com
+     neuronio-0/location quando o diagrama entrou. */
+  const naoMensuravel = ev(`(function(){
+    for(const m of MODULES) for(let li=0; li<m.lessons.length; li++){
+      const faltando = KNOWLEDGE_DIM_IDS.filter(d=>!canMeasure(m.id,li,d));
+      if(faltando.length) return {key: topicKey(m.id,li), dim: faltando[0]};
+    }
+    return null;
+  })()`);
+  ok(naoMensuravel, '3. premissa: tem de existir ao menos um par tópico×dimensão não-mensurável');
+  ev(`scheduleDimension(${JSON.stringify(naoMensuravel && naoMensuravel.key)}, ${JSON.stringify(naoMensuravel && naoMensuravel.dim)}, 1)`);
+  const dims = ev(`(state.srs[${JSON.stringify(naoMensuravel && naoMensuravel.key)}] || {}).dims || {}`);
+  eq(Object.prototype.hasOwnProperty.call(dims, naoMensuravel ? naoMensuravel.dim : 'x'), false,
+     '3. agendou uma dimensão que o tópico não consegue medir (' + (naoMensuravel && naoMensuravel.key) + '/' + (naoMensuravel && naoMensuravel.dim) + ')');
 
   ev(`scheduleDimension('neuronio-0','recognition',1)`);
   eq(ev(`state.srs['neuronio-0'].dims.recognition.box`), 0, '3. primeira evidência deveria abrir na caixa 0');
@@ -513,8 +524,14 @@ const reset = ()=>ev('state = defaultState();');
   const cau = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'causality')?1:0),0),0)`);
   eq(cau, 64, '16. toda aula tem cadeia com 4+ etapas, então Explicação causal deveria cobrir 64/64');
 
-  const total = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`);
-  eq(total, 189, '16. o total de caixas deveria ir de 188 para 189');
+  /* O total muda a cada fase que acrescenta fonte, então aferir um número aqui
+     vira falso na fase seguinte. O que é estável e é o ponto desta fase: a
+     cadeia cobre causalidade em TODO tópico, inclusive no único que o mini quiz
+     não cobria. */
+  const semCadeia = ev(`MODULES.flatMap(m=>m.lessons.map((_,li)=>
+    (CHAIN[m.id] && CHAIN[m.id][li] && Array.isArray(CHAIN[m.id][li].s) && CHAIN[m.id][li].s.length>=4)
+      ? null : m.id+'-'+li)).filter(Boolean)`);
+  eq(semCadeia.length, 0, '16. todo tópico precisa de cadeia com 4+ etapas: ' + semCadeia.join(', '));
 
   // se a caixa de causalidade existe, tem de haver com o que alimentá-la
   const malformadas = ev(`(function(){
@@ -610,6 +627,63 @@ const reset = ()=>ev('state = defaultState();');
   })()`);
   eq(foraDoMapa.length, 0,
      '18. fontes caindo no default .28 por omissão: ' + foraDoMapa.join(', '));
+}
+
+/* ---------- 19. Localização: âncoras reais e cobertura ---------- */
+{
+  // toda âncora tem de apontar para uma parte que existe no SVG E em parts
+  const quebradas = ev(`(function(){
+    const r=[];
+    MODULES.forEach(m=>{
+      const A=ANATOMY[m.id]||{};
+      const ids={}; (A.parts||[]).forEach(p=>ids[p.id]=1);
+      const svg={}; (String(A.svg||'').match(/data-struct="([^"]+)"/g)||[]).forEach(s=>svg[s.slice(13,-1)]=1);
+      m.lessons.forEach((_,li)=>locationAnchorsOf(m.id,li).forEach(a=>{
+        if(!ids[a.part] || !svg[a.part]) r.push(m.id+'-'+li+' '+a.term+' -> '+a.part);
+      }));
+    });
+    return r;
+  })()`);
+  eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
+
+  const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
+  eq(totalAncoras, 168, '19. o número de âncoras utilizáveis mudou — era 168');
+
+  /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
+     dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por
+     uma mini-questão que o classificador leu como "onde fica". A âncora não é a
+     única fonte, e o item de revisão precisa saber disso (ver bloco 20). */
+  const loc = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'location')?1:0),0),0)`);
+  eq(loc, 58, '19. Localização deveria cobrir 58/64 — 56 por diagrama, mais 2 que já tinham mini-questão');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 236,
+     '19. o total de caixas deveria ir de 189 para 236');
+
+  /* A invariante que realmente importa: nenhum tópico pode ter caixa de
+     Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.
+     Agendar o que não se sabe medir produz fila que nada satisfaz. */
+  const semFonte = ev(`(function(){
+    const r=[];
+    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
+      if(!canMeasure(m.id,li,'location')) return;
+      const temAncora = locationAnchorsOf(m.id,li).length > 0;
+      const temQuestao = ((MINI_QUIZZES[m.id]||[])[li]||[])
+        .some(q=>inferQuestionDimension(q,{module:m, lessonIndex:li, source:'review'})==='location');
+      if(!temAncora && !temQuestao) r.push(m.id+'-'+li);
+    }));
+    return r;
+  })()`);
+  eq(semFonte.length, 0, '19. caixa de Localização sem fonte nenhuma: ' + semFonte.join(', '));
+
+  // e os 6 verdadeiramente sem nada continuam sem caixa
+  const seisSemNada = ['neuroanatomia-2','linguagem-2','linguagem-3','clinica-3','metodos-0','metodos-2'];
+  const indevidos = ev(`${JSON.stringify(seisSemNada)}.filter(k=>{
+    const p = splitTopicKey(k); return canMeasure(p[0], p[1], 'location');
+  })`);
+  eq(indevidos.length, 0, '19. tópico abstrato sem fonte nenhuma não pode ganhar caixa: ' + indevidos.join(', '));
+
+  // todo módulo precisa de distratores
+  const semDistrator = ev(`MODULES.filter(m=>((ANATOMY[m.id]||{}).parts||[]).length < 3).map(m=>m.id)`);
+  eq(semDistrator.length, 0, '19. módulo sem 3 partes para servirem de distrator: ' + semDistrator.join(', '));
 }
 
 /* ---------- resultado ---------- */

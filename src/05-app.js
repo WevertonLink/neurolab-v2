@@ -5069,6 +5069,34 @@ function buildTermNode(){
   }catch(e){}
   return TERM_NODE;
 }
+/* Termos deste tópico que apontam para uma parte de verdade do diagrama do
+   próprio módulo. É a matéria-prima do item de Localização: o mapeamento já
+   existia em CONTEXT_TOPIC_TERMS para explicar "onde este termo entra no
+   mecanismo", e nunca tinha sido cobrado. Medido: as 168 âncoras resolvem,
+   nenhuma quebrada. */
+const _locAnchorCache = {};
+function locationAnchorsOf(moduleId, lessonIndex){
+  const ck = moduleId + '-' + lessonIndex;
+  if(_locAnchorCache[ck]) return _locAnchorCache[ck];
+  const out = [];
+  const A = (typeof ANATOMY!=='undefined' && ANATOMY[moduleId]) || null;
+  if(A){
+    const idsDeParte = {}; (A.parts||[]).forEach(p=>idsDeParte[p.id] = 1);
+    const noSvg = {};
+    (String(A.svg||'').match(/data-struct="([^"]+)"/g)||[])
+      .forEach(s=>{ noSvg[s.slice(13,-1)] = 1; });
+    const mapa = (typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS[moduleId]
+                  && CONTEXT_TOPIC_TERMS[moduleId][String(lessonIndex)]) || {};
+    if(typeof buildTermNode === 'function' && !TERM_NODE) buildTermNode();
+    Object.keys(mapa).forEach(term=>{
+      let r = null; try{ r = termNode(term, moduleId); }catch(e){}
+      if(r && r.a === moduleId && r.p && idsDeParte[r.p] && noSvg[r.p]) out.push({term:term, part:r.p});
+    });
+  }
+  _locAnchorCache[ck] = out;
+  return out;
+}
+
 function termNode(key, anatPreferida){
   if(!TERM_NODE) buildTermNode();
   const lista = TERM_NODE[String(key || '').toLowerCase()];
