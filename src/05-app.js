@@ -1417,7 +1417,7 @@ function renderReviewReconstruction(){
         <div class="dm-chain-pool">${pool}</div>
         ${r.selected.length && !travado ? `<button class="dm-undo" onclick="undoReviewChainStep()">← desfazer última etapa</button>
         <button class="dm-reveal-link" onclick="revealReviewChain()">não estou conseguindo — ver a cadeia</button>`:''}
-        ${fecho}
+        <div class="mq-feedback" id="rv-fb" aria-live="polite">${fecho}</div>
       </div>
     </div>`;
   focusCardTop('#rv-body .rv-card');
@@ -1451,6 +1451,7 @@ function revealReviewChain(){
   if(!r || r.result===1 || r.revealed) return;
   r.revealed = true;
   renderReviewReconstruction();
+  revealAfterAnswer('rv-fb');   // idem: quem desiste também precisa alcançar o botão
 }
 function checkReviewReconstruction(){
   const t = review.queue[review.ti], r = review.recon; if(!r) return;
@@ -1461,6 +1462,12 @@ function checkReviewReconstruction(){
   recordDimensionEvidence(topicScope(t.key), 'causality', certo?1:0, 'reconstruction', {questionId:'RC:'+t.key});
   if(certo) awardXP(XP.review, null); else saveState();
   renderReviewReconstruction();
+  /* Traz o resultado para a dobra. O cartão da reconstrução passa de 1000px —
+     a lista montada mais o pool inteiro —, então o botão de continuar nascia
+     fora da tela em TODOS os viewports de celular: medido, 512px abaixo num
+     360x620 e 97px abaixo até num 430x932. A múltipla escolha já fazia isso
+     desde sempre; as formas novas não faziam. */
+  revealAfterAnswer('rv-fb');
 }
 
 /* =====================================================================
@@ -1509,6 +1516,7 @@ function answerReviewLocation(partId){
   recordDimensionEvidence(topicScope(t.key), 'location', certa?1:0, 'diagram', {questionId:'RL:'+t.key+':'+L.part});
   if(certa) awardXP(XP.review, null); else saveState();
   renderReviewLocation();
+  revealAfterAnswer('rv-fb');   // o cartão embute o SVG inteiro; sem isto o botão fica fora da dobra
 }
 
 function nextReview(){

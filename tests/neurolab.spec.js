@@ -1068,6 +1068,185 @@ for (const viewport of REVIEW_VIEWPORTS) {
   });
 }
 
+/* AS TRÊS FORMAS NOVAS DE ITEM DE REVISÃO.
+
+   Desde que o cronograma passou a agendar tópico × dimensão, o item da fila
+   deixou de ser um tópico e cada dimensão ganhou forma própria: Reconhecimento
+   pergunta em múltipla escolha, Aplicação serve a prova de previsão,
+   Explicação causal pede a cadeia remontada sem alternativas, e Localização
+   pede o toque no diagrama.
+
+   O portão local (tools/test-srs.js) cobre a lógica das quatro com fartura,
+   mas roda num DOM stubado — nunca abriu uma tela. Estes testes são a única
+   coisa que exercita a renderização e o gesto de verdade.
+
+   Semear a dimensão é o que escolhe a forma: a chave dentro de `dims` decide
+   qual caminho de loadReviewTopic() dispara. */
+async function entrarNaRevisao(page, dim, reps) {
+  await page.evaluate(({ dim, reps }) => {
+    const m = MODULES[0];
+    const key = topicKey(m.id, 0);
+    state.srs = {};
+    state.srs[key] = { seededAt: Date.now(), dims: {} };
+    state.srs[key].dims[dim] = {
+      box: 0, due: startOfDay(Date.now()) - DAY, last: 0, reps: reps || 0, lapses: 0
+    };
+    startReview();
+  }, { dim, reps });
+  await expect(page.locator('#view-review')).toHaveClass(/active/);
+  await expect(page.locator('#rv-body .rv-card')).toBeVisible();
+}
+
+test('@smoke Explicação causal na revisão pede a cadeia, não alternativas', async ({ page }) => {
+  await entrarNaRevisao(page, 'causality');
+
+  // A dimensão trocou a FORMA da pergunta, não só o enunciado.
+  await expect(page.locator('#rv-body .dm-reconstruct')).toBeVisible();
+  await expect(page.locator('#rv-body .mq-options')).toHaveCount(0);
+
+  const cadeia = await page.evaluate(() => ({
+    total: review.recon.chain.length,
+    // ordem em que os botões do pool precisam ser tocados para reconstruir
+    ordem: review.recon.chain.map((txt) => review.recon.available.findIndex((a) => a.text === txt)),
+    embaralhado: !review.recon.available.every((a, i) => a.index === i)
+  }));
+
+  // A guarda anti-brinde, vista ponta a ponta: se o pool viesse na ordem
+  // original, a cadeia estaria montada e a tarefa não pediria nada.
+  expect(cadeia.embaralhado, 'o pool veio na ordem original — a reconstrução seria de graça').toBe(true);
+  await expect(page.locator('#rv-body .dm-chain-pool button')).toHaveCount(cadeia.total);
+
+  // Toca pelos botões reais, na ordem causal.
+  for (const pos of cadeia.ordem) {
+    await page.locator('#rv-body .dm-chain-pool button').nth(pos).click();
+  }
+
+  await expect(page.locator('#rv-body .dm-reconstruct-result.right')).toBeVisible();
+  const caixa = await page.evaluate(() => state.dimensionEvidence['T:neuronio-0'].causality);
+  expect(caixa.sources.reconstruction, 'a fonte da evidência tem de ser a reconstrução').toBe(1);
+  expect(caixa.last, 'remontar na ordem certa tem de contar como acerto').toBe(1);
+});
+
+test('@smoke Localização na revisão responde no diagrama e não entrega a resposta', async ({ page }) => {
+  await entrarNaRevisao(page, 'location');
+
+  await expect(page.locator('#rv-body #rv-anat svg')).toBeVisible();
+  const parte = await page.evaluate(() => review.loc.part);
+  expect(parte, 'o item precisa de uma parte alvo').toBeTruthy();
+
+  /* Duas tentativas anteriores ensinaram por que aqui é `dispatchEvent` e não
+     um clique posicional:
+
+     1. Clique normal estoura os 15s com "element is not stable" — o `.apart`
+        tem `transition: filter .18s` e a caixa do <g> é recalculada a cada
+        quadro, então a checagem de estabilidade nunca assenta.
+     2. Clique com `force` acerta o CENTRO da caixa do elemento — e as partes
+        da anatomia se aninham. O centro geométrico do soma é o núcleo, que é
+        desenhado dentro dele. O toque resolvia para a parte errada e a
+        resposta vinha como erro.
+
+     O ponto exato do toque não é o que este teste existe para provar: é a rota
+     (delegação global → handleAnatPartTap → resposta em vez de ficha) e a
+     guarda logo abaixo. dispatchEvent entrega o evento no elemento certo e
+     passa pelo mesmo caminho de delegação. */
+  await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().dispatchEvent('click');
+
+  /* A asserção que mais importa aqui. Uma delegação global abre a ficha da
+     estrutura ao toque em qualquer .apart, em qualquer lugar do documento —
+     e a ficha traz o NOME da estrutura, que é exatamente o que a pergunta
+     está cobrando. handleAnatPartTap desvia o toque para a resposta enquanto
+     o item está aberto; se essa guarda cair, a pergunta passa a entregar a
+     própria resposta no primeiro toque. */
+  await expect(page.locator('#term-modal')).toBeHidden();
+
+  await expect(page.locator('#rv-fb .mq-verd')).toBeVisible();
+  const caixa = await page.evaluate(() => state.dimensionEvidence['T:neuronio-0'].location);
+  expect(caixa.sources.diagram, 'a fonte da evidência tem de ser o diagrama').toBe(1);
+  expect(caixa.last, 'tocar a parte certa tem de contar como acerto').toBe(1);
+});
+
+test('@smoke Aplicação na revisão serve a prova de previsão', async ({ page }) => {
+  // reps par escolhe a previsão; ímpar alterna para as mini-questões
+  await entrarNaRevisao(page, 'application', 0);
+
+  const textos = await page.evaluate(() => ({
+    naTela: (document.querySelector('#rv-body .rv-card h4') || {}).textContent || '',
+    daPrevisao: PREDICT.neuronio[0].q.replace(/<[^>]*>/g, '')
+  }));
+  expect(textos.naTela.trim(), 'o item de Aplicação tem de servir a previsão do tópico')
+    .toBe(textos.daPrevisao.trim());
+
+  await page.locator('#rv-body .mq-options button').first().click();
+  await expect(page.locator('#rv-fb .fbnav .bigbtn')).toBeVisible();
+  const fonte = await page.evaluate(() =>
+    Object.keys(state.dimensionEvidence['T:neuronio-0'].application.sources));
+  expect(fonte, 'a evidência tem de ser registrada como previsão, não como revisão comum')
+    .toEqual(['prediction']);
+});
+
+/* MEDIÇÃO — alcance do botão de continuar nas duas formas ALTAS.
+
+   O teste de alcance que já existe acima foi calibrado contra o cartão mais
+   BAIXO dos quatro: quatro alternativas. A reconstrução mostra a lista montada
+   mais o pool inteiro de etapas, e a localização embute um SVG de anatomia —
+   os dois são bem mais altos, e é neles que o botão tem mais chance de cair
+   fora da dobra num celular pequeno. */
+for (const dim of ['causality', 'location']) {
+  for (const viewport of REVIEW_VIEWPORTS) {
+    test(`@visual alcance do botão em ${dim} a ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name !== 'mobile-chromium', 'A medição usa os viewports retrato.');
+      await page.setViewportSize(viewport);
+      await entrarNaRevisao(page, dim);
+
+      if (dim === 'causality') {
+        const ordem = await page.evaluate(() =>
+          review.recon.chain.map((txt) => review.recon.available.findIndex((a) => a.text === txt)));
+        for (const pos of ordem) {
+          await page.locator('#rv-body .dm-chain-pool button').nth(pos).click();
+        }
+      } else {
+        // Aqui só interessa que HAJA resposta, para o bloco de resultado
+        // aparecer e o botão poder ser medido — se acertou ou errou é
+        // irrelevante. Ver o comentário no @smoke de Localização.
+        const parte = await page.evaluate(() => review.loc.part);
+        await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().dispatchEvent('click');
+      }
+
+      const botao = page.locator('#rv-body .rv-card .bigbtn').last();
+      await expect(botao).toBeVisible();
+      // revealAfterAnswer rola em requestAnimationFrame e com behavior:'smooth'.
+      // reducedMotion:'reduce' no config torna o scroll instantâneo, mas o frame
+      // ainda precisa acontecer antes de medir.
+      await page.waitForTimeout(400);
+
+      const geo = await page.evaluate(() => {
+        const btns = document.querySelectorAll('#rv-body .rv-card .bigbtn');
+        const btn = btns[btns.length - 1];
+        const card = document.querySelector('#rv-body .rv-card');
+        const r = btn.getBoundingClientRect();
+        return {
+          viewport: window.innerHeight,
+          alturaDoCard: Math.round(card.getBoundingClientRect().height),
+          botaoTopo: Math.round(r.top),
+          botaoBase: Math.round(r.bottom),
+          visivelSemRolar: r.top >= 0 && r.bottom <= window.innerHeight,
+          pixelsAbaixoDaDobra: Math.max(0, Math.round(r.bottom - window.innerHeight)),
+          scrollY: Math.round(window.scrollY)
+        };
+      });
+
+      console.log(`[medida ${dim} ${viewport.width}x${viewport.height}] ${JSON.stringify(geo)}`);
+      await attachJson(testInfo, `alcance-${dim}-${viewport.width}x${viewport.height}.json`, geo);
+
+      expect(geo.alturaDoCard, 'o card da revisão não tem altura').toBeGreaterThan(0);
+      expect(
+        geo.visivelSemRolar,
+        `botão fora da dobra em ${dim} ${viewport.width}x${viewport.height}: ${geo.pixelsAbaixoDaDobra}px abaixo`
+      ).toBe(true);
+    });
+  }
+}
+
 // Os termos já eram clicáveis no texto da aula, e não no feedback do quiz — quem
 // aprendia o gesto tentava usá-lo depois de responder e não acontecia nada.
 // O teste guarda as duas decisões de desenho: a explicação nasce embutida, e o
