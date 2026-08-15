@@ -1247,6 +1247,34 @@ for (const dim of ['causality', 'location']) {
   }
 }
 
+/* Um botão sem estilo não some — ele fica com o visual PADRÃO do navegador,
+   que num app escuro é uma caixa branca de texto preto. Foi o que aconteceu
+   com a porta do Modo Domínio no painel de revisão: nasceu reusando
+   `.dm-list-link`, que só existe estilizada como filha de `.dm-linear-actions`,
+   e fora daquele contexto não recebia regra nenhuma.
+
+   O CI não pegou porque não havia nada afirmando sobre a aparência do painel
+   do dashboard. Este teste afirma o mínimo que distingue "estilizado" de
+   "padrão do navegador": fundo transparente. */
+test('@smoke a porta do Modo Domínio no painel de revisão está estilizada', async ({ page }) => {
+  await page.evaluate(() => {
+    seedTopic(topicKey(MODULES[0].id, 0));
+    renderDashboard();
+  });
+
+  const botao = page.locator('#db-review .rv-dominio');
+  await expect(botao).toBeVisible();
+
+  const estilo = await botao.evaluate((el) => {
+    const cs = getComputedStyle(el);
+    return { fundo: cs.backgroundColor, borda: cs.borderTopWidth, altura: Math.round(el.getBoundingClientRect().height) };
+  });
+  expect(estilo.fundo, 'fundo opaco = botão sem estilo, com o visual padrão do navegador')
+    .toBe('rgba(0, 0, 0, 0)');
+  expect(estilo.borda, 'borda padrão do navegador').toBe('0px');
+  expect(estilo.altura, 'alvo de toque pequeno demais').toBeGreaterThanOrEqual(44);
+});
+
 /* A PONTE DE MÃO DUPLA ENTRE A AULA E A FICHA.
 
    As fichas de CONCEPTS sempre souberam quais aulas explicam cada condição; a

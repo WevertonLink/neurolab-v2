@@ -1600,7 +1600,7 @@ function renderReview(){
     const nd = nextDueDate();
     const days = nd? Math.max(0, Math.round((nd - startOfDay(Date.now()))/DAY)) : null;
     el.innerHTML = `<h3>Revisão espaçada</h3><p>Nada vence hoje.${days!=null? ' Próxima revisão em <b>'+days+' dia'+(days!==1?'s':'')+'</b>.':''} Voltar cedo demais rende menos que voltar no ponto de esquecer — o cronograma cuida disso.</p>`;
-    el.innerHTML += `<button class="dm-list-link" onclick="openDomainMode()">Ver o diagnóstico completo no Modo Domínio →</button>`;
+    el.innerHTML += `<button class="rv-dominio" onclick="openDomainMode()">Ver o diagnóstico completo no Modo Domínio →</button>`;
     return;
   }
   const sessionCount = Math.min(due.length, SESSION_CAP);
@@ -1615,10 +1615,14 @@ function renderReview(){
     </div>`).join('');
   let more = '';
   if(sessionCount > previewCount){
-    more += `<div class="rmeta" style="margin-top:9px;padding-left:2px">+ ${sessionCount-previewCount} outro(s) na fila</div>`;
+    const resto = sessionCount - previewCount;
+    more += `<div class="rmeta" style="margin-top:9px;padding-left:2px">+ ${resto} ${resto===1?'item':'itens'} nesta sessão</div>`;
   }
   if(overflow > 0){
-    more += `<div class="rmeta" style="margin-top:5px;padding-left:2px;opacity:.75">faltam ${overflow} para a próxima sessão</div>`;
+    /* Era "faltam N para a próxima sessão", que lê como "você precisa de mais
+       N" — o oposto do que diz. São os que FICAM para depois, e com a fila
+       maior desde o agendamento por dimensão isso aparece com número grande. */
+    more += `<div class="rmeta" style="margin-top:5px;padding-left:2px;opacity:.75">outros ${overflow} ficam para as próximas</div>`;
   }
   /* O letreiro mostra a SESSÃO, não a fila inteira. Agendar por dimensão
      multiplica a fila por ~3 sem aumentar o trabalho do dia — cada item
@@ -1628,7 +1632,7 @@ function renderReview(){
      rodapé deste cartão em vez de um segundo cartão logo abaixo dizendo
      coisa parecida. O cartão cheio de entrada continua existindo para quem
      ainda não tem nada agendado — ver renderDomainEntry. */
-  const portaDominio = `<button class="dm-list-link" onclick="openDomainMode()">Ver o diagnóstico completo no Modo Domínio →</button>`;
+  const portaDominio = `<button class="rv-dominio" onclick="openDomainMode()">Ver o diagnóstico completo no Modo Domínio →</button>`;
   el.innerHTML = `<h3>Revisão de hoje <span class="rcount">${sessionCount}</span></h3><p>Cada item é um tipo de saber sobre um tópico, não o tópico inteiro. O que você reconhece bem sai do radar por semanas; o que você não explica volta em dias — cada um no seu próprio ritmo.</p><div class="review-list">${items}</div>${more}<button class="bigbtn rv-start" onclick="startReview()">Revisar agora · ${sessionCount} ${sessionCount===1?'item':'itens'}</button>${portaDominio}`;
 }
 function reviewTopic(mi,li){
