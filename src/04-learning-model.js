@@ -156,7 +156,9 @@ function resolveQuestionContextFromKey(key){
   hit=String(key||'').match(/^Q:([^:]+):(\d+)$/);
   if(hit){
     m=MODULES.find(x=>x.id===hit[1]); const qi=Number(hit[2]); const q=m&&m.quiz[qi];
-    return q?{q,scope:moduleScope(m.id),questionId:key,context:{module:m,source:'module'}}:null;
+    // com `l` declarado, a auto-avaliação de uma questão de módulo também é do TÓPICO
+    const escopo = (q && Number.isInteger(q.l)) ? topicScope(m.id+'-'+q.l) : moduleScope(m.id);
+    return q?{q,scope:escopo,questionId:key,context:{module:m,source:'module'}}:null;
   }
   return null;
 }
@@ -197,6 +199,15 @@ function measurableDimensions(moduleId, lessonIndex){
   if(typeof CHAIN !== 'undefined' && CHAIN[moduleId] && CHAIN[moduleId][lessonIndex]
      && Array.isArray(CHAIN[moduleId][lessonIndex].s)
      && CHAIN[moduleId][lessonIndex].s.length >= 4) found.causality = 1;
+  /* A questão do quiz de módulo declara a aula que cobra (campo `l`), então
+     ela é fonte do TÓPICO, não só do módulo. Fecha 4 dos 14 buracos de
+     Reconhecimento sem escrever conteúdo novo. */
+  if(typeof MODULES !== 'undefined'){
+    const mod = MODULES.find(x=>x.id===moduleId);
+    if(mod) (mod.quiz||[]).forEach(q=>{
+      if(q && q.l === lessonIndex) found[inferQuestionDimension(q,{module:mod, source:'module'})] = 1;
+    });
+  }
   // Localização: só quando existe termo deste tópico ancorado a uma parte real
   // do diagrama do próprio módulo, E o diagrama tem partes bastantes para
   // servirem de distrator. Em 8 tópicos — os abstratos, como "transtornos

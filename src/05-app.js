@@ -18,19 +18,19 @@ const MODULES = [
     ],
     quiz:[
       {q:'Qual estrutura do neurônio é responsável por receber sinais de outras células?',
-       o:['O axônio','Os dendritos','A bainha de mielina','A fenda sináptica'], c:1,
+       o:['O axônio','Os dendritos','A bainha de mielina','A fenda sináptica'], c:1, l:0,
        er:'Isso. Os <strong>dendritos</strong> são os ramos receptores; o axônio é quem envia o sinal adiante. Um só neurônio pode ter milhares desses pontos de entrada.',
        ew:'Na verdade são os <strong>dendritos</strong> que recebem. O axônio faz o oposto — leva o sinal para fora, em direção aos terminais e às próximas células.'},
       {q:'O potencial de ação é "tudo-ou-nada". Como o cérebro codifica, então, a intensidade de um estímulo forte?',
-       o:['Gerando um potencial de ação de maior amplitude','Aumentando a frequência dos disparos','Tornando o sinal mais lento','Ativando a mielina'], c:1,
+       o:['Gerando um potencial de ação de maior amplitude','Aumentando a frequência dos disparos','Tornando o sinal mais lento','Ativando a mielina'], c:1, l:1,
        er:'Exato. A amplitude é sempre a mesma; o que muda é a <strong>frequência</strong>. Estímulo mais forte = disparos mais rápidos e frequentes, não um sinal "maior".',
        ew:'A amplitude não muda — é sempre a mesma, por isso "tudo-ou-nada". A intensidade é codificada pela <strong>frequência dos disparos</strong>: quanto mais forte o estímulo, mais rápido o neurônio dispara.'},
       {q:'Qual é a diferença funcional entre glutamato e GABA?',
-       o:['Glutamato inibe, GABA excita','Ambos excitam, mas em regiões diferentes','Glutamato excita, GABA inibe','Nenhum afeta o disparo, só o humor'], c:2,
+       o:['Glutamato inibe, GABA excita','Ambos excitam, mas em regiões diferentes','Glutamato excita, GABA inibe','Nenhum afeta o disparo, só o humor'], c:2, l:2,
        er:'Correto. <strong>Glutamato</strong> é o principal excitatório (aproxima do limiar) e <strong>GABA</strong> o principal inibitório (afasta dele). O equilíbrio entre os dois define se a célula dispara.',
        ew:'É o contrário do que a alternativa diz. <strong>Glutamato excita</strong> (empurra a célula em direção ao disparo) e <strong>GABA inibe</strong> (segura o disparo). Esse equilíbrio é a base do controle cerebral.'},
       {q:'Por que um único neuromodulador, como a dopamina, consegue afetar algo tão amplo quanto motivação e humor?',
-       o:['Porque viaja bem mais rápido pelo axônio do que os demais sinais químicos','Porque modula circuitos inteiros de uma vez, não uma só sinapse','Porque é liberada em quantidade muito maior que o glutamato na fenda','Porque age diretamente no DNA de cada neurônio que ela alcança'], c:1,
+       o:['Porque viaja bem mais rápido pelo axônio do que os demais sinais químicos','Porque modula circuitos inteiros de uma vez, não uma só sinapse','Porque é liberada em quantidade muito maior que o glutamato na fenda','Porque age diretamente no DNA de cada neurônio que ela alcança'], c:1, l:3,
        er:'Isso mesmo. Neuromoduladores ajustam o <strong>modo de operação de regiões inteiras</strong> — não entregam uma mensagem pontual. Daí o efeito amplo sobre estados mentais.',
        ew:'A razão é o alcance: neuromoduladores <strong>ajustam circuitos inteiros</strong> ao mesmo tempo, em vez de transmitir uma mensagem ponto-a-ponto. Por isso um só ajuste químico muda humor, foco e motivação juntos.'}
     ]
@@ -51,19 +51,19 @@ const MODULES = [
     ],
     quiz:[
       {q:'O que a regra de Hebb descreve?',
-       o:['Que o cérebro para de mudar depois do fim da infância','Que neurônios que disparam juntos fortalecem sua conexão','Que cada memória fica guardada em uma única célula do cérebro','Que a inibição é sempre mais forte do que a excitação'], c:1,
+       o:['Que o cérebro para de mudar depois do fim da infância','Que neurônios que disparam juntos fortalecem sua conexão','Que cada memória fica guardada em uma única célula do cérebro','Que a inibição é sempre mais forte do que a excitação'], c:1, l:1,
        er:'Isso. "Disparam juntos, conectam-se juntos" — a atividade coincidente e repetida <strong>fortalece a sinapse</strong>. É o princípio celular do aprendizado.',
        ew:'A regra de Hebb diz que <strong>neurônios que disparam juntos se conectam mais fortemente</strong>. Não fala de célula única nem de fim da plasticidade — é sobre como a conexão entre células se fortalece com o uso.'},
       {q:'No modelo de Kandel, o que distingue a memória de LONGO prazo da de curto prazo?',
-       o:['Ela usa neurotransmissores completamente diferentes dos de curto prazo','Ela exige síntese de novas proteínas e crescimento de novas conexões','Ela dura apenas alguns segundos e depois desaparece por completo','Ela é a única que não envolve o hipocampo em nenhum momento'], c:1,
+       o:['Ela usa neurotransmissores completamente diferentes dos de curto prazo','Ela exige síntese de novas proteínas e crescimento de novas conexões','Ela dura apenas alguns segundos e depois desaparece por completo','Ela é a única que não envolve o hipocampo em nenhum momento'], c:1, l:2,
        er:'Exato. Curto prazo modifica proteínas já existentes; <strong>longo prazo requer expressão gênica, novas proteínas e novas sinapses</strong>. Memória duradoura é estrutura física nova.',
        ew:'A marca do longo prazo é justamente <strong>construir estrutura nova</strong>: ativar genes, sintetizar novas proteínas e formar novas conexões. O curto prazo apenas ajusta, temporariamente, proteínas que já existem.'},
       {q:'Por que a repetição espaçada consolida melhor que estudar tudo de uma vez?',
-       o:['Porque cansa menos a vista e permite estudar por muito mais horas seguidas','Porque dá ao cérebro janelas para consolidar cada traço entre as sessões','Porque ativa a LTD em vez da LTP, o que fixa melhor a informação','Porque evita o uso do hipocampo, poupando-o para outras tarefas'], c:1,
+       o:['Porque cansa menos a vista e permite estudar por muito mais horas seguidas','Porque dá ao cérebro janelas para consolidar cada traço entre as sessões','Porque ativa a LTD em vez da LTP, o que fixa melhor a informação','Porque evita o uso do hipocampo, poupando-o para outras tarefas'], c:1, l:3,
        er:'Correto. A consolidação leva tempo. Espaçar as revisões respeita essas <strong>janelas de estabilização</strong>, reforçando o traço a cada retomada, em vez de saturá-lo de uma vez.',
        ew:'O motivo é a consolidação: ela ocorre <strong>ao longo do tempo</strong>. Espaçar dá ao cérebro as janelas para estabilizar e reforçar cada memória entre as sessões — algo que a maratona de uma noite não permite.'},
       {q:'Qual é o papel do hipocampo na formação de memórias declarativas?',
-       o:['Ele guarda permanentemente todas as memórias em um único local','Ele ajuda a ligar elementos da memória nova e participa de sua reorganização com redes corticais','Ele apenas controla o sono e não participa da memória declarativa','Ele produz a dopamina necessária para que a memória seja gravada'], c:1,
+       o:['Ele guarda permanentemente todas as memórias em um único local','Ele ajuda a ligar elementos da memória nova e participa de sua reorganização com redes corticais','Ele apenas controla o sono e não participa da memória declarativa','Ele produz a dopamina necessária para que a memória seja gravada'], c:1, l:3,
        er:'Isso. O hipocampo ajuda a <strong>ligar elementos distribuídos</strong> da experiência. Com reativações posteriores, sua relação com redes corticais se reorganiza — uma parte da consolidação sistêmica.',
        ew:'O hipocampo não é um depósito único nem apenas uma ponte temporária. Ele participa da ligação inicial e da recuperação de memórias; com o tempo, hipocampo e redes corticais reorganizam suas contribuições.'}
     ]
@@ -84,19 +84,19 @@ const MODULES = [
     ],
     quiz:[
       {q:'Qual é a função mais precisa da dopamina no sistema de recompensa?',
-       o:['Produzir a sensação de prazer em si, no momento do consumo','Sinalizar motivação, busca e antecipação ("querer")','Armazenar as memórias de longo prazo no hipocampo','Inibir o córtex pré-frontal durante a tomada de decisão'], c:1,
+       o:['Produzir a sensação de prazer em si, no momento do consumo','Sinalizar motivação, busca e antecipação ("querer")','Armazenar as memórias de longo prazo no hipocampo','Inibir o córtex pré-frontal durante a tomada de decisão'], c:1, l:0,
        er:'Isso. Dopamina é o "querer" — <strong>motivação e antecipação</strong>, não o prazer em si (que envolve outros sistemas). É o que te faz ir atrás e persistir.',
        ew:'É o mal-entendido mais comum. Dopamina é sobretudo <strong>motivação e antecipação</strong> — o "querer", não o "gostar". O prazer propriamente dito depende de outros sistemas.'},
       {q:'Segundo Schultz, quando os neurônios de dopamina disparam com MAIS força?',
-       o:['Quando a recompensa é exatamente a que era esperada','Quando a recompensa é melhor do que o esperado','Quando não há recompensa nenhuma no ambiente','Sempre que aparece qualquer estímulo novo'], c:1,
+       o:['Quando a recompensa é exatamente a que era esperada','Quando a recompensa é melhor do que o esperado','Quando não há recompensa nenhuma no ambiente','Sempre que aparece qualquer estímulo novo'], c:1, l:1,
        er:'Exato. Eles codificam <strong>surpresa positiva</strong> — recompensa melhor que o previsto. Se é exatamente esperada, quase não disparam; se falha, caem abaixo do basal.',
        ew:'Eles disparam mais forte diante de <strong>surpresa positiva</strong> — recompensa melhor que o esperado. Quando é exatamente prevista, o disparo é mínimo; é um sinal de "atualize sua previsão", não de recompensa em si.'},
       {q:'Do ponto de vista neurológico, por que fatiar uma meta grande em passos pequenos e visíveis aumenta a motivação?',
-       o:['Porque engana o cérebro, fazendo-o esquecer completamente o tamanho real da meta','Porque cada avanço visível gera um micro-sinal de recompensa que reforça o continuar','Porque reduz a produção de dopamina e com isso diminui a ansiedade da espera','Porque desativa o loop do hábito e libera o pré-frontal para agir'], c:1,
+       o:['Porque engana o cérebro, fazendo-o esquecer completamente o tamanho real da meta','Porque cada avanço visível gera um micro-sinal de recompensa que reforça o continuar','Porque reduz a produção de dopamina e com isso diminui a ansiedade da espera','Porque desativa o loop do hábito e libera o pré-frontal para agir'], c:1, l:2,
        er:'Correto. Progresso granular = <strong>sinal de recompensa frequente</strong>. Metas vagas e distantes não dão ao cérebro como "prever recompensa", então quase não motivam.',
        ew:'A razão é o sinal: cada progresso visível dispara um <strong>micro-sinal dopaminérgico de recompensa antecipada</strong> que reforça o comportamento. Metas grandes e distantes não produzem esse sinal — por isso desmotivam, mesmo sem falta de disciplina.'},
       {q:'Quais são os três componentes do loop do hábito?',
-       o:['Estímulo, inibição, repouso','Gatilho, rotina, recompensa','Sódio, potássio, cálcio','Codificar, consolidar, recuperar'], c:1,
+       o:['Estímulo, inibição, repouso','Gatilho, rotina, recompensa','Sódio, potássio, cálcio','Codificar, consolidar, recuperar'], c:1, l:3,
        er:'Isso mesmo. <strong>Gatilho → rotina → recompensa</strong>. E a recompensa imediata e consistente é o que fixa o hábito — feedback instantâneo constrói hábito melhor que o adiado.',
        ew:'O loop é <strong>gatilho → rotina → recompensa</strong>. O gatilho dispara, a rotina é a ação, e a recompensa (quanto mais imediata, melhor) é o que faz o cérebro querer repetir.'}
     ]
@@ -117,19 +117,19 @@ const MODULES = [
     ],
     quiz:[
       {q:'Qual é a capacidade aproximada da memória de trabalho, segundo estimativas modernas?',
-       o:['Cerca de 4 itens','Cerca de 50 itens','Praticamente ilimitada','Exatamente 1 item'], c:0,
+       o:['Cerca de 4 itens','Cerca de 50 itens','Praticamente ilimitada','Exatamente 1 item'], c:0, l:1,
        er:'Isso. Cerca de <strong>quatro itens</strong> por vez. Passar disso não é distração — é o buffer transbordando. Muito "desfoco" é sobrecarga de memória de trabalho.',
        ew:'É bem menos do que se imagina: cerca de <strong>quatro itens</strong>. Quando você ultrapassa isso, o desempenho cai porque o buffer transbordou — não por falta de esforço.'},
       {q:'Qual é o papel central do córtex pré-frontal na atenção?',
-       o:['Produzir a dopamina usada pelo restante do cérebro','Manter objetivos ativos e inibir distrações','Armazenar memórias permanentes de longo prazo','Controlar o batimento cardíaco e a respiração'], c:1,
+       o:['Produzir a dopamina usada pelo restante do cérebro','Manter objetivos ativos e inibir distrações','Armazenar memórias permanentes de longo prazo','Controlar o batimento cardíaco e a respiração'], c:1, l:2,
        er:'Exato. O pré-frontal ajuda a manter metas e regras e a <strong>enviesar outras redes</strong> em favor da tarefa. Ele coordena, mas não trabalha sozinho nem funciona como uma bateria que simplesmente se esgota.',
        ew:'O pré-frontal participa do <strong>controle executivo</strong>, mantendo metas e modulando respostas concorrentes em conjunto com outras redes. Sono ruim, estresse e interferência podem tornar esse controle menos estável.'},
       {q:'O que a ciência mostra sobre a "multitarefa" cognitiva?',
-       o:['O cérebro executa várias tarefas cognitivas em paralelo, sem nenhum custo de troca','É alternância rápida entre tarefas, com um custo de troca a cada mudança','É mais eficiente do que manter o foco em uma tarefa por vez','Só é possível quando as duas tarefas usam o mesmo circuito'], c:1,
+       o:['O cérebro executa várias tarefas cognitivas em paralelo, sem nenhum custo de troca','É alternância rápida entre tarefas, com um custo de troca a cada mudança','É mais eficiente do que manter o foco em uma tarefa por vez','Só é possível quando as duas tarefas usam o mesmo circuito'], c:1, l:3,
        er:'Correto. Não há paralelismo real — há <strong>alternância com custo de troca</strong>. Cada mudança perde tempo e precisão ao recarregar o contexto mental.',
        ew:'Não existe multitarefa cognitiva real: é <strong>alternância rápida</strong> entre tarefas, e cada troca cobra um <strong>custo</strong> em tempo e precisão. Fazer duas coisas "juntas" costuma significar fazer as duas pior.'},
       {q:'Para que serve a rede de controle executivo descrita por Posner?',
-       o:['Para acelerar a entrada no sono profundo à noite','Para resolver conflitos e sustentar a atenção contra distrações','Para produzir as emoções básicas, como o medo, a raiva e a alegria','Para armazenar memórias declarativas por longos períodos'], c:1,
+       o:['Para acelerar a entrada no sono profundo à noite','Para resolver conflitos e sustentar a atenção contra distrações','Para produzir as emoções básicas, como o medo, a raiva e a alegria','Para armazenar memórias declarativas por longos períodos'], c:1, l:2,
        er:'Isso mesmo. A rede executiva <strong>resolve conflitos atencionais</strong> e sustenta o foco. Junto com alerta e orientação, forma o sistema de atenção — que não é uma coisa só.',
        ew:'A rede executiva serve para <strong>resolver conflitos e manter a atenção</strong> apesar das distrações. É uma das três redes de Posner, ao lado do alerta e da orientação.'}
     ]
@@ -150,19 +150,19 @@ const MODULES = [
     ],
     quiz:[
       {q:'Qual é a função principal da amígdala?',
-       o:['Consolidar as memórias de longo prazo antes de transferi-las para o córtex','Detectar e avaliar relevância emocional, sobretudo ameaças, muito rápido','Controlar o ritmo circadiano e a hora de dormir todos os dias','Produzir a fala e organizar a gramática das frases'], c:1,
+       o:['Consolidar as memórias de longo prazo antes de transferi-las para o córtex','Detectar e avaliar relevância emocional, sobretudo ameaças, muito rápido','Controlar o ritmo circadiano e a hora de dormir todos os dias','Produzir a fala e organizar a gramática das frases'], c:1, l:0,
        er:'Isso. A amígdala participa da avaliação rápida de <strong>relevância e ameaça</strong> e influencia atenção, memória e respostas corporais. Ela atua dentro de redes, não como um botão que sequestra toda a razão.',
        ew:'A amígdala participa da avaliação de relevância emocional, especialmente em situações incertas ou ameaçadoras, e pode priorizar respostas rápidas em interação com outras redes.'},
       {q:'Segundo a lei de Yerkes-Dodson, como a ativação se relaciona com o desempenho?',
-       o:['Quanto maior a ativação, melhor o desempenho, sem nenhum limite superior','Em U invertido: há um ponto ótimo intermediário, e o excesso piora','A ativação não tem efeito algum sobre o desempenho da pessoa','Só a ausência total de ativação produz um bom desempenho'], c:1,
+       o:['Quanto maior a ativação, melhor o desempenho, sem nenhum limite superior','Em U invertido: há um ponto ótimo intermediário, e o excesso piora','A ativação não tem efeito algum sobre o desempenho da pessoa','Só a ausência total de ativação produz um bom desempenho'], c:1, l:2,
        er:'Exato. É um <strong>U invertido</strong>: pouca ativação = apatia; ativação média = pico de desempenho; excesso = despencada. O ideal é o ponto do meio.',
        ew:'A relação é um <strong>U invertido</strong>, não uma linha reta. Pouca ativação deixa apático, ativação intermediária é o pico, e ativação excessiva <strong>derruba</strong> o desempenho. Mais nem sempre é melhor.'},
       {q:'Qual é o efeito do cortisol CRÔNICO sobre o cérebro?',
-       o:['Melhora permanentemente a memória','Prejudica o hipocampo e o córtex pré-frontal','Não tem nenhum efeito','Aumenta o número de neurônios indefinidamente'], c:1,
+       o:['Melhora permanentemente a memória','Prejudica o hipocampo e o córtex pré-frontal','Não tem nenhum efeito','Aumenta o número de neurônios indefinidamente'], c:1, l:2,
        er:'Correto. O estresse agudo é útil, mas o cortisol <strong>crônico corrói o hipocampo</strong> (memória) e o <strong>pré-frontal</strong> (controle e foco) — justo as áreas que você mais precisa para pensar.',
        ew:'O problema é a cronicidade: cortisol prolongado <strong>prejudica o hipocampo</strong> (memória) e o <strong>córtex pré-frontal</strong> (foco e controle). O estresse breve pode ajudar; o estresse que não desliga cobra caro.'},
       {q:'O que a neurociência moderna diz sobre a separação entre emoção e cognição?',
-       o:['São dois sistemas completamente independentes, que jamais chegam a se influenciar','Estão entrelaçadas — o estado emocional influencia atenção, memória e decisão','A emoção só atrapalha o pensamento e, por isso, deveria ser sempre ignorada','A cognição não consegue funcionar sem uma noite inteira de sono'], c:1,
+       o:['São dois sistemas completamente independentes, que jamais chegam a se influenciar','Estão entrelaçadas — o estado emocional influencia atenção, memória e decisão','A emoção só atrapalha o pensamento e, por isso, deveria ser sempre ignorada','A cognição não consegue funcionar sem uma noite inteira de sono'], c:1, l:3,
        er:'Isso mesmo. Não há cognição "pura": emoção e razão estão <strong>entrelaçadas</strong>. Por isso regular o estado (sono, respiração, reavaliação) é parte de pensar bem, não um extra.',
        ew:'Elas estão <strong>entrelaçadas</strong>, não separadas. O estado emocional influencia diretamente atenção, memória e decisão — daí regular o estado ser parte de trabalhar bem, e não uma distração dele.'}
     ]
@@ -183,19 +183,19 @@ const MODULES = [
     ],
     quiz:[
       {q:'Qual estágio do sono está mais associado à consolidação de memórias declarativas (fatos e eventos)?',
-       o:['O sono REM','O sono de ondas lentas (sono profundo)','O estágio N1 (adormecer)','Nenhum — a consolidação só ocorre acordado'], c:1,
+       o:['O sono REM','O sono de ondas lentas (sono profundo)','O estágio N1 (adormecer)','Nenhum — a consolidação só ocorre acordado'], c:1, l:1,
        er:'Isso. O <strong>sono de ondas lentas</strong> (profundo, N3) consolida a memória declarativa. O REM tem outro papel: memória procedural e processamento emocional.',
        ew:'É o <strong>sono de ondas lentas</strong> (o sono profundo). O REM importa também, mas mais para habilidades procedurais e emoção — a consolidação de fatos e eventos se apoia no sono profundo.'},
       {q:'O que o sistema glinfático faz durante o sono?',
-       o:['Produz a melatonina que induz o sono no fim da tarde','Remove resíduos metabólicos acumulados no cérebro','Bloqueia os receptores de adenosina no cérebro','Fortalece diretamente todas as sinapses do córtex'], c:1,
+       o:['Produz a melatonina que induz o sono no fim da tarde','Remove resíduos metabólicos acumulados no cérebro','Bloqueia os receptores de adenosina no cérebro','Fortalece diretamente todas as sinapses do córtex'], c:1, l:2,
        er:'Exato. É a "faxina" noturna: o sistema glinfático <strong>remove resíduos metabólicos</strong> acumulados na vigília. Dormir mal deixa esses subprodutos se acumularem.',
        ew:'O sistema glinfático faz a <strong>limpeza de resíduos metabólicos</strong> do cérebro durante o sono. Privar-se de sono trava essa faxina, deixando subprodutos acumulados — não é só cansaço.'},
       {q:'Como a cafeína age no cérebro para reduzir a sensação de sono?',
-       o:['Elimina toda a adenosina já acumulada no organismo durante o dia','Bloqueia os receptores de adenosina, mascarando o cansaço','Faz o corpo produzir muito mais melatonina que o normal','Consolida as memórias que ficaram pendentes do dia'], c:1,
+       o:['Elimina toda a adenosina já acumulada no organismo durante o dia','Bloqueia os receptores de adenosina, mascarando o cansaço','Faz o corpo produzir muito mais melatonina que o normal','Consolida as memórias que ficaram pendentes do dia'], c:1, l:3,
        er:'Correto. A cafeína <strong>bloqueia os receptores de adenosina</strong> — ela mascara o sinal de cansaço, mas a adenosina continua acumulando. Quando a cafeína passa, o cansaço represado volta.',
        ew:'A cafeína não elimina nada — ela <strong>bloqueia os receptores de adenosina</strong>, mascarando o sinal de sono. A adenosina segue se acumulando por trás, e o cansaço volta de uma vez quando o efeito passa.'},
       {q:'Qual é a duração aproximada de um ciclo de sono?',
-       o:['Cerca de 10 minutos','Cerca de 90 minutos','Cerca de 6 horas','Não há ciclos, o sono é uniforme'], c:1,
+       o:['Cerca de 10 minutos','Cerca de 90 minutos','Cerca de 6 horas','Não há ciclos, o sono é uniforme'], c:1, l:1,
        er:'Isso mesmo. Cada ciclo dura cerca de <strong>90 minutos</strong> e passa por diferentes estágios. Uma noite completa encadeia vários — e cortar horas corta justamente as fases que consolidam.',
        ew:'Cada ciclo dura em torno de <strong>90 minutos</strong>, alternando estágios de sono profundo e REM. O sono não é uniforme — uma noite completa é feita de vários desses ciclos encadeados.'}
     ]
@@ -1284,7 +1284,13 @@ function loadReviewTopic(){
   if(t.dim === 'application'){
     qs = applicationBank(m, t.li, t.key);
   } else {
-    qs = todas.filter(q=>inferQuestionDimension(q,{module:m, lessonIndex:t.li, source:'review'}) === t.dim);
+    /* Inclui a questão do quiz de módulo que declara esta aula: sem isso, um
+       tópico cuja única fonte daquela dimensão é o quiz de módulo teria caixa
+       e nenhuma pergunta para satisfazê-la. */
+    const doModulo = (m.quiz||[]).filter(q=>q.l===t.li
+      && inferQuestionDimension(q,{module:m, source:'module'}) === t.dim);
+    qs = todas.filter(q=>inferQuestionDimension(q,{module:m, lessonIndex:t.li, source:'review'}) === t.dim)
+              .concat(doModulo);
   }
   if(!qs.length) qs = todas;
   if(typeof orderReviewQuestions==='function') qs = orderReviewQuestions(qs, t.key);
@@ -2155,19 +2161,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'Qual estrutura conecta os dois hemisférios cerebrais?',
-     o:['O tronco encefálico','O corpo caloso','O cerebelo','O tálamo'], c:1,
+     o:['O tronco encefálico','O corpo caloso','O cerebelo','O tálamo'], c:1, l:0,
      er:'Isso. O <strong>corpo caloso</strong> é a grande ponte de fibras que liga os hemisférios e permite que troquem informação.',
      ew:'Quem une os hemisférios é o <strong>corpo caloso</strong>; as outras estruturas têm funções distintas.'},
     {q:'O lobo occipital é dedicado principalmente a:',
-     o:['Movimento','Audição','Visão','Olfato'], c:2,
+     o:['Movimento','Audição','Visão','Olfato'], c:2, l:1,
      er:'Exato. O <strong>lobo occipital</strong>, bem atrás, é quase todo voltado ao processamento <strong>visual</strong>.',
      ew:'O occipital é o lobo da <strong>visão</strong>; movimento é frontal e audição é temporal.'},
     {q:'Qual estrutura funciona como a principal central de retransmissão da informação sensorial?',
-     o:['O hipotálamo','O tálamo','O cerebelo','O bulbo'], c:1,
+     o:['O hipotálamo','O tálamo','O cerebelo','O bulbo'], c:1, l:2,
      er:'Correto. O <strong>tálamo</strong> retransmite quase toda a informação sensorial rumo ao córtex.',
      ew:'É o <strong>tálamo</strong> o grande relé sensorial; o hipotálamo regula funções internas.'},
     {q:'Uma lesão em qual região tende a ser fatal por atingir funções vitais como a respiração?',
-     o:['Lobo frontal','Córtex pré-frontal','Tronco encefálico','Lobo parietal'], c:2,
+     o:['Lobo frontal','Córtex pré-frontal','Tronco encefálico','Lobo parietal'], c:2, l:3,
      er:'Sim. O <strong>tronco encefálico</strong> controla respiração e batimento — dano ali costuma ser fatal.',
      ew:'As funções vitais ficam no <strong>tronco encefálico</strong>; lesões corticais raramente matam de imediato.'}
   ]
@@ -2272,19 +2278,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'O processo de converter um estímulo físico (luz, som, pressão) em sinal neural chama-se:',
-     o:['Consolidação','Transdução sensorial','Potenciação de longo prazo','Mielinização'], c:1,
+     o:['Consolidação','Transdução sensorial','Potenciação de longo prazo','Mielinização'], c:1, l:0,
      er:'Isso. A <strong>transdução sensorial</strong> traduz a energia do estímulo na língua elétrica do cérebro.',
      ew:'O termo é <strong>transdução</strong>; os outros descrevem memória, plasticidade ou isolamento do axônio.'},
     {q:'Na retina, quais células são responsáveis pela visão de cores e de detalhes finos?',
-     o:['Os bastonetes','Os cones','As células gliais','Os nociceptores'], c:1,
+     o:['Os bastonetes','Os cones','As células gliais','Os nociceptores'], c:1, l:1,
      er:'Correto. Os <strong>cones</strong> dão cor e detalhe e se concentram na fóvea; os bastonetes cuidam da visão no escuro.',
      ew:'Cor e detalhe são dos <strong>cones</strong>; os bastonetes funcionam no escuro, sem cor.'},
     {q:"O 'mapa' de frequências ao longo da cóclea, em que graves e agudos ativam pontos diferentes, chama-se:",
-     o:['Homúnculo','Tonotopia','Adaptação','Quiasma'], c:1,
+     o:['Homúnculo','Tonotopia','Adaptação','Quiasma'], c:1, l:2,
      er:'Exato. A <strong>tonotopia</strong> organiza a cóclea por frequência, como as teclas de um piano.',
      ew:'É a <strong>tonotopia</strong>; homúnculo é o mapa do tato e quiasma é o cruzamento das vias visuais.'},
     {q:'Qual sentido é a exceção por alcançar o córtex sem passar pelo tálamo, com ligação direta a emoção e memória?',
-     o:['Visão','Audição','Olfato','Tato'], c:2,
+     o:['Visão','Audição','Olfato','Tato'], c:2, l:3,
      er:'Sim. O <strong>olfato</strong> vai direto ao sistema límbico — por isso um cheiro evoca memórias tão vivas.',
      ew:'O <strong>olfato</strong> é a exceção; visão, audição e tato passam pelo tálamo antes do córtex.'}
   ]
@@ -2389,19 +2395,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'O córtex motor primário fica em qual lobo?',
-     o:['Occipital','Frontal','Temporal','Parietal'], c:1,
+     o:['Occipital','Frontal','Temporal','Parietal'], c:1, l:1,
      er:'Isso. O córtex motor primário fica no <strong>lobo frontal</strong>, logo à frente do sulco central.',
      ew:'É no <strong>lobo frontal</strong>; o parietal fica logo atrás (tato) e o occipital cuida da visão.'},
     {q:'Qual estrutura NÃO inicia o movimento, mas o afina — cuidando de timing, coordenação e equilíbrio?',
-     o:['O cerebelo','O córtex motor primário','A junção neuromuscular','A medula'], c:0,
+     o:['O cerebelo','O córtex motor primário','A junção neuromuscular','A medula'], c:0, l:2,
      er:'Correto. O <strong>cerebelo</strong> corrige o erro e coordena; ele não dá a ordem inicial.',
      ew:'É o <strong>cerebelo</strong> que afina; o córtex comanda e a junção apenas entrega o sinal ao músculo.'},
     {q:'A degeneração de neurônios de dopamina que empobrece o movimento (lentidão, rigidez, tremor) caracteriza:',
-     o:['A doença de Parkinson','A esclerose lateral amiotrófica','A afasia de Broca','A epilepsia focal'], c:0,
+     o:['A doença de Parkinson','A esclerose lateral amiotrófica','A afasia de Broca','A epilepsia focal'], c:0, l:2,
      er:'Sim. No <strong>Parkinson</strong>, a perda de dopamina desequilibra os gânglios da base e sobra freio ao movimento.',
      ew:'É o <strong>Parkinson</strong>; ele vem da falta de dopamina que regula os gânglios da base.'},
     {q:'Qual neurotransmissor o neurônio motor libera na junção neuromuscular para contrair o músculo?',
-     o:['Dopamina','Noradrenalina','Acetilcolina','GABA'], c:2,
+     o:['Dopamina','Noradrenalina','Acetilcolina','GABA'], c:2, l:3,
      er:'Exato. A <strong>acetilcolina</strong> é o mensageiro na junção neuromuscular.',
      ew:'É a <strong>acetilcolina</strong>; dopamina e serotonina atuam dentro do cérebro, não na fibra muscular.'}
   ]
@@ -2504,19 +2510,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'Na formação do cérebro, os neurônios recém-nascidos precisam se mover até sua posição final. Esse processo é a:',
-     o:['Poda sináptica','Migração neuronal','Mielinização','Transdução sensorial'], c:1,
+     o:['Poda sináptica','Migração neuronal','Mielinização','Transdução sensorial'], c:1, l:1,
      er:'Isso. A <strong>migração</strong> leva cada neurônio recém-nascido até seu lugar, muitas vezes escalando a glia radial.',
      ew:'É a <strong>migração neuronal</strong>; poda corta sinapses e mielinização isola axônios.'},
     {q:'No começo da vida, o cérebro produz sinapses em excesso e depois elimina as pouco usadas. Esse processo chama-se:',
-     o:['Poda sináptica','Neurogênese','Potenciação de longo prazo','Apoptose'], c:0,
+     o:['Poda sináptica','Neurogênese','Potenciação de longo prazo','Apoptose'], c:0, l:2,
      er:'Correto. A <strong>poda sináptica</strong> remove o excesso e mantém as conexões usadas — esculpir cortando.',
      ew:'É a <strong>poda sináptica</strong>; neurogênese cria neurônios e apoptose é morte celular, não de sinapses.'},
     {q:"Uma 'janela' do desenvolvimento em que a experiência molda um circuito com força especial (como a visão ou a língua materna) é um:",
-     o:['Período crítico','Reflexo','Potencial de ação','Homúnculo'], c:0,
+     o:['Período crítico','Reflexo','Potencial de ação','Homúnculo'], c:0, l:3,
      er:'Sim. No <strong>período crítico</strong>, a experiência tem um poder de moldar o circuito que não se repete depois.',
      ew:'É um <strong>período crítico</strong>; os outros termos descrevem um reflexo, um sinal elétrico e um mapa cortical.'},
     {q:'Qual região é uma das últimas a completar a mielinização, só por volta dos 20 e poucos anos?',
-     o:['O córtex visual primário','O córtex pré-frontal','O cerebelo','O bulbo raquidiano'], c:1,
+     o:['O córtex visual primário','O córtex pré-frontal','O cerebelo','O bulbo raquidiano'], c:1, l:3,
      er:'Exato. O <strong>córtex pré-frontal</strong> amadurece por último — daí o autocontrole ainda em obras na adolescência.',
      ew:'É o <strong>córtex pré-frontal</strong>; áreas sensoriais e o tronco se mielinizam bem mais cedo.'}
   ]
@@ -2626,19 +2632,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'Na maioria das pessoas, a linguagem depende principalmente de qual hemisfério?',
-     o:['O direito','O esquerdo','Nenhum dos dois','Sempre os dois igualmente'], c:1,
+     o:['O direito','O esquerdo','Nenhum dos dois','Sempre os dois igualmente'], c:1, l:0,
      er:'Isso. Na maioria das pessoas a linguagem é <strong>lateralizada à esquerda</strong>.',
      ew:'É o <strong>hemisfério esquerdo</strong> na maioria; o direito costuma cuidar mais da entonação emocional.'},
     {q:'A área de Broca, no lobo frontal, está mais ligada a:',
-     o:['Produzir a fala e a gramática','Compreender o significado das palavras','Enxergar as letras','Ouvir os sons'], c:0,
+     o:['Produzir a fala e a gramática','Compreender o significado das palavras','Enxergar as letras','Ouvir os sons'], c:0, l:1,
      er:'Correto. <strong>Broca</strong> fica ao lado do córtex motor e cuida de produzir a fala e a gramática.',
      ew:'Broca <strong>produz</strong>; quem compreende o significado é a área de Wernicke, no temporal.'},
     {q:'Uma pessoa que fala de forma fluente, mas sem sentido, e tem dificuldade de compreender, provavelmente tem lesão na:',
-     o:['Área de Broca','Área de Wernicke','Medula espinhal','Amígdala cerebral'], c:1,
+     o:['Área de Broca','Área de Wernicke','Medula espinhal','Amígdala cerebral'], c:1, l:2,
      er:'Sim. É o quadro da <strong>afasia de Wernicke</strong>: fala fluente e sem sentido, compreensão prejudicada.',
      ew:'Isso é lesão em <strong>Wernicke</strong>; em Broca a fala fica não fluente, mas com sentido e compreensão preservada.'},
     {q:'A língua de sinais é processada pelas mesmas áreas de linguagem do hemisfério esquerdo. Isso mostra que essas áreas servem para:',
-     o:['A linguagem em si, não apenas para o som/fala','Apenas para ouvir e processar os sons da fala falada','Apenas para mover as mãos e os braços','Apenas para ler palavras escritas'], c:0,
+     o:['A linguagem em si, não apenas para o som/fala','Apenas para ouvir e processar os sons da fala falada','Apenas para mover as mãos e os braços','Apenas para ler palavras escritas'], c:0, l:3,
      er:'Exato. Elas processam <strong>linguagem</strong> em qualquer forma — falada ou sinalizada.',
      ew:'Servem à <strong>linguagem</strong> em si: por isso a língua de sinais usa as mesmas regiões da fala.'}
   ]
@@ -2739,19 +2745,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'Os sintomas de uma doença cerebral ajudam os médicos a descobrir, sobretudo:',
-     o:['A cor dos neurônios afetados','O local afetado no cérebro','O tipo sanguíneo do paciente','A idade exata da pessoa'], c:1,
+     o:['A cor dos neurônios afetados','O local afetado no cérebro','O tipo sanguíneo do paciente','A idade exata da pessoa'], c:1, l:0,
      er:'Isso. Pela <strong>localização</strong>, o sintoma revela qual região foi atingida — a lógica das afasias, ampliada.',
      ew:'O sintoma aponta o <strong>local afetado</strong>: cada região tem sua função, então a perda revela onde está o dano.'},
     {q:'A doença de Parkinson resulta principalmente da perda de neurônios que produzem:',
-     o:['Dopamina, na substância negra','Insulina, produzida no pâncreas','Hemoglobina, no sangue','Queratina, na pele'], c:0,
+     o:['Dopamina, na substância negra','Insulina, produzida no pâncreas','Hemoglobina, no sangue','Queratina, na pele'], c:0, l:1,
      er:'Correto. Sem a <strong>dopamina</strong> da substância negra, os gânglios da base travam o movimento.',
      ew:'É a <strong>dopamina</strong>; insulina, hemoglobina e queratina nem são feitas por esses neurônios.'},
     {q:'Um AVC (derrame) causa dano porque:',
-     o:['O fluxo de sangue para uma região é interrompido e os neurônios morrem por falta de oxigênio','O cérebro fica sem sono por tempo demais e as células acabam entrando em colapso','Há excesso de vitaminas circulando no sangue, o que acaba intoxicando os neurônios daquela região','Os músculos do corpo encolhem e deixam de enviar sinais de volta ao cérebro'], c:0,
+     o:['O fluxo de sangue para uma região é interrompido e os neurônios morrem por falta de oxigênio','O cérebro fica sem sono por tempo demais e as células acabam entrando em colapso','Há excesso de vitaminas circulando no sangue, o que acaba intoxicando os neurônios daquela região','Os músculos do corpo encolhem e deixam de enviar sinais de volta ao cérebro'], c:0, l:2,
      er:'Sim. Sem sangue e oxigênio, os neurônios morrem em minutos — por isso tratar rápido é decisivo.',
      ew:'O problema é <strong>vascular</strong>: o sangue é cortado e o tecido morre por falta de oxigênio.'},
     {q:'Sobre transtornos psiquiátricos como a depressão, é correto dizer que:',
-     o:['São condições reais do cérebro, envolvendo circuitos e química, e são tratáveis','São apenas falta de força de vontade e de disciplina da parte de quem sofre com eles','Não têm nenhuma base biológica conhecida e, por isso, não podem ser medidos','Não podem ser tratados de forma alguma: quem tem, tem para o resto da vida'], c:0,
+     o:['São condições reais do cérebro, envolvendo circuitos e química, e são tratáveis','São apenas falta de força de vontade e de disciplina da parte de quem sofre com eles','Não têm nenhuma base biológica conhecida e, por isso, não podem ser medidos','Não podem ser tratados de forma alguma: quem tem, tem para o resto da vida'], c:0, l:3,
      er:'Exato. São <strong>condições do cérebro</strong>, biológicas e tratáveis — com terapia e medicação.',
      ew:'São condições reais e <strong>tratáveis</strong>; reduzi-las a falta de vontade é impreciso e injusto.'}
   ]
@@ -2855,19 +2861,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'A maioria das drogas que agem no cérebro atua em qual local?',
-     o:['Nas sinapses, alterando a neurotransmissão','Nos ossos e nas articulações do corpo','Diretamente no DNA de todos os neurônios','Apenas nos músculos esqueléticos'], c:0,
+     o:['Nas sinapses, alterando a neurotransmissão','Nos ossos e nas articulações do corpo','Diretamente no DNA de todos os neurônios','Apenas nos músculos esqueléticos'], c:0, l:0,
      er:'Isso. As drogas psicoativas agem sobretudo na <strong>sinapse</strong>, mudando a comunicação entre neurônios.',
      ew:'O alvo principal é a <strong>sinapse</strong>: é ali que elas alteram a neurotransmissão.'},
     {q:"Uma droga 'agonista' é aquela que:",
-     o:['Imita ou ativa a ação de um neurotransmissor no receptor','Bloqueia totalmente o receptor, impedindo qualquer ação','Não tem nenhum efeito sobre o receptor, apenas o ocupa','Destrói o neurônio inteiro em que o receptor se encontra'], c:0,
+     o:['Imita ou ativa a ação de um neurotransmissor no receptor','Bloqueia totalmente o receptor, impedindo qualquer ação','Não tem nenhum efeito sobre o receptor, apenas o ocupa','Destrói o neurônio inteiro em que o receptor se encontra'], c:0, l:0,
      er:'Correto. O <strong>agonista</strong> imita ou reforça o neurotransmissor, ativando o receptor.',
      ew:'Agonista <strong>ativa</strong> o receptor; quem o bloqueia é o antagonista.'},
     {q:'Os antidepressivos do tipo ISRS agem principalmente ao:',
-     o:['Bloquear a recaptação da serotonina, deixando-a mais tempo na sinapse','Aumentar a produção de serotonina dentro do neurônio que vai liberá-la','Eliminar toda a dopamina disponível nos circuitos de recompensa','Cortar o fluxo de sangue para as áreas emocionais do cérebro'], c:0,
+     o:['Bloquear a recaptação da serotonina, deixando-a mais tempo na sinapse','Aumentar a produção de serotonina dentro do neurônio que vai liberá-la','Eliminar toda a dopamina disponível nos circuitos de recompensa','Cortar o fluxo de sangue para as áreas emocionais do cérebro'], c:0, l:2,
      er:'Sim. Os ISRS impedem a reabsorção da <strong>serotonina</strong>, prolongando seu sinal.',
      ew:'Eles bloqueiam a <strong>recaptação da serotonina</strong>; não têm relação com ossos, sangue ou remover dopamina.'},
     {q:'A tolerância a uma droga (precisar de doses maiores com o tempo) acontece porque:',
-     o:['O cérebro se adapta, por exemplo reduzindo receptores, para manter o equilíbrio','A droga vai ficando mais forte a cada uso, e o corpo precisa compensar','O cérebro simplesmente para de funcionar direito depois de algumas doses da droga','Nada muda no cérebro: é apenas impressão de quem usa a substância'], c:0,
+     o:['O cérebro se adapta, por exemplo reduzindo receptores, para manter o equilíbrio','A droga vai ficando mais forte a cada uso, e o corpo precisa compensar','O cérebro simplesmente para de funcionar direito depois de algumas doses da droga','Nada muda no cérebro: é apenas impressão de quem usa a substância'], c:0, l:3,
      er:'Exato. O cérebro se <strong>adapta</strong> ao estímulo repetido, então é preciso mais para o mesmo efeito.',
      ew:'A droga não muda; o que muda é o <strong>cérebro</strong>, que se adapta e reduz sua resposta.'}
   ]
@@ -2978,19 +2984,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'Para provar que uma região CAUSA uma função (e não apenas se ativa junto), o cientista precisa:',
-     o:['Manipular a região (lesão, estimulação) e observar o efeito','Apenas observar a atividade dela enquanto a pessoa faz a tarefa','Medir a cor e a temperatura do cérebro naquele ponto','Perguntar à pessoa o que ela acha que está sentindo'], c:0,
+     o:['Manipular a região (lesão, estimulação) e observar o efeito','Apenas observar a atividade dela enquanto a pessoa faz a tarefa','Medir a cor e a temperatura do cérebro naquele ponto','Perguntar à pessoa o que ela acha que está sentindo'], c:0, l:2,
      er:'Isso. Só <strong>manipulando</strong> a região dá para mostrar que ela é necessária — o salto da correlação à causa.',
      ew:'Observar mostra correlação; provar causa exige <strong>manipular</strong> a área e ver o que muda.'},
     {q:'Qual técnica tem ótima resolução no tempo (milissegundos), mas baixa precisão de local?',
-     o:['EEG','fMRI','Registro unitário','Nenhuma delas'], c:0,
+     o:['EEG','fMRI','Registro unitário','Nenhuma delas'], c:0, l:1,
      er:'Correto. O <strong>EEG</strong> é veloz no tempo, mas localiza mal a origem do sinal.',
      ew:'É o <strong>EEG</strong>: rápido, porém pouco preciso quanto ao local; a fMRI é o oposto.'},
     {q:'A optogenética permite:',
-     o:['Ligar e desligar neurônios específicos com luz, com grande precisão','Ver o cérebro funcionando sem precisar de equipamento nenhum de imagem','Curar qualquer doença neurológica com um feixe de luz','Ler os pensamentos exatos de uma pessoa em tempo real'], c:0,
+     o:['Ligar e desligar neurônios específicos com luz, com grande precisão','Ver o cérebro funcionando sem precisar de equipamento nenhum de imagem','Curar qualquer doença neurológica com um feixe de luz','Ler os pensamentos exatos de uma pessoa em tempo real'], c:0, l:2,
      er:'Sim. Com uma proteína sensível à luz, ela controla tipos específicos de neurônios em milissegundos.',
      ew:'Ela <strong>controla neurônios com luz</strong>; não lê pensamentos nem dispensa equipamento.'},
     {q:'Por que a neurociência combina vários métodos (evidência convergente)?',
-     o:['Nenhum método sozinho vê tudo — cada um tem limites de resolução e invasividade','Porque um único método já bastaria, mas os cientistas gostam de repetir','Para gastar mais dinheiro e justificar orçamentos maiores de pesquisa','Porque todos os métodos são idênticos e acabam dando exatamente o mesmo resultado'], c:0,
+     o:['Nenhum método sozinho vê tudo — cada um tem limites de resolução e invasividade','Porque um único método já bastaria, mas os cientistas gostam de repetir','Para gastar mais dinheiro e justificar orçamentos maiores de pesquisa','Porque todos os métodos são idênticos e acabam dando exatamente o mesmo resultado'], c:0, l:3,
      er:'Exato. Como cada técnica tem pontos cegos, cruzá-las torna a conclusão confiável.',
      ew:'Um método não basta: cada um tem limites, e por isso se buscam evidências que convergem.'}
   ]
@@ -6031,19 +6037,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'Qual a diferença anatômica entre a via somática e a via autonômica até o alvo?',
-     o:['A autonômica usa dois neurônios em série, com um gânglio no meio','A autonômica usa um neurônio só, mais rápido','A somática não usa neurotransmissor na chegada','A autonômica não sai do sistema nervoso central'], c:0,
+     o:['A autonômica usa dois neurônios em série, com um gânglio no meio','A autonômica usa um neurônio só, mais rápido','A somática não usa neurotransmissor na chegada','A autonômica não sai do sistema nervoso central'], c:0, l:0,
      er:'Isso. O relé no gânglio é o que permite um comando central se espalhar por vários alvos ao mesmo tempo.',
      ew:'A via somática é que vai direto, com um neurônio. A autonômica faz escala num gânglio — e é essa escala que permite a resposta difusa.'},
     {q:'Por que a resposta simpática dura mais que o impulso nervoso que a disparou?',
-     o:['Porque a medula adrenal lança adrenalina na corrente sanguínea','Porque o neurônio simpático dispara mais rápido','Porque a acetilcolina permanece na sinapse','Porque o gânglio armazena o sinal por horas'], c:0,
+     o:['Porque a medula adrenal lança adrenalina na corrente sanguínea','Porque o neurônio simpático dispara mais rápido','Porque a acetilcolina permanece na sinapse','Porque o gânglio armazena o sinal por horas'], c:0, l:1,
      er:'Exato. O sinal deixa de ser endereçado e vira circulante — alcança o corpo todo e persiste depois do estímulo.',
      ew:'O que prolonga a resposta é o hormônio na circulação, não a velocidade do disparo: a adrenalina da medula adrenal continua agindo depois do impulso.'},
     {q:'Por que o parassimpático consegue agir órgão por órgão e o simpático age em bloco?',
-     o:['Porque os gânglios parassimpáticos ficam junto ao próprio órgão','Porque o parassimpático usa noradrenalina','Porque o simpático não tem gânglios','Porque o vago inerva um único órgão'], c:0,
+     o:['Porque os gânglios parassimpáticos ficam junto ao próprio órgão','Porque o parassimpático usa noradrenalina','Porque o simpático não tem gânglios','Porque o vago inerva um único órgão'], c:0, l:2,
      er:'Isso. Gânglio junto ao alvo dá ação seletiva; a cadeia central do simpático distribui o mesmo comando para muitos alvos.',
      ew:'A diferença é de posição do gânglio: no parassimpático ele fica junto ao órgão; no simpático, numa cadeia ao lado da coluna, que espalha.'},
     {q:'O que a variabilidade da frequência cardíaca indica?',
-     o:['O tônus do vago e a flexibilidade do sistema autônomo','A força de contração do coração','A quantidade de adrenalina armazenada','O número de gânglios da cadeia simpática'], c:0,
+     o:['O tônus do vago e a flexibilidade do sistema autônomo','A força de contração do coração','A quantidade de adrenalina armazenada','O número de gânglios da cadeia simpática'], c:0, l:3,
      er:'Certo. Variabilidade alta reflete bom tônus vagal e um sistema que se ajusta; baixa indica rigidez, associada a estresse crônico.',
      ew:'Ela não mede força nem estoque de hormônio: mede a variação entre batimentos, que reflete o quanto o vago está modulando o coração.'}
   ]
@@ -6296,19 +6302,19 @@ MODULES.push({
   ],
   quiz:[
     {q:'Por que o cérebro precisa de uma "moeda comum" para decidir?',
-     o:['Porque opções de naturezas diferentes só podem ser comparadas numa escala única','Porque toda decisão envolve dinheiro','Porque o valor de mercado precisa ser calculado','Porque o córtex motor exige um número para agir'], c:0,
+     o:['Porque opções de naturezas diferentes só podem ser comparadas numa escala única','Porque toda decisão envolve dinheiro','Porque o valor de mercado precisa ser calculado','Porque o córtex motor exige um número para agir'], c:0, l:0,
      er:'Isso. Sem converter para uma escala compartilhada, maçã e filme seriam literalmente incomparáveis.',
      ew:'A questão não é dinheiro: é que grandezas de naturezas diferentes precisam de uma régua comum para serem comparadas.'},
     {q:'O que a aprendizagem reversa mede?',
-     o:['A capacidade de atualizar o valor quando a regra muda','A velocidade de formar uma memória nova','A força de contração muscular','A quantidade de dopamina liberada'], c:0,
+     o:['A capacidade de atualizar o valor quando a regra muda','A velocidade de formar uma memória nova','A força de contração muscular','A quantidade de dopamina liberada'], c:0, l:1,
      er:'Certo. Ela testa se o avaliador reescreve a estimativa — e é isso que falha com lesão no orbitofrontal.',
      ew:'Ela não mede memória nem dopamina diretamente: mede se a pessoa muda de escolha depois que a contingência muda.'},
     {q:'Por que a curva hiperbólica de desconto produz reversão de preferência?',
-     o:['Porque ela despenca no curto prazo e achata depois, invertendo a comparação conforme a distância','Porque ela cresce com o tempo','Porque ela é idêntica à exponencial','Porque o valor não muda com a espera'], c:0,
+     o:['Porque ela despenca no curto prazo e achata depois, invertendo a comparação conforme a distância','Porque ela cresce com o tempo','Porque ela é idêntica à exponencial','Porque o valor não muda com a espera'], c:0, l:2,
      er:'Exato. A ordem das preferências se inverte conforme as duas opções se aproximam do presente.',
      ew:'Com curva exponencial não haveria reversão. É justamente o formato hiperbólico — queda abrupta e depois achatamento — que produz a inversão.'},
     {q:'No modelo de acúmulo de evidência, o que representa a troca entre velocidade e acerto?',
-     o:['A altura do limiar de decisão','A velocidade de condução do axônio','A quantidade de opções disponíveis','O nível de cortisol no momento'], c:0,
+     o:['A altura do limiar de decisão','A velocidade de condução do axônio','A quantidade de opções disponíveis','O nível de cortisol no momento'], c:0, l:3,
      er:'Isso. Limiar baixo decide rápido e erra mais; limiar alto acerta mais e demora. É um parâmetro ajustável.',
      ew:'Não é condução nem hormônio: no modelo, a troca corresponde diretamente ao quanto de evidência é exigido antes de fechar.'}
   ]
@@ -7100,6 +7106,8 @@ function markRead(idx,ev){
    ===================================================================== */
 let quiz={ mod:0, i:0, correct:0, answered:false };
 function startQuiz(){
+  // lote aberto: uma decisão de intervalo por dimensão no fim, não uma por questão
+  if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
   const m=MODULES[currentModule];
   quiz={ mod:currentModule, i:0, correct:0, answered:false };
   document.documentElement.style.setProperty('--mc',m.color);
@@ -7135,7 +7143,14 @@ function answer(k){
   const q=m.quiz[quiz.i];
   const chosen=quiz.opts[k];
   const right = chosen.correct;
-  if(typeof recordDimensionEvidence==='function'){ const dim=inferQuestionDimension(q,{module:m,source:'module'}); recordDimensionEvidence(moduleScope(m.id),dim,right?1:0,'module-quiz',{questionId:'Q:'+m.id+':'+quiz.i}); }
+  if(typeof recordDimensionEvidence==='function'){
+    const dim=inferQuestionDimension(q,{module:m,source:'module'});
+    /* A questão declara a aula que cobra, então a evidência vai para o TÓPICO
+       e agenda a caixa dele. Antes ia para o módulo e não agendava nada —
+       era a maior atividade do app sem consequência nenhuma no cronograma. */
+    const escopo = Number.isInteger(q.l) ? topicScope(topicKey(m.id,q.l)) : moduleScope(m.id);
+    recordDimensionEvidence(escopo,dim,right?1:0,'module-quiz',{questionId:'Q:'+m.id+':'+quiz.i});
+  }
   const opts=document.querySelectorAll('#qz-opts .opt');
   opts.forEach(o=>{
     const kk=+o.dataset.k;
@@ -7190,6 +7205,7 @@ function finishQuiz(){
   state.mastery[m.id]=newMastery;
   const firstTime=!state.doneQuiz[m.id];
   state.doneQuiz[m.id]=true;
+  if(typeof commitEvidenceBatch==='function') commitEvidenceBatch();
   if(firstTime) awardXP(XP.complete,null);
   saveState();
   renderResult(m,quiz.correct,total,score,newMastery,prev,improved,delta,firstTime);

@@ -658,9 +658,9 @@ const reset = ()=>ev('state = defaultState();');
      uma mini-questão que o classificador leu como "onde fica". A âncora não é a
      única fonte, e o item de revisão precisa saber disso (ver bloco 20). */
   const loc = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'location')?1:0),0),0)`);
-  eq(loc, 58, '19. Localização deveria cobrir 58/64 — 56 por diagrama, mais 2 que já tinham mini-questão');
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 236,
-     '19. o total de caixas deveria ir de 189 para 236');
+  eq(loc, 59, '19. Localização deveria cobrir 59/64 — 56 por diagrama, 2 por mini-questão, 1 por questão de módulo');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 241,
+     '19. o total de caixas deveria ser 241');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.
@@ -672,14 +672,19 @@ const reset = ()=>ev('state = defaultState();');
       const temAncora = locationAnchorsOf(m.id,li).length > 0;
       const temQuestao = ((MINI_QUIZZES[m.id]||[])[li]||[])
         .some(q=>inferQuestionDimension(q,{module:m, lessonIndex:li, source:'review'})==='location');
-      if(!temAncora && !temQuestao) r.push(m.id+'-'+li);
+      const temModulo = (m.quiz||[])
+        .some(q=>q.l===li && inferQuestionDimension(q,{module:m, source:'module'})==='location');
+      if(!temAncora && !temQuestao && !temModulo) r.push(m.id+'-'+li);
     }));
     return r;
   })()`);
   eq(semFonte.length, 0, '19. caixa de Localização sem fonte nenhuma: ' + semFonte.join(', '));
 
   // e os 6 verdadeiramente sem nada continuam sem caixa
-  const seisSemNada = ['neuroanatomia-2','linguagem-2','linguagem-3','clinica-3','metodos-0','metodos-2'];
+  /* neuroanatomia-2 saiu desta lista: a questão do quiz de módulo que declara
+     aquela aula ("qual estrutura é a central de retransmissão sensorial") é uma
+     pergunta de localização legítima, e passou a contar como fonte. */
+  const seisSemNada = ['linguagem-2','linguagem-3','clinica-3','metodos-0','metodos-2'];
   const indevidos = ev(`${JSON.stringify(seisSemNada)}.filter(k=>{
     const p = splitTopicKey(k); return canMeasure(p[0], p[1], 'location');
   })`);
@@ -829,6 +834,66 @@ const reset = ()=>ev('state = defaultState();');
   ev(`renderReview(); renderDomainEntry();`);
   ok(ev(`document.getElementById('db-domain-entry').innerHTML.indexOf('openDomainMode()') > -1`),
      '21. sem cronograma, o cartão de entrada tem de aparecer');
+}
+
+/* ---------- 22. o quiz de módulo declara a aula que cobra ---------- */
+{
+  // toda questão tem `l` válido — é o que permite ela agendar por tópico
+  const invalidas = ev(`(function(){
+    const r=[];
+    MODULES.forEach(m=>m.quiz.forEach((q,i)=>{
+      if(!Number.isInteger(q.l) || q.l<0 || q.l>=m.lessons.length) r.push(m.id+' Q'+i+' l='+JSON.stringify(q.l));
+    }));
+    return r;
+  })()`);
+  eq(invalidas.length, 0, '22. questão de quiz de módulo sem `l` válido: ' + invalidas.slice(0,4).join(' | '));
+
+  /* Catraca das aulas órfãs. São 8 aulas que nenhuma questão de módulo cobra —
+     medido, não estimado. Fechar isso exigiria escrever questões novas, o que
+     quebraria a grade de 4 por módulo, então fica como dívida declarada. O que
+     este portão garante é que ela não CRESÇA: mexer no mapeamento e deixar mais
+     uma aula sem cobrança falha aqui. */
+  const orfas = ev(`(function(){
+    const r=[];
+    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{ if(!m.quiz.some(q=>q.l===li)) r.push(m.id+'-'+li); }));
+    return r;
+  })()`);
+  eq(orfas.length, 8, '22. aulas sem questão de quiz de módulo mudou de 8 para ' + orfas.length + ': ' + orfas.join(', '));
+
+  /* Dirige o quiz de módulo DE VERDADE — startQuiz, renderQuestion, answer,
+     nextQ — em vez de montar as chamadas de evidência à mão. A primeira versão
+     deste teste reimplementava a gravação e por isso passava mesmo com o escopo
+     religado no módulo: testava a si mesma. */
+  reset();
+  ev(`(function(){
+    currentModule = 0;
+    quiz = { mod:0, i:0, correct:0, answered:false };
+    startQuiz();
+    const m = MODULES[0];
+    for(let i=0; i<m.quiz.length; i++){
+      renderQuestion();
+      answer(quiz.opts.findIndex(o=>o.correct));
+      nextQ();
+    }
+  })()`);
+  ok(ev(`Object.keys(state.srs).length > 0`), '22. responder o quiz de módulo tem de agendar caixa de tópico');
+  eq(ev(`Object.keys(state.dimensionEvidence).filter(k=>k.indexOf('M:')===0).length`), 0,
+     '22. e nenhuma evidência pode ficar em escopo de módulo — o `l` diz qual tópico é');
+  ok(ev(`Object.keys(state.dimensionEvidence).some(k=>k==='T:neuronio-0')`),
+     '22. a questão que declara a aula 0 tem de gravar no tópico dela');
+
+  // o tópico cuja única fonte é o quiz de módulo tem pergunta na revisão
+  reset();
+  ev(`(function(){
+    const m=MODULES.find(x=>x.id==='emocao'), mi=MODULES.indexOf(m), li=0, key=topicKey('emocao',li);
+    seedTopic(key);
+    review={ queue:[{mi:mi, li:li, key:key, dim:'recognition', title:m.lessons[li].t,
+                     mn:m.n, color:m.color, due:0, box:0, overdue:0}],
+             ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] };
+    loadReviewTopic();
+  })()`);
+  ok(ev(`review.topicQs.length > 0`),
+     '22. tópico que só mede Reconhecimento pela questão de módulo precisa ter o que perguntar');
 }
 
 /* ---------- resultado ---------- */

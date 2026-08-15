@@ -1,9 +1,9 @@
 # NeuroLab — arquitetura de conteúdo e aprendizagem
 
 *Levantamento original de 2026-08-14 sobre `4711259` (v1.7.2). Atualizado até
-as Fases 2, 1, 3 e 4 do cronograma por dimensão (v1.11.0), com os três portões
-locais verdes: `verifica-metaforas`, `audit-content` e `test-srs`
-(129 verificações).*
+as Fases 2, 1, 3 e 4 do cronograma por dimensão, mais a declaração de `l:` no
+quiz de módulo (v1.12.0), com os três portões locais verdes:
+`verifica-metaforas`, `audit-content` e `test-srs` (135 verificações).*
 
 Documento de referência para mudanças futuras. Descreve **como os módulos são
 estruturados**, **como eles alimentam a revisão espaçada**, **o que do conteúdo
@@ -164,11 +164,11 @@ a caixa 0 fica intocada, então a primeira volta é sempre exatamente amanhã.
 
 `measurableDimensions(moduleId, lessonIndex)` (`04`) é **derivada do conteúdo,
 nunca gravada**: uma dimensão só ganha caixa se este tópico tem como medi-la.
-Hoje isso dá **236 caixas das 256 possíveis** —
+Hoje isso dá **241 caixas das 256 possíveis** —
 
 ```
-recognition  50/64 tópicos      causality    64/64 tópicos
-location     58/64 tópicos      application  64/64 tópicos
+recognition  54/64 tópicos      causality    64/64 tópicos
+location     59/64 tópicos      application  64/64 tópicos
 ```
 
 — e as fontes por tópico são quatro: o mini quiz; a prova de previsão
@@ -198,14 +198,26 @@ O schema não muda desde a Fase 0: cada fase só acrescentou fonte.
 | contrafactual do Domínio | `domainAnswerCounter` (`04c`) | promove / rebaixa `causality` do tópico alvo |
 | reconstrução da cadeia | `domainAdvanceFocus` (`04c`) | idem |
 | abrir o app | `seedSrsFromHistory` | enfileira tópicos com domínio registrado |
-| **quiz do módulo** | `finishQuiz` | **não agenda tópico** — ver abaixo |
+| quiz do módulo | `answer` → `commitEvidenceBatch` | ✅ agenda o tópico que a questão declara em `l` |
 | **caso integrado** | `04b`/`04c` | **não agenda tópico** — ver abaixo |
 
-Quiz de módulo e casos integrados escrevem em escopo `M:` e continuam medindo o
-módulo. Não agendam tópico porque **o mapeamento questão→aula não é posicional**:
-medido por TF-IDF sobre os 64 pares e conferido à mão, `plasticidade`, `sono`,
-`motor` e `metodos` sequer testam a aula 0 no quiz do módulo. Atribuir por
-posição creditaria a aula errada.
+**O quiz de módulo passou a agendar por tópico.** Cada uma das 64 questões
+declara a aula que cobra, no campo `l`. Isso não podia sair de heurística: o
+mapeamento **não é posicional**, e as 64 atribuições foram lidas uma a uma. O
+TF-IDF que eu havia usado para estimar concordava com a posição em 66% e errava
+casos concretos.
+
+Ganho medido: Reconhecimento de 50 para 54 tópicos e Localização de 58 para 59,
+sem escrever conteúdo novo — só declarando o que a questão já cobrava.
+
+**8 aulas não são cobradas por nenhuma questão de módulo** (medido, não
+estimado): `plasticidade-0`, `atencao-0`, `emocao-1`, `sono-0`, `motor-0`,
+`desenvolvimento-0`, `farmacologia-1`, `metodos-0`. Fechar isso exigiria
+escrever questões novas e quebraria a grade de 4 por módulo, então fica como
+dívida declarada — com catraca no portão (bloco 22) para não crescer.
+
+Os casos integrados continuam em escopo `M:` e sem agendar tópico: eles medem o
+módulo de propósito, e não há campo que os prenda a uma aula.
 
 ### 4.4 A regra de promoção (`scheduleDimension`)
 
