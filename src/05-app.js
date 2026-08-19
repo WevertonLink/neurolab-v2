@@ -1,3 +1,115 @@
+// Módulos Avançados: M17 a M22
+export const ADVANCED_MODULES = [
+  {
+    id: "m17",
+    title: "Circuitos de Decisão e Desconto Temporal",
+    category: "Neurociência Computacional & Cognitiva",
+    levelRequired: 16,
+    xpReward: 400,
+    integratedVisual: {
+      title: "Do Valor Subjetivo à Ação Motora",
+      subtitle: "Como o cérebro arbitra o conflito entre o agora e o futuro",
+      dontConfuse: [
+        {
+          termA: "vmPFC (Pré-Frontal Ventromedial)",
+          termB: "dlPFC (Pré-Frontal Dorsolateral)",
+          distinction: "O vmPFC computa 'quanto vale para mim agora'; o dlPFC sustenta 'qual é a regra e o plano futuro'."
+        },
+        {
+          termA: "Gânglios da Base",
+          termB: "Córtex Motor",
+          distinction: "Os gânglios selecionam qual ação vence a disputa; o córtex motor executa o comando aprovado."
+        }
+      ],
+      flowSummary: [
+        { type: "cognition", label: "CUSTO / TEMPO", desc: "no dlPFC" },
+        { type: "arrow" },
+        { type: "valuation", label: "VALOR UNIFICADO", desc: "no vmPFC" },
+        { type: "arrow" },
+        { type: "action", label: "LIBERAÇÃO DO GATING", desc: "no Estriado/Tálamo" }
+      ]
+    },
+    lessons: [
+      {
+        id: "m17-l1",
+        number: 1,
+        title: "O Árbitro do Valor",
+        recap: "A aula anterior mostrou como sinapses somam votos. Em escala de rede, o cérebro faz a mesma conta para decidir entre um ganho imediato ou um objetivo futuro.",
+        body: "Para decidir, o cérebro traduz grandezas distintas (esforço, sabor, tempo de espera) em uma moeda unificada. O vmPFC integra sinais emocionais com o núcleo accumbens, enquanto o dlPFC aplica controle top-down sustentando a meta futura contra a atração imediata.",
+        mechanismSteps: [
+          { step: 1, text: "Estímulos com recompensas temporais diferentes chegam pelas vias sensoriais." },
+          { step: 2, text: "O estriado ventral e a amígdala disparam atração pela recompensa imediata." },
+          {
+            step: 3,
+            isHinge: true,
+            badge: "a dobradiça",
+            text: "O vmPFC calcula a taxa de desconto hiperbólico cruzando valor e tempo.",
+            hingeExplanation: {
+              title: "POR QUE ESTE PASSO É A DOBRADIÇA",
+              text: "O desconto é hiperbólico: o cérebro desvaloriza o futuro drasticamente. Se o dlPFC não intervir ativamente com controle inibitório, o valor imediato sempre vence a disputa motora."
+            }
+          },
+          { step: 4, text: "O dlPFC recruta interneurônios inibitórios locais para atenuar o impulso imediato." },
+          { step: 5, text: "O circuito vencedor desbloqueia a alça tálamo-cortical, liberando o comportamento." }
+        ],
+        quiz: {
+          question: "Em tarefas de desconto temporal, indivíduos com hipofunção no dlPFC tendem a:",
+          options: [
+            "Optar sistematicamente pela recompensa imediata por falta de controle inibitório sobre o estriado/vmPFC.",
+            "Escolher a recompensa futura por perda da percepção de tempo.",
+            "Perder os movimentos voluntários das mãos.",
+            "Esquecer a linguagem semântica primária."
+          ],
+          correct: 0,
+          explanation: "O dlPFC é o freio executivo. Sem sua modulação, a atração imediata do estriado/vmPFC domina."
+        }
+      }
+    ]
+  },
+  {
+    id: "m18",
+    title: "Farmacodinâmica Fina e Modulação Alostérica",
+    category: "Neuroquímica & Farmacologia",
+    levelRequired: 17,
+    xpReward: 420,
+    lessons: [
+      {
+        id: "m18-l1",
+        number: 1,
+        title: "O Poro de Cloreto e Modulação Alostérica",
+        recap: "Vimos o neurônio manter -70 mV em repouso. Agora entenderemos como modular essa voltagem com precisão molecular.",
+        body: "Receptores GABA-A são canais de Cl-. PAMs (como benzodiazepínicos) ligam-se a sítios alostéricos sem abrir o canal sozinhos: eles aumentam a frequência de abertura na presença do GABA, garantindo margem de segurança biológica.",
+        mechanismSteps: [
+          { step: 1, text: "O neurônio pré-sináptico libera GABA na fenda sináptica." },
+          { step: 2, text: "O GABA ocupa os sítios ortostéricos nas interfaces α/β." },
+          {
+            step: 3,
+            isHinge: true,
+            badge: "a dobradiça",
+            text: "O PAM estabiliza a conformação aberta do canal sem atuar isoladamente.",
+            hingeExplanation: {
+              title: "POR QUE ESTE PASSO É A DOBRADIÇA",
+              text: "O PAM depende da atividade endógena. Sem GABA prévio na fenda, o canal não abre, conferindo segurança funcional em relação a agonistas diretos."
+            }
+          },
+          { step: 4, text: "Ocorre influxo de íons Cl- a favor do gradiente eletroquímico." },
+          { step: 5, text: "A membrana atinge cerca de -80 mV, inibindo o disparo do potencial de ação." }
+        ],
+        quiz: {
+          question: "Qual a diferença funcional entre um Modulador Alostérico Positivo (PAM) e um agonista direto do GABA-A?",
+          options: [
+            "O PAM só atua amplificando a abertura do canal se o neurotransmissor natural (GABA) já estiver ligado.",
+            "O PAM fecha permanentemente os canais de sódio voltagem-dependentes.",
+            "O agonista direto converte inibição em despolarização excitatória.",
+            "O PAM destrói a membrana lipídica pós-sináptica."
+          ],
+          correct: 0,
+          explanation: "PAMs alteram a conformação alostérica para potencializar o ligante endógeno; sozinhos, não têm eficácia intrínseca."
+        }
+      }
+    ]
+  }
+];
 /* =====================================================================
    NEUROLAB — dados
    ===================================================================== */
