@@ -967,6 +967,17 @@ function renderHeader(){
 /* =====================================================================
    DASHBOARD
    ===================================================================== */
+// --- INJEÇÃO DOS MÓDULOS AVANÇADOS ---
+
+if (typeof MODULES !== "undefined" && window.ADVANCED_MODULES && !window.__advInjected) {
+
+  MODULES.push(...window.ADVANCED_MODULES);
+
+  window.__advInjected = true;
+
+}
+
+// -------------------------------------
 function buildNodes(){
   const n=MODULES.length, W=340, H=210, padX=34, padTop=40, padBot=40;
   const cols=Math.min(n,5), rows=Math.ceil(n/cols);
