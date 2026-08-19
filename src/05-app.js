@@ -5576,6 +5576,16 @@ recompensa:[
  {q:"Um hábito já formado continua mesmo quando a recompensa some. Como isso é possível?", o:["O controle migrou para um circuito que roda sem o prêmio","A pessoa continua esperando a recompensa, que já não vem mais","O próprio ato virou a recompensa e substituiu a antiga"], c:0,
   after:"O controle migra do estriado ventral (querer) para o dorsal (rotina), e a dopamina se desloca para a DEIXA. O comportamento passa a rodar quase sozinho — por isso hábito é tão difícil de quebrar."}
 ],
+decisao:[
+ {q:"Você tem de escolher entre comer uma maçã e assistir a um filme. Como o cérebro compara duas coisas que não têm nada em comum?", o:["Compara atributo por atributo: sabor, duração, preço","Converte as duas para uma única escala interna de valor","Decide pelo hábito, porque a comparação é impossível"], c:1,
+  after:"Converte. O cérebro inventa uma moeda comum — o valor subjetivo — e as opções deixam de ser maçã e filme para virarem dois números na mesma régua. Sem essa conversão, comparar seria literalmente impossível."},
+ {q:"Uma pessoa com lesão no córtex orbitofrontal faz testes de QI, memória e linguagem, e vai bem em todos. Onde ela falha?", o:["Em raciocínio lógico complexo, que exige muitas etapas","Em decisões da vida real, quando a regra muda e ela não acompanha","Em movimentos finos, que dependem de planejamento"], c:1,
+  after:"Nas decisões reais. O quadro é marcante justamente por isso: tudo que um teste mede está preservado, e a vida desanda. O OFC não guarda quanto vale — ele ATUALIZA quanto vale, e sem essa atualização a pessoa segue escolhendo o que já parou de funcionar."},
+ {q:"Você prefere R$ 100 daqui a doze meses a R$ 90 daqui a onze. Um ano depois chega a hora: R$ 90 hoje ou R$ 100 amanhã. O que a maioria faz?", o:["Mantém a escolha: espera o dia a mais pelos R$ 100","Inverte, e pega os R$ 90 hoje","Fica indiferente, porque a diferença é a mesma"], c:1,
+  after:"Inverte — a mesma pessoa, o mesmo dia de espera, os mesmos dez reais. Não é falta de caráter: é a forma da curva de desconto. Ela é hiperbólica, despenca perto do agora e achata longe. A reversão de preferência é consequência geométrica, não moral."},
+ {q:"Duas pessoas fazem a mesma tarefa. Uma responde rápido e erra mais; a outra é lenta e acerta mais. O que difere entre elas?", o:["A velocidade com que o cérebro processa a informação","A altura do limiar em que param de acumular evidência","A quantidade de informação que os olhos captam"], c:1,
+  after:"A altura do limiar. Não é que uma pense mais rápido — é que ela decide com menos evidência acumulada. E como isso é UM número, dá para movê-lo de propósito: rapidez e acerto não são dois talentos, são duas leituras do mesmo ajuste."}
+],
 atencao:[
  {q:"Numa festa barulhenta, você ouve seu nome do outro lado da sala. O que isso revela?", o:["Você estava, sem perceber, acompanhando as duas conversas ao mesmo tempo","O ignorado é processado em parte, e o relevante rouba o foco","A atenção não tem limite real; ela só parece ter"], c:1,
   after:"O ignorado não é descartado: é processado o bastante para que algo relevante vença a competição. Atenção não é um filtro perfeito — é uma balança que se inclina."},
@@ -5595,6 +5605,16 @@ emocao:[
   after:"A curva é um U invertido. De menos entedia, de mais paralisa. O melhor desempenho fica num ponto intermediário — e é por isso que relaxar completamente não é a meta."},
  {q:"Você entende a matéria, mas num dia ruim não rende. O que falhou?", o:["A memória: o conteúdo não tinha sido fixado direito ainda","O estado: ele ajusta o ganho antes de qualquer esforço","A motivação: no fundo, faltou querer o suficiente"], c:1,
   after:"O estado vem ANTES do esforço. A noradrenalina ajusta o ganho do córtex; num estado ruim, o mesmo conhecimento não se acessa igual. Cuidar do estado é parte do estudo, não um extra."}
+],
+autonomo:[
+ {q:"Para mover o braço, um único neurônio vai do sistema nervoso central até o músculo. O autônomo usa DOIS, com uma troca no meio. Para que serve esse ponto de troca?", o:["Para o sinal chegar mais rápido ao órgão","Para um comando só poder se espalhar por vários alvos","Para o cérebro poder cancelar a ordem no meio do caminho"], c:1,
+  after:"Para espalhar. No gânglio, uma fibra que chega contata várias que saem. É por isso que a resposta autonômica pega o corpo inteiro — coração, pupila, digestão — enquanto o comando somático move um músculo por vez."},
+ {q:"O susto passa em segundos, mas o coração fica acelerado por minutos. Por quê?", o:["O nervo continua disparando durante todo esse tempo","Parte do sinal virou hormônio no sangue, e sangue demora a depurar","O coração guarda uma memória própria do susto"], c:1,
+  after:"Virou hormônio. A medula adrenal é um gânglio modificado: em vez de mandar um axônio a um órgão, despeja adrenalina direto no sangue. O sinal perde o endereço e vira circulante — alcança tudo, e dura muito mais que o impulso que o disparou."},
+ {q:"O simpático age no corpo em bloco. O parassimpático consegue desacelerar o coração sem mexer na digestão. O que permite essa seletividade?", o:["Ele usa um neurotransmissor diferente em cada órgão","Os gânglios dele ficam junto de cada órgão, não numa cadeia central","Ele é mais lento, e por isso mais preciso"], c:1,
+  after:"A posição dos gânglios. No simpático eles formam uma cadeia ao lado da coluna, e um comando espalha. No parassimpático o gânglio fica junto do próprio órgão — cada alvo tem a sua estação, e dá para mexer em um sem mexer nos outros."},
+ {q:"O nervo vago liga cérebro e intestino. Na maior parte, as fibras dele levam informação em qual direção?", o:["Do cérebro para o intestino: é o cérebro que comanda a digestão","Do intestino para o cérebro: ele informa mais do que obedece","Metade para cada lado, em equilíbrio"], c:1,
+  after:"De baixo para cima. A maior parte das fibras do vago SOBE. O intestino tem uma malha própria de centenas de milhões de neurônios que digere sozinha — o que ele manda ao cérebro é sobretudo relatório, não pedido de ordem."}
 ],
 sono:[
  {q:"Dormir é o cérebro se desligando para descansar?", o:["Sim: é uma pausa para o cérebro descansar","Em parte: só o córtex descansa; o resto do cérebro segue ativo","Não: é um turno de trabalho — consolidação e limpeza"], c:2,
@@ -5828,6 +5848,24 @@ recompensa:[
   w:"E se você remover a recompensa de um hábito já formado?",
   wa:"Ele continua. O gatilho ainda dispara a rotina, porque o dorsal não consulta o valor. É isso que torna um vício tão resistente — e é o MESMO mecanismo que faz um gesto treinado virar automático no Módulo 11."}
 ],
+decisao:[
+ {s:["Duas opções chegam sem unidade em comum: maçã e filme","No córtex orbitofrontal há neurônios que respondem ao VALOR, não ao tipo de bem","Suco, dinheiro e descanso movem as MESMAS células, variando só com o quanto valem","Cada opção vira um número numa régua compartilhada","Só então existe maior que — e a comparação passa a ter resposta"], h:2,
+  hn:"A moeda comum não é metáfora, é medida. Se cada bem tivesse o seu próprio grupo de neurônios, não haveria onde comparar. É este achado — as mesmas células para bens diferentes — e não a ideia de valor, que sustenta o módulo inteiro.",
+  w:"E se cada tipo de recompensa tivesse os seus próprios neurônios de valor?",
+  wa:"Você compararia maçã com maçã e filme com filme, e travaria entre as duas categorias. Sem régua única, melhor só existe dentro de cada tipo — e a escolha entre tipos diferentes deixa de ter resposta possível."},
+ {s:["Uma opção que era boa deixa de ser: a regra do ambiente mudou","O valor guardado sobre ela está agora desatualizado","O córtex orbitofrontal reescreve a estimativa a partir do novo resultado","A escolha seguinte já usa o valor corrigido","Com o OFC lesado, a reescrita não acontece","A pessoa repete a opção que não funciona — mesmo sabendo dizer que a regra mudou"], h:5,
+  hn:"O passo que revela o mecanismo é o último: ela SABE verbalmente que mudou, e escolhe errado assim mesmo. Isso separa duas coisas que costumamos confundir — conhecer a regra e ter o valor atualizado. São sistemas diferentes, e só o segundo comanda a escolha.",
+  w:"E se você apenas avisasse a pessoa, em voz alta, que a regra inverteu?",
+  wa:"Não resolveria. É exatamente o que o quadro mostra: o relato verbal fica correto e a escolha continua errada. Saber não substitui o valor atualizado — e é por isso que dizer a alguém que aquilo lhe faz mal costuma não mudar nada."},
+ {s:["Duas recompensas, iguais em tudo menos na espera","Cada uma é descontada pelo tempo até chegar","O desconto humano é HIPERBÓLICO: despenca no começo e achata depois","Longe do agora, um dia a mais quase não muda nada — e o valor maior vence","Perto do agora, o MESMO dia a mais derruba o valor — e o menor vence","A preferência se inverte sem que nada da oferta tenha mudado"], h:2,
+  hn:"Se a curva fosse exponencial — que é como um banco calcula juros — a reversão seria IMPOSSÍVEL: a ordem entre duas opções nunca mudaria só por passar o tempo. A forma hiperbólica é o que permite a incoerência, e é o que faz de você e do banco calculadoras diferentes.",
+  w:"E se o desconto humano fosse exponencial, como o dos juros?",
+  wa:"Você seria coerente no tempo: o que escolhesse para daqui a um ano continuaria escolhendo quando o ano chegasse. Adiar não geraria arrependimento, e a categoria me sabotei deixaria de existir. Boa parte da economia comportamental ficaria sem assunto."},
+ {s:["A evidência chega ruidosa: nenhum instante isolado decide","O cérebro SOMA essa evidência ao longo do tempo","Neurônios do parietal sobem em rampa enquanto a soma cresce","Quando o total cruza um limiar, a resposta sai","Limiar alto: mais evidência somada, mais tempo, mais acerto","Limiar baixo: menos evidência, menos tempo, mais erro"], h:3,
+  hn:"O limiar é o único número LIVRE da conta. A qualidade da evidência vem do mundo e a velocidade de somar vem do circuito — nenhum dos dois está sob seu controle. A altura está. Por isso o compromisso entre velocidade e acerto não é traço de personalidade: é o único botão que existe, e ele é ajustável.",
+  w:"E se alguém baixasse o limiar até zero?",
+  wa:"Responderia instantaneamente, e no acaso: sem evidência acumulada, a escolha vira sorteio. O tempo de deliberação não é lentidão a ser vencida — é literalmente o que compra a precisão."}
+],
 atencao:[
  {s:["Muitos estímulos chegam ao mesmo tempo","Eles COMPETEM por representação no córtex","O pré-frontal enviesa a disputa a favor do objetivo (top-down)","Estímulos vistosos puxam sozinhos (bottom-up)","Vence quem tiver mais apoio somado"], h:1,
   hn:"Atenção não é um holofote que você aponta: é uma DISPUTA que você influencia. Isso muda tudo — o ignorado não foi bloqueado, foi derrotado. Por isso o seu nome, dito do outro lado da sala, ainda consegue virar o jogo.",
@@ -5863,6 +5901,24 @@ emocao:[
   hn:"O estado não compete com a força de vontade: ele vem ANTES dela. Quando você tenta se esforçar, o ajuste já foi feito. É por isso que cuidar do sono e da ansiedade não é preparação para estudar — é parte do estudo.",
   w:"E se você estudar sempre ansioso e fizer a prova calmo?",
   wa:"O contexto interno muda e a recuperação piora — memória é dependente de estado. Estudar no estado em que você vai ser cobrado é vantagem real, não superstição."}
+],
+autonomo:[
+ {s:["Um comando autonômico sai do sistema nervoso central","Ele NÃO vai direto ao órgão: para num gânglio autonômico","Ali, uma fibra que chega contata VÁRIAS que saem","O mesmo comando parte para alvos diferentes ao mesmo tempo","Coração, brônquio, pupila e vaso mudam juntos","A resposta é de corpo inteiro, e não de um alvo por vez"], h:2,
+  hn:"A divergência no gânglio é a razão anatômica de a emoção ser sentida no corpo TODO. Não existe um centro decidindo coordenar coração e pupila: eles mudam juntos porque compartilham a mesma escala. A arquitetura já é a coordenação.",
+  w:"E se o autônomo usasse um neurônio só, como o somático?",
+  wa:"Cada órgão precisaria do seu próprio comando central, e sustos seriam localizados: o coração aceleraria sem a pupila dilatar. O corpo perderia a resposta unificada — e com ela boa parte do que reconhecemos como sentir uma emoção."},
+ {s:["O simpático dispara e alcança seus órgãos por fibras nervosas","Uma das saídas não termina num órgão: termina na medula adrenal","A medula adrenal é um gânglio que não tem axônios de saída","Em vez de contatar um alvo, ela lança adrenalina na corrente sanguínea","O sinal perde o endereço e alcança tudo que tiver receptor","E dura o tempo de o sangue circular e depurar, não o tempo do impulso"], h:3,
+  hn:"O mesmo sistema fala de duas maneiras: por fibra, rápido e endereçado; por sangue, lento e para todos. Não são dois sistemas — é um, com duas velocidades. Isso explica por que o susto tem um pico imediato e uma cauda longa que você não desliga pensando.",
+  w:"E se a medula adrenal fosse removida?",
+  wa:"A resposta imediata continuaria, porque as fibras nervosas seguem chegando aos órgãos. O que sumiria é a CAUDA: o alerta terminaria junto com o estímulo, sem o rastro de minutos. Perde-se a persistência, não a reação."},
+ {s:["O parassimpático sai do tronco encefálico e da porção sacral da medula","A maior parte desse fluxo viaja por um nervo só: o vago","Mas o gânglio de troca NÃO fica no caminho — fica junto do órgão alvo","Cada órgão tem a sua própria estação de troca","Um comando pode chegar a um alvo sem passar pelos outros","Por isso o freio é seletivo, e o acelerador é em bloco"], h:2,
+  hn:"Acelerador e freio não são simétricos, e a assimetria é anatômica, não funcional. Faz sentido: fugir exige o corpo inteiro junto, e recuperar-se exige ajuste fino, órgão por órgão. A posição de um gânglio decide se um sistema age em coro ou em solo.",
+  w:"E se os gânglios parassimpáticos ficassem numa cadeia central, como os do simpático?",
+  wa:"Descansar viraria tudo-ou-nada. Não daria para desacelerar o coração enquanto a digestão espera, nem reativar o intestino sem contrair a pupila. Some justamente o ajuste fino, e sobra um segundo botão de bloco, redundante com o primeiro."},
+ {s:["Simpático e parassimpático estão os DOIS ativos o tempo todo","O que muda não é ligar e desligar: é o equilíbrio entre eles, o tônus","O coração fica sob os dois, e o intervalo entre batimentos varia com esse equilíbrio","Essa variação é a variabilidade da frequência cardíaca","Variabilidade alta indica um sistema que ajusta; baixa, um sistema travado","Por isso o coração serve de janela para um equilíbrio que não se vê"], h:1,
+  hn:"A ideia de interruptor é o erro mais comum aqui, e custa a compreensão inteira. Se fosse liga-desliga, não haveria o que medir entre batimentos: a variabilidade EXISTE porque os dois ramos disputam continuamente. O que parece ruído no ritmo cardíaco é a assinatura da disputa.",
+  w:"E se o parassimpático simplesmente desligasse, em vez de reduzir?",
+  wa:"A frequência cardíaca subiria e ficaria RÍGIDA: rápida e sem variação. É próximo do que se vê em estresse crônico e em alguns quadros clínicos — não é só o coração acelerado, é o coração que perdeu a capacidade de variar. E a rigidez, não a velocidade, é o que prevê pior desfecho."}
 ],
 sono:[
  {s:["Acordado, você acumula sinapses fortalecidas e resíduos","Dormindo, o cérebro REABRE o que aprendeu (replay)","Reorganiza o traço entre hipocampo e redes corticais","Reescalona TODAS as sinapses para baixo","O que era forte continua forte em relação ao resto; o ruído some"], h:3,
