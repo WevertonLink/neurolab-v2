@@ -203,6 +203,28 @@ const MODULES = [
 ];
 
 const MINI_QUIZZES = {
+  memoria:[
+    [
+      {lvl:0,q:"A memória procedimental é a memória de:",o:["Como se faz algo, mesmo sem conseguir contar como","Fatos e datas que se consegue enunciar","Apenas episódios com carga emocional forte"], c:0,er:"É o saber-fazer: andar de bicicleta, digitar, desenhar no espelho. Melhora com repetição sem precisar passar pela consciência.",ew:"Fatos e datas são a memória declarativa — justamente a que H.M. perdeu. E a carga emocional é outro eixo, que atravessa os dois tipos."},
+      {lvl:1,q:"H.M. melhorou no desenho no espelho ao longo de três dias e não guardava lembrança das sessões. O que isso descarta?",o:["Que os dois tipos de memória sejam graus de um mesmo sistema","Que a memória procedimental exista","Que ele conseguisse aprender qualquer coisa"], c:0,er:"Se fosse um sistema só, mais forte ou mais fraco, não haveria como a habilidade subir enquanto a lembrança do treino não se forma.",ew:"O caso não nega a memória procedimental — ele a demonstra. E não mostra incapacidade de aprender: mostra o contrário, num tipo de aprendizado."},
+      {lvl:2,q:"Por que a cirurgia de H.M. pôde destruir um tipo de memória e poupar o outro?",o:["Porque cada tipo se apoia em estruturas diferentes, e ela removeu só umas","Porque a memória procedimental é mais antiga e por isso resiste mais","Porque o que já foi muito treinado deixa de precisar do cérebro"], c:0,er:"A dissociação é anatômica: o lobo temporal medial saiu, e o estriado — onde o hábito se grava — não foi tocado. É o substrato que separa, não a intensidade.",ew:"Antiguidade evolutiva não protege de lesão, e habilidade treinada continua morando no cérebro — só que em outro lugar."}
+    ],
+    [
+      {lvl:0,q:"O estriado aprende, sobretudo:",o:["A ligação entre um estímulo e a resposta que funcionou, por repetição","A relação entre lugares e objetos, em poucas exposições","Apenas informação que carrega valor emocional"], c:0,er:"É aprendizado lento e por repetição, e entrega algo automático e preso ao contexto do treino.",ew:"Aprender relações em poucas exposições é o que o hipocampo faz — é justamente a outra metade da competição."},
+      {lvl:1,q:"Um rato treinado à exaustão resolve o labirinto por hábito. Silenciando o estriado dele, o que acontece?",o:["Ele volta a resolver por lugar","Ele fica imóvel: nenhuma solução sobrou","Nada muda: o hábito não depende do estriado"], c:0,er:"A solução por lugar reaparece. Ela nunca foi apagada pelo treino — estava coberta pelo hábito.",ew:"Não sobra nada só se houvesse uma solução única. E o hábito depende do estriado: é ele que o silenciamento derruba."},
+      {lvl:2,q:"Por que se diz que os dois sistemas COMPETEM, em vez de somarem forças?",o:["Porque desligar um faz a solução do outro reaparecer, o que exige que ela estivesse coberta","Porque só um deles fica ativo por vez ao longo do dia","Porque um consome a energia que faltaria ao outro"], c:0,er:"O reaparecimento é a prova: os dois registros coexistem, e o comportamento mostra um de cada vez.",ew:"Não é revezamento por horário nem disputa por energia — é disputa pelo controle da SAÍDA, com os dois gravados ao mesmo tempo."}
+    ],
+    [
+      {lvl:0,q:"Amnésia retrógrada graduada quer dizer:",o:["Perder mais das lembranças recentes do que das antigas","Perder a capacidade de formar lembranças novas","Perder apenas as lembranças da infância"], c:0,er:"É a perda do que veio ANTES da lesão, mais forte perto dela e mais fraca quanto mais antiga a lembrança.",ew:"Não formar lembrança nova é amnésia anterógrada — o outro lado. E o gradiente poupa a infância, não a ataca."},
+      {lvl:1,q:"Durante o sono, o hipocampo reativa sequências em velocidade comprimida. Para que isso serve?",o:["Para dar ao córtex a repetição que um episódio único não ofereceu","Para apagar do hipocampo o que já não é útil","Para converter a lembrança em habilidade motora"], c:0,er:"O córtex aprende devagar, por acúmulo. O episódio aconteceu uma vez; a reativação fornece as repetições que faltavam.",ew:"A reativação não é faxina nem conversão de tipo: é ensaio. O que ela produz é independência do hipocampo, não outro tipo de memória."},
+      {lvl:2,q:"Por que o gradiente da amnésia retrógrada é considerado disputado?",o:["Porque para lembranças ricas em detalhe do episódio ele costuma aparecer achatado","Porque nunca foi observado em paciente algum","Porque aparece em animais e nunca em humanos"], c:0,er:"Para conhecimento geral a evidência é boa; para episódio detalhado há dados de que o hipocampo segue exigido a vida toda.",ew:"O gradiente é bem documentado, em humanos inclusive. A disputa não é sobre existir — é sobre até onde a independência chega, e para que tipo de lembrança."}
+    ],
+    [
+      {lvl:0,q:"Reconsolidação é:",o:["Uma lembrança evocada voltar a ficar instável e precisar ser gravada outra vez","A primeira gravação da lembrança, logo depois do episódio","O apagamento definitivo de uma lembrança antiga"], c:0,er:"A evocação pode devolver o traço a um estado lábil, e ele precisa ser reestabilizado para persistir.",ew:"A primeira gravação é a consolidação — sem o RE. E reconsolidar não é apagar: é regravar, com a chance de o conteúdo mudar."},
+      {lvl:1,q:"Em ratos, bloquear a síntese de proteínas depois da evocação prejudica só a memória evocada. Por que essa seletividade importa?",o:["Porque descarta que o efeito seja toxicidade geral do remédio","Porque prova que o mesmo vale em humanos","Porque mostra que a memória evocada era a mais fraca"], c:0,er:"Se tudo fosse prejudicado, a explicação trivial bastaria. Atingir só o que foi evocado mostra que a evocação fez algo específico com aquele traço.",ew:"O experimento é em rato e não se transporta sozinho para humano — as tentativas humanas replicam mal. E força prévia não entra: as memórias comparadas eram equivalentes."},
+      {lvl:2,q:"Para quem estuda, o que a literatura de fato sustenta sobre lembrar?",o:["Recuperar com precisão consolida; o risco vem de recuperar errado ou junto de informação nova","Reler é mais seguro, porque toda evocação reabre a gravação","Evocar é indiferente: não fortalece nem enfraquece"], c:0,er:"O efeito de teste é dos achados mais sólidos que existem: recuperar fortalece. A reconsolidação não desfaz isso — ela diz onde mora o risco.",ew:"\"Toda evocação reabre\" é forte demais: a janela exige surpresa e tende a não abrir para memória antiga e forte. E evocar está longe de ser indiferente."}
+    ]
+  ],
   neuronio:[
     [
       {lvl:0,q:"O que mantém o potencial de repouso de cerca de −70 mV?",o:["A bomba de sódio-potássio e canais de vazamento de K⁺","A liberação contínua de dopamina pelos terminais vizinhos","A bainha de mielina, que envolve e isola o corpo celular"], c:0,er:"A bomba Na⁺/K⁺ (3 Na⁺ para fora, 2 K⁺ para dentro) mais os canais de vazamento sustentam o gradiente de repouso.",ew:"O repouso é elétrico e iônico: depende de bombas e canais, não de neurotransmissores nem de mielina."},
@@ -2214,6 +2236,41 @@ MINI_QUIZZES['neuroanatomia']=[
   ]
 ];
 
+
+ANATOMY['memoria']={
+  title:'Onde cada memória mora',
+  caption:'Toque numa estrutura para ver o que ela guarda — e o que sobra sem ela.',
+  parts:[
+    {id:'hipocampo', label:'Hipocampo', blurb:'Grava episódios em uma exposição e guarda a RELAÇÃO entre as partes da cena. Sem ele, nada de novo vira lembrança de fato — e o que já era antigo continua lá.'},
+    {id:'temporal', label:'Lobo temporal medial', blurb:'A vizinhança do hipocampo, removida dos dois lados no caso de H.M. É o que a cirurgia tirou, e por isso o que a dissociação delimita.'},
+    {id:'estriado', label:'Estriado', blurb:'Aprende estímulo e resposta devagar, por repetição. Entrega hábito: rápido, automático e preso ao contexto do treino.'},
+    {id:'cerebelo', label:'Cerebelo', blurb:'Afina a habilidade motora aprendida. Um cuidado com o caso de H.M.: o cerebelo dele NÃO estava íntegro — anos de anticonvulsivante o deixaram atrofiado, o que aparece na ressonância de 1997 e na histologia póstuma. A cirurgia não o tocou, mas ele também não era um cerebelo normal.'},
+    {id:'cortex', label:'Córtex', blurb:'O destino da consolidação sistêmica. Recebe as reativações do sono e, com repetição suficiente, passa a reunir o padrão sem o hipocampo.'}
+  ],
+  svg:`<svg class="anat-svg" viewBox="0 0 440 220" role="img" aria-label="Corte esquemático com hipocampo, estriado, cerebelo e córtex">
+    <path d="M84 118 C70 62 152 34 218 40 C292 47 336 74 338 112 C339 138 318 152 294 152 L150 152 C110 152 90 140 84 118 Z" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/>
+    <g class="apart" data-anat="memoria" data-struct="cortex">
+      <path d="M84 118 C70 62 152 34 218 40 C292 47 336 74 338 112 L318 112 C314 82 276 60 216 56 C160 52 92 74 102 116 Z" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/>
+    </g>
+    <g class="apart" data-anat="memoria" data-struct="temporal">
+      <path d="M112 126 C120 146 168 152 214 150 L272 148 C266 132 200 128 158 126 Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.5"/>
+    </g>
+    <g class="apart" data-anat="memoria" data-struct="hipocampo">
+      <path d="M150 134 C168 124 200 122 226 128 C244 132 250 140 244 144 C232 138 196 134 172 138 C160 140 152 138 150 134 Z" fill="currentColor" fill-opacity=".42" stroke="currentColor" stroke-width="1.6"/>
+    </g>
+    <g class="apart" data-anat="memoria" data-struct="estriado">
+      <ellipse cx="186" cy="96" rx="34" ry="20" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/>
+    </g>
+    <g class="apart" data-anat="memoria" data-struct="cerebelo">
+      <path d="M292 132 C316 128 334 136 334 146 C334 158 314 164 296 160 C284 157 282 140 292 132 Z" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M292 138 L332 142 M290 146 L332 150 M294 154 L326 158" stroke="currentColor" stroke-width="1" opacity=".5"/>
+    </g>
+    <text x="186" y="100" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">estriado</text>
+    <text x="196" y="170" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">hipocampo</text>
+    <text x="312" y="180" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">cerebelo</text>
+    <text x="200" y="30" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">córtex</text>
+  </svg>`
+};
 ANATOMY['neuroanatomia']={
   title:'O mapa do cérebro',
   caption:'Toque numa região para ver o que é e onde fica.',
@@ -3991,7 +4048,13 @@ const BRIDGE = {
     `A aula disse que cada ferramenta ganha num eixo e perde em outro. Aqui, a comparação direta — e como escolher pela pergunta que você quer responder.`,
     `A aula mostrou que só manipular o cérebro prova causa. Aqui, as ferramentas que fazem isso, da mais antiga (a lesão) à que revolucionou o campo.`,
     `A aula defendeu a evidência convergente. Aqui, para onde o campo está indo — e o que ainda está em aberto.`
-  ]
+  ],
+memoria:[
+ "A aula separou dois sistemas por um caso clínico. Aqui você vê onde cada um mora — e por que uma cirurgia pôde destruir um com o outro de pé.",
+ "A aula disse que hipocampo e estriado disputam a saída. Toque nos dois e compare o que cada um guarda da MESMA tarefa.",
+ "A aula seguiu a lembrança saindo do hipocampo em direção ao córtex. Aqui os dois aparecem juntos, que é como a consolidação sistêmica precisa ser vista.",
+ "A aula mostrou a evocação reabrindo a gravação. Volte ao hipocampo: é o mesmo lugar que gravou, e é ele que a devolve ao estado instável."
+],
 };
 
 function deepBridge(mid, idx){
@@ -4000,6 +4063,10 @@ function deepBridge(mid, idx){
 }
 
 const GLOSSARY = {
+  // --- memória: os sistemas (m17) ---
+  'lobo temporal medial':'A face interna do lobo temporal, dos dois lados do cérebro. Guarda o hipocampo e a vizinhança dele. É o que foi removido no caso de H.M.',
+  'memória procedimental':'A memória de COMO se faz: andar de bicicleta, digitar, desenhar no espelho. Melhora com repetição e não precisa passar pela consciência — nem sempre dá para contar em palavras o que se sabe fazer.',
+  'amnésia retrógrada graduada':'A perda de lembranças ANTERIORES à lesão, mais forte para os anos recentes e mais fraca para os antigos. É o principal indício de que a lembrança deixa de depender do hipocampo com o tempo.',
   // --- célula e sinal ---
   'limiar':'O nível de carga que o neurônio precisa atingir para disparar. Abaixo dele não acontece nada; ao cruzá-lo, o disparo sai sempre igual.',
   'bomba de sódio-potássio':'Uma proteína que empurra sódio para fora e potássio para dentro do neurônio, mantendo-o "carregado" e pronto para disparar. Gasta muita energia.',
@@ -5717,7 +5784,17 @@ metodos:[
   after:"Ligar e desligar neurônios escolhidos, na hora exata. Isso transforma correlação em CAUSA — e é por isso que ela mudou o campo. Em animais: em humanos, ainda não."},
  {q:"Se nenhum método sozinho prova nada, como a neurociência chega a alguma conclusão?", o:["Por convergência: métodos diferentes, mesma resposta","Escolhendo sempre o método mais confiável de todos","Repetindo o mesmo experimento um grande número de vezes"], c:0,
   after:"Por CONVERGÊNCIA. Um resultado sozinho vale pouco; vários métodos com fraquezas diferentes apontando para a mesma conclusão valem muito. Não se constrói confiança com uma prova, e sim com um cerco."}
-]
+],
+memoria:[
+ {q:"Um paciente perdeu a capacidade de formar lembranças novas. Ele treina uma habilidade motora difícil por três dias seguidos. O que acontece?", o:["Ele não melhora: sem lembrar do treino, não há aprendizado","Ele melhora normalmente, e não guarda lembrança das sessões","Ele melhora só enquanto a sessão dura, e volta ao zero no dia seguinte"], c:1,
+  after:"Melhora normalmente. A curva de aprendizado é comum, e a lembrança de ter treinado não se forma. Não é a mesma memória em graus diferentes — são sistemas em estruturas diferentes, e a cirurgia alcançou uma e não a outra."},
+ {q:"Um rato aprendeu a resolver um labirinto por hábito, sempre virando para o mesmo lado. Você silencia o estriado dele por alguns minutos. O que ele faz?", o:["Fica perdido: a única solução que tinha foi desligada","Volta a resolver por lugar, indo aonde a comida estava","Repete o giro de sempre, porque o hábito não depende do estriado"], c:1,
+  after:"Volta a resolver por lugar. A solução do hipocampo nunca foi apagada pelo treino — ela estava coberta. Desligar o hábito não ensina nada novo ao animal: revela o que já estava gravado e não chegava à saída."},
+ {q:"Uma lesão no hipocampo apaga lembranças de qual período da vida?", o:["De toda a vida, por igual","Sobretudo dos anos recentes — mas depende do tipo de lembrança","Só do dia da lesão em diante"], c:1,
+  after:"Sobretudo do recente, e com uma ressalva que importa: o gradiente aparece bem para conhecimento geral, e tende a achatar quando a lembrança é rica em detalhe do episódio. A mudança de lugar é real; o quanto ela se completa está em disputa."},
+ {q:"Você lembra de um episódio antigo. Isso deixa a lembrança mais frágil ou mais firme?", o:["Sempre mais frágil: toda evocação reabre a gravação","Em geral mais firme — mas a janela pode abrir e deixar entrar erro","Indiferente: lembrar não altera nada"], c:1,
+  after:"Em geral mais firme. Recuperar é a técnica de estudo que mais consolida, e isso é dos achados mais sólidos que existem. Mas em certas condições a evocação desestabiliza a lembrança, e ela é regravada — e aí o que você sabe hoje, ou o que alguém acabou de te contar, pode entrar junto."}
+],
 };
 
 function predKey(mid, idx){ return 'P:'+mid+':'+idx; }
@@ -6093,7 +6170,25 @@ metodos:[
   hn:"A força não vem de um método bom: vem de métodos que ERRAM DE MANEIRAS DIFERENTES. Se todos errassem igual, mil estudos concordantes não valeriam nada. Por isso repetir com o MESMO método vale menos que convergir entre métodos diferentes.",
   w:"E se um resultado só aparece com um método?",
   wa:"Desconfie. Pode ser real — mas também pode ser um artefato daquele método. Foi assim que várias descobertas de fMRI caíram."}
-]
+],
+memoria:[
+ {s:["Uma cirurgia remove o lobo temporal medial dos dois lados","O paciente para de formar lembranças novas de fatos e episódios","Mas treina desenho no espelho por três dias e MELHORA como qualquer um","E não guarda lembrança nenhuma das sessões de treino","A habilidade não passa por ali: apoia-se no estriado e no cerebelo"], h:4,
+  hn:"O que fecha o argumento não é o desempenho: é o SUBSTRATO. Melhorar sem lembrar ainda poderia ser lembrança fraca demais para relatar. O que descarta a explicação por grau é a habilidade morar FORA do que foi removido — a dissociação é anatômica, não de intensidade.",
+  w:"E se a habilidade também dependesse do lobo temporal medial?",
+  wa:"A cirurgia teria levado as duas, e o caso não separaria nada: seria amnésia e ponto. É a habilidade estar ancorada em outro lugar que transforma um paciente numa evidência sobre a arquitetura da memória."},
+ {s:["Um labirinto aceita duas soluções: ir ao lugar certo, ou repetir o giro que funcionou","No começo do treino o rato resolve por lugar — a solução do hipocampo","Com repetição, passa a resolver por resposta fixa — a solução do estriado","Silenciar o estriado num animal já treinado faz a solução por lugar REAPARECER","Logo, ela nunca foi apagada: estava coberta"], h:3,
+  hn:"O experimento não mede qual sistema é melhor. Ele mostra que os dois guardaram a resposta ao mesmo tempo, e que um estava calando o outro na saída. Desligar não ensina nada ao animal — revela o que já estava lá. É por isso que esqueci como fazia muitas vezes quer dizer outro jeito assumiu o controle.",
+  w:"E se o treino apagasse a solução do hipocampo em vez de encobri-la?",
+  wa:"Silenciar o estriado não faria a solução por lugar voltar — não haveria o que voltar. O reaparecimento é a prova de que os dois registros coexistem, e de que o comportamento mostra só um deles de cada vez."},
+ {s:["Um episódio é gravado uma vez, e o córtex aprende devagar, por acúmulo","Durante o sono e o repouso acordado, o hipocampo reativa a sequência comprimida","O córtex recebe a mesma sequência muitas vezes e soma um ajuste pequeno a cada uma","Com repetição suficiente, o córtex reúne o padrão sozinho","A lembrança antiga passa a depender menos do hipocampo","E uma lesão tardia poupa o que já ficou independente"], h:1,
+  hn:"A repetição vem de DENTRO, não do mundo. O episódio aconteceu uma vez só; a reativação acontece muitas vezes, sem você fazer nada. É isso que resolve o problema de treinar um sistema lento com uma experiência que não se repete — e é aqui que dormir mal cobra o preço.",
+  w:"E se a reativação durante o sono não acontecesse?",
+  wa:"Não haveria gradiente: a lembrança dependeria do hipocampo a vida inteira, e uma lesão aos setenta anos levaria também a infância. O que faz o antigo sobreviver não é a idade dele — é quantas vezes foi reativado desde então."},
+ {s:["Em ratos, uma memória de medo já consolidada é evocada","Bloquear a síntese de proteínas logo depois prejudica justamente essa memória","As memórias que não foram evocadas passam intactas","Logo, a evocação a devolveu a um estado em que ela podia mudar","Mas a janela exige surpresa na evocação, e tende a não abrir para memória antiga e forte","E em humanos as tentativas de usar isso para apagar medo replicam mal"], h:2,
+  hn:"A seletividade é a prova, e é ela que separa o achado de um artefato. Se o bloqueio prejudicasse tudo, seria toxicidade geral do remédio. Prejudicar SÓ a lembrança evocada mostra que a evocação fez algo específico com aquela memória — nenhuma outra observação do experimento diz isso.",
+  w:"E se a reconsolidação não existisse?",
+  wa:"A memória continuaria distorcível, porque lembrar já é reconstruir: você preenche lacuna com o que costuma acontecer e confunde a fonte do que sabe. O que sumiria é a janela BIOQUÍMICA em que o traço pode ser alterado de propósito — e com ela, a esperança de tratar trauma enfraquecendo a gravação."}
+],
 };
 
 /* =====================================================================
@@ -6397,6 +6492,40 @@ MODULES.push({
      o:['A altura do limiar de decisão','A velocidade de condução do axônio','A quantidade de opções disponíveis','O nível de cortisol no momento'], c:0, l:3,
      er:'Isso. Limiar baixo decide rápido e erra mais; limiar alto acerta mais e demora. É um parâmetro ajustável.',
      ew:'Não é condução nem hormônio: no modelo, a troca corresponde diretamente ao quanto de evidência é exigido antes de fechar.'}
+  ]
+});
+
+MODULES.push({
+  id:'memoria', n:'17', title:'Memória: os sistemas', color:'var(--jade)', hex:'#10b981',
+  tag:'Não é uma memória só, e elas competem',
+  intro:'O curso já ensinou como uma sinapse guarda informação. Falta o andar de cima: a memória não é um arquivo único, são sistemas separados, que aprendem por regras diferentes e disputam o controle do comportamento.',
+  lessons:[
+    {t:'Dois sistemas, e o paciente que os separou',
+     b:`<p>Em 1953, uma cirurgia para conter epilepsia removeu boa parte do <span class="term">lobo temporal medial</span> dos dois lados de um paciente conhecido como H.M. Ele deixou de formar lembranças novas de fatos e de episódios — e perdeu também parte dos anos anteriores à operação. O prejuízo não era só para a frente.</p><p>O achado que separou os sistemas veio de uma tarefa de desenhar olhando para um espelho, ao longo de três dias. Ele melhorava como qualquer pessoa melhora, e não guardava lembrança nenhuma das sessões de treino. Você faz essa mesma divisão sem perceber: sabe contar o que jantou ontem, e sabe andar de bicicleta sem conseguir contar como. A <span class="term">memória declarativa</span> e a <span class="term">memória procedimental</span> não são graus da mesma coisa — a segunda não passa pelo lobo temporal medial — ela se apoia no estriado e no cerebelo.</p>`},
+    {t:'Hipocampo e estriado: por que competem',
+     b:`<p>Os dois sistemas aprendem a mesma tarefa por regras diferentes. O <span class="term">hipocampo</span> grava a relação entre as coisas — o que aconteceu, onde, junto de quê — e faz isso em poucas exposições, entregando algo flexível. O <span class="term">estriado</span> grava a ligação entre um estímulo e a resposta que funcionou, devagar e por repetição, e entrega o contrário: rápido, automático e preso ao contexto do treino.</p><p>Num labirinto que aceita as duas soluções, o rato começa resolvendo por lugar e, com treino, passa a resolver por resposta fixa. O experimento decisivo silencia temporariamente uma das estruturas: desligar o estriado de um animal já treinado faz a solução por LUGAR reaparecer. Ela não tinha sido apagada — estava calada, coberta pelo hábito. Você conhece isso: dirigindo no automático, passar direto pela conversão que ia usar hoje.</p>`},
+    {t:'A lembrança muda de lugar enquanto você dorme',
+     b:`<p>Uma lembrança recente depende do hipocampo; uma antiga, muito menos. É o que sugere a <span class="term">amnésia retrógrada graduada</span>: a lesão leva os anos recentes e poupa a infância. Entre gravar e ficar independente existe um processo, e ele roda quando você não está usando a memória — no sono, e também no repouso acordado, o hipocampo reativa as sequências em velocidade comprimida, e o córtex soma um ajuste pequeno a cada repetição.</p><p>Até onde essa independência chega está <em>em disputa</em>. Para conhecimento geral, a evidência do gradiente é boa. Para lembranças ricas em detalhe do próprio episódio, há dados consistentes de que o hipocampo segue sendo exigido a vida toda — e nessa leitura o gradiente aparece achatado, e o que fica independente é uma versão transformada, não a mesma lembrança.</p>`},
+    {t:'Lembrar pode reabrir a gravação',
+     b:`<p>Lembrar nem sempre é abrir um arquivo e fechar sem tocar. Em ratos, bloquear a síntese de proteínas logo depois de o animal evocar uma memória de medo prejudica justamente aquela memória, e só ela: as que não foram evocadas passam intactas. A evocação a devolveu a um estado instável, e ela precisou ser gravada outra vez — é a <span class="term">reconsolidação</span>.</p><p>Só que a janela não abre sempre. Ela depende de a evocação trazer alguma surpresa, e tende a não abrir para memórias antigas e fortes. E em humanos a evidência é bem mais frágil: os estudos que tentaram usar isso para apagar medo acumularam falhas de replicação. Para você, vale a regra prudente — recuperar com precisão CONSOLIDA, e é a melhor técnica de estudo que existe. O risco não é lembrar: é lembrar errado, ou lembrar junto de informação nova, porque aí o erro entra na regravação.</p>`}
+  ],
+  quiz:[
+    {q:'O que o caso de H.M. permite concluir?',
+     o:['Que habilidade e episódio se apoiam em estruturas diferentes','Que a memória procedimental resiste mais porque é mais antiga','Que a cirurgia poupou apenas o que ele já tinha treinado muito','Que ele conservou intacto tudo o que sabia antes da operação'], c:0, l:0,
+     er:'Isso. Ele melhorava numa habilidade cujo substrato a cirurgia não alcançou, sem guardar lembrança das sessões. A dissociação é anatômica, não de intensidade.',
+     ew:'Não é questão de resistência nem de quanto foi treinado: é de LUGAR. E ele não conservou tudo o que sabia antes — parte dos anos anteriores à cirurgia também se perdeu.'},
+    {q:'Silenciar o estriado de um rato já treinado faz a solução por lugar reaparecer. O que isso mostra?',
+     o:['Que as duas soluções coexistiam, e uma estava cobrindo a outra','Que o rato reaprendeu a rota na hora','Que o hipocampo assumiu as funções do estriado','Que o treino havia apagado a solução por lugar'], c:0, l:1,
+     er:'Exato. Reaparecer exige que ainda estivesse gravada. O treino não apagou a solução do hipocampo — o hábito passou a ocupar a saída.',
+     ew:'Não houve tempo de reaprender, e nada foi assumido por outra estrutura. E se o treino tivesse apagado a solução por lugar, ela não teria como voltar.'},
+    {q:'O que a amnésia retrógrada graduada indica?',
+     o:['Que a dependência do hipocampo diminui com o reprocessamento — ao menos para conhecimento geral','Que as lembranças antigas foram gravadas com mais força','Que o hipocampo descarta o antigo por falta de espaço','Que o gradiente vale igualmente para todo tipo de lembrança'], c:0, l:2,
+     er:'Certo, e com a ressalva no lugar: o gradiente é claro para conhecimento geral e tende a achatar quando a lembrança é rica em detalhe do episódio.',
+     ew:'Não é força nem espaço — é mudança de dependência. E não é uniforme: o gradiente aparece com clareza sobretudo no conhecimento geral.'},
+    {q:'Em que condição evocar uma lembrança pode alterá-la?',
+     o:['Quando a recuperação é imprecisa, ou vem junto de informação nova','Sempre que a lembrança é evocada, sem exceção','Só quando a lembrança é emocional','Nunca: evocar é leitura, não escrita'], c:0, l:3,
+     er:'Isso. Recuperar com precisão fortalece; o risco aparece quando a recuperação erra, ou quando informação nova entra na mesma janela.',
+     ew:'"Sempre" é forte demais: a janela depende de haver surpresa na evocação e tende a não abrir para memória antiga e forte. E "nunca" ignora o achado de que a evocação chega a desestabilizar o traço.'}
   ]
 });
 
