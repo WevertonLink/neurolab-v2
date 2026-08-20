@@ -22,12 +22,13 @@
 <text x="592" y="314" text-anchor="middle" fill="#e9e9f0" font-size="15">estriado</text>
 <ellipse cx="742" cy="308" rx="52" ry="24" fill="#10b981" fill-opacity=".2" stroke="#10b981" stroke-width="2"/>
 <text x="742" y="314" text-anchor="middle" fill="#e9e9f0" font-size="15">cerebelo</text>
-<text x="527" y="370" fill="#9aa0b4" font-size="16">grava por repetição, devagar</text>
-<text x="527" y="396" fill="#9aa0b4" font-size="16">automático, e difícil de contar</text>
+<text x="527" y="366" fill="#9aa0b4" font-size="15">estriado: gruda resposta em estímulo, por reforço</text>
+<text x="527" y="392" fill="#9aa0b4" font-size="15">cerebelo: corrige um modelo interno, por erro</text>
+<text x="527" y="418" fill="#10b981" font-size="15">é o cerebelo que sustenta o espelho</text>
 
 <path d="M441 300 L500 300" stroke="#2c2c45" stroke-width="2" stroke-dasharray="6 6"/>
 <rect x="60" y="452" width="821" height="86" rx="12" fill="#10b981" fill-opacity=".08" stroke="#10b981" stroke-width="1.5"/>
-<text x="86" y="486" fill="#e9e9f0" font-size="17">A cirurgia de H.M. removeu o lobo temporal medial dos dois lados.</text>
+<text x="86" y="486" fill="#e9e9f0" font-size="17">A cirurgia de H.M. removeu boa parte do lobo temporal medial dos dois lados, o hipocampo incluído.</text>
 <text x="86" y="514" fill="#9aa0b4" font-size="17">Ele melhorava numa habilidade e não guardava lembrança do treino — e há pacientes com o perfil inverso.</text>
 
 <!-- ================= FAIXA 2 — consolidação ================= -->
@@ -45,7 +46,7 @@
 <path d="M270 768 C400 800 480 810 596 784" fill="none" stroke="#10b981" stroke-width="1.6" opacity=".45"/>
 <polygon points="596,784 578,780 580,795" fill="#10b981" opacity=".45"/>
 <text x="432" y="668" text-anchor="middle" fill="#9aa0b4" font-size="16">reativação, uma noite após a outra</text>
-<text x="432" y="836" text-anchor="middle" fill="#9aa0b4" font-size="15">o episódio aconteceu uma vez; a reativação, muitas</text>
+<text x="432" y="836" text-anchor="middle" fill="#9aa0b4" font-size="15">o episódio aconteceu uma vez; a reativação, muitas — o acúmulo no córtex é o modelo</text>
 
 <text x="60" y="890" fill="#9aa0b4" font-size="16">dependência do hipocampo, com o passar do tempo</text>
 <rect x="60" y="904" width="821" height="26" rx="13" fill="#2c2c45"/>
