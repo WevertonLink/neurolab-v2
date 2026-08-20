@@ -203,50 +203,6 @@ const MODULES = [
 ];
 
 const MINI_QUIZZES = {
-  ritmos:[
-    [
-      {lvl:0,q:"No laço que produz a oscilação, qual é o papel do interneurônio PV?",o:["Calar as células piramidais que acabaram de excitá-lo","Excitar as células piramidais em cadeia","Conduzir o sinal para outras áreas do córtex"], c:0,er:"Ele é a metade inibitória: é excitado pelas piramidais e responde silenciando-as. O ciclo nasce dessa ida e volta.",ew:"Se ele excitasse, não haveria ciclo — a atividade só cresceria. E o laço é local: quem leva sinal para longe são os axônios de projeção."},
-      {lvl:1,q:"Um remédio que faz a inibição GABA-A decair mais devagar tende a:",o:["Baixar a frequência da oscilação","Aumentar a frequência da oscilação","Não mudar a frequência, só a amplitude"], c:0,er:"O período do ciclo é o tempo que a inibição leva para sair do caminho. Decaimento mais lento significa ciclo mais longo, ou seja, frequência menor.",ew:"Inibição mais duradoura atrasa o retorno das piramidais — atrasa o ciclo. E não é só amplitude: a cinética da inibição é o que define o período."},
-      {lvl:2,q:"Por que se diz que a oscilação EMERGE do circuito, em vez de ser imposta a ele?",o:["Porque nasce do laço excitação-inibição, sem nenhuma célula marca-passo","Porque é gerada por um núcleo central que sincroniza o resto","Porque depende de um estímulo rítmico vindo do ambiente"], c:0,er:"Nenhum elemento carrega o ritmo sozinho: ele é uma propriedade do laço, e some se você desfizer o laço.",ew:"Não há maestro nem metrônomo externo aqui. O ritmo aparece mesmo em fatia isolada, sem núcleo central e sem estímulo do mundo."}
-    ],
-    [
-      {lvl:0,q:"Acoplamento fase-amplitude entre theta e gama significa que:",o:["A força do gama depende da fase em que o theta está","Os dois ritmos têm a mesma frequência","O gama some quando o theta aparece"], c:0,er:"O gama irrompe em fases determinadas do ciclo lento, sempre as mesmas — é isso que a medida capta.",ew:"Eles têm frequências bem diferentes, e não se excluem: o rápido aparece DENTRO do lento, não no lugar dele."},
-      {lvl:1,q:"A proposta de que a razão theta/gama fixaria o limite da memória de trabalho deve ser tratada como:",o:["Uma leitura influente e ainda em disputa","Um fato estabelecido, como o próprio acoplamento","Uma ideia já descartada pela literatura"], c:0,er:"O acoplamento replica; a leitura dele como o mecanismo da capacidade não fechou. São dois níveis de confiança diferentes.",ew:"Ela não tem o mesmo respaldo que o acoplamento, e também não foi descartada — segue viva e disputada, que é uma terceira coisa."},
-      {lvl:2,q:"Por que vale desconfiar ao transportar achados de theta do rato para o humano?",o:["Porque o theta humano é mais lento e mais intermitente","Porque humanos não têm hipocampo comparável","Porque em humanos o gama não existe"], c:0,er:"A diferença de frequência e de continuidade é grande o bastante para que a conta de quantos gamas cabem num theta não seja a mesma.",ew:"O hipocampo humano é bem comparável, e o gama existe nos dois. O que muda é o regime do theta — e é justamente isso que a conta usa."}
-    ],
-    [
-      {lvl:0,q:"Um neurônio responde mais a disparos que chegam:",o:["Juntos, dentro de poucos milissegundos","Espalhados ao longo de um segundo","Sempre igual: o total é o que conta"], c:0,er:"A janela de integração é curta, então coincidência vale muito mais que a mesma quantidade de disparo diluída no tempo.",ew:"Se só o total contasse, sincronizar não compraria nada — e é justamente por a janela ser curta que o ritmo passa a significar algo."},
-      {lvl:1,q:"Duas populações conectadas passam a se influenciar muito mais, sem nenhuma mudança nas sinapses. A explicação compatível é:",o:["Elas entraram em fase, e os disparos passaram a cair na janela receptiva","Cresceu o número de neurônios em cada população","A mielina das conexões entre elas aumentou"], c:0,er:"A fase muda o roteamento em milissegundos, coisa que mudança de sinapse não faz nessa escala.",ew:"O enunciado fixa as sinapses e a população — o que sobra para variar rápido é o tempo relativo entre os disparos."},
-      {lvl:2,q:"Por que a crítica à comunicação por coerência é considerada séria?",o:["Porque sincronia e comunicação eficaz andam juntas sem que se saiba qual causa qual","Porque a sincronia entre áreas distantes nunca foi registrada","Porque a ideia contradiz o funcionamento das sinapses"], c:0,er:"É o problema clássico de direção: correlação forte não decide causa. A sincronia pode ser produto do circuito bem afinado, e não a ferramenta que o afina.",ew:"A sincronia é registrada com folga, e a ideia não contradiz sinapse nenhuma — ela se apoia numa propriedade real, a janela curta de integração."}
-    ],
-    [
-      {lvl:0,q:"A onda lenta do sono profundo é:",o:["A alternância do córtex entre um estado calado e um ativo, cerca de uma vez por segundo","Uma salva rápida de 11 a 16 Hz vinda do tálamo","Uma descarga curtíssima do hipocampo, mais rápida que as duas"], c:0,er:"É o ritmo mais lento dos três, e é a fase ativa dele que abre a janela para o que chega de fora do córtex.",ew:"A salva de 11 a 16 Hz é o fuso, e a descarga curtíssima é o ripple. Os três se encaixam, mas cada um tem sua velocidade e sua origem."},
-      {lvl:1,q:"Se os ripples do hipocampo passassem a cair na fase calada da onda lenta, o esperado seria:",o:["Menos transferência para o córtex, porque ele quase não dispara nessa fase","Mais transferência, porque o córtex estaria menos ocupado","Nenhuma diferença: o que importa é o número de ripples"], c:0,er:"A fase calada é justamente quando o córtex não responde. A mesma repetição chegaria a uma porta fechada.",ew:"Córtex calado não é córtex disponível: é córtex que não dispara. E o experimento mostra que o encaixe importa — reforçá-lo melhora a memória."},
-      {lvl:2,q:"Por que o acoplamento entre os ritmos do sono é tratado como CAUSA da consolidação, e não só como coincidência?",o:["Porque reforçar o acoplamento experimentalmente melhora a memória no dia seguinte","Porque os dois aparecem sempre juntos nos registros","Porque a onda lenta é a única atividade do sono profundo"], c:0,er:"Manipular e ver a memória mudar é o que separa causa de correlação — é exatamente o passo que falta na disputa da aula anterior.",ew:"Aparecer junto é correlação, e é o que a crítica à coerência cobra. E o sono profundo tem bem mais que onda lenta: fusos e ripples estão lá dentro."}
-    ]
-  ],
-  memoria:[
-    [
-      {lvl:0,q:"A memória procedimental é a memória de:",o:["Como se faz algo, mesmo sem conseguir contar como","Fatos e datas que se consegue enunciar","Apenas episódios com carga emocional forte"], c:0,er:"É o saber-fazer: andar de bicicleta, digitar, desenhar no espelho. Melhora com repetição sem precisar passar pela consciência.",ew:"Fatos e datas são a memória declarativa — justamente a que H.M. perdeu. E a carga emocional é outro eixo, que atravessa os dois tipos."},
-      {lvl:1,q:"H.M. melhorou no desenho no espelho ao longo de três dias e não guardava lembrança das sessões. O que isso descarta?",o:["Que os dois tipos de memória sejam graus de um mesmo sistema","Que a memória procedimental exista","Que ele conseguisse aprender qualquer coisa"], c:0,er:"Se fosse um sistema só, mais forte ou mais fraco, não haveria como a habilidade subir enquanto a lembrança do treino não se forma — e o quadro inverso, nos pacientes cerebelares, fecha a saída que ainda sobrava.",ew:"O caso não nega a memória procedimental — ele a demonstra. E não mostra incapacidade de aprender: mostra o contrário, num tipo de aprendizado."},
-      {lvl:2,q:"Por que a cirurgia de H.M. pôde destruir um tipo de memória e poupar o outro?",o:["Porque cada tipo se apoia em estruturas diferentes, e ela removeu só umas","Porque a memória procedimental é mais antiga e por isso resiste mais","Porque o que já foi muito treinado deixa de precisar do cérebro"], c:0,er:"A dissociação é anatômica: o lobo temporal medial saiu, e os circuitos motores que sustentam a habilidade ficaram fora do corte. É o substrato que separa, não a intensidade.",ew:"Antiguidade evolutiva não protege de lesão, e habilidade treinada continua morando no cérebro — só que em outro lugar."}
-    ],
-    [
-      {lvl:0,q:"O estriado aprende, sobretudo:",o:["A ligação entre um estímulo e a resposta que funcionou, por repetição","A relação entre lugares e objetos, em poucas exposições","Apenas informação que carrega valor emocional"], c:0,er:"É aprendizado lento e por repetição, e entrega algo automático e preso ao contexto do treino.",ew:"Aprender relações em poucas exposições é o que o hipocampo faz — é justamente a outra metade da competição."},
-      {lvl:1,q:"Um rato treinado à exaustão resolve o labirinto por hábito. Silenciando o estriado dele, o que acontece?",o:["Ele volta a resolver por lugar","Ele fica imóvel: nenhuma solução sobrou","Nada muda: o hábito não depende do estriado"], c:0,er:"A solução por lugar reaparece. Ela nunca foi apagada pelo treino — estava coberta pelo hábito.",ew:"Não sobra nada só se houvesse uma solução única. E o hábito depende do estriado: é ele que o silenciamento derruba."},
-      {lvl:2,q:"Por que se diz que os dois sistemas COMPETEM, em vez de somarem forças?",o:["Porque desligar um faz a solução do outro reaparecer, o que exige que ela estivesse coberta","Porque só um deles fica ativo por vez ao longo do dia","Porque um consome a energia que faltaria ao outro"], c:0,er:"O reaparecimento é a prova: os dois registros coexistem, e o comportamento mostra um de cada vez.",ew:"Não é revezamento por horário nem disputa por energia — é disputa pelo controle da SAÍDA, com os dois gravados ao mesmo tempo."}
-    ],
-    [
-      {lvl:0,q:"Amnésia retrógrada graduada quer dizer:",o:["Perder mais das lembranças recentes do que das antigas","Perder a capacidade de formar lembranças novas","Perder apenas as lembranças da infância"], c:0,er:"É a perda do que veio ANTES da lesão, mais forte perto dela e mais fraca quanto mais antiga a lembrança.",ew:"Não formar lembrança nova é amnésia anterógrada — o outro lado. E o gradiente poupa a infância, não a ataca."},
-      {lvl:1,q:"Durante o sono, o hipocampo reativa sequências em velocidade comprimida. Para que isso serve?",o:["Para dar ao córtex a repetição que um episódio único não ofereceu","Para apagar do hipocampo o que já não é útil","Para converter a lembrança em habilidade motora"], c:0,er:"O córtex aprende devagar, por acúmulo. O episódio aconteceu uma vez; a reativação fornece as repetições que faltavam.",ew:"A reativação não é faxina nem conversão de tipo: é ensaio. O que ela produz é independência do hipocampo, não outro tipo de memória."},
-      {lvl:2,q:"Por que o gradiente da amnésia retrógrada é considerado disputado?",o:["Porque para lembranças ricas em detalhe do episódio ele costuma aparecer achatado","Porque nunca foi observado em paciente algum","Porque aparece em animais e nunca em humanos"], c:0,er:"Para conhecimento geral a evidência é boa; para episódio detalhado há dados de que o hipocampo segue exigido a vida toda.",ew:"O gradiente é bem documentado, em humanos inclusive. A disputa não é sobre existir — é sobre até onde a independência chega, e para que tipo de lembrança."}
-    ],
-    [
-      {lvl:0,q:"Reconsolidação é:",o:["Uma lembrança evocada voltar a ficar instável e precisar ser gravada outra vez","A primeira gravação da lembrança, logo depois do episódio","O apagamento definitivo de uma lembrança antiga"], c:0,er:"A evocação pode devolver o traço a um estado lábil, e ele precisa ser reestabilizado para persistir.",ew:"A primeira gravação é a consolidação — sem o RE. E reconsolidar não é apagar: é regravar, com a chance de o conteúdo mudar."},
-      {lvl:1,q:"Em ratos, bloquear a síntese de proteínas depois da evocação prejudica só a memória evocada. Por que essa seletividade importa?",o:["Porque descarta que o efeito seja toxicidade geral do remédio","Porque prova que o mesmo vale em humanos","Porque mostra que a memória evocada era a mais fraca"], c:0,er:"Se tudo fosse prejudicado, a explicação trivial bastaria. Atingir só o que foi evocado mostra que a evocação fez algo específico com aquele traço.",ew:"O experimento é em rato e não se transporta sozinho para humano — as tentativas humanas replicam mal. E força prévia não entra: as memórias comparadas eram equivalentes."},
-      {lvl:2,q:"Para quem estuda, o que a literatura de fato sustenta sobre lembrar?",o:["Recuperar com precisão consolida; o risco vem de recuperar errado ou junto de informação nova","Reler é mais seguro, porque toda evocação reabre a gravação","Evocar é indiferente: não fortalece nem enfraquece"], c:0,er:"O efeito de teste é dos achados mais sólidos que existem: recuperar fortalece. A reconsolidação não desfaz isso — ela diz onde mora o risco.",ew:"\"Toda evocação reabre\" é forte demais: a janela exige surpresa e tende a não abrir para memória antiga e forte. E evocar está longe de ser indiferente."}
-    ]
-  ],
   neuronio:[
     [
       {lvl:0,q:"O que mantém o potencial de repouso de cerca de −70 mV?",o:["A bomba de sódio-potássio e canais de vazamento de K⁺","A liberação contínua de dopamina pelos terminais vizinhos","A bainha de mielina, que envolve e isola o corpo celular"], c:0,er:"A bomba Na⁺/K⁺ (3 Na⁺ para fora, 2 K⁺ para dentro) mais os canais de vazamento sustentam o gradiente de repouso.",ew:"O repouso é elétrico e iônico: depende de bombas e canais, não de neurotransmissores nem de mielina."},
@@ -2258,86 +2214,6 @@ MINI_QUIZZES['neuroanatomia']=[
   ]
 ];
 
-
-ANATOMY['memoria']={
-  title:'Onde cada memória mora',
-  caption:'Toque numa estrutura para ver o que ela guarda — e o que sobra sem ela.',
-  parts:[
-    {id:'hipocampo', label:'Hipocampo', blurb:'Grava episódios em uma exposição e guarda a RELAÇÃO entre as partes da cena. Sem ele, nada de novo vira lembrança de fato — e o que já era antigo continua lá.'},
-    {id:'temporal', label:'Lobo temporal medial', blurb:'A vizinhança do hipocampo, removida dos dois lados no caso de H.M. É o que a cirurgia tirou, e por isso o que a dissociação delimita.'},
-    {id:'estriado', label:'Estriado', blurb:'Aprende estímulo e resposta devagar, por repetição. Entrega hábito: rápido, automático e preso ao contexto do treino.'},
-    {id:'cerebelo', label:'Cerebelo', blurb:'Afina a habilidade motora aprendida. Um cuidado com o caso de H.M.: o cerebelo dele NÃO estava íntegro — anos de anticonvulsivante o deixaram atrofiado, o que aparece na ressonância de 1997 e na histologia póstuma. A cirurgia não o tocou, mas ele também não era um cerebelo normal.'},
-    {id:'cortex', label:'Córtex', blurb:'O destino da consolidação sistêmica. Recebe as reativações do sono e, com repetição suficiente, passa a reunir o padrão sem o hipocampo.'}
-  ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 220" role="img" aria-label="Corte esquemático com hipocampo, estriado, cerebelo e córtex">
-    <path d="M84 118 C70 62 152 34 218 40 C292 47 336 74 338 112 C339 138 318 152 294 152 L150 152 C110 152 90 140 84 118 Z" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/>
-    <g class="apart" data-anat="memoria" data-struct="cortex">
-      <path d="M84 118 C70 62 152 34 218 40 C292 47 336 74 338 112 L318 112 C314 82 276 60 216 56 C160 52 92 74 102 116 Z" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/>
-    </g>
-    <g class="apart" data-anat="memoria" data-struct="temporal">
-      <path d="M112 126 C120 146 168 152 214 150 L272 148 C266 132 200 128 158 126 Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.5"/>
-    </g>
-    <g class="apart" data-anat="memoria" data-struct="hipocampo">
-      <path d="M150 134 C168 124 200 122 226 128 C244 132 250 140 244 144 C232 138 196 134 172 138 C160 140 152 138 150 134 Z" fill="currentColor" fill-opacity=".42" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="memoria" data-struct="estriado">
-      <ellipse cx="186" cy="96" rx="34" ry="20" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="memoria" data-struct="cerebelo">
-      <path d="M292 132 C316 128 334 136 334 146 C334 158 314 164 296 160 C284 157 282 140 292 132 Z" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M292 138 L332 142 M290 146 L332 150 M294 154 L326 158" stroke="currentColor" stroke-width="1" opacity=".5"/>
-    </g>
-    <text x="186" y="100" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">estriado</text>
-    <text x="196" y="170" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">hipocampo</text>
-    <text x="312" y="180" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">cerebelo</text>
-    <text x="200" y="30" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">córtex</text>
-  </svg>`
-};
-
-ANATOMY['ritmos']={
-  title:'Onde cada ritmo nasce',
-  caption:'Toque numa estrutura para ver que ritmo sai dela — e o que o ritmo serve para fazer.',
-  parts:[
-    {id:'piramidal', label:'Célula piramidal', blurb:'A excitatória do laço. Dispara, recruta o interneurônio que vai calá-la, e volta a disparar quando a inibição decai. É metade do motor da oscilação.'},
-    {id:'interneuronio', label:'Interneurônio PV', blurb:'A inibitória do laço, e o cronômetro dele: o tempo que a inibição leva para decair é o que fixa a frequência. Acioná-la seletivamente perto de 40 Hz produz gama.'},
-    {id:'hipocampo', label:'Hipocampo', blurb:'Onde theta e gama foram medidos encaixados, e de onde saem os ripples do sono — as salvas curtíssimas em que a sequência gravada é repetida.'},
-    {id:'talamo', label:'Tálamo', blurb:'A origem dos fusos do sono. Eles não caem em qualquer momento: encaixam-se na fase ativa da onda lenta cortical.'},
-    {id:'cortex', label:'Córtex', blurb:'Onde a onda lenta alterna estado calado e estado ativo, cerca de uma vez por segundo. É a fase ativa que abre a porta para o que o hipocampo manda.'}
-  ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 240" role="img" aria-label="Esquema com córtex, tálamo, hipocampo e o laço piramidal-interneurônio">
-    <path d="M60 96 C48 46 128 22 196 28 C272 35 318 62 320 100 C321 126 300 140 276 140 L126 140 C88 140 66 118 60 96 Z" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"/>
-    <g class="apart" data-anat="ritmos" data-struct="cortex">
-      <path d="M60 96 C48 46 128 22 196 28 C272 35 318 62 320 100 L300 100 C296 70 258 48 194 44 C136 40 70 62 78 94 Z" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M78 88 C104 74 150 70 196 74 C244 78 282 88 300 98" fill="none" stroke="currentColor" stroke-width="1" opacity=".45"/>
-    </g>
-    <g class="apart" data-anat="ritmos" data-struct="talamo">
-      <ellipse cx="176" cy="102" rx="30" ry="17" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="ritmos" data-struct="hipocampo">
-      <path d="M124 124 C144 114 178 112 206 118 C224 122 230 130 224 134 C210 128 174 124 148 128 C136 130 126 128 124 124 Z" fill="currentColor" fill-opacity=".42" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <text x="176" y="106" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">tálamo</text>
-    <text x="150" y="152" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">hipocampo</text>
-    <text x="192" y="20" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">córtex</text>
-    <line x1="332" y1="44" x2="332" y2="212" stroke="currentColor" stroke-width="1" opacity=".25"/>
-    <text x="386" y="42" text-anchor="middle" font-size="9" fill="currentColor" opacity=".6">o laço</text>
-    <g class="apart" data-anat="ritmos" data-struct="piramidal">
-      <path d="M386 66 L400 92 L372 92 Z" fill="currentColor" fill-opacity=".38" stroke="currentColor" stroke-width="1.6"/>
-      <line x1="386" y1="66" x2="386" y2="54" stroke="currentColor" stroke-width="1.4"/>
-    </g>
-    <g class="apart" data-anat="ritmos" data-struct="interneuronio">
-      <circle cx="386" cy="150" r="14" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <path d="M398 94 C412 112 412 128 398 142" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".8"/>
-    <polygon points="398,142 404,132 392,134" fill="currentColor" opacity=".8"/>
-    <path d="M374 142 C360 128 360 112 374 94" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".8"/>
-    <line x1="368" y1="96" x2="380" y2="96" stroke="currentColor" stroke-width="2.4" opacity=".8"/>
-    <text x="418" y="86" font-size="8" fill="currentColor" opacity=".65">excita</text>
-    <text x="336" y="120" font-size="8" fill="currentColor" opacity=".65">cala</text>
-    <text x="386" y="184" text-anchor="middle" font-size="9" fill="currentColor" opacity=".8">piramidal ⇄ PV</text>
-    <text x="386" y="200" text-anchor="middle" font-size="8" fill="currentColor" opacity=".55">o período é o decaimento</text>
-  </svg>`
-};
 ANATOMY['neuroanatomia']={
   title:'O mapa do cérebro',
   caption:'Toque numa região para ver o que é e onde fica.',
@@ -4115,19 +3991,7 @@ const BRIDGE = {
     `A aula disse que cada ferramenta ganha num eixo e perde em outro. Aqui, a comparação direta — e como escolher pela pergunta que você quer responder.`,
     `A aula mostrou que só manipular o cérebro prova causa. Aqui, as ferramentas que fazem isso, da mais antiga (a lesão) à que revolucionou o campo.`,
     `A aula defendeu a evidência convergente. Aqui, para onde o campo está indo — e o que ainda está em aberto.`
-  ],
-memoria:[
- "A aula separou dois sistemas por um caso clínico. Aqui você vê onde cada um mora — e por que uma cirurgia pôde destruir um com o outro de pé.",
- "A aula disse que hipocampo e estriado disputam a saída. Toque nos dois e compare o que cada um guarda da MESMA tarefa.",
- "A aula seguiu a lembrança saindo do hipocampo em direção ao córtex. Aqui os dois aparecem juntos, que é como a consolidação sistêmica precisa ser vista.",
- "A aula mostrou a evocação reabrindo a gravação. O experimento clássico é na amígdala; aqui veja o hipocampo, que é quem reabre quando o evocado é um episódio."
-],
-ritmos:[
- "A aula montou o laço que produz o ritmo. Aqui estão os dois personagens dele lado a lado: a piramidal que excita e o interneurônio que cala.",
- "A aula tratou de dois ritmos encaixados. Toque no hipocampo — é lá que theta e gama foram medidos juntos.",
- "A aula falou de janelas de milissegundos entre populações distantes. No diagrama, veja quais estruturas precisariam estar em fase para conversar.",
- "A aula descreveu três ritmos, um dentro do outro. Aqui estão as três casas deles: córtex, tálamo e hipocampo."
-],
+  ]
 };
 
 function deepBridge(mid, idx){
@@ -4136,18 +4000,6 @@ function deepBridge(mid, idx){
 }
 
 const GLOSSARY = {
-  // --- ritmos e oscilações (m18) ---
-  'células piramidais':'Os principais neurônios excitatórios do córtex e do hipocampo, de corpo triangular. São elas que disparam, recrutam os interneurônios que vão calá-las, e voltam a disparar — a metade excitatória do laço que produz a oscilação.',
-  'interneurônios PV':'Interneurônios inibitórios que carregam a proteína parvalbumina. Rápidos e precisos, calam as células piramidais logo depois de serem excitados por elas. O tempo que essa inibição leva para decair é o que fixa a frequência do ritmo.',
-  'theta':'Oscilação lenta, de poucos ciclos por segundo, marcante no hipocampo. Serve de ciclo de referência: ritmos mais rápidos aparecem encaixados em fases determinadas dele. No humano é mais lento e mais intermitente que no roedor.',
-  'gama':'Oscilação rápida, em torno de 40 Hz, produzida pelo laço entre células piramidais e interneurônios PV. Aparece em salvas, e no hipocampo essas salvas caem em fases determinadas do theta.',
-  'acoplamento fase-amplitude':'Quando a força de um ritmo rápido depende da fase em que um ritmo lento está. É medida, não interpretação: mostra que os dois ritmos não são independentes, e que o lento organiza o rápido no tempo.',
-  'onda lenta':'A alternância do córtex, cerca de uma vez por segundo no sono profundo, entre um estado em que quase ninguém dispara e outro em que a rede volta a funcionar. É a fase ativa que abre a janela para o que chega do hipocampo.',
-  'fusos do sono':'Salvas rápidas de 11 a 16 Hz geradas no circuito entre tálamo e córtex, típicas do sono. Não caem em qualquer momento: encaixam-se na fase ativa da onda lenta, e é dentro delas que os ripples aparecem.',
-  // --- memória: os sistemas (m17) ---
-  'lobo temporal medial':'A face interna do lobo temporal, dos dois lados do cérebro. Guarda o hipocampo e a vizinhança dele. É o que foi removido no caso de H.M.',
-  'memória procedimental':'A memória de COMO se faz: andar de bicicleta, digitar, desenhar no espelho. Melhora com repetição e não precisa passar pela consciência — nem sempre dá para contar em palavras o que se sabe fazer.',
-  'amnésia retrógrada graduada':'A perda de lembranças ANTERIORES à lesão, mais forte para os anos recentes e mais fraca para os antigos. É o principal indício de que a lembrança deixa de depender do hipocampo com o tempo.',
   // --- célula e sinal ---
   'limiar':'O nível de carga que o neurônio precisa atingir para disparar. Abaixo dele não acontece nada; ao cruzá-lo, o disparo sai sempre igual.',
   'bomba de sódio-potássio':'Uma proteína que empurra sódio para fora e potássio para dentro do neurônio, mantendo-o "carregado" e pronto para disparar. Gasta muita energia.',
@@ -5865,27 +5717,7 @@ metodos:[
   after:"Ligar e desligar neurônios escolhidos, na hora exata. Isso transforma correlação em CAUSA — e é por isso que ela mudou o campo. Em animais: em humanos, ainda não."},
  {q:"Se nenhum método sozinho prova nada, como a neurociência chega a alguma conclusão?", o:["Por convergência: métodos diferentes, mesma resposta","Escolhendo sempre o método mais confiável de todos","Repetindo o mesmo experimento um grande número de vezes"], c:0,
   after:"Por CONVERGÊNCIA. Um resultado sozinho vale pouco; vários métodos com fraquezas diferentes apontando para a mesma conclusão valem muito. Não se constrói confiança com uma prova, e sim com um cerco."}
-],
-memoria:[
- {q:"Um paciente perdeu a capacidade de formar lembranças novas. Ele treina uma habilidade motora difícil por três dias seguidos. O que acontece?", o:["Ele não melhora: sem lembrar do treino, não há aprendizado","Ele melhora normalmente, e não guarda lembrança das sessões","Ele melhora só enquanto a sessão dura, e volta ao zero no dia seguinte"], c:1,
-  after:"Melhora normalmente. A curva de aprendizado é comum, e a lembrança de ter treinado não se forma. Não é a mesma memória em graus diferentes — são sistemas em estruturas diferentes, e a cirurgia alcançou uma e não a outra."},
- {q:"Um rato aprendeu a resolver um labirinto por hábito, sempre virando para o mesmo lado. Você silencia o estriado dele por alguns minutos. O que ele faz?", o:["Fica perdido: a única solução que tinha foi desligada","Volta a resolver por lugar, indo aonde a comida estava","Repete o giro de sempre, porque o hábito não depende do estriado"], c:1,
-  after:"Volta a resolver por lugar. A solução do hipocampo nunca foi apagada pelo treino — ela estava coberta. Desligar o hábito não ensina nada novo ao animal: revela o que já estava gravado e não chegava à saída."},
- {q:"Uma lesão no hipocampo apaga lembranças de qual período da vida?", o:["De toda a vida, por igual","Sobretudo dos anos recentes — mas depende do tipo de lembrança","Só do dia da lesão em diante"], c:1,
-  after:"Sobretudo do recente, e com uma ressalva que importa: o gradiente aparece bem para conhecimento geral, e tende a achatar quando a lembrança é rica em detalhe do episódio. A mudança de lugar é real; o quanto ela se completa está em disputa."},
- {q:"Você lembra de um episódio antigo. Isso deixa a lembrança mais frágil ou mais firme?", o:["Sempre mais frágil: toda evocação reabre a gravação","Em geral mais firme — mas a janela pode abrir e deixar entrar erro","Indiferente: lembrar não altera nada"], c:1,
-  after:"Em geral mais firme. Recuperar é a técnica de estudo que mais consolida, e isso é dos achados mais sólidos que existem. Mas em certas condições a evocação desestabiliza a lembrança, e ela é regravada — e aí o que você sabe hoje, ou o que alguém acabou de te contar, pode entrar junto."}
-],
-ritmos:[
- {q:"De onde vem a frequência de uma oscilação cerebral?", o:["De um marca-passo: um grupo de células que impõe o ritmo às demais","Do tempo que a inibição leva para decair, dentro do próprio laço","Da velocidade com que o sinal percorre os axônios"], c:1,
-  after:"Do decaimento da inibição. Não há maestro: as piramidais excitam os interneurônios, que as calam, e o ritmo é o inverso do tempo que essa inibição leva para sumir. É por isso que o gama gira perto de 40 Hz — é cinética de receptor, não escolha do circuito."},
- {q:"Num ciclo lento de theta cabem vários ciclos rápidos de gama. O que se sabe com segurança sobre isso?", o:["Que a razão entre os dois ritmos é o limite da memória de trabalho","Que o gama irrompe em fases determinadas do theta, e isso é medido","Que os dois ritmos são independentes e só coincidem por acaso"], c:1,
-  after:"O acoplamento é o que está medido e replica. A leitura dele como mecanismo do limite da memória de trabalho é proposta influente, e ainda em disputa. Vale separar: o dado é sólido, a interpretação é que não fechou."},
- {q:"Duas populações de neurônios, as mesmas sinapses, a mesma quantidade de disparo. De repente uma passa a influenciar muito mais a outra. O que mudou?", o:["A força das sinapses entre elas","A fase relativa entre os ritmos das duas","O número de neurônios envolvidos"], c:1,
-  after:"A fase. Como o neurônio soma o que chega junto, disparos que caem na janela receptiva valem muito mais que os mesmos disparos espalhados. Dá para mudar quem influencia quem em milissegundos, sem mexer em uma sinapse sequer."},
- {q:"Durante o sono profundo, em que momento aparecem os ripples do hipocampo?", o:["Espalhados por igual, o tempo todo","Encaixados nos fusos, que por sua vez caem na fase ativa da onda lenta","Só nas transições entre um ciclo de sono e o seguinte"], c:1,
-  after:"Encaixados, um ritmo dentro do outro. É esse encaixe que faz a repetição do hipocampo chegar ao córtex quando ele está aberto para receber — e reforçar o acoplamento melhora o que você lembra no dia seguinte."}
-],
+]
 };
 
 function predKey(mid, idx){ return 'P:'+mid+':'+idx; }
@@ -6261,43 +6093,7 @@ metodos:[
   hn:"A força não vem de um método bom: vem de métodos que ERRAM DE MANEIRAS DIFERENTES. Se todos errassem igual, mil estudos concordantes não valeriam nada. Por isso repetir com o MESMO método vale menos que convergir entre métodos diferentes.",
   w:"E se um resultado só aparece com um método?",
   wa:"Desconfie. Pode ser real — mas também pode ser um artefato daquele método. Foi assim que várias descobertas de fMRI caíram."}
-],
-memoria:[
- {s:["Uma cirurgia remove o lobo temporal medial dos dois lados","O paciente para de formar lembranças novas de fatos e episódios","Mas treina desenho no espelho por três dias e MELHORA como qualquer um","E não guarda lembrança nenhuma das sessões de treino","Em outros pacientes, o dano cerebelar dá o quadro INVERSO: falham no espelho e lembram do treino"], h:4,
-  hn:"O que fecha o argumento não é este paciente: é o PAR. H.M. sozinho ainda admitiria a leitura por grau — lembrança fraca demais para relatar. É o quadro inverso, em outras pessoas, que torna a explicação por intensidade impossível: nenhuma régua única produz dois perfis opostos ao mesmo tempo.",
-  w:"E se existisse só o caso de H.M., sem o quadro inverso?",
-  wa:"Sobraria uma leitura possível: um sistema só, em que a habilidade exige menos dele que a lembrança. É existirem pessoas que falham no espelho E lembram do treino que fecha essa saída — dois perfis opostos não cabem numa régua só."},
- {s:["Um labirinto aceita duas soluções: ir ao lugar certo, ou repetir o giro que funcionou","No começo do treino o rato resolve por lugar — a solução do hipocampo","Com repetição, passa a resolver por resposta fixa — a solução do estriado","Silenciar o estriado num animal já treinado faz a solução por lugar REAPARECER","Logo, ela nunca foi apagada: estava coberta"], h:3,
-  hn:"O experimento não mede qual sistema é melhor. Ele mostra que os dois guardaram a resposta ao mesmo tempo, e que um estava calando o outro na saída. Desligar não ensina nada ao animal — revela o que já estava lá. É por isso que \"esqueci como fazia\" muitas vezes quer dizer \"outro jeito assumiu o controle\".",
-  w:"E se o treino apagasse a solução do hipocampo em vez de encobri-la?",
-  wa:"Silenciar o estriado não faria a solução por lugar voltar — não haveria o que voltar. O reaparecimento é a prova de que os dois registros coexistem, e de que o comportamento mostra só um deles de cada vez."},
- {s:["Um episódio é gravado uma vez, e o córtex aprende devagar, por acúmulo","Durante o sono e o repouso acordado, o hipocampo reativa a sequência comprimida","O córtex recebe a mesma sequência muitas vezes e soma um ajuste pequeno a cada uma","Com repetição suficiente, o córtex reúne o padrão sozinho","A lembrança antiga passa a depender menos do hipocampo","E uma lesão tardia poupa o que já ficou independente"], h:1,
-  hn:"A repetição vem de DENTRO, não do mundo. O episódio aconteceu uma vez só; a reativação acontece muitas vezes, sem você fazer nada. É isso que resolve o problema de treinar um sistema lento com uma experiência que não se repete — e é aqui que dormir mal cobra o preço.",
-  w:"E se a reativação durante o sono não acontecesse?",
-  wa:"Não haveria gradiente: a lembrança dependeria do hipocampo a vida inteira, e uma lesão aos setenta anos levaria também a infância. O que faz o antigo sobreviver não é a idade dele — é quantas vezes foi reativado desde então."},
- {s:["Em ratos, uma memória de medo já consolidada é evocada","Bloquear a síntese de proteínas logo depois prejudica justamente essa memória","As memórias que não foram evocadas passam intactas","Logo, a evocação a devolveu a um estado em que ela podia mudar","Mas a janela exige surpresa na evocação, e tende a não abrir para memória antiga e forte","E em humanos as tentativas de usar isso para apagar medo replicam mal"], h:2,
-  hn:"A seletividade é a prova, e é ela que separa o achado de um artefato. Se o bloqueio prejudicasse tudo, seria toxicidade geral do remédio. Prejudicar SÓ a lembrança evocada mostra que a evocação fez algo específico com aquela memória — nenhuma outra observação do experimento diz isso.",
-  w:"E se a reconsolidação não existisse?",
-  wa:"A memória continuaria distorcível, porque lembrar já é reconstruir: você preenche lacuna com o que costuma acontecer e confunde a fonte do que sabe. O que sumiria é a janela BIOQUÍMICA em que o traço pode ser alterado de propósito — e com ela, a esperança de tratar trauma enfraquecendo a gravação."}
-],
-ritmos:[
- {s:["Células piramidais disparam e excitam os interneurônios PV","Os interneurônios respondem calando as piramidais","A inibição decai com uma constante de tempo própria do receptor","Quando ela decai o bastante, as piramidais voltam a disparar","O ciclo recomeça, e a frequência é o inverso desse tempo de decaimento"], h:2,
-  hn:"O passo que quase nunca contam é que a inibição tem DURAÇÃO, e que a duração dela é o cronômetro. Enquanto se pensa em inibição como interruptor — ligado ou desligado — não há como explicar por que o gama gira perto de 40 Hz e não em outro valor qualquer. O relógio não foi acrescentado ao circuito: é propriedade de um receptor.",
-  w:"E se a inibição fosse instantânea, sem tempo de decaimento?",
-  wa:"Não haveria oscilação nenhuma: as piramidais seriam caladas e liberadas no mesmo instante, e a rede se acomodaria num nível fixo de atividade. Sem atraso não há ciclo — o que produz ritmo é a inibição chegar rápido e ir embora devagar."},
- {s:["No hipocampo, o theta corre lento e o gama corre rápido","O gama não se espalha por igual: irrompe em fases determinadas do theta","Isso é medido, e chama-se acoplamento fase-amplitude","Vários ciclos de gama cabem dentro de um ciclo de theta","Daí a proposta: cada gama seguraria um item, e o theta os enfileiraria","O acoplamento replica bem; a proposta segue em disputa"], h:5,
-  hn:"A separação entre os dois últimos passos é o que quase nunca aparece resumido. O acoplamento é observação e se replica; lê-lo como o mecanismo da capacidade da memória de trabalho é interpretação, e é ela que não fechou. Juntar as duas coisas faz um dado sólido carregar uma conclusão que ele não sustenta.",
-  w:"E se o gama aparecesse por igual em todas as fases do theta?",
-  wa:"Não sobraria estrutura temporal para enfileirar nada: os itens cairiam todos no mesmo ponto do ciclo lento e deixariam de ser distinguíveis pela fase. É o acoplamento que cria posições dentro do ciclo — sem ele resta um ritmo rápido sem endereço."},
- {s:["Um neurônio soma o que chega junto, dentro de poucos milissegundos","Portanto responde muito mais a disparos coincidentes que aos mesmos disparos espalhados","Se duas populações oscilam em fase, os disparos de uma caem na janela receptiva da outra","Fora de fase, a mesma quantidade de disparo chega com a porta fechada","Logo, mudar a fase muda quem influencia quem, sem mudar nenhuma sinapse","Se os circuitos USAM isso para rotear informação é o que está em disputa"], h:4,
-  hn:"O que torna a ideia poderosa é ela alterar o roteamento sem tocar na fiação. Todo o resto do curso explica mudança de influência por mudança de força sináptica, que leva tempo. Aqui a mesma rede troca de destinatário em milissegundos, só ajustando fase — e é por ser tão poderosa que exigem tanto dela.",
-  w:"E se o neurônio somasse tudo o que chega ao longo de um segundo inteiro?",
-  wa:"A fase deixaria de importar: disparos coincidentes e espalhados dariam o mesmo total, e sincronizar não compraria nada. A janela curta de integração é a condição sem a qual o ritmo não teria como significar coisa alguma."},
- {s:["No sono profundo o córtex alterna, cerca de uma vez por segundo, entre calado e ativo","Encaixados na fase ativa vêm os fusos, que chegam do tálamo","E dentro dos fusos cabem os ripples do hipocampo","Durante os ripples o hipocampo repete a sequência gravada","Ela chega ao córtex exatamente na fase em que ele está aberto","Reforçar o acoplamento entre onda lenta e fuso melhora a memória no dia seguinte"], h:4,
-  hn:"O ponto não é que a repetição aconteça: é QUANDO ela acontece. O módulo 17 mostrou o hipocampo reativando, e aqui aparece o que faltava — a mesma repetição, chegando fora da fase ativa, encontraria um córtex que não dispara. O encaixe dos três ritmos é o endereço temporal da entrega.",
-  w:"E se os ripples caíssem em fases aleatórias da onda lenta?",
-  wa:"Boa parte da repetição chegaria durante o estado calado, quando o córtex não responde, e a noite renderia muito menos transferência. É exatamente o que o experimento mostra ao contrário: melhorar o encaixe melhora o resultado."}
-],
+]
 };
 
 /* =====================================================================
@@ -6601,74 +6397,6 @@ MODULES.push({
      o:['A altura do limiar de decisão','A velocidade de condução do axônio','A quantidade de opções disponíveis','O nível de cortisol no momento'], c:0, l:3,
      er:'Isso. Limiar baixo decide rápido e erra mais; limiar alto acerta mais e demora. É um parâmetro ajustável.',
      ew:'Não é condução nem hormônio: no modelo, a troca corresponde diretamente ao quanto de evidência é exigido antes de fechar.'}
-  ]
-});
-
-MODULES.push({
-  id:'memoria', n:'17', title:'Memória: os sistemas', color:'var(--jade)', hex:'#10b981',
-  tag:'Não é uma memória só, e elas competem',
-  intro:'O curso já ensinou como uma sinapse guarda informação. Falta o andar de cima: a memória não é um arquivo único, são sistemas separados, que aprendem por regras diferentes e disputam o controle do comportamento.',
-  lessons:[
-    {t:'Dois sistemas, e o paciente que os separou',
-     b:`<p>Em 1953, uma cirurgia para conter epilepsia removeu boa parte do <span class="term">lobo temporal medial</span> dos dois lados de um paciente conhecido como H.M. Ele deixou de formar lembranças novas de fatos e de episódios — e perdeu também parte dos anos anteriores à operação. O prejuízo não era só para a frente.</p><p>O achado que separou os sistemas veio de uma tarefa de desenhar olhando para um espelho, ao longo de três dias. Ele melhorava como qualquer um, e não guardava lembrança nenhuma das sessões. Você faz essa divisão sem perceber: sabe contar o que jantou ontem, e andar de bicicleta sem contar como. A <span class="term">memória declarativa</span> e a <span class="term">memória procedimental</span> não são graus da mesma coisa. E a prova não é só ele: pacientes com dano no <span class="term">cerebelo</span> mostram o quadro inverso — falham no espelho e lembram bem do treino.</p>`},
-    {t:'Hipocampo e estriado: por que competem',
-     b:`<p>Os dois sistemas aprendem a mesma tarefa por regras diferentes. O <span class="term">hipocampo</span> grava a relação entre as coisas — o que aconteceu, onde, junto de quê — e faz isso em poucas exposições, entregando algo flexível. O <span class="term">estriado</span> grava a ligação entre um estímulo e a resposta que funcionou, devagar e por repetição, e entrega o contrário: rápido, automático e preso ao contexto do treino.</p><p>Num labirinto que aceita as duas soluções, o rato começa resolvendo por lugar e, com treino, passa a resolver por resposta fixa. O teste decisivo parte da caixa OPOSTA — só assim ir ao lugar e repetir o giro deixam de coincidir — e silencia uma das estruturas: desligar o estriado de um animal já treinado faz a solução por LUGAR reaparecer. Ela não fora apagada, estava coberta pelo hábito. Você conhece: no automático, passar direto pela conversão de hoje.</p>`},
-    {t:'A lembrança muda de lugar enquanto você dorme',
-     b:`<p>Uma lembrança recente depende do hipocampo; uma antiga, muito menos. É o que sugere a <span class="term">amnésia retrógrada graduada</span>: a lesão leva os anos recentes e poupa a infância. Entre gravar e ficar independente existe um processo, e ele roda quando você não está usando a memória — no sono, e também no repouso acordado, o hipocampo reativa as sequências em velocidade comprimida — e o córtex somando um ajuste a cada repetição é o modelo que explica o resto.</p><p>Até onde essa independência chega está <em>em disputa</em>. Para conhecimento geral, a evidência do gradiente é boa. Para lembranças ricas em detalhe do próprio episódio, há dados consistentes de que o hipocampo segue sendo exigido a vida toda — e nessa leitura o gradiente aparece achatado, e o que fica independente é uma versão transformada, não a mesma lembrança.</p>`},
-    {t:'Lembrar pode reabrir a gravação',
-     b:`<p>Lembrar nem sempre é abrir um arquivo e fechar sem tocar. Em ratos, bloquear a síntese de proteínas logo depois de o animal evocar uma memória de medo prejudica justamente aquela memória, e só ela: as que não foram evocadas passam intactas. A evocação a devolveu a um estado instável, e ela precisou ser gravada outra vez — é a <span class="term">reconsolidação</span>.</p><p>Só que a janela não abre sempre. Ela depende de a evocação trazer alguma surpresa, e tende a não abrir para memórias antigas e fortes. E em humanos a evidência é bem mais frágil: os estudos que tentaram usar isso para apagar medo acumularam falhas de replicação. Para você, vale a regra prudente — recuperar com precisão CONSOLIDA, e é das técnicas de estudo que mais rendem. O risco não é lembrar: é lembrar errado, ou lembrar junto de informação nova, porque aí o erro entra na regravação.</p>`}
-  ],
-  quiz:[
-    {q:'O que o caso de H.M. permite concluir?',
-     o:['Que habilidade e episódio se apoiam em estruturas diferentes','Que a memória procedimental resiste mais porque é mais antiga','Que a cirurgia poupou apenas o que ele já tinha treinado muito','Que ele conservou intacto tudo o que sabia antes da operação'], c:0, l:0,
-     er:'Isso. Ele melhorava sem guardar lembrança das sessões, e há pacientes com o perfil oposto. Dois perfis opostos não cabem numa régua de intensidade.',
-     ew:'Não é questão de resistência nem de quanto foi treinado: é de LUGAR. E ele não conservou tudo o que sabia antes — parte dos anos anteriores à cirurgia também se perdeu.'},
-    {q:'Silenciar o estriado de um rato já treinado faz a solução por lugar reaparecer. O que isso mostra?',
-     o:['Que as duas soluções coexistiam, e uma estava cobrindo a outra','Que o rato reaprendeu a rota na hora','Que o hipocampo assumiu as funções do estriado','Que o treino havia apagado a solução por lugar'], c:0, l:1,
-     er:'Exato. Reaparecer exige que ainda estivesse gravada. O treino não apagou a solução do hipocampo — o hábito passou a ocupar a saída.',
-     ew:'Não houve tempo de reaprender, e nada foi assumido por outra estrutura. E se o treino tivesse apagado a solução por lugar, ela não teria como voltar.'},
-    {q:'O que a amnésia retrógrada graduada indica?',
-     o:['Que a dependência do hipocampo diminui com o reprocessamento — ao menos para conhecimento geral','Que as lembranças antigas foram gravadas com mais força','Que o hipocampo descarta o antigo por falta de espaço','Que o gradiente vale igualmente para todo tipo de lembrança'], c:0, l:2,
-     er:'Certo, e com a ressalva no lugar: o gradiente é claro para conhecimento geral e tende a achatar quando a lembrança é rica em detalhe do episódio.',
-     ew:'Não é força nem espaço — é mudança de dependência. E não é uniforme: o gradiente aparece com clareza sobretudo no conhecimento geral.'},
-    {q:'Em que condição evocar uma lembrança pode alterá-la?',
-     o:['Quando a recuperação é imprecisa, ou vem junto de informação nova','Sempre que a lembrança é evocada, sem exceção','Só quando a lembrança é emocional','Nunca: evocar é leitura, não escrita'], c:0, l:3,
-     er:'Isso. Recuperar com precisão fortalece; o risco aparece quando a recuperação erra, ou quando informação nova entra na mesma janela.',
-     ew:'"Sempre" é forte demais: a janela depende de haver surpresa na evocação e tende a não abrir para memória antiga e forte. E "nunca" ignora o achado de que a evocação chega a desestabilizar o traço.'}
-  ]
-});
-
-MODULES.push({
-  id:'ritmos', n:'18', title:'Ritmos e oscilações', color:'var(--mint)', hex:'#5eead4',
-  tag:'O relógio não foi acrescentado: ele cai da fiação',
-  intro:'Atenção, memória e sono aparecem no curso apoiados em ritmo, e nenhum dos três diz de onde o ritmo vem. Vem de um laço entre excitação e inibição — e o que ele produz não é enfeite: é o endereço temporal que decide quem consegue falar com quem.',
-  lessons:[
-    {t:'Por que o cérebro oscila',
-     b:`<p>Uma oscilação cerebral não é um relógio que alguém acrescentou ao circuito: ela cai da própria fiação. As <span class="term">células piramidais</span> disparam e excitam os <span class="term">interneurônios PV</span>, que respondem calando as piramidais. Enquanto a inibição decai, ninguém dispara. Quando ela some, as piramidais voltam — e o ciclo recomeça.</p><p>O que fixa a frequência é a velocidade com que essa inibição decai. É por isso que o ritmo gama gira perto de 40 Hz e não em qualquer valor: o tempo de decaimento do receptor GABA-A é o cronômetro. Acionar seletivamente os interneurônios PV nessa faixa produz gama; acionar as piramidais, não. A inibição que você provavelmente imagina como um simples desligar é, aqui, o que marca o compasso.</p>`},
-    {t:'Theta e gama: um ritmo dentro do outro',
-     b:`<p>Os ritmos não vivem separados. No hipocampo, o <span class="term">theta</span> corre lento — poucos ciclos por segundo — e o <span class="term">gama</span> corre rápido. O gama não aparece espalhado por igual: ele irrompe em fases determinadas do theta, sempre as mesmas. Isso tem nome e é medida, não suposição: <span class="term">acoplamento fase-amplitude</span>.</p><p>Daí saiu uma proposta influente. Se cada ciclo de gama pudesse segurar um item, e vários gamas cabem num theta, então o tanto de coisas que você mantém na cabeça ao mesmo tempo seria a razão entre os dois ritmos. É elegante, e segue <em>em disputa</em>: o acoplamento replica bem; a leitura dele como o mecanismo da memória de trabalho é que não fechou. Vale lembrar também que o theta humano é mais lento e mais intermitente que o do rato, de onde vem quase toda a evidência.</p>`},
-    {t:'A janela: por que sincronizar é comunicar',
-     b:`<p>Um neurônio não soma o que chega ao longo de um segundo. Ele soma o que chega junto, dentro de poucos milissegundos — é um detector de coincidência, e é isso que torna o ritmo prático. Se duas populações oscilam em fase, os disparos de uma chegam à outra na janela em que ela está receptiva. Fora de fase, a mesma quantidade de disparo chega com a porta fechada.</p><p>Repare no que isso permite: a mesma rede que você tem agora troca de destinatário em milissegundos, sem tocar em nenhuma sinapse. A proposta de que os circuitos usam isso para escolher com quem falar é das ideias mais influentes e mais <em>disputadas</em> da área. A crítica é séria — ver sincronia junto de comunicação eficaz não mostra qual das duas produz a outra, e boa parte do efeito pode ser consequência do circuito, e não causa.</p>`},
-    {t:'O encaixe do sono: onda lenta, fuso e ripple',
-     b:`<p>No sono profundo o córtex alterna, cerca de uma vez por segundo, entre um estado em que quase ninguém dispara e outro em que a rede volta a funcionar: é a <span class="term">onda lenta</span>. Encaixados na fase ativa dela vêm os <span class="term">fusos do sono</span>, salvas rápidas que chegam do tálamo. E dentro dos fusos cabem os <span class="term">ripples</span> do hipocampo, ainda mais rápidos e curtíssimos.</p><p>Três ritmos, um dentro do outro. Esse encaixe é o que dá endereço temporal à transferência que o módulo 17 descreveu: o hipocampo repete a sequência exatamente quando o córtex está aberto para recebê-la. E reforçar o acoplamento entre onda lenta e fuso melhora o que você lembra no dia seguinte — o que faz dele causa, e não apenas coincidência.</p>`}
-  ],
-  quiz:[
-    {q:'Por que a oscilação gama gira em torno de 40 Hz, e não em qualquer frequência?',
-     o:['Porque o tempo de decaimento da inibição fixa o período do laço','Porque há um grupo de células marca-passo impondo essa frequência','Porque é a velocidade máxima com que um neurônio consegue disparar','Porque a mielina limita a condução nessa faixa'], c:0, l:0,
-     er:'O laço excitação-inibição tem um período, e quem o fixa é a cinética da inibição. O ritmo é propriedade do circuito, não algo imposto de fora dele.',
-     ew:'Não há marca-passo aqui: o ritmo emerge do laço. E não é teto de disparo nem de condução — neurônios disparam bem mais rápido que 40 Hz, e a mielina muda velocidade, não período de oscilação.'},
-    {q:'Sobre o acoplamento entre theta e gama, o que está estabelecido e o que está em disputa?',
-     o:['O acoplamento está estabelecido; sua leitura como mecanismo da memória de trabalho está em disputa','Os dois estão igualmente estabelecidos','O acoplamento está em disputa; a leitura dele é que é consensual','Nenhum dos dois tem evidência que se sustente'], c:0, l:1,
-     er:'Separar dado de interpretação é o ponto todo. O gama irrompendo em fases determinadas do theta é medida que replica; o que ela significa para a capacidade da memória é proposta.',
-     ew:'Inverter os dois é o erro comum — o acoplamento não é a parte frágil. E dar aos dois o mesmo respaldo empresta à interpretação uma solidez que ela não tem.'},
-    {q:'Qual é a crítica mais séria à ideia de que os circuitos se comunicam por coerência?',
-     o:['Que a sincronia pode ser consequência do circuito, e não a causa da comunicação','Que sincronia entre populações distantes nunca foi observada','Que neurônios não somam entradas em janelas curtas','Que o efeito só aparece em animais anestesiados'], c:0, l:2,
-     er:'É um problema de direção: ver sincronia junto de comunicação eficaz não diz qual das duas produz a outra. A crítica não nega o fenômeno — nega a inferência causal.',
-     ew:'A sincronia é amplamente observada, e a soma em janelas curtas é justamente o que torna a ideia plausível. O ponto fraco não é o fenômeno: é o que se conclui dele.'},
-    {q:'Por que o encaixe dos três ritmos importa para a memória?',
-     o:['Porque faz a repetição do hipocampo chegar quando o córtex está na fase ativa','Porque aumenta a quantidade total de repetições por noite','Porque impede o córtex de disparar durante o sono','Porque converte a lembrança em habilidade motora'], c:0, l:3,
-     er:'É endereço temporal. A mesma repetição, chegando na fase calada, encontraria um córtex que não responde — e reforçar o acoplamento de fato melhora a memória no dia seguinte.',
-     ew:'Não é volume: o encaixe organiza QUANDO, não quantas vezes. E o córtex não fica impedido de disparar — a fase ativa da onda lenta é exatamente quando ele volta a disparar.'}
   ]
 });
 

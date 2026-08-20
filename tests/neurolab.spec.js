@@ -3,32 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const runtimeAudit = new WeakMap();
-/* Derivado do fonte, não codificado à mão. O 16 que estava aqui era o número
-   de módulos de uma versão antiga: `toHaveCount(MODULE_COUNT)` REPETE até o
-   timeout, então cada módulo novo transformava uma asserção rápida numa espera
-   de vários segundos, multiplicada por todo loop de módulo e todo viewport
-   móvel. A auditoria ia de 5 minutos para dezenas — foi o que produziu os runs
-   de 45min cancelado e 77min de falha quando o Pack V2 entrou. */
-const MODULE_COUNT = (() => {
-  const fonte = fs.readFileSync(path.join(__dirname, '..', 'src', '05-app.js'), 'utf8');
-  const inicio = fonte.indexOf('const MODULES = [');
-  if (inicio < 0) throw new Error('não achei `const MODULES = [` em src/05-app.js');
-  let i = fonte.indexOf('[', inicio);
-  let profundidade = 0;
-  let fim = -1;
-  for (; i < fonte.length; i += 1) {
-    if (fonte[i] === '[') profundidade += 1;
-    else if (fonte[i] === ']') { profundidade -= 1; if (profundidade === 0) { fim = i; break; } }
-  }
-  if (fim < 0) throw new Error('o literal MODULES não fecha');
-  // dentro de MODULES, `id:` só aparece uma vez por módulo: aula é {t,b} e questão é {q,o,c,l,er,ew}
-  const noLiteral = (fonte.slice(inicio, fim).match(/\bid:\s*'/g) || []).length;
-  const nosPushes = (fonte.match(/^MODULES\.push\(\{/gm) || []).length;
-  const total = noLiteral + nosPushes;
-  // se o parsing quebrar, falhar alto — e não gerar uma suíte vazia em silêncio
-  if (total < 10) throw new Error(`contagem de módulos implausível: ${total} (literal ${noLiteral} + pushes ${nosPushes})`);
-  return total;
-})();
+const MODULE_COUNT = 16;
 const MOBILE_VIEWPORTS = [
   { width: 360, height: 800 },
   { width: 390, height: 844 },

@@ -151,7 +151,7 @@ const reset = ()=>ev('state = defaultState();');
   ok(dims.indexOf('recognition') > -1, '1. neuronio-0 deveria medir recognition');
 
   const total = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`);
-  ok(total > 0 && total <= 320, `1. total de caixas possíveis fora de faixa: ${total}`);
+  ok(total > 0 && total <= 256, `1. total de caixas possíveis fora de faixa: ${total}`);
   const semNada = ev(`MODULES.flatMap(m=>m.lessons.map((_,li)=>measurableDimensions(m.id,li).length?null:m.id+'-'+li)).filter(Boolean)`);
   eq(semNada.length, 0, `1. tópicos sem nenhuma dimensão mensurável: ${semNada.join(', ')}`);
 }
@@ -361,15 +361,10 @@ const reset = ()=>ev('state = defaultState();');
   eq(semMini, 'prediction', '10. sem mini-questão de aplicação, o banco é sempre a previsão');
 }
 
-/* ---------- 11. Aplicação cobre TODA aula, e o banco é bem formado ---------- */
+/* ---------- 11. Aplicação cobre os 64 tópicos, e o banco é bem formado ---------- */
 {
-  /* Derivado do conteúdo, não congelado: a invariante é "toda aula tem
-     previsão", e ela não deixa de valer quando um módulo novo entra. O 64 que
-     estava aqui obrigava a editar o portão a cada módulo — e um número que se
-     edita por rotina deixa de ser portão. */
-  const totalAulas = ev(`MODULES.reduce((s,m)=>s+m.lessons.length,0)`);
   const app = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'application')?1:0),0),0)`);
-  eq(app, totalAulas, '11. toda aula tem previsão, então Aplicação deveria cobrir ' + totalAulas + '/' + totalAulas);
+  eq(app, 64, '11. toda aula tem previsão, então Aplicação deveria cobrir 64/64');
 
   const total = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`);
   ok(total >= 188, '11. o total de caixas deveria subir de 164 para ~188, veio ' + total);
@@ -524,11 +519,10 @@ const reset = ()=>ev('state = defaultState();');
      '15. domainDeterministicShuffle tem de continuar sendo o mesmo algoritmo');
 }
 
-/* ---------- 16. a cadeia cobre Explicação causal em TODA aula ---------- */
+/* ---------- 16. a cadeia cobre Explicação causal nos 64 tópicos ---------- */
 {
-  const totalAulas = ev(`MODULES.reduce((s,m)=>s+m.lessons.length,0)`);
   const cau = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'causality')?1:0),0),0)`);
-  eq(cau, totalAulas, '16. toda aula tem cadeia com 4+ etapas, então Explicação causal deveria cobrir ' + totalAulas + '/' + totalAulas);
+  eq(cau, 64, '16. toda aula tem cadeia com 4+ etapas, então Explicação causal deveria cobrir 64/64');
 
   /* O total muda a cada fase que acrescenta fonte, então aferir um número aqui
      vira falso na fase seguinte. O que é estável e é o ponto desta fase: a
@@ -657,26 +651,16 @@ const reset = ()=>ev('state = defaultState();');
   eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
 
   const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
-  eq(totalAncoras, 185, '19. o número de âncoras utilizáveis mudou — era 185 (168 + 8 do m17 + 9 do m18)');
+  eq(totalAncoras, 168, '19. o número de âncoras utilizáveis mudou — era 168');
 
   /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
      dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por
      uma mini-questão que o classificador leu como "onde fica". A âncora não é a
      única fonte, e o item de revisão precisa saber disso (ver bloco 20). */
   const loc = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'location')?1:0),0),0)`);
-  /* A contagem crua subia a cada módulo novo. O que o portão precisa vigiar é
-     outra coisa: QUAIS tópicos ficam sem Localização. São os abstratos, onde
-     "onde fica" não é pergunta com resposta. Se um módulo novo entrar sem
-     âncora de diagrama, ele aparece nesta lista e o portão fecha. */
-  const semLoc = ev(`MODULES.reduce((a,m)=>a.concat(m.lessons.map((_,li)=>canMeasure(m.id,li,'location')?null:m.id+'-'+li).filter(Boolean)),[])`);
-  const ABSTRATOS = ['emocao-3','linguagem-2','linguagem-3','clinica-0','clinica-3','metodos-0','metodos-2'];
-  eq(semLoc.slice().sort().join(' '), ABSTRATOS.slice().sort().join(' '),
-     '19. mudou o conjunto de tópicos sem Localização — veio: ' + semLoc.join(' '));
-  /* Este continua sendo catraca de propósito: o total só deve subir, e subir
-     deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
-     é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 275,
-     '19. o total de caixas deveria ser 275 (259 + 16 do m18)');
+  eq(loc, 57, '19. Localização deveria cobrir 57/64 — 56 por diagrama, mais 1 por questão de módulo');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 243,
+     '19. o total de caixas deveria ser 243');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.
