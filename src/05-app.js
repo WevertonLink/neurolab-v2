@@ -3914,6 +3914,12 @@ const BRIDGE = {
     `A aula recomendou fatiar o progresso em pedaços pequenos e visíveis. Aqui, por que isso funciona — e por que a recompensa imprevisível prende ainda mais.`,
     `A aula mostrou o hábito virando automático. Aqui, o que muda de lugar dentro do cérebro quando isso acontece — e por que o hábito sobrevive mesmo sem prazer.`
   ],
+  decisao: [
+    `A aula disse que o cérebro converte tudo para uma escala única de valor. Aqui, onde essa conversão acontece — e por que as mesmas células respondem a suco e a dinheiro.`,
+    `A aula mostrou o avaliador que atualiza valores, e o que sobra quando ele para de atualizar. Aqui, o circuito inteiro — e o ponto exato onde a lesão interrompe a reescrita.`,
+    `A aula listou os três impostos que o valor paga: tempo, esforço e risco. Aqui, a forma de cada desconto — e por que só a curva do tempo produz arrependimento.`,
+    `A aula mostrou a decisão fechando quando a evidência cruza um limiar. Aqui, a rampa subindo célula a célula — e a altura que separa quem é rápido de quem acerta.`
+  ],
   atencao: [
     `A aula disse que a atenção é um sistema com partes, não uma coisa só. Aqui, a mecânica: tudo compete o tempo todo, e a atenção apenas inclina a balança.`,
     `A aula tratou do espaço mental onde você segura informação enquanto pensa. Aqui, as peças desse espaço — e como os neurônios "seguram" algo que já não está na sua frente.`,
@@ -3925,6 +3931,12 @@ const BRIDGE = {
     `A aula apresentou o eixo do estresse e o cortisol. Aqui, a cadeia completa de comando — e o freio que deveria desligá-la, mas falha no estresse crônico.`,
     `A aula mostrou que um pouco de estresse ajuda e muito atrapalha. Aqui, a curva que descreve isso e o que o estresse prolongado faz ao cérebro.`,
     `A aula concluiu que o estado importa tanto quanto o esforço. Aqui, a química que regula esse estado — e por que ela tem um ponto ótimo, nem baixo nem alto demais.`
+  ],
+  autonomo: [
+    `A aula separou o que você comanda do que roda sozinho, e apontou o gânglio no meio do caminho. Aqui, as duas vias lado a lado — e o ponto de troca que espalha um comando por vários alvos.`,
+    `A aula mostrou o simpático preparando o corpo para agir, e o atalho que joga adrenalina direto no sangue. Aqui, o trajeto completo — do que sai da medula ao que passa a circular.`,
+    `A aula colocou o parassimpático como freio seletivo, com os gânglios junto de cada órgão. Aqui, o vago e seus alvos — e por que a seletividade é uma questão de endereço.`,
+    `A aula trocou o interruptor pelo equilíbrio, e mostrou o intestino informando mais do que obedece. Aqui, o tônus lido no coração — e a malha entérica que digere por conta própria.`
   ],
   sono: [
     `A aula afirmou que dormir é trabalho ativo, não pausa. Aqui, as três tarefas que o cérebro executa enquanto você dorme.`,
