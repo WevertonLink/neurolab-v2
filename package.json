@@ -4,9 +4,10 @@
   "private": true,
   "description": "Auditoria automatizada do NeuroLab 1.8.0: cronograma espaçado por tópico × dimensão, Modo Domínio com banco adversarial, diagnósticos por alternativa, sessão guiada, reconstrução causal e funcionamento offline.",
   "scripts": {
-    "test": "npm run check:metaforas && npm run check:content && npm run check:srs && playwright test",
+    "test": "npm run check:metaforas && npm run check:content && npm run check:srs && npm run check:frases && playwright test",
     "check:metaforas": "node tools/verifica-metaforas.js",
     "check:srs": "node tools/test-srs.js",
+    "check:frases": "node tools/frases-proscritas.js",
     "test:smoke": "playwright test --grep @smoke",
     "test:coverage": "playwright test --grep @coverage --project=mobile-chromium",
     "test:visual": "playwright test --grep @visual --project=mobile-chromium",

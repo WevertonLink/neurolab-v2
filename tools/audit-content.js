@@ -10,6 +10,9 @@ const ROOT = path.join(__dirname, '..');
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 const exists = (rel) => fs.existsSync(path.join(ROOT, rel));
 const errors = [];
+/* o que a auditoria de fato contou, para a linha de saída não anunciar
+   número congelado — foi o que fez ela dizer "32 imagens" com 36 no disco */
+const medido = { imagens: 0, precache: 0, modulos: 0 };
 const ok = (condition, message) => { if (!condition) errors.push(message); };
 
 const required = [
@@ -25,6 +28,22 @@ if (!errors.length) {
   const html = read('index.html');
   const css = read('styles/features.css') + '\n' + read('styles/domain-mode.css');
   const app = read('src/05-app.js');
+
+  /* Os ids de MÓDULO, colhidos uma vez e usados por dois portões (metáforas e
+     visão integrada). Só os de módulo: `id:` também aparece nas partes do
+     ANATOMY, e a primeira versão disto colheu 106 ids em vez de 18. */
+  const inicioLit = app.indexOf('const MODULES = [');
+  let cursor = app.indexOf('[', inicioLit);
+  let prof = 0;
+  let fimLit = -1;
+  for (; cursor < app.length; cursor += 1) {
+    if (app[cursor] === '[') prof += 1;
+    else if (app[cursor] === ']') { prof -= 1; if (prof === 0) { fimLit = cursor; break; } }
+  }
+  const idsDeModulo = [...app.slice(inicioLit, fimLit).matchAll(/\bid:\s*'([a-z-]+)'/g)].map((m) => m[1])
+    .concat([...app.matchAll(/MODULES\.push\(\{[\s\S]{0,80}?\bid:\s*'([a-z-]+)'/g)].map((m) => m[1]));
+  ok(idsDeModulo.length >= 10,
+    `contagem de módulos implausível: ${idsDeModulo.length} — o parsing quebrou`);
   const domain = read('src/04b-domain-mode.js');
   const guided = read('src/04c-domain-guided.js');
   const metaphors = read('src/01-metaphors.js');
@@ -146,8 +165,15 @@ if (!errors.length) {
   ok(Boolean(metaphorMatch), 'IMAGINE_DATA_V2 não encontrado');
   if (metaphorMatch) {
     const data = JSON.parse(metaphorMatch[1]);
-    ok(Object.keys(data).length === 16,
-      `esperadas 16 metáforas estruturadas; encontradas ${Object.keys(data).length}`);
+    /* Derivado do conteúdo, não congelado: a invariante é "todo módulo tem
+       metáfora", e ela vale com 16, 18 ou 40 módulos. O número fixo obrigava a
+       editar o portão a cada módulo — e portão que se edita por rotina deixa
+       de ser portão. */
+    const semMetafora = idsDeModulo.filter((id) => !Object.prototype.hasOwnProperty.call(data, id));
+    ok(semMetafora.length === 0,
+      `todo módulo precisa de metáfora em IMAGINE_DATA_V2; sem ela: ${semMetafora.join(', ')}`);
+    ok(Object.keys(data).length >= idsDeModulo.length,
+      `metáforas (${Object.keys(data).length}) não cobrem os módulos (${idsDeModulo.length})`);
     ok(data.atencao?.scene_title === 'A bancada com espaço limitado',
       'a metáfora de atenção voltou ao modelo da torre de controle');
   }
@@ -188,8 +214,16 @@ if (!errors.length) {
   const integrated = read('src/02-integrated-visuals.js');
   const visualPaths = [...integrated.matchAll(/["']\.\/(assets\/visuals\/[^"']+)["']/g)]
     .map((match) => match[1]);
-  ok(visualPaths.length === 32,
-    `esperadas 32 imagens integradas; encontradas ${visualPaths.length}`);
+  /* Derivado do conteúdo. A invariante é "todo módulo tem visão integrada, com
+     imagem cheia e miniatura" — e ela vale com 16, 18 ou 40 módulos. O 32 fixo
+     que estava aqui obrigava a editar o portão a cada módulo novo. */
+  const semVisual = idsDeModulo.filter((id) => !new RegExp(`\\n  ${id}: \\{`).test(integrated));
+  ok(semVisual.length === 0,
+    `todo módulo precisa de visão integrada; sem ela: ${semVisual.join(', ')}`);
+  medido.imagens = visualPaths.length;
+  medido.modulos = idsDeModulo.length;
+  ok(visualPaths.length === idsDeModulo.length * 2,
+    `esperadas 2 imagens por módulo (${idsDeModulo.length * 2}); encontradas ${visualPaths.length}`);
   visualPaths.forEach((file) => ok(exists(file), `imagem integrada ausente: ${file}`));
 
   const assetsBlock = sw.match(/const ASSETS = \[(.*?)\];/s);
@@ -198,9 +232,17 @@ if (!errors.length) {
     const cachedPaths = [...assetsBlock[1].matchAll(/["']\.\/([^"']*)["']/g)]
       .map((match) => match[1])
       .filter(Boolean);
-    ok(cachedPaths.length === 49,
-      `esperados 49 arquivos explícitos no precache; encontrados ${cachedPaths.length}`);
+    /* O número exato importava menos do que as duas invariantes que ele tentava
+       proteger, e que agora são verificadas diretamente: todo arquivo do
+       precache existe, e toda imagem integrada está no precache. Um número que
+       se edita por rotina deixa de ser portão. */
+    ok(cachedPaths.length >= visualPaths.length,
+      `precache (${cachedPaths.length}) menor que as imagens integradas (${visualPaths.length})`);
     cachedPaths.forEach((file) => ok(exists(file), `arquivo do precache ausente: ${file}`));
+    const foraDoPrecache = visualPaths.filter((file) => !cachedPaths.includes(file));
+    ok(foraDoPrecache.length === 0,
+      `imagem integrada fora do precache: ${foraDoPrecache.join(', ')}`);
+    medido.precache = cachedPaths.length;
   }
 
   ok(manifest.name === 'NeuroLab — Estudo Interativo de Neurociência',
@@ -218,4 +260,4 @@ if (errors.length) {
 }
 
 console.log('Auditoria de conteúdo: ok');
-console.log('  estrutura, Modo Domínio guiado, banco adversarial com 24 atividades, 32 imagens, 49 arquivos de precache, acessibilidade, metáforas, ciência e privacidade verificados');
+console.log(`  estrutura, Modo Domínio guiado, banco adversarial com 24 atividades, ${medido.modulos} módulos, ${medido.imagens} imagens, ${medido.precache} arquivos de precache, acessibilidade, metáforas, ciência e privacidade verificados`);

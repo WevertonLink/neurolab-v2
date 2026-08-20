@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="941" height="1672" viewBox="0 0 941 1672" role="img" aria-label="Infográfico do módulo Memória: os sistemas">
+<rect width="941" height="1672" fill="#12121c"/>
+<text x="470" y="58" text-anchor="middle" fill="#e9e9f0" font-size="34" font-weight="700">Memória: os sistemas</text>
+<text x="470" y="92" text-anchor="middle" fill="#9aa0b4" font-size="19">Do episódio de hoje à lembrança que se sustenta sozinha</text>
+
+<!-- ================= FAIXA 1 — dois sistemas ================= -->
+<line x1="60" y1="120" x2="881" y2="120" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="158" fill="#10b981" font-size="22" font-weight="700">1 · Dois sistemas, não um em graus</text>
+
+<rect x="60" y="180" width="380" height="250" rx="14" fill="none" stroke="#2c2c45" stroke-width="2"/>
+<text x="86" y="216" fill="#e9e9f0" font-size="21" font-weight="700">Declarativa</text>
+<text x="86" y="246" fill="#9aa0b4" font-size="17">o que aconteceu, e onde</text>
+<ellipse cx="150" cy="308" rx="58" ry="26" fill="#10b981" fill-opacity=".34" stroke="#10b981" stroke-width="2"/>
+<text x="150" y="314" text-anchor="middle" fill="#e9e9f0" font-size="16">hipocampo</text>
+<text x="86" y="370" fill="#9aa0b4" font-size="16">grava em poucas exposições</text>
+<text x="86" y="396" fill="#9aa0b4" font-size="16">flexível, e dá para contar</text>
+
+<rect x="501" y="180" width="380" height="250" rx="14" fill="none" stroke="#2c2c45" stroke-width="2"/>
+<text x="527" y="216" fill="#e9e9f0" font-size="21" font-weight="700">Procedimental</text>
+<text x="527" y="246" fill="#9aa0b4" font-size="17">como se faz</text>
+<ellipse cx="592" cy="308" rx="52" ry="24" fill="#10b981" fill-opacity=".2" stroke="#10b981" stroke-width="2"/>
+<text x="592" y="314" text-anchor="middle" fill="#e9e9f0" font-size="15">estriado</text>
+<ellipse cx="742" cy="308" rx="52" ry="24" fill="#10b981" fill-opacity=".2" stroke="#10b981" stroke-width="2"/>
+<text x="742" y="314" text-anchor="middle" fill="#e9e9f0" font-size="15">cerebelo</text>
+<text x="527" y="366" fill="#9aa0b4" font-size="15">estriado: gruda resposta em estímulo, por reforço</text>
+<text x="527" y="392" fill="#9aa0b4" font-size="15">cerebelo: corrige um modelo interno, por erro</text>
+<text x="527" y="418" fill="#10b981" font-size="15">é o cerebelo que sustenta o espelho</text>
+
+<path d="M441 300 L500 300" stroke="#2c2c45" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="60" y="452" width="821" height="86" rx="12" fill="#10b981" fill-opacity=".08" stroke="#10b981" stroke-width="1.5"/>
+<text x="86" y="486" fill="#e9e9f0" font-size="17">A cirurgia de H.M. removeu boa parte do lobo temporal medial dos dois lados, o hipocampo incluído.</text>
+<text x="86" y="514" fill="#9aa0b4" font-size="17">Ele melhorava numa habilidade e não guardava lembrança do treino — e há pacientes com o perfil inverso.</text>
+
+<!-- ================= FAIXA 2 — consolidação ================= -->
+<line x1="60" y1="576" x2="881" y2="576" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="614" fill="#10b981" font-size="22" font-weight="700">2 · A lembrança deixa de precisar do hipocampo</text>
+
+<ellipse cx="180" cy="742" rx="86" ry="40" fill="#10b981" fill-opacity=".34" stroke="#10b981" stroke-width="2"/>
+<text x="180" y="749" text-anchor="middle" fill="#e9e9f0" font-size="18">hipocampo</text>
+<rect x="600" y="682" width="240" height="120" rx="14" fill="#10b981" fill-opacity=".14" stroke="#10b981" stroke-width="2"/>
+<text x="720" y="749" text-anchor="middle" fill="#e9e9f0" font-size="18">córtex</text>
+<path d="M270 716 C400 660 480 660 596 700" fill="none" stroke="#10b981" stroke-width="2.5"/>
+<polygon points="596,700 578,692 582,708" fill="#10b981"/>
+<path d="M270 742 C400 720 480 720 596 742" fill="none" stroke="#10b981" stroke-width="2" opacity=".7"/>
+<polygon points="596,742 578,735 580,750" fill="#10b981" opacity=".7"/>
+<path d="M270 768 C400 800 480 810 596 784" fill="none" stroke="#10b981" stroke-width="1.6" opacity=".45"/>
+<polygon points="596,784 578,780 580,795" fill="#10b981" opacity=".45"/>
+<text x="432" y="668" text-anchor="middle" fill="#9aa0b4" font-size="16">reativação, uma noite após a outra</text>
+<text x="432" y="836" text-anchor="middle" fill="#9aa0b4" font-size="15">o episódio aconteceu uma vez; a reativação, muitas — o acúmulo no córtex é o modelo</text>
+
+<text x="60" y="890" fill="#9aa0b4" font-size="16">dependência do hipocampo, com o passar do tempo</text>
+<rect x="60" y="904" width="821" height="26" rx="13" fill="#2c2c45"/>
+<path d="M60 904 h500 a13 13 0 0 1 0 26 h-500 z" fill="#10b981" fill-opacity=".55"/>
+<text x="72" y="922" fill="#e9e9f0" font-size="15">recente</text>
+<text x="869" y="922" text-anchor="end" fill="#9aa0b4" font-size="15">antiga</text>
+<rect x="60" y="948" width="821" height="72" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.5"/>
+<text x="86" y="978" fill="#e9e9f0" font-size="16">Em disputa: o gradiente é claro para conhecimento geral</text>
+<text x="86" y="1004" fill="#9aa0b4" font-size="16">e tende a achatar quando a lembrança é rica em detalhe do episódio.</text>
+
+<!-- ================= FAIXA 3 — reconsolidação ================= -->
+<line x1="60" y1="1058" x2="881" y2="1058" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="1096" fill="#10b981" font-size="22" font-weight="700">3 · Lembrar pode reabrir a gravação</text>
+
+<rect x="60" y="1128" width="200" height="96" rx="12" fill="#10b981" fill-opacity=".22" stroke="#10b981" stroke-width="2"/>
+<text x="160" y="1170" text-anchor="middle" fill="#e9e9f0" font-size="17">lembrança</text>
+<text x="160" y="1196" text-anchor="middle" fill="#9aa0b4" font-size="15">estável</text>
+<path d="M266 1176 L352 1176" stroke="#10b981" stroke-width="2.5"/>
+<polygon points="352,1176 334,1168 334,1184" fill="#10b981"/>
+<text x="309" y="1160" text-anchor="middle" fill="#9aa0b4" font-size="15">evocar</text>
+<rect x="358" y="1128" width="212" height="96" rx="12" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="464" y="1170" text-anchor="middle" fill="#e9e9f0" font-size="17">instável</text>
+<text x="464" y="1196" text-anchor="middle" fill="#9aa0b4" font-size="15">janela aberta</text>
+<path d="M576 1176 L662 1176" stroke="#10b981" stroke-width="2.5"/>
+<polygon points="662,1176 644,1168 644,1184" fill="#10b981"/>
+<text x="619" y="1160" text-anchor="middle" fill="#9aa0b4" font-size="15">regravar</text>
+<rect x="668" y="1128" width="213" height="96" rx="12" fill="#10b981" fill-opacity=".22" stroke="#10b981" stroke-width="2"/>
+<text x="774" y="1170" text-anchor="middle" fill="#e9e9f0" font-size="17">estável de novo</text>
+<text x="774" y="1196" text-anchor="middle" fill="#9aa0b4" font-size="15">e talvez diferente</text>
+
+<rect x="60" y="1256" width="400" height="128" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.5"/>
+<text x="86" y="1290" fill="#e9e9f0" font-size="17" font-weight="700">A janela nem sempre abre</text>
+<text x="86" y="1320" fill="#9aa0b4" font-size="16">Exige surpresa na evocação, e tende</text>
+<text x="86" y="1346" fill="#9aa0b4" font-size="16">a não abrir para memória antiga e forte.</text>
+<rect x="481" y="1256" width="400" height="128" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.5"/>
+<text x="507" y="1290" fill="#e9e9f0" font-size="17" font-weight="700">O que isso NÃO quer dizer</text>
+<text x="507" y="1320" fill="#9aa0b4" font-size="16">Recuperar com precisão consolida.</text>
+<text x="507" y="1346" fill="#9aa0b4" font-size="16">O risco é recuperar errado.</text>
+
+<rect x="60" y="1408" width="821" height="94" rx="12" fill="#10b981" fill-opacity=".08" stroke="#10b981" stroke-width="1.5"/>
+<text x="86" y="1444" fill="#e9e9f0" font-size="17">O experimento que define a reconsolidação é em ratos, com memória de medo.</text>
+<text x="86" y="1474" fill="#9aa0b4" font-size="17">Em humanos, as tentativas de usar isso para apagar medo replicam mal.</text>
+
+<text x="470" y="1560" text-anchor="middle" fill="#9aa0b4" font-size="17">Um sistema grava depressa e entrega ao outro, que aprende devagar.</text>
+<text x="470" y="1590" text-anchor="middle" fill="#9aa0b4" font-size="17">O que sobrevive não é a mesma lembrança: é a versão que restou da transferência.</text>
+<text x="470" y="1636" text-anchor="middle" fill="#2c2c45" font-size="15">NeuroLab · módulo 17</text>
+</svg>

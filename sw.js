@@ -59,7 +59,11 @@ const ASSETS = [
   './assets/visuals/module-15-neuropharmacology-thumb.webp',
   './assets/visuals/module-15-neuropharmacology.webp',
   './assets/visuals/module-16-methods-thumb.webp',
-  './assets/visuals/module-16-methods.webp'
+  './assets/visuals/module-16-methods.webp',
+  './assets/visuals/module-17-memory-systems.svg',
+  './assets/visuals/module-17-memory-systems-thumb.svg',
+  './assets/visuals/module-18-rhythms-oscillations.svg',
+  './assets/visuals/module-18-rhythms-oscillations-thumb.svg'
 ];
 
 self.addEventListener('install', event => {
