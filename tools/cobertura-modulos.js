@@ -75,6 +75,27 @@ if (furados.length) {
 /* O critério: uma estrutura que cobre todos os módulos MENOS os novos é padrão
    da casa que o módulo novo não cumpriu. Uma que já faltava em módulos antigos
    é opcional, e não acusa. */
+/* LINKS é o tecido conectivo: um conceito, e cada aula onde ele reaparece
+   fazendo outra coisa. Ele é indexado por CONCEITO, não por módulo, então a
+   varredura acima não o enxerga — foi assim que os módulos novos ficaram em
+   zero aparições sem nenhum portão notar.
+
+   Não vira reprovação: cinco módulos antigos também estão em zero, e é
+   legítimo, porque nem todo módulo hospeda um conceito que atravessa. Mas
+   aparece no relatório, para a decisão ser tomada e não esquecida. */
+try {
+  const L = J("typeof LINKS !== 'undefined' ? LINKS : {}");
+  const conta = {};
+  ids.forEach((id) => { conta[id] = []; });
+  Object.keys(L).forEach((k) => (L[k].onde || []).forEach((o) => {
+    if (conta[o.m] && !conta[o.m].includes(k)) conta[o.m].push(k);
+  }));
+  const semLink = ids.filter((id) => !conta[id].length);
+  console.log(`\nConceitos que atravessam (LINKS): ${Object.keys(L).length} conceitos`);
+  if (semLink.length) console.log(`  sem nenhuma ligação: ${semLink.join(', ')}`);
+  else console.log('  todos os módulos hospedam ao menos um conceito');
+} catch (e) { /* LINKS pode não existir numa versão futura */ }
+
 const NOVOS = process.argv.slice(2);
 if (!NOVOS.length) {
   /* Sem argumento, o critério é o mesmo sem precisar saber quais são os novos:
