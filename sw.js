@@ -67,7 +67,11 @@ const ASSETS = [
   './assets/visuals/extra-01-esforco.svg',
   './assets/visuals/extra-01-esforco-thumb.svg',
   './assets/visuals/extra-02-ilusoes.svg',
-  './assets/visuals/extra-02-ilusoes-thumb.svg'
+  './assets/visuals/extra-02-ilusoes-thumb.svg',
+  './assets/visuals/extra-03-saber.svg',
+  './assets/visuals/extra-03-saber-thumb.svg',
+  './assets/visuals/extra-04-palpite.svg',
+  './assets/visuals/extra-04-palpite-thumb.svg'
 ];
 
 self.addEventListener('install', event => {

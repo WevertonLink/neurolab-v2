@@ -305,6 +305,26 @@ const INTEGRATED_VISUALS = {
     caption: "A confiança de quem releu foi medida com o texto à vista — numa condição que a prova não vai ter.",
     layers: [["Reconhecer não é produzir","Com o material presente, metade da recuperação é feita por ele. Sem material, a metade some — mas a confiança já foi calibrada."],["As técnicas que rendem pouco","Grifar e resumir trabalham no texto. O grifo ainda cobra: estreita a atenção para itens isolados."],["O conserto é o momento","Adiar o julgamento força uma recuperação de verdade. E explicar o mecanismo passo a passo desfaz a ilusão em trinta segundos."]],
     clarify: "Julgamento adiado não é introspecção melhor: é uma recuperação disfarçada de introspecção. O que melhora a nota é você ter sido obrigado a puxar da memória para respondê-la."
+  },
+  saber: {
+    title: "O monitor, e o que ele tem em mãos",
+    lead: "Uma visão única para relacionar a sensação de saber, a ponta da língua, o monitoramento de fonte e a validade da confiança.",
+    thumb: "./assets/visuals/extra-03-saber-thumb.svg",
+    src: "./assets/visuals/extra-03-saber.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, a pergunta e os fragmentos alimentando um monitor que julga antes da busca, com a nota de que ele não tem a resposta em mãos. Na segunda, o acesso à palavra dividido em duas rotas — significado e forma — com a ponta da língua marcada no ponto em que só a segunda falha. Na terceira, duas barras comparam a duração do conteúdo e a da etiqueta de fonte, e uma linha do tempo mostra a confiança perdendo validade a cada nova medida.",
+    caption: "O monitor julga pela pergunta, porque é o que ele tem antes da busca — e é rápido justamente por não conferir.",
+    layers: [["Julgar sem o alvo","A sensação de saber se apoia na familiaridade da pista e nos fragmentos que ela puxa. Pista familiar produz sensação de saber sem conhecimento por trás."],["A falha que revela","Ter o sentido e um pedaço do som sem a palavra prova que são caminhos separados — se fosse bloco, viria inteira ou nada."],["O que dura mais","O conteúdo sobrevive à etiqueta de quem o entregou. Daí a repetição aumentar a sensação de verdade sem nada para descontar."]],
+    clarify: "Sensação de saber e confiança são medidas diferentes: a primeira prevê se você acharia a resposta, antes de tê-la; a segunda avalia a resposta que já saiu. A primeira erra por familiaridade da pergunta; a segunda, por repetição da medida."
+  },
+  palpite: {
+    title: "Os dois eixos que decidem",
+    lead: "Uma visão única para relacionar reconhecimento de padrão, as duas condições da intuição válida, e por que a confiança não informa.",
+    thumb: "./assets/visuals/extra-04-palpite-thumb.svg",
+    src: "./assets/visuals/extra-04-palpite.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, uma situação puxando da memória uma resposta pronta, com a nota de que ela chega sem histórico. Na segunda, um quadrante com regularidade num eixo e retorno no outro, marcando onde a intuição se forma e onde só há repetição. Na terceira, duas colunas comparam ambiente de alta e de baixa validade, com o resultado da comparação entre julgamento e fórmula em cada um, e uma faixa mostrando a confiança subindo igual nos dois.",
+    caption: "A pergunta útil não é se você confia na sua intuição: é se este assunto tem padrão estável e se você já recebeu retorno sobre ele.",
+    layers: [["O palpite chega sem histórico","A sensação de certeza é idêntica no especialista calibrado e em quem só repetiu. A experiência interna não separa os dois."],["As duas condições","Regularidade dá o que aprender; retorno permite aprender. Falta uma e a intuição não se forma — por mais anos que passem."],["O contrapeso obrigatório","Onde há regularidade e retorno, o especialista vence com folga. O problema nunca foi a expertise: foi onde ela foi aplicada."]],
+    clarify: "O que decide não é a dificuldade do problema. A atmosfera é dos sistemas mais caóticos que existem, e a previsão do tempo calibra — porque o resultado volta amanhã, milhares de vezes."
   }
 };
 

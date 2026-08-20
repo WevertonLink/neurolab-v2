@@ -151,7 +151,7 @@ const reset = ()=>ev('state = defaultState();');
   ok(dims.indexOf('recognition') > -1, '1. neuronio-0 deveria medir recognition');
 
   const total = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`);
-  ok(total > 0 && total <= 320, `1. total de caixas possíveis fora de faixa: ${total}`);
+  ok(total > 0 && total <= 400, `1. total de caixas possíveis fora de faixa: ${total}`);
   const semNada = ev(`MODULES.flatMap(m=>m.lessons.map((_,li)=>measurableDimensions(m.id,li).length?null:m.id+'-'+li)).filter(Boolean)`);
   eq(semNada.length, 0, `1. tópicos sem nenhuma dimensão mensurável: ${semNada.join(', ')}`);
 }
@@ -657,7 +657,7 @@ const reset = ()=>ev('state = defaultState();');
   eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
 
   const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
-  eq(totalAncoras, 207, '19. o número de âncoras utilizáveis mudou — era 207 (193 + 14 do extra 02)');
+  eq(totalAncoras, 224, '19. o número de âncoras utilizáveis mudou — era 224 (207 + 17 do bloco B)');
 
   /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
      dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por
@@ -675,8 +675,8 @@ const reset = ()=>ev('state = defaultState();');
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 307,
-     '19. o total de caixas deveria ser 307 (291 + 16 do extra 02)');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 339,
+     '19. o total de caixas deveria ser 339 (307 + 32 do bloco B)');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.
