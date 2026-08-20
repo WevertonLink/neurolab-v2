@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="941" height="1672" viewBox="0 0 941 1672" role="img" aria-label="Infográfico do módulo extra O esforço que gruda">
+<rect width="941" height="1672" fill="#12121c"/>
+<text x="470" y="58" text-anchor="middle" fill="#e9e9f0" font-size="34" font-weight="700">O ciclo que deixa marca</text>
+<text x="470" y="92" text-anchor="middle" fill="#9aa0b4" font-size="19">O estudo que rende é o que se sente como fracasso</text>
+
+<line x1="60" y1="120" x2="881" y2="120" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="158" fill="#94a3b8" font-size="22" font-weight="700">1 · Recuperar, não rever</text>
+<rect x="60" y="180" width="390" height="230" rx="14" fill="none" stroke="#2c2c45" stroke-width="2"/>
+<text x="86" y="216" fill="#e9e9f0" font-size="21" font-weight="700">Reler</text>
+<text x="86" y="252" fill="#9aa0b4" font-size="17">acesso ao texto que está na página</text>
+<text x="86" y="282" fill="#9aa0b4" font-size="17">sai limpo, sem tremer</text>
+<rect x="86" y="306" width="338" height="34" rx="8" fill="#94a3b8" fill-opacity=".14"/>
+<text x="104" y="329" fill="#e9e9f0" font-size="16">sensação: ótima</text>
+<rect x="86" y="350" width="338" height="34" rx="8" fill="#94a3b8" fill-opacity=".06"/>
+<text x="104" y="373" fill="#9aa0b4" font-size="16">uma semana depois: pouco</text>
+
+<rect x="491" y="180" width="390" height="230" rx="14" fill="none" stroke="#94a3b8" stroke-width="2"/>
+<text x="517" y="216" fill="#e9e9f0" font-size="21" font-weight="700">Recuperar</text>
+<text x="517" y="252" fill="#9aa0b4" font-size="17">produzir sem a página à vista</text>
+<text x="517" y="282" fill="#9aa0b4" font-size="17">trabalhoso, e às vezes falha</text>
+<rect x="517" y="306" width="338" height="34" rx="8" fill="#94a3b8" fill-opacity=".06"/>
+<text x="535" y="329" fill="#9aa0b4" font-size="16">sensação: ruim</text>
+<rect x="517" y="350" width="338" height="34" rx="8" fill="#94a3b8" fill-opacity=".3"/>
+<text x="535" y="373" fill="#e9e9f0" font-size="16">uma semana depois: muito mais</text>
+<text x="470" y="446" text-anchor="middle" fill="#94a3b8" font-size="17">A sensação acompanha o esforço, nunca o resultado.</text>
+
+<line x1="60" y1="486" x2="881" y2="486" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="524" fill="#94a3b8" font-size="22" font-weight="700">2 · O intervalo faz o trabalho</text>
+<text x="60" y="562" fill="#9aa0b4" font-size="17">As mesmas horas, distribuídas de dois jeitos.</text>
+<text x="60" y="612" fill="#e9e9f0" font-size="16">tudo num dia</text>
+<rect x="60" y="626" width="220" height="26" rx="6" fill="#94a3b8" fill-opacity=".45"/>
+<rect x="286" y="626" width="595" height="26" rx="6" fill="#2c2c45"/>
+<text x="60" y="694" fill="#e9e9f0" font-size="16">espalhado</text>
+<rect x="60" y="708" width="44" height="26" rx="6" fill="#94a3b8" fill-opacity=".45"/>
+<rect x="170" y="708" width="44" height="26" rx="6" fill="#94a3b8" fill-opacity=".45"/>
+<rect x="280" y="708" width="44" height="26" rx="6" fill="#94a3b8" fill-opacity=".45"/>
+<rect x="390" y="708" width="44" height="26" rx="6" fill="#94a3b8" fill-opacity=".45"/>
+<rect x="500" y="708" width="44" height="26" rx="6" fill="#94a3b8" fill-opacity=".45"/>
+<rect x="610" y="708" width="44" height="26" rx="6" fill="#94a3b8" fill-opacity=".45"/>
+<text x="137" y="762" text-anchor="middle" fill="#9aa0b4" font-size="14">esfria</text>
+<text x="247" y="762" text-anchor="middle" fill="#9aa0b4" font-size="14">esfria</text>
+<text x="357" y="762" text-anchor="middle" fill="#9aa0b4" font-size="14">esfria</text>
+<rect x="60" y="792" width="821" height="76" rx="12" fill="#94a3b8" fill-opacity=".08" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="86" y="826" fill="#e9e9f0" font-size="17">Esquecer um pouco não é o preço do método: é a condição dele.</text>
+<text x="86" y="854" fill="#9aa0b4" font-size="17">Recuperar algo que já esfriou custa mais, e é o custo que consolida.</text>
+
+<line x1="60" y1="908" x2="881" y2="908" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="946" fill="#94a3b8" font-size="22" font-weight="700">3 · O ciclo, e a peça que falta</text>
+
+<rect x="60" y="984" width="180" height="70" rx="12" fill="#94a3b8" fill-opacity=".14" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="150" y="1026" text-anchor="middle" fill="#e9e9f0" font-size="17">primeiro contato</text>
+<path d="M248 1019 L306 1019" stroke="#94a3b8" stroke-width="2"/><polygon points="306,1019 292,1012 292,1026" fill="#94a3b8"/>
+<rect x="312" y="978" width="200" height="82" rx="12" fill="#94a3b8" fill-opacity=".34" stroke="#94a3b8" stroke-width="2"/>
+<text x="412" y="1012" text-anchor="middle" fill="#e9e9f0" font-size="18">recuperação</text>
+<text x="412" y="1038" text-anchor="middle" fill="#9aa0b4" font-size="14">puxar sem olhar</text>
+<path d="M520 1019 L578 1019" stroke="#94a3b8" stroke-width="2"/><polygon points="578,1019 564,1012 564,1026" fill="#94a3b8"/>
+<rect x="584" y="984" width="180" height="70" rx="12" fill="#94a3b8" fill-opacity=".22" stroke="#94a3b8" stroke-width="1.6"/>
+<text x="674" y="1026" text-anchor="middle" fill="#e9e9f0" font-size="17">retorno</text>
+<path d="M674 1060 C674 1118 520 1140 412 1140" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="6 5"/>
+<rect x="292" y="1114" width="240" height="56" rx="12" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="6 5"/>
+<text x="412" y="1148" text-anchor="middle" fill="#e9e9f0" font-size="17">intervalo</text>
+<path d="M292 1142 C180 1142 150 1110 150 1058" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="6 5"/>
+<polygon points="150,1058 144,1072 156,1072" fill="#94a3b8"/>
+
+<rect x="60" y="1206" width="821" height="92" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="86" y="1242" fill="#e9e9f0" font-size="18" font-weight="700">Tire o retorno e o ciclo trabalha contra você</text>
+<text x="86" y="1274" fill="#9aa0b4" font-size="17">A recuperação fortalece o que foi recuperado — inclusive quando o que saiu estava errado.</text>
+
+<rect x="60" y="1326" width="821" height="102" rx="12" fill="#94a3b8" fill-opacity=".08" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="86" y="1362" fill="#e9e9f0" font-size="18" font-weight="700">Sensação de aprendizado</text>
+<text x="86" y="1394" fill="#9aa0b4" font-size="17">Mede a facilidade da tarefa, não o que vai sobrar. É o termômetro quebrado</text>
+<text x="86" y="1420" fill="#9aa0b4" font-size="17">que faz você abandonar justamente o método que estava funcionando.</text>
+
+<text x="470" y="1510" text-anchor="middle" fill="#9aa0b4" font-size="18">O que rende tem em comum a sensação de estar dando errado.</text>
+<text x="470" y="1546" text-anchor="middle" fill="#9aa0b4" font-size="18">Julgue por um teste dias depois, nunca pelo conforto do momento.</text>
+<text x="470" y="1620" text-anchor="middle" fill="#2c2c45" font-size="15">NeuroLab · extra 01</text>
+</svg>

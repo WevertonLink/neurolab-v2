@@ -285,6 +285,16 @@ const INTEGRATED_VISUALS = {
     caption: "A oscilação não é enfeite do circuito: ela cria janelas curtas, e é a fase dessas janelas que decide quem consegue alcançar quem.",
     layers: [["O laço","As piramidais excitam os interneurônios, que as calam. A inibição dura e decai, e o período do ciclo é alguns múltiplos desse tempo."],["Um ritmo dentro do outro","O gama irrompe em fases determinadas do theta — e não numa só. Qual fase identifica de onde veio a entrada, num achado de roedor que não se repetiu no macaco."],["O encaixe do sono","Onda lenta, fuso e ripple aninhados. Induzir o fuso em fase melhora a consolidação; fora de fase, não."]],
     clarify: "A frequência não é o inverso do tempo de decaimento da inibição: o período do ciclo é alguns múltiplos dele. A inibição não precisa só começar a decair — precisa cair abaixo do nível que ainda segura as piramidais, e uma exponencial leva vários múltiplos de τ para chegar lá. É o mesmo motivo pelo qual uma rede mais excitada cruza esse nível antes, e oscila mais rápido."
+  },
+  esforco: {
+    title: "O ciclo que deixa marca",
+    lead: "Uma visão única para relacionar recuperação, intervalo e retorno — e a sensação de aprendizado, que mede a coisa errada.",
+    thumb: "./assets/visuals/extra-01-esforco-thumb.svg",
+    src: "./assets/visuals/extra-01-esforco.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, duas colunas comparam reler e recuperar, com a observação de que a sensação de aprendizado premia a primeira e o resultado premia a segunda. Na segunda faixa, uma linha do tempo mostra sessões concentradas contra sessões espalhadas, com o esquecimento parcial entre elas marcado como condição do ganho. Na terceira, um ciclo de quatro caixas — primeiro contato, recuperação, retorno e intervalo — com a nota de que sem retorno a tentativa errada é o que se fortalece.",
+    caption: "As técnicas que mais rendem têm em comum a sensação de estarem dando errado — e é por isso que quase ninguém as usa.",
+    layers: [["Recuperar, não rever","Produzir sem a fonte à vista modifica o traço; reler só dá acesso a ele. A diferença aparece uma semana depois, não na hora."],["O intervalo faz o trabalho","Esquecer um pouco entre as sessões é a condição do ganho: recuperação barata modifica pouco."],["Sem retorno, treina o erro","A tentativa que falha prepara o terreno para a correção — mas se a correção não vem, é a resposta errada que fica mais forte."]],
+    clarify: "Dificuldade desejável não é dificuldade qualquer: é a que exige recuperar, discriminar ou reconstruir. Material confuso, letra ruim ou barulho também são difíceis, e não ajudam em nada."
   }
 };
 
