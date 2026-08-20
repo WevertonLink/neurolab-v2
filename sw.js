@@ -63,11 +63,7 @@ const ASSETS = [
   './assets/visuals/module-17-memory-systems.webp',
   './assets/visuals/module-17-memory-systems-thumb.webp',
   './assets/visuals/module-18-rhythms-oscillations.svg',
-  './assets/visuals/module-18-rhythms-oscillations-thumb.svg',
-  './assets/visuals/extra-01-esforco.svg',
-  './assets/visuals/extra-01-esforco-thumb.svg',
-  './assets/visuals/extra-02-ilusoes.svg',
-  './assets/visuals/extra-02-ilusoes-thumb.svg'
+  './assets/visuals/module-18-rhythms-oscillations-thumb.svg'
 ];
 
 self.addEventListener('install', event => {

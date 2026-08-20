@@ -657,7 +657,7 @@ const reset = ()=>ev('state = defaultState();');
   eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
 
   const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
-  eq(totalAncoras, 207, '19. o número de âncoras utilizáveis mudou — era 207 (193 + 14 do extra 02)');
+  eq(totalAncoras, 185, '19. o número de âncoras utilizáveis mudou — era 185 (168 + 8 do m17 + 9 do m18)');
 
   /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
      dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por
@@ -675,8 +675,8 @@ const reset = ()=>ev('state = defaultState();');
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 307,
-     '19. o total de caixas deveria ser 307 (291 + 16 do extra 02)');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 275,
+     '19. o total de caixas deveria ser 275 (259 + 16 do m18)');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.

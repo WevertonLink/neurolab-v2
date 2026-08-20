@@ -285,26 +285,6 @@ const INTEGRATED_VISUALS = {
     caption: "A oscilação não é enfeite do circuito: ela cria janelas curtas, e é a fase dessas janelas que decide quem consegue alcançar quem.",
     layers: [["O laço","As piramidais excitam os interneurônios, que as calam. A inibição dura e decai, e o período do ciclo é alguns múltiplos desse tempo."],["Um ritmo dentro do outro","O gama irrompe em fases determinadas do theta — e não numa só. Qual fase identifica de onde veio a entrada, num achado de roedor que não se repetiu no macaco."],["O encaixe do sono","Onda lenta, fuso e ripple aninhados. Induzir o fuso em fase melhora a consolidação; fora de fase, não."]],
     clarify: "A frequência não é o inverso do tempo de decaimento da inibição: o período do ciclo é alguns múltiplos dele. A inibição não precisa só começar a decair — precisa cair abaixo do nível que ainda segura as piramidais, e uma exponencial leva vários múltiplos de τ para chegar lá. É o mesmo motivo pelo qual uma rede mais excitada cruza esse nível antes, e oscila mais rápido."
-  },
-  esforco: {
-    title: "O ciclo que deixa marca",
-    lead: "Uma visão única para relacionar recuperação, intervalo e retorno — e a sensação de aprendizado, que mede a coisa errada.",
-    thumb: "./assets/visuals/extra-01-esforco-thumb.svg",
-    src: "./assets/visuals/extra-01-esforco.svg",
-    alt: "Infográfico vertical em três faixas. Na primeira, duas colunas comparam reler e recuperar, com a observação de que a sensação de aprendizado premia a primeira e o resultado premia a segunda. Na segunda faixa, uma linha do tempo mostra sessões concentradas contra sessões espalhadas, com o esquecimento parcial entre elas marcado como condição do ganho. Na terceira, um ciclo de quatro caixas — primeiro contato, recuperação, retorno e intervalo — com a nota de que sem retorno a tentativa errada é o que se fortalece.",
-    caption: "As técnicas que mais rendem têm em comum a sensação de estarem dando errado — e é por isso que quase ninguém as usa.",
-    layers: [["Recuperar, não rever","Produzir sem a fonte à vista modifica o traço; reler só dá acesso a ele. A diferença aparece uma semana depois, não na hora."],["O intervalo faz o trabalho","Esquecer um pouco entre as sessões é a condição do ganho: recuperação barata modifica pouco."],["Sem retorno, treina o erro","A tentativa que falha prepara o terreno para a correção — mas se a correção não vem, é a resposta errada que fica mais forte."]],
-    clarify: "Dificuldade desejável não é dificuldade qualquer: é a que exige recuperar, discriminar ou reconstruir. Material confuso, letra ruim ou barulho também são difíceis, e não ajudam em nada."
-  },
-  ilusoes: {
-    title: "Onde a ilusão se instala",
-    lead: "Uma visão única para separar reconhecer de produzir, entender por que grifar rende pouco, e ver o que conserta o julgamento.",
-    thumb: "./assets/visuals/extra-02-ilusoes-thumb.svg",
-    src: "./assets/visuals/extra-02-ilusoes.svg",
-    alt: "Infográfico vertical em três faixas. Na primeira, duas colunas comparam reconhecimento e evocação, com a observação de que o material presente faz parte do trabalho. Na segunda, uma escada de utilidade das técnicas de estudo, com recuperação e espaçamento no topo e grifar e resumir no rodapé, e uma nota sobre o custo específico do grifo em questões que exigem ligar partes. Na terceira, duas linhas do tempo comparam o julgamento feito logo após estudar com o julgamento adiado, e uma caixa mostra o teste da explicação de mecanismo.",
-    caption: "A confiança de quem releu foi medida com o texto à vista — numa condição que a prova não vai ter.",
-    layers: [["Reconhecer não é produzir","Com o material presente, metade da recuperação é feita por ele. Sem material, a metade some — mas a confiança já foi calibrada."],["As técnicas que rendem pouco","Grifar e resumir trabalham no texto. O grifo ainda cobra: estreita a atenção para itens isolados."],["O conserto é o momento","Adiar o julgamento força uma recuperação de verdade. E explicar o mecanismo passo a passo desfaz a ilusão em trinta segundos."]],
-    clarify: "Julgamento adiado não é introspecção melhor: é uma recuperação disfarçada de introspecção. O que melhora a nota é você ter sido obrigado a puxar da memória para respondê-la."
   }
 };
 
