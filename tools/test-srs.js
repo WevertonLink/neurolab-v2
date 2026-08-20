@@ -657,7 +657,7 @@ const reset = ()=>ev('state = defaultState();');
   eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
 
   const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
-  eq(totalAncoras, 186, '19. o número de âncoras utilizáveis mudou — era 186 (177 + 9 do m18)');
+  eq(totalAncoras, 185, '19. o número de âncoras utilizáveis mudou — era 185 (168 + 8 do m17 + 9 do m18)');
 
   /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
      dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por

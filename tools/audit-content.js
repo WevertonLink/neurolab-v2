@@ -146,8 +146,27 @@ if (!errors.length) {
   ok(Boolean(metaphorMatch), 'IMAGINE_DATA_V2 não encontrado');
   if (metaphorMatch) {
     const data = JSON.parse(metaphorMatch[1]);
-    ok(Object.keys(data).length === 16,
-      `esperadas 16 metáforas estruturadas; encontradas ${Object.keys(data).length}`);
+    /* Derivado do conteúdo, não congelado: a invariante é "todo módulo tem
+       metáfora", e ela vale com 16, 18 ou 40 módulos. O número fixo obrigava a
+       editar o portão a cada módulo — e portão que se edita por rotina deixa
+       de ser portão. */
+    /* Só os ids de MÓDULO: `id:` também aparece nas partes do ANATOMY, e a
+       primeira versão desta linha colheu 106 ids em vez de 18. */
+    const inicioLit = app.indexOf('const MODULES = [');
+    let cursor = app.indexOf('[', inicioLit);
+    let prof = 0;
+    let fimLit = -1;
+    for (; cursor < app.length; cursor += 1) {
+      if (app[cursor] === '[') prof += 1;
+      else if (app[cursor] === ']') { prof -= 1; if (prof === 0) { fimLit = cursor; break; } }
+    }
+    const idsDeModulo = [...app.slice(inicioLit, fimLit).matchAll(/\bid:\s*'([a-z-]+)'/g)].map((m) => m[1])
+      .concat([...app.matchAll(/MODULES\.push\(\{[\s\S]{0,80}?\bid:\s*'([a-z-]+)'/g)].map((m) => m[1]));
+    const semMetafora = idsDeModulo.filter((id) => !Object.prototype.hasOwnProperty.call(data, id));
+    ok(semMetafora.length === 0,
+      `todo módulo precisa de metáfora em IMAGINE_DATA_V2; sem ela: ${semMetafora.join(', ')}`);
+    ok(Object.keys(data).length >= idsDeModulo.length,
+      `metáforas (${Object.keys(data).length}) não cobrem os módulos (${idsDeModulo.length})`);
     ok(data.atencao?.scene_title === 'A bancada com espaço limitado',
       'a metáfora de atenção voltou ao modelo da torre de controle');
   }
