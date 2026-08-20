@@ -65,7 +65,9 @@ const ASSETS = [
   './assets/visuals/module-18-rhythms-oscillations.svg',
   './assets/visuals/module-18-rhythms-oscillations-thumb.svg',
   './assets/visuals/extra-01-esforco.svg',
-  './assets/visuals/extra-01-esforco-thumb.svg'
+  './assets/visuals/extra-01-esforco-thumb.svg',
+  './assets/visuals/extra-02-ilusoes.svg',
+  './assets/visuals/extra-02-ilusoes-thumb.svg'
 ];
 
 self.addEventListener('install', event => {
