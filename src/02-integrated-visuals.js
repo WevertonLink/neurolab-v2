@@ -265,6 +265,26 @@ const INTEGRATED_VISUALS = {
       ["Convergência","Combinar métodos reduz ambiguidades e transforma resultados em conhecimento revisável."]
     ],
     clarify: "Correlação não prova causalidade; sinais hemodinâmicos ou químicos não são disparos diretos; uma imagem impressionante não substitui uma explicação testável."
+  },
+  memoria: {
+    title: "Do episódio à lembrança que se sustenta sozinha",
+    lead: "Uma visão única para relacionar os dois sistemas de memória, a transferência para o córtex e a janela que a evocação abre.",
+    thumb: "./assets/visuals/module-17-memory-systems-thumb.svg",
+    src: "./assets/visuals/module-17-memory-systems.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, dois quadros lado a lado: memória declarativa com o hipocampo, e memória procedimental com estriado e cerebelo. Na segunda, o hipocampo ligado ao córtex por três setas de reativação, e uma barra que mostra a dependência do hipocampo caindo do recente para o antigo. Na terceira, uma sequência de três caixas: lembrança estável, estado instável após a evocação, e lembrança regravada.",
+    caption: "A memória não é um arquivo único: são sistemas que aprendem por regras diferentes, e o que sobrevive ao tempo é a versão que restou da transferência.",
+    layers: [["Dois sistemas, não um em graus","O hipocampo grava o episódio em poucas exposições; estriado e cerebelo gravam o gesto por repetição. Uma lesão pode alcançar um e não o outro."],["A transferência","Durante o sono e o repouso, o hipocampo reativa a sequência e o córtex acumula. Com repetição suficiente, o córtex sustenta a lembrança sozinho."],["A janela da evocação","Lembrar pode devolver o traço a um estado instável, que precisa ser regravado — mas a janela exige surpresa e nem sempre abre."]],
+    clarify: "Consolidação é a primeira estabilização, logo após o episódio; reconsolidação é a reestabilização depois de uma evocação. Não são a mesma coisa em momentos diferentes."
+  },
+  ritmos: {
+    title: "Do laço ao encaixe: como o ritmo vira endereço",
+    lead: "Uma visão única para relacionar o laço que produz a oscilação, o gama encaixado no theta e os três ritmos aninhados do sono.",
+    thumb: "./assets/visuals/module-18-rhythms-oscillations-thumb.svg",
+    src: "./assets/visuals/module-18-rhythms-oscillations.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, uma célula piramidal e um interneurônio PV ligados por duas setas, uma que excita e outra que cala, ao lado de um quadro que explica que o período do ciclo é alguns múltiplos do tempo de decaimento da inibição. Na segunda, uma onda theta lenta com duas salvas de gama em fases diferentes, uma em cada cor. Na terceira, uma onda lenta com um fuso encaixado na fase ativa e um ripple mais rápido dentro do fuso.",
+    caption: "A oscilação não é enfeite do circuito: ela cria janelas curtas, e é a fase dessas janelas que decide quem consegue alcançar quem.",
+    layers: [["O laço","As piramidais excitam os interneurônios, que as calam. A inibição dura e decai, e o período do ciclo é alguns múltiplos desse tempo."],["Um ritmo dentro do outro","O gama irrompe em fases determinadas do theta — e não numa só. Qual fase identifica de onde veio a entrada."],["O encaixe do sono","Onda lenta, fuso e ripple aninhados. Induzir o fuso em fase melhora a consolidação; fora de fase, não."]],
+    clarify: "A frequência não é o inverso do tempo de decaimento da inibição: o período do ciclo é vários múltiplos dele, porque a excitação também leva tempo para recrutar os interneurônios."
   }
 };
 
