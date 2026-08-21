@@ -75,26 +75,46 @@ if (furados.length) {
 /* O critério: uma estrutura que cobre todos os módulos MENOS os novos é padrão
    da casa que o módulo novo não cumpriu. Uma que já faltava em módulos antigos
    é opcional, e não acusa. */
-/* LINKS é o tecido conectivo: um conceito, e cada aula onde ele reaparece
-   fazendo outra coisa. Ele é indexado por CONCEITO, não por módulo, então a
-   varredura acima não o enxerga — foi assim que os módulos novos ficaram em
-   zero aparições sem nenhum portão notar.
+/* ---------- estruturas indexadas por CONCEITO, não por módulo ----------
 
-   Não vira reprovação: cinco módulos antigos também estão em zero, e é
-   legítimo, porque nem todo módulo hospeda um conceito que atravessa. Mas
-   aparece no relatório, para a decisão ser tomada e não esquecida. */
-try {
-  const L = J("typeof LINKS !== 'undefined' ? LINKS : {}");
-  const conta = {};
-  ids.forEach((id) => { conta[id] = []; });
-  Object.keys(L).forEach((k) => (L[k].onde || []).forEach((o) => {
-    if (conta[o.m] && !conta[o.m].includes(k)) conta[o.m].push(k);
+   A varredura acima procura `ESTRUTURA[idDoModulo]`. Há uma segunda forma no
+   app: a estrutura é indexada por CONCEITO e aponta para módulos por um campo
+   interno. `LINKS` e `CONCEPTS` são assim.
+
+   Esta é a razão pela qual eu errei o número de camadas de um módulo CINCO
+   vezes seguidas — 4, 7, 10, 11, 13, e são 14. Toda vez que descobri uma
+   tarde, ela era desta forma, e a ferramenta olhava só a outra. Enquanto o
+   segundo formato não fosse varrido, haveria sempre uma camada invisível
+   esperando para aparecer depois de eu ter declarado o número com confiança.
+
+   Cada entrada diz onde mora a lista de módulos, para o script não precisar
+   adivinhar a forma. */
+const POR_CONCEITO = [
+  { nome: 'LINKS',    campo: 'onde', idDe: (o) => o.m,
+    oque: 'conceitos que reaparecem em módulos diferentes fazendo outra coisa' },
+  { nome: 'CONCEPTS', campo: 'm',    idDe: (o) => (typeof o === 'string' ? o : o.m),
+    oque: 'cartões de conceito, condição, estado, fenômeno e substância' }
+];
+
+const furosPorConceito = [];
+for (const est of POR_CONCEITO) {
+  let E;
+  try { E = J(`typeof ${est.nome} !== 'undefined' ? ${est.nome} : null`); } catch (e) { continue; }
+  if (!E) continue;
+  const alcancados = new Set();
+  Object.keys(E).forEach((k) => (E[k][est.campo] || []).forEach((o) => {
+    const id = est.idDe(o);
+    if (id) alcancados.add(id);
   }));
-  const semLink = ids.filter((id) => !conta[id].length);
-  console.log(`\nConceitos que atravessam (LINKS): ${Object.keys(L).length} conceitos`);
-  if (semLink.length) console.log(`  sem nenhuma ligação: ${semLink.join(', ')}`);
-  else console.log('  todos os módulos hospedam ao menos um conceito');
-} catch (e) { /* LINKS pode não existir numa versão futura */ }
+  const semNada = ids.filter((id) => !alcancados.has(id));
+  console.log(`\n${est.nome}: ${Object.keys(E).length} entradas — ${est.oque}`);
+  if (semNada.length) {
+    console.log(`  módulos que nenhuma entrada alcança: ${semNada.join(', ')}`);
+    furosPorConceito.push({ nome: est.nome, falta: semNada });
+  } else {
+    console.log('  todos os módulos são alcançados');
+  }
+}
 
 const NOVOS = process.argv.slice(2);
 if (!NOVOS.length) {
@@ -104,6 +124,18 @@ if (!NOVOS.length) {
      verdade, como CONTEXT_TERMS, que já faltava num módulo antigo. */
   const quaseCompletas = furados.filter((l) => !OPCIONAIS[l.nome]);
   if (!quaseCompletas.length) {
+    /* Furo por conceito NÃO reprova sozinho: cinco módulos antigos não hospedam
+       nenhum LINKS, e isso é legítimo — nem todo módulo abriga um conceito que
+       atravessa. Mas um módulo que nenhuma das DUAS estruturas alcança está
+       isolado do resto do curso, e isso é defeito. */
+    const isolados = furosPorConceito.length === POR_CONCEITO.length
+      ? furosPorConceito[0].falta.filter((id) => furosPorConceito.every((f) => f.falta.includes(id)))
+      : [];
+    if (isolados.length) {
+      console.log(`\nISOLADOS — nenhuma estrutura por conceito os alcança: ${isolados.join(', ')}`);
+      console.log('Um módulo que nada referencia não se liga ao resto do curso.');
+      process.exit(1);
+    }
     console.log('\nCobertura: ok — toda estrutura obrigatória cobre os ' + total + ' módulos.');
     Object.keys(OPCIONAIS).forEach((k) => console.log(`  (opcional: ${k} — ${OPCIONAIS[k]})`));
     process.exit(0);
