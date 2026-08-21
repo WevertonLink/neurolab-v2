@@ -4806,9 +4806,17 @@ const TERM_REL = {
 const CONCEPTS = {
 
 /* ===== os que vieram com os módulos 17, 18 e a trilha de extras ===== */
+'saber-fazer':{cat:'fenomeno', n:'Saber fazer sem saber explicar',
+ q:'Por que você anda de bicicleta e não consegue dizer como?',
+ a:'Porque são dois sistemas de memória, com regras e endereços diferentes. A <b>memória declarativa</b> guarda o que aconteceu e onde, em poucas exposições, e sai em palavras. A <b>procedimental</b> guarda o como: o estriado gruda resposta em estímulo por reforço, e o cerebelo corrige um modelo interno por erro. Nenhum dos dois passa pelo lobo temporal medial, que é o endereço da primeira. A separação não é teórica: uma cirurgia bilateral no lobo temporal medial destruiu a formação de lembranças novas de um paciente, e ele seguiu melhorando em habilidades que não guardava lembrança de ter treinado.',
+ t:['memória declarativa','memória procedimental','lobo temporal medial','estriado'],
+ m:[{m:'memoria', l:0},{m:'memoria', l:1}],
+ k:['habito','hipocampo'],
+ s:['andar de bicicleta','saber fazer sem explicar','memoria de habilidade','automatico']},
+
 'ponta-lingua':{cat:'fenomeno', n:'Ponta da língua',
  q:'Por que a palavra fica "na ponta da língua" sem sair?',
- a:'Porque o acesso à palavra tem duas etapas, e só a segunda falhou. Você recupera o <b>significado</b> e um pedaço da <b>forma</b> — a primeira letra, o número de sílabas — sem a palavra inteira. Se ela fosse guardada num bloco só, viria inteira ou não viria nada: é o que sobra na falha que revela como o acesso é montado. O que trava segue em disputa, entre ativação que não alcança o limiar e um competidor no caminho. E o mesmo estado aparece em línguas de sinais, com acesso à configuração da mão sem o sinal completo — o que mostra que a divisão entre sentido e forma não depende do som.',
+ a:'Porque o acesso à palavra tem duas etapas, e a segunda entregou pouco. Você recupera o <b>significado</b> e um pedaço da <b>forma</b> — a primeira letra, o número de sílabas — sem a palavra inteira. Se ela fosse guardada num bloco só, viria inteira ou não viria nada: é o que sobra na falha que revela como o acesso é montado. Repare que o monitor acerta ao insistir que você sabe: a <b>sensação de saber</b> se apoia justamente nesses fragmentos, e por isso ela é confiável aqui — e enganosa quando a pergunta soa familiar e você nunca aprendeu a resposta. O que trava a última etapa segue em disputa.',
  t:['ponta da língua','sensação de saber','evocação'],
  m:[{m:'saber', l:1},{m:'saber', l:0}],
  k:['hipocampo'],
@@ -4816,15 +4824,15 @@ const CONCEPTS = {
 
 'falsa-memoria':{cat:'fenomeno', n:'Falsa memória',
  q:'Como alguém lembra com nitidez de algo que não aconteceu?',
- a:'Por duas rotas que se somam. A memória não guarda etiqueta de origem: ela guarda características da lembrança — vivacidade, detalhe, contexto — e INFERE de onde veio. Uma cena imaginada com nitidez pode ser atribuída a experiência direta, e é isso que o <b>monitoramento de fonte</b> tenta reconstruir. A segunda rota é a <b>reconsolidação</b>: evocar pode devolver o traço a um estado em que ele muda, e o que você sabe hoje, ou o que alguém acabou de sugerir, entra na regravação. Note o incômodo: nitidez e confiança não protegem — são justamente as pistas que o sistema usa para atribuir origem.',
- t:['monitoramento de fonte','reconsolidação','calibração'],
- m:[{m:'saber', l:2},{m:'memoria', l:3}],
+ a:'Porque a memória não guarda etiqueta de origem. Ela guarda características da lembrança — vivacidade, detalhe sensorial, contexto — e INFERE de onde veio, na hora de lembrar. Uma cena imaginada com nitidez pode ser atribuída a experiência direta, e é isso que o <b>monitoramento de fonte</b> tenta reconstruir. Há um segundo mecanismo, independente deste: a simples repetição aumenta a sensação de que algo é verdade, mesmo quando você lembra perfeitamente que a fonte não presta. E note o incômodo: nitidez não protege — ela é uma das pistas que o sistema usa para decidir que aquilo foi vivido.',
+ t:['monitoramento de fonte','fluência'],
+ m:[{m:'saber', l:2},{m:'saber', l:3}],
  k:['hipocampo'],
  s:['lembrar errado','memoria falsa','jurar que aconteceu','lembranca inventada']},
 
 'achei-que-entendi':{cat:'estado', n:'Achei que tinha entendido',
  q:'Por que acompanho a explicação e depois não consigo repetir?',
- a:'Porque acompanhar e produzir são capacidades diferentes, e a segunda é a cobrada. Ler com o texto à frente gera <b>fluência</b>, e o cérebro usa fluência como sinal de domínio — mas metade do trabalho estava sendo feita pela página. Há um caso mais teimoso, a <b>ilusão de profundidade explicativa</b>: ela aparece para MECANISMOS e quase não para fatos. Você tem a imagem do objeto funcionando e confunde a nitidez dela com a completude da cadeia causal. O teste que desfaz é curto e vale para qualquer assunto: explique passo a passo, sem olhar, e o buraco aparece sozinho.',
+ a:'Porque acompanhar e produzir são capacidades diferentes, e a segunda é a cobrada. Ler com o texto à frente gera <b>fluência</b>, e o cérebro usa fluência como sinal de domínio — isso vale para qualquer assunto, porque parte do trabalho estava sendo feita pela página. Há um caso mais teimoso, a <b>ilusão de profundidade explicativa</b>: ela aparece para MECANISMOS e quase não para fatos, e por isso o teste que a desfaz tem endereço. Explique o mecanismo passo a passo, sem olhar, e o buraco aparece. Para fato você já sabe que não sabe; é o mecanismo que engana, porque a imagem dele funcionando parece completa.',
  t:['fluência','ilusão de profundidade explicativa','evocação','reconhecimento'],
  m:[{m:'ilusoes', l:3},{m:'ilusoes', l:0}],
  k:['hipocampo'],
