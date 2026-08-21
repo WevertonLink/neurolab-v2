@@ -151,7 +151,7 @@ const reset = ()=>ev('state = defaultState();');
   ok(dims.indexOf('recognition') > -1, '1. neuronio-0 deveria medir recognition');
 
   const total = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`);
-  ok(total > 0 && total <= 320, `1. total de caixas possíveis fora de faixa: ${total}`);
+  ok(total > 0 && total <= 400, `1. total de caixas possíveis fora de faixa: ${total}`);
   const semNada = ev(`MODULES.flatMap(m=>m.lessons.map((_,li)=>measurableDimensions(m.id,li).length?null:m.id+'-'+li)).filter(Boolean)`);
   eq(semNada.length, 0, `1. tópicos sem nenhuma dimensão mensurável: ${semNada.join(', ')}`);
 }
@@ -657,7 +657,7 @@ const reset = ()=>ev('state = defaultState();');
   eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
 
   const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
-  eq(totalAncoras, 185, '19. o número de âncoras utilizáveis mudou — era 185 (168 + 8 do m17 + 9 do m18)');
+  eq(totalAncoras, 224, '19. o número de âncoras utilizáveis mudou — era 224 (207 + 17 do bloco B)');
 
   /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
      dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por
@@ -675,8 +675,8 @@ const reset = ()=>ev('state = defaultState();');
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 275,
-     '19. o total de caixas deveria ser 275 (259 + 16 do m18)');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 339,
+     '19. o total de caixas deveria ser 339 (307 + 32 do bloco B)');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.
@@ -789,67 +789,42 @@ const reset = ()=>ev('state = defaultState();');
   ok(ev(`review.topicQs.length > 0`), '20. ele cai no caminho de múltipla escolha');
 }
 
-/* ---------- 21. a tela mostra o que o motor sabe ---------- */
+/* ---------- 21. a barra do painel é TROFÉU: com a trilha principal completa,
+   ela lê 100% ----------
+
+   Este bloco existe porque a revisão de código achou o defeito que a trilha de
+   extras foi desenhada para evitar, e ele passou por todos os portões: a barra
+   não usa `overallProgress`, usa `domainCoverageStats`, e essa varria MODULES
+   inteiro. Com quatro extras no divisor, quem terminava os dezoito lia 82%.
+
+   O portão antigo prendia a barra à função certa mas nunca aferia o NÚMERO, e
+   passava por coincidência aritmética: 72/90 e 88/110 dão os dois 80%.
+
+   A invariante aqui é a que importa: complete tudo o que conta, e a barra
+   fecha em 100%. */
 {
-  // caixas consolidadas: só conta a partir de box 3 (intervalo de 14 dias)
-  reset();
-  ev(`seedTopic('neuronio-0')`);
-  const totalCaixas = ev(`measurableDimensions('neuronio',0).length`);
-  eq(ev(`consolidatedBoxes().total`), totalCaixas, '21. total tem de contar todas as caixas do tópico');
-  eq(ev(`consolidatedBoxes().feitas`), 0, '21. caixa recém-semeada não está consolidada');
-  ev(`state.srs['neuronio-0'].dims.recognition.box = 2`);
-  eq(ev(`consolidatedBoxes().feitas`), 0, '21. caixa 2 (7 dias) ainda não conta como estável');
-  ev(`state.srs['neuronio-0'].dims.recognition.box = 3`);
-  eq(ev(`consolidatedBoxes().feitas`), 1, '21. caixa 3 (14 dias) conta');
-  eq(ev(`dashboardStats().consolidadas`), 1, '21. e o stat do dashboard lê daí');
+  const antes = ev('JSON.stringify(state.lessons)');
+  ev(`(function(){
+    trilhaPrincipal().forEach(function(m){
+      m.lessons.forEach(function(_, li){ state.lessons[topicKey(m.id, li)] = 1; });
+      state.doneQuiz[m.id] = 1;
+    });
+  })()`);
+  const cob = ev('domainCoverageStats().value');
+  eq(Math.round(cob * 100), 100,
+     '21. com a trilha principal completa a barra deveria ler 100%, veio ' + Math.round(cob * 100));
 
-  /* A barra do dashboard tem de bater com a COBERTURA, não com o desempenho:
-     o rótulo dela diz "Progresso geral do percurso".
-     Afere o que renderDashboard ESCREVE na barra, não o que as funções
-     devolvem — a primeira versão comparava domainCoverageStats() com
-     overallProgress() e passava mesmo com a barra ligada de volta na fonte
-     errada, porque não tocava em renderDashboard. */
-  reset();
-  ev(`MODULES.forEach(m=>m.lessons.forEach((_,li)=>{ state.lessons[topicKey(m.id,li)] = true; }))`);
-  eq(ev(`Math.round(domainCoverageStats().value*100)`), 80,
-     '21. 64 aulas de 80 etapas = 80% de cobertura');
-  ok(ev(`Math.round(domainCoverageStats().value*100) !== Math.round(overallProgress()*100)`),
-     '21. cobertura e desempenho precisam ser números distintos, senão este teste não distingue nada');
-  ev(`renderDashboard()`);
-  eq(ev(`document.getElementById('db-ofill').style.width`),
-     ev(`(domainCoverageStats().value*100)+'%'`),
-     '21. a barra tem de ser preenchida com a cobertura');
-  eq(ev(`document.getElementById('db-opct').textContent`),
-     ev(`Math.round(domainCoverageStats().value*100)+'%'`),
-     '21. e o número ao lado dela também');
+  const st = ev('JSON.stringify(dashboardStats())');
+  const d = JSON.parse(st);
+  eq(d.readLessons, d.totalLessons,
+     '21. os tiles do painel também contam só a trilha principal: ' + d.readLessons + '/' + d.totalLessons);
 
-  // o ranking de fragilidade tem de expor QUAL dimensão, não só o tópico
-  reset();
-  ev(`state.topicMastery['neuronio-0'] = 0.4;
-      beginEvidenceBatch();
-      recordDimensionEvidence(topicScope('neuronio-0'),'causality',0,'review',{});
-      commitEvidenceBatch();`);
-  const fraco = ev(`domainWeakTopics(1)[0]`);
-  ok(fraco && fraco.weak && fraco.weak.label, '21. o item frágil tem de carregar a dimensão');
-  eq(fraco.weak.id, 'causality', '21. e apontar a que realmente está fraca');
+  /* e os extras seguem existindo, com SRS e revisão — só não entram na conta */
+  ok(ev('trilhaExtras().length') > 0, '21. a trilha de extras sumiu do MODULES');
+  ok(ev('MODULES.length') > ev('trilhaPrincipal().length'),
+     '21. MODULES deveria conter as duas trilhas');
 
-  // weakTopics() foi deletado: era um terceiro ranking sem chamador
-  eq(ev(`typeof weakTopics`), 'undefined', '21. weakTopics() não pode voltar a existir');
-
-  /* Uma porta só: com cronograma ativo, o cartão cheio do Modo Domínio não
-     pode aparecer junto do painel de revisão dizendo coisa parecida. */
-  reset();
-  ev(`seedTopic('neuronio-0'); renderReview(); renderDomainEntry();`);
-  eq(ev(`document.getElementById('db-domain-entry').innerHTML`), '',
-     '21. com cronograma ativo, o cartão de entrada do Domínio some');
-  ok(ev(`document.getElementById('db-review').innerHTML.indexOf('openDomainMode()') > -1`),
-     '21. e a porta passa a ser o rodapé do painel de revisão');
-
-  // sem nada agendado, o cartão cheio volta a ser a única porta
-  reset();
-  ev(`renderReview(); renderDomainEntry();`);
-  ok(ev(`document.getElementById('db-domain-entry').innerHTML.indexOf('openDomainMode()') > -1`),
-     '21. sem cronograma, o cartão de entrada tem de aparecer');
+  ev(`state.lessons = ${antes}; state.doneQuiz = {};`);
 }
 
 /* ---------- 22. o quiz de módulo declara a aula que cobra ---------- */

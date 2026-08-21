@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="941" height="1672" viewBox="0 0 941 1672" role="img" aria-label="Infográfico do módulo extra As ilusões do estudo">
+<rect width="941" height="1672" fill="#12121c"/>
+<text x="470" y="58" text-anchor="middle" fill="#e9e9f0" font-size="34" font-weight="700">Onde a ilusão se instala</text>
+<text x="470" y="92" text-anchor="middle" fill="#9aa0b4" font-size="19">Você acha que sabe; o teste no dia seguinte discorda</text>
+
+<line x1="60" y1="120" x2="881" y2="120" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="158" fill="#d4b483" font-size="22" font-weight="700">1 · Reconhecer não é produzir</text>
+<rect x="60" y="180" width="390" height="196" rx="14" fill="none" stroke="#2c2c45" stroke-width="2"/>
+<text x="86" y="216" fill="#e9e9f0" font-size="21" font-weight="700">Reconhecimento</text>
+<text x="86" y="250" fill="#9aa0b4" font-size="17">o material está na sua frente</text>
+<text x="86" y="278" fill="#9aa0b4" font-size="17">chega rápido e sem esforço</text>
+<rect x="86" y="300" width="338" height="52" rx="8" fill="#d4b483" fill-opacity=".1"/>
+<text x="104" y="322" fill="#e9e9f0" font-size="16">é o que a releitura treina</text>
+<text x="104" y="344" fill="#9aa0b4" font-size="15">e não é o que a prova cobra</text>
+
+<rect x="491" y="180" width="390" height="196" rx="14" fill="none" stroke="#d4b483" stroke-width="2"/>
+<text x="517" y="216" fill="#e9e9f0" font-size="21" font-weight="700">Evocação</text>
+<text x="517" y="250" fill="#9aa0b4" font-size="17">sem a fonte à vista</text>
+<text x="517" y="278" fill="#9aa0b4" font-size="17">custa, e às vezes falha</text>
+<rect x="517" y="300" width="338" height="52" rx="8" fill="#d4b483" fill-opacity=".3"/>
+<text x="535" y="322" fill="#e9e9f0" font-size="16">é o que a prova cobra</text>
+<text x="535" y="344" fill="#9aa0b4" font-size="15">e a única que dá sensação ruim</text>
+<text x="470" y="412" text-anchor="middle" fill="#d4b483" font-size="17">Com o texto à vista, ele faz metade do trabalho por você.</text>
+
+<line x1="60" y1="452" x2="881" y2="452" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="490" fill="#d4b483" font-size="22" font-weight="700">2 · A escada de utilidade</text>
+<rect x="60" y="516" width="821" height="44" rx="10" fill="#d4b483" fill-opacity=".32" stroke="#d4b483" stroke-width="1.6"/>
+<text x="86" y="544" fill="#e9e9f0" font-size="17">ALTA · prática de recuperação, prática distribuída</text>
+<rect x="60" y="570" width="700" height="44" rx="10" fill="#d4b483" fill-opacity=".16" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="86" y="598" fill="#e9e9f0" font-size="17">MODERADA · intercalação, autoexplicação</text>
+<rect x="60" y="624" width="520" height="44" rx="10" fill="#d4b483" fill-opacity=".06" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="86" y="652" fill="#9aa0b4" font-size="17">BAIXA · grifar, resumir, reler</text>
+<rect x="60" y="694" width="821" height="86" rx="12" fill="none" stroke="#d4b483" stroke-width="1.5"/>
+<text x="86" y="728" fill="#e9e9f0" font-size="17" font-weight="700">O grifo é o único com custo, não só rendimento fraco</text>
+<text x="86" y="760" fill="#9aa0b4" font-size="17">Ele estreita a atenção para itens isolados, e prejudica as questões que pedem ligar partes.</text>
+
+<line x1="60" y1="820" x2="881" y2="820" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="858" fill="#d4b483" font-size="22" font-weight="700">3 · O conserto é o momento</text>
+<text x="60" y="898" fill="#9aa0b4" font-size="17">A mesma pergunta — "quanto disso eu vou lembrar?" — em dois instantes.</text>
+
+<text x="60" y="948" fill="#e9e9f0" font-size="16">logo após estudar</text>
+<rect x="60" y="962" width="330" height="30" rx="8" fill="#d4b483" fill-opacity=".35"/>
+<text x="76" y="983" fill="#e9e9f0" font-size="14">estudo</text>
+<path d="M396 977 L430 977" stroke="#9aa0b4" stroke-width="1.6"/><polygon points="430,977 418,971 418,983" fill="#9aa0b4"/>
+<text x="440" y="982" fill="#9aa0b4" font-size="15">julga aqui · fluência no máximo</text>
+
+<text x="60" y="1036" fill="#e9e9f0" font-size="16">adiado, sem o material</text>
+<rect x="60" y="1050" width="330" height="30" rx="8" fill="#d4b483" fill-opacity=".35"/>
+<text x="76" y="1071" fill="#e9e9f0" font-size="14">estudo</text>
+<rect x="404" y="1050" width="200" height="30" rx="8" fill="#2c2c45"/>
+<text x="504" y="1071" text-anchor="middle" fill="#9aa0b4" font-size="14">intervalo</text>
+<path d="M614 1065 L648 1065" stroke="#d4b483" stroke-width="1.8"/><polygon points="648,1065 636,1059 636,1071" fill="#d4b483"/>
+<text x="658" y="1070" fill="#d4b483" font-size="15">julga aqui</text>
+<rect x="60" y="1108" width="821" height="80" rx="12" fill="#d4b483" fill-opacity=".08" stroke="#d4b483" stroke-width="1.5"/>
+<text x="86" y="1142" fill="#e9e9f0" font-size="17">Adiado, você precisa RECUPERAR só para conseguir responder.</text>
+<text x="86" y="1170" fill="#9aa0b4" font-size="17">Não é introspecção melhor: é uma recuperação disfarçada de introspecção.</text>
+
+<rect x="60" y="1216" width="821" height="120" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="86" y="1252" fill="#e9e9f0" font-size="18" font-weight="700">O teste que desfaz a ilusão</text>
+<text x="86" y="1284" fill="#9aa0b4" font-size="17">Dê uma nota ao seu entendimento de um mecanismo. Explique passo a passo, sem olhar.</text>
+<text x="86" y="1312" fill="#9aa0b4" font-size="17">Dê a nota de novo. A queda é o tamanho da ilusão — e ela só aparece para MECANISMOS.</text>
+
+<text x="470" y="1420" text-anchor="middle" fill="#9aa0b4" font-size="18">Para fatos, você sabe que não sabe.</text>
+<text x="470" y="1452" text-anchor="middle" fill="#9aa0b4" font-size="18">Para mecanismos, a imagem do objeto funcionando ocupa o lugar da explicação.</text>
+<text x="470" y="1524" text-anchor="middle" fill="#d4b483" font-size="19">Tire a muleta ANTES de medir, não depois.</text>
+<text x="470" y="1620" text-anchor="middle" fill="#2c2c45" font-size="15">NeuroLab · extra 02</text>
+</svg>

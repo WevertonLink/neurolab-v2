@@ -60,6 +60,13 @@ unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+0
   --gold:#eab308;
   --jade:#10b981;
   --mint:#5eead4;
+  /* A trilha de extras usa uma família mais fria e menos saturada que os 18
+     módulos de neurociência. A diferença de cor é parte do recado: não é
+     sobre o cérebro, é sobre como você estuda. */
+  --slate:#94a3b8;
+  --sand:#d4b483;
+  --sage:#9cb380;
+  --dusk:#b39ddb;
   --good:#34d399;
   --bad:#fb7185;
   --shadow:0 20px 60px -20px rgba(0,0,0,.8);
@@ -160,6 +167,15 @@ header.top{
 /* module cards */
 .sec-label{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin:26px 2px 12px}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* O cabeçalho da trilha de extras ocupa a largura toda da grade, para separar
+   de verdade as duas seções em vez de virar mais um cartão. */
+.cards-sec{grid-column:1/-1;margin:18px 0 2px;padding-top:16px;border-top:1px solid var(--line)}
+.cards-sec h3{margin:0 0 4px;font-size:15px;color:var(--ink)}
+.cards-sec p{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink-3)}
+/* `.card` declara o shorthand `border` DEPOIS desta regra e com a mesma
+   especificidade, então `border-style:dashed` sozinho era sobrescrito e a
+   borda tracejada nunca aparecia. `.card.card-extra` sobe a especificidade. */
+.card.card-extra{border-style:dashed}
 .card{
   position:relative;text-align:left;border:1px solid var(--line);border-radius:16px;padding:15px 15px 14px;
   background:linear-gradient(180deg,var(--panel),var(--panel-2));

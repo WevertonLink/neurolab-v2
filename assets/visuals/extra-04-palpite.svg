@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="941" height="1672" viewBox="0 0 941 1672" role="img" aria-label="Infográfico do módulo extra Quando confiar no palpite">
+<rect width="941" height="1672" fill="#12121c"/>
+<text x="470" y="58" text-anchor="middle" fill="#e9e9f0" font-size="34" font-weight="700">Os dois eixos que decidem</text>
+<text x="470" y="92" text-anchor="middle" fill="#9aa0b4" font-size="19">A intuição não é boa nem ruim: ela depende do ambiente</text>
+
+<line x1="60" y1="120" x2="881" y2="120" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="158" fill="#b39ddb" font-size="22" font-weight="700">1 · O palpite chega sem histórico</text>
+<rect x="60" y="186" width="230" height="70" rx="12" fill="#b39ddb" fill-opacity=".2" stroke="#b39ddb" stroke-width="1.8"/>
+<text x="175" y="228" text-anchor="middle" fill="#e9e9f0" font-size="17">a situação</text>
+<path d="M296 221 L356 221" stroke="#b39ddb" stroke-width="2"/><polygon points="356,221 342,214 342,228" fill="#b39ddb"/>
+<rect x="362" y="186" width="230" height="70" rx="12" fill="#b39ddb" fill-opacity=".34" stroke="#b39ddb" stroke-width="2"/>
+<text x="477" y="221" text-anchor="middle" fill="#e9e9f0" font-size="17">resposta inteira</text>
+<text x="477" y="243" text-anchor="middle" fill="#9aa0b4" font-size="14">sem passos conscientes</text>
+<rect x="620" y="186" width="261" height="70" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="750" y="221" text-anchor="middle" fill="#9aa0b4" font-size="16">de onde veio</text>
+<text x="750" y="243" text-anchor="middle" fill="#9aa0b4" font-size="14">não vem junto</text>
+<rect x="60" y="284" width="821" height="70" rx="12" fill="#b39ddb" fill-opacity=".08" stroke="#b39ddb" stroke-width="1.5"/>
+<text x="86" y="316" fill="#e9e9f0" font-size="17">A certeza é IDÊNTICA no especialista calibrado e em quem só repetiu sem retorno.</text>
+<text x="86" y="342" fill="#9aa0b4" font-size="17">Como a experiência interna não separa os dois, só resta olhar para o ambiente.</text>
+
+<line x1="60" y1="394" x2="881" y2="394" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="432" fill="#b39ddb" font-size="22" font-weight="700">2 · As duas condições</text>
+<text x="470" y="474" text-anchor="middle" fill="#9aa0b4" font-size="16">regularidade do ambiente →</text>
+<text x="86" y="620" text-anchor="middle" fill="#9aa0b4" font-size="16" transform="rotate(-90 86 620)">retorno →</text>
+<rect x="120" y="492" width="360" height="120" rx="12" fill="#b39ddb" fill-opacity=".06" stroke="#2c2c45" stroke-width="1.6" stroke-dasharray="6 5"/>
+<text x="300" y="540" text-anchor="middle" fill="#9aa0b4" font-size="17">repetição sem aprendizado</text>
+<text x="300" y="568" text-anchor="middle" fill="#9aa0b4" font-size="14">há retorno, mas nada estável a aprender</text>
+<text x="300" y="594" text-anchor="middle" fill="#9aa0b4" font-size="13">baixa validade</text>
+<rect x="500" y="492" width="360" height="120" rx="12" fill="#b39ddb" fill-opacity=".34" stroke="#b39ddb" stroke-width="2"/>
+<text x="680" y="540" text-anchor="middle" fill="#e9e9f0" font-size="18">a intuição se forma aqui</text>
+<text x="680" y="568" text-anchor="middle" fill="#9aa0b4" font-size="14">xadrez, meteorologia, sala de emergência</text>
+<text x="680" y="594" text-anchor="middle" fill="#b39ddb" font-size="13">alta validade</text>
+<rect x="120" y="626" width="360" height="110" rx="12" fill="#b39ddb" fill-opacity=".03" stroke="#2c2c45" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="300" y="672" text-anchor="middle" fill="#9aa0b4" font-size="16">nada a aprender,</text>
+<text x="300" y="696" text-anchor="middle" fill="#9aa0b4" font-size="16">e nada que avise</text>
+<rect x="500" y="626" width="360" height="110" rx="12" fill="#b39ddb" fill-opacity=".12" stroke="#2c2c45" stroke-width="1.6" stroke-dasharray="6 5"/>
+<text x="680" y="672" text-anchor="middle" fill="#9aa0b4" font-size="16">há padrão,</text>
+<text x="680" y="696" text-anchor="middle" fill="#9aa0b4" font-size="16">mas ninguém confirma</text>
+<rect x="120" y="754" width="740" height="52" rx="10" fill="none" stroke="#b39ddb" stroke-width="1.6"/>
+<text x="490" y="786" text-anchor="middle" fill="#e9e9f0" font-size="17">a confiança sobe nos QUATRO — por isso ela não diz em qual você está</text>
+
+<line x1="60" y1="848" x2="881" y2="848" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="886" fill="#b39ddb" font-size="22" font-weight="700">3 · O contrapeso obrigatório</text>
+<rect x="60" y="916" width="390" height="180" rx="14" fill="none" stroke="#2c2c45" stroke-width="2"/>
+<text x="86" y="952" fill="#e9e9f0" font-size="19" font-weight="700">Baixa validade</text>
+<text x="86" y="988" fill="#9aa0b4" font-size="17">fórmula simples iguala ou</text>
+<text x="86" y="1014" fill="#9aa0b4" font-size="17">supera o julgamento experiente</text>
+<text x="86" y="1052" fill="#9aa0b4" font-size="15">humanos julgam o mesmo caso</text>
+<text x="86" y="1076" fill="#9aa0b4" font-size="15">de formas diferentes em dias diferentes</text>
+<rect x="491" y="916" width="390" height="180" rx="14" fill="#b39ddb" fill-opacity=".12" stroke="#b39ddb" stroke-width="2"/>
+<text x="517" y="952" fill="#e9e9f0" font-size="19" font-weight="700">Alta validade</text>
+<text x="517" y="988" fill="#e9e9f0" font-size="17">o especialista ganha</text>
+<text x="517" y="1014" fill="#e9e9f0" font-size="17">com larga margem</text>
+<text x="517" y="1052" fill="#b39ddb" font-size="15">o problema nunca foi a expertise:</text>
+<text x="517" y="1076" fill="#b39ddb" font-size="15">foi onde ela foi aplicada</text>
+
+<rect x="60" y="1132" width="821" height="92" rx="12" fill="#b39ddb" fill-opacity=".08" stroke="#b39ddb" stroke-width="1.5"/>
+<text x="86" y="1168" fill="#e9e9f0" font-size="18" font-weight="700">A pergunta que você pode se fazer</text>
+<text x="86" y="1202" fill="#9aa0b4" font-size="17">Este assunto tem padrão estável, e eu já recebi retorno suficiente sobre ele?</text>
+
+<text x="470" y="1300" text-anchor="middle" fill="#9aa0b4" font-size="18">Não é a dificuldade do problema que decide.</text>
+<text x="470" y="1334" text-anchor="middle" fill="#9aa0b4" font-size="18">A atmosfera é caótica, e a previsão do tempo calibra —</text>
+<text x="470" y="1368" text-anchor="middle" fill="#9aa0b4" font-size="18">porque o resultado volta amanhã, milhares de vezes.</text>
+<text x="470" y="1450" text-anchor="middle" fill="#b39ddb" font-size="19">Vinte anos sem retorno produzem confiança, não calibração.</text>
+<text x="470" y="1620" text-anchor="middle" fill="#2c2c45" font-size="15">NeuroLab · extra 04</text>
+</svg>

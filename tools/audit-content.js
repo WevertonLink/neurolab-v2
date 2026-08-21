@@ -194,7 +194,15 @@ if (!errors.length) {
     'política não descreve as atualizações na própria origem');
   ok(!/não faz nenhuma requisição à internet/i.test(privacy),
     'política voltou a afirmar ausência absoluta de requisições');
-  ok(/neurolab-v1-15-1/.test(sw), 'versão do cache offline não foi atualizada');
+  /* Este portão exigia a string EXATA da versão vigente, o que o punha do lado
+     errado da própria regra: ele impedia o bump que o cabeçalho do sw.js manda
+     fazer a cada publicação de conteúdo. O que dá para verificar de fora é a
+     FORMA — que exista uma versão, e que ela seja legível. Se ela subiu ou não
+     é decisão de quem publica, e o comentário do sw.js já a instrui. */
+  const versao = sw.match(/const VERSION = '([^']+)'/);
+  ok(Boolean(versao), 'sw.js sem VERSION declarada');
+  ok(versao && /^neurolab-v\d+-\d+-\d+$/.test(versao[1]),
+    `VERSION fora do padrão neurolab-vX-Y-Z: ${versao && versao[1]}`);
 
   // O progresso do aluno é irrecuperável, e a forma de perdê-lo era silenciosa:
   // a janela aberta em segundo plano gravava seu retrato velho por cima do

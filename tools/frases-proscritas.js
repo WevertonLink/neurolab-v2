@@ -48,7 +48,15 @@ const PROSCRITAS = [
   { re: /a melhor técnica de estudo que existe/i,
     porque: 'Dunlosky 2013 põe recuperação e prática distribuída lado a lado em alta utilidade' },
   { re: /\beu (quase |já |ainda )?(deixei|tinha|escrevi|errei)\b/i,
-    porque: 'voz autoral vazando para o texto do aluno — isto é conversa com o revisor' }
+    porque: 'voz autoral vazando para o texto do aluno — isto é conversa com o revisor' },
+  { re: /(especialista|expertise)[^.]{0,40}(ganha|vence|supera)[^.]{0,30}(com folga|com margem)/i,
+    porque: 'Kahneman & Klein: algoritmos superam humanos em validade BAIXA e também MUITO ALTA' },
+  { re: /grifar[^.]{0,60}n[ãa]o supera[^.]{0,30}factuais|nem nas factuais/i,
+    porque: 'Ponce, Mayer & Méndez 2022: grifo do próprio aluno dá ganho pequeno em retenção' },
+  { re: /trinta segundos/i,
+    porque: 'número inventado: a tarefa de explicação de mecanismo leva minutos' },
+  { re: /julgamento adiado[^.]{0,40}(melhora|aumenta) a calibra[çc][ãa]o|adiar[^.]{0,30}melhora a calibra[çc][ãa]o/i,
+    porque: 'o adiamento melhora a RESOLUÇÃO; a calibração absoluta piora' }
 ];
 
 /* Reúne todo trecho em que o conteúdo AFIRMA alguma coisa. Distratores ficam
@@ -105,6 +113,17 @@ Object.keys(AN).forEach((id) => {
 const GL = bloco('GLOSSARY');
 Object.keys(GL).forEach((k) => juntar(`glossário/${k}`, GL[k]));
 
+/* DEEP e REFERENCES ficavam de fora, e são justamente as camadas mais novas —
+   88 blocos de prosa densa e 66 notas de fonte que nenhuma varredura alcançava.
+   É a falha descrita no cabeçalho deste arquivo, cometida dentro dele. */
+const DP = bloco('DEEP');
+Object.keys(DP).forEach((id) => (DP[id] || []).forEach((b, i) => juntar(`${id}/aprofundar ${i}`, b)));
+const RF = bloco('REFERENCES');
+Object.keys(RF).forEach((id) => (RF[id] || []).forEach((r, i) => {
+  juntar(`${id}/referência ${i}/fonte`, r.src);
+  juntar(`${id}/referência ${i}/nota`, r.note);
+}));
+
 const IV = bloco('INTEGRATED_VISUALS');
 Object.keys(IV).forEach((id) => {
   ['lead', 'alt', 'caption', 'clarify'].forEach((c) => juntar(`${id}/integrada/${c}`, (IV[id] || {})[c]));
@@ -130,17 +149,31 @@ fs.readdirSync(path.join(ROOT, 'assets/visuals'))
    NÃO é o inverso do decaimento. Uma negação nas ~40 letras anteriores salva a
    ocorrência — janela curta de propósito, para não engolir defeito de verdade
    que apareça num parágrafo onde a palavra "não" está longe. */
-const NEGADA = /\b(n[ãa]o|nunca|deixa de|em vez de|ao contr[áa]rio de|longe de)\b/i;
+const NEGADA = /\b(n[ãa]o|nunca|deixa de)\b/i;
+
+/* A janela de perdão é a ORAÇÃO, não um número cru de letras. Com 40 caracteres
+   um "não" que negava outra coisa entrava na janela e perdoava a frase seguinte
+   — medido. E `em vez de` / `ao contrário de` alargavam ainda mais, então
+   saíram: negar de verdade se escreve com "não" ou "nunca". */
+const oracaoAntes = (texto, i) => {
+  const inicio = Math.max(
+    texto.lastIndexOf('.', i - 1), texto.lastIndexOf(';', i - 1),
+    texto.lastIndexOf(':', i - 1), texto.lastIndexOf('>', i - 1),
+    texto.lastIndexOf('!', i - 1), texto.lastIndexOf('?', i - 1));
+  return texto.slice(inicio + 1, i);
+};
 
 let achados = 0;
 for (const { onde, texto } of afirmacoes) {
   for (const regra of PROSCRITAS) {
-    const m = texto.match(regra.re);
-    if (!m) continue;
-    const antes = texto.slice(Math.max(0, m.index - 40), m.index);
-    if (NEGADA.test(antes)) continue;
+    /* TODAS as ocorrências: com `match` simples, perdoar a primeira descartava
+       a regra inteira e uma segunda ocorrência AFIRMADA ficava invisível. */
+    const re = new RegExp(regra.re.source, regra.re.flags.includes('g') ? regra.re.flags : regra.re.flags + 'g');
+    for (const m of texto.matchAll(re)) {
+    if (NEGADA.test(oracaoAntes(texto, m.index))) continue;
     achados += 1;
     console.error(`${onde}\n    "${m[0]}"\n    → ${regra.porque}`);
+    }
   }
 }
 

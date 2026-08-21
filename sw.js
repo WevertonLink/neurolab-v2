@@ -7,7 +7,7 @@
    Ao publicar uma versão nova do conteúdo, incremente VERSION. É isso que
    dispara o precache do index.html novo e apaga o cache anterior.
    ===================================================================== */
-const VERSION = 'neurolab-v1-15-1';
+const VERSION = 'neurolab-v1-16-0';
 
 const ASSETS = [
   './',
@@ -63,7 +63,15 @@ const ASSETS = [
   './assets/visuals/module-17-memory-systems.webp',
   './assets/visuals/module-17-memory-systems-thumb.webp',
   './assets/visuals/module-18-rhythms-oscillations.svg',
-  './assets/visuals/module-18-rhythms-oscillations-thumb.svg'
+  './assets/visuals/module-18-rhythms-oscillations-thumb.svg',
+  './assets/visuals/extra-01-esforco.svg',
+  './assets/visuals/extra-01-esforco-thumb.svg',
+  './assets/visuals/extra-02-ilusoes.svg',
+  './assets/visuals/extra-02-ilusoes-thumb.svg',
+  './assets/visuals/extra-03-saber.svg',
+  './assets/visuals/extra-03-saber-thumb.svg',
+  './assets/visuals/extra-04-palpite.svg',
+  './assets/visuals/extra-04-palpite-thumb.svg'
 ];
 
 self.addEventListener('install', event => {

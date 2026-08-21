@@ -285,6 +285,46 @@ const INTEGRATED_VISUALS = {
     caption: "A oscilação não é enfeite do circuito: ela cria janelas curtas, e é a fase dessas janelas que decide quem consegue alcançar quem.",
     layers: [["O laço","As piramidais excitam os interneurônios, que as calam. A inibição dura e decai, e o período do ciclo é alguns múltiplos desse tempo."],["Um ritmo dentro do outro","O gama irrompe em fases determinadas do theta — e não numa só. Qual fase identifica de onde veio a entrada, num achado de roedor que não se repetiu no macaco."],["O encaixe do sono","Onda lenta, fuso e ripple aninhados. Induzir o fuso em fase melhora a consolidação; fora de fase, não."]],
     clarify: "A frequência não é o inverso do tempo de decaimento da inibição: o período do ciclo é alguns múltiplos dele. A inibição não precisa só começar a decair — precisa cair abaixo do nível que ainda segura as piramidais, e uma exponencial leva vários múltiplos de τ para chegar lá. É o mesmo motivo pelo qual uma rede mais excitada cruza esse nível antes, e oscila mais rápido."
+  },
+  esforco: {
+    title: "O ciclo que deixa marca",
+    lead: "Uma visão única para relacionar recuperação, intervalo e retorno — e a sensação de aprendizado, que mede a coisa errada.",
+    thumb: "./assets/visuals/extra-01-esforco-thumb.svg",
+    src: "./assets/visuals/extra-01-esforco.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, duas colunas comparam reler e recuperar, com a observação de que a sensação de aprendizado premia a primeira e o resultado premia a segunda. Na segunda faixa, uma linha do tempo mostra sessões concentradas contra sessões espalhadas, com o esquecimento parcial entre elas marcado como condição do ganho. Na terceira, um ciclo de quatro caixas — primeiro contato, recuperação, retorno e intervalo — com a nota de que sem retorno a tentativa errada é o que se fortalece.",
+    caption: "As técnicas que mais rendem têm em comum a sensação de estarem dando errado — e é por isso que quase ninguém as usa.",
+    layers: [["Recuperar, não rever","Produzir sem a fonte à vista modifica o traço; reler só dá acesso a ele. A diferença aparece uma semana depois, não na hora."],["O intervalo faz o trabalho","Esquecer um pouco entre as sessões é a condição do ganho: recuperação barata modifica pouco."],["Sem retorno, treina o erro","A tentativa que falha prepara o terreno para a correção — mas se a correção não vem, é a resposta errada que fica mais forte."]],
+    clarify: "Dificuldade desejável não é dificuldade qualquer: é a que exige recuperar, discriminar ou reconstruir. Material confuso, letra ruim ou barulho também são difíceis, e não ajudam em nada."
+  },
+  ilusoes: {
+    title: "Onde a ilusão se instala",
+    lead: "Uma visão única para separar reconhecer de produzir, entender por que grifar rende pouco, e ver o que conserta o julgamento.",
+    thumb: "./assets/visuals/extra-02-ilusoes-thumb.svg",
+    src: "./assets/visuals/extra-02-ilusoes.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, duas colunas comparam reconhecimento e evocação, com a observação de que o material presente faz parte do trabalho. Na segunda, uma escada de utilidade das técnicas de estudo, com recuperação e espaçamento no topo e grifar e resumir no rodapé, e uma nota sobre o custo específico do grifo em questões que exigem ligar partes. Na terceira, duas linhas do tempo comparam o julgamento feito logo após estudar com o julgamento adiado, e uma caixa mostra o teste da explicação de mecanismo.",
+    caption: "A confiança de quem releu foi medida com o texto à vista — numa condição que a prova não vai ter.",
+    layers: [["Reconhecer não é produzir","Com o material presente, metade da recuperação é feita por ele. Sem material, a metade some — mas a confiança já foi calibrada."],["As técnicas que rendem pouco","Grifar e resumir trabalham no texto. O grifo ainda cobra: estreita a atenção para itens isolados."],["O conserto é o momento","Adiar o julgamento força uma recuperação de verdade. E explicar o mecanismo passo a passo desfaz a ilusão na hora."]],
+    clarify: "Julgamento adiado não é introspecção melhor: é uma recuperação disfarçada de introspecção. O que melhora a nota é você ter sido obrigado a puxar da memória para respondê-la."
+  },
+  saber: {
+    title: "O monitor, e o que ele tem em mãos",
+    lead: "Uma visão única para relacionar a sensação de saber, a ponta da língua, o monitoramento de fonte e a validade da confiança.",
+    thumb: "./assets/visuals/extra-03-saber-thumb.svg",
+    src: "./assets/visuals/extra-03-saber.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, a pergunta e os fragmentos alimentando um monitor que julga antes da busca, com a nota de que ele não tem a resposta em mãos. Na segunda, o acesso à palavra dividido em duas rotas — significado e forma — com a ponta da língua marcada no ponto em que só a segunda falha. Na terceira, duas barras comparam a duração do conteúdo e a da etiqueta de fonte, e uma linha do tempo mostra a confiança perdendo validade a cada nova medida.",
+    caption: "O monitor julga pela pergunta, porque é o que ele tem antes da busca — e é rápido justamente por não conferir.",
+    layers: [["Julgar sem o alvo","A sensação de saber se apoia na familiaridade da pista e nos fragmentos que ela puxa. Pista familiar produz sensação de saber sem conhecimento por trás."],["A falha que revela","Ter o sentido e um pedaço do som sem a palavra prova que são caminhos separados — se fosse bloco, viria inteira ou nada."],["O que dura mais","O conteúdo sobrevive à etiqueta de quem o entregou. Daí a repetição aumentar a sensação de verdade sem nada para descontar."]],
+    clarify: "Sensação de saber e confiança são medidas diferentes: a primeira prevê se você acharia a resposta, antes de tê-la; a segunda avalia a resposta que já saiu. A primeira erra por familiaridade da pergunta; a segunda, por repetição da medida."
+  },
+  palpite: {
+    title: "Os dois eixos que decidem",
+    lead: "Uma visão única para relacionar reconhecimento de padrão, as duas condições da intuição válida, e por que a confiança não informa.",
+    thumb: "./assets/visuals/extra-04-palpite-thumb.svg",
+    src: "./assets/visuals/extra-04-palpite.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, uma situação puxando da memória uma resposta pronta, com a nota de que ela chega sem histórico. Na segunda, um quadrante com regularidade num eixo e retorno no outro, marcando onde a intuição se forma e onde só há repetição. Na terceira, duas colunas comparam ambiente de alta e de baixa validade, com o resultado da comparação entre julgamento e fórmula em cada um, e uma faixa mostrando a confiança subindo igual nos dois.",
+    caption: "A pergunta útil não é se você confia na sua intuição: é se este assunto tem padrão estável e se você já recebeu retorno sobre ele.",
+    layers: [["O palpite chega sem histórico","A sensação de certeza é idêntica no especialista calibrado e em quem só repetiu. A experiência interna não separa os dois."],["As duas condições","Regularidade dá o que aprender; retorno permite aprender. Falta uma e a intuição não se forma — por mais anos que passem."],["O contrapeso obrigatório","Onde há regularidade e retorno, a intuição do especialista é genuinamente válida — o que não é o mesmo que vencer uma fórmula. O problema nunca foi a expertise: foi onde ela foi aplicada."]],
+    clarify: "O que decide não é a dificuldade do problema. A atmosfera é dos sistemas mais caóticos que existem, e a previsão do tempo calibra — porque o resultado volta amanhã, milhares de vezes."
   }
 };
 

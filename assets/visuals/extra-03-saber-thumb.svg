@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="995" viewBox="0 0 941 1672" role="img" aria-label="Infográfico do módulo extra A máquina de saber o que se sabe">
+<rect width="941" height="1672" fill="#12121c"/>
+<text x="470" y="58" text-anchor="middle" fill="#e9e9f0" font-size="34" font-weight="700">O monitor, e o que ele tem em mãos</text>
+<text x="470" y="92" text-anchor="middle" fill="#9aa0b4" font-size="19">Como você sabe que sabe antes de conseguir dizer</text>
+
+<line x1="60" y1="120" x2="881" y2="120" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="158" fill="#9cb380" font-size="22" font-weight="700">1 · Julgar sem ter o alvo</text>
+<rect x="60" y="184" width="250" height="66" rx="12" fill="#9cb380" fill-opacity=".3" stroke="#9cb380" stroke-width="2"/>
+<text x="185" y="216" text-anchor="middle" fill="#e9e9f0" font-size="18">a pergunta</text>
+<text x="185" y="238" text-anchor="middle" fill="#9aa0b4" font-size="14">o quanto ela é familiar</text>
+<rect x="60" y="264" width="250" height="66" rx="12" fill="#9cb380" fill-opacity=".16" stroke="#9cb380" stroke-width="1.6" stroke-dasharray="6 5"/>
+<text x="185" y="296" text-anchor="middle" fill="#e9e9f0" font-size="18">fragmentos</text>
+<text x="185" y="318" text-anchor="middle" fill="#9aa0b4" font-size="14">letra, sílabas, contorno</text>
+<path d="M316 217 L392 240" stroke="#9cb380" stroke-width="2"/>
+<path d="M316 297 L392 274" stroke="#9cb380" stroke-width="2"/>
+<rect x="398" y="216" width="230" height="82" rx="12" fill="none" stroke="#9cb380" stroke-width="2"/>
+<text x="513" y="252" text-anchor="middle" fill="#e9e9f0" font-size="18">o monitor</text>
+<text x="513" y="278" text-anchor="middle" fill="#9aa0b4" font-size="14">julga com ISTO</text>
+<rect x="668" y="216" width="213" height="82" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.6" stroke-dasharray="4 5"/>
+<text x="774" y="252" text-anchor="middle" fill="#9aa0b4" font-size="17">a resposta</text>
+<text x="774" y="278" text-anchor="middle" fill="#9aa0b4" font-size="14">não está disponível</text>
+<text x="470" y="368" text-anchor="middle" fill="#9cb380" font-size="17">Pergunta familiar produz sensação de saber sem conhecimento por trás.</text>
+
+<line x1="60" y1="410" x2="881" y2="410" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="448" fill="#9cb380" font-size="22" font-weight="700">2 · A falha que revela a arquitetura</text>
+<rect x="60" y="480" width="380" height="60" rx="12" fill="#9cb380" fill-opacity=".26" stroke="#9cb380" stroke-width="1.8"/>
+<text x="250" y="517" text-anchor="middle" fill="#e9e9f0" font-size="18">significado — chega</text>
+<rect x="60" y="556" width="380" height="60" rx="12" fill="#9cb380" fill-opacity=".1" stroke="#9cb380" stroke-width="1.8" stroke-dasharray="6 5"/>
+<text x="250" y="586" text-anchor="middle" fill="#e9e9f0" font-size="18">forma — chega pela metade</text>
+<text x="250" y="606" text-anchor="middle" fill="#9aa0b4" font-size="13">primeira letra, número de sílabas</text>
+<rect x="481" y="480" width="400" height="136" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="507" y="514" fill="#e9e9f0" font-size="17" font-weight="700">Por que isso prova alguma coisa</text>
+<text x="507" y="546" fill="#9aa0b4" font-size="16">Ter os dois em separado é IMPOSSÍVEL</text>
+<text x="507" y="572" fill="#9aa0b4" font-size="16">se a palavra for um bloco único.</text>
+<text x="507" y="602" fill="#9cb380" font-size="15">a falha proíbe o acesso em bloco</text>
+<text x="60" y="662" fill="#9aa0b4" font-size="16">Em disputa: ativação parcial que não alcança o limiar, ou um competidor que bloqueia o caminho.</text>
+
+<line x1="60" y1="702" x2="881" y2="702" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="740" fill="#9cb380" font-size="22" font-weight="700">3 · O que dura mais</text>
+<text x="60" y="786" fill="#e9e9f0" font-size="16">conteúdo</text>
+<rect x="60" y="800" width="700" height="30" rx="8" fill="#9cb380" fill-opacity=".4"/>
+<text x="60" y="864" fill="#e9e9f0" font-size="16">etiqueta da fonte</text>
+<rect x="60" y="878" width="230" height="30" rx="8" fill="#9cb380" fill-opacity=".14"/>
+<text x="304" y="899" fill="#9aa0b4" font-size="15">some primeiro</text>
+<rect x="60" y="936" width="821" height="84" rx="12" fill="#9cb380" fill-opacity=".08" stroke="#9cb380" stroke-width="1.5"/>
+<text x="86" y="970" fill="#e9e9f0" font-size="17">A repetição aumenta a sensação de verdade INDEPENDENTE de você confiar na fonte.</text>
+<text x="86" y="1000" fill="#9aa0b4" font-size="17">O sinal é contado, não avaliado — e ele não vem marcado com a procedência.</text>
+
+<text x="60" y="1074" fill="#9cb380" font-size="22" font-weight="700">4 · A confiança tem data</text>
+<text x="60" y="1112" fill="#9aa0b4" font-size="17">A mesma pessoa, a mesma resposta, medida em três momentos.</text>
+<rect x="60" y="1142" width="180" height="34" rx="8" fill="#9cb380" fill-opacity=".4" stroke="#9cb380" stroke-width="1.6"/>
+<text x="150" y="1165" text-anchor="middle" fill="#e9e9f0" font-size="15">1ª vez, sem pista</text>
+<text x="150" y="1198" text-anchor="middle" fill="#9cb380" font-size="14">informa muito</text>
+<rect x="270" y="1142" width="180" height="34" rx="8" fill="#9cb380" fill-opacity=".2" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="360" y="1165" text-anchor="middle" fill="#e9e9f0" font-size="15">2ª vez</text>
+<text x="360" y="1198" text-anchor="middle" fill="#9aa0b4" font-size="14">já contaminada</text>
+<rect x="480" y="1142" width="180" height="34" rx="8" fill="#9cb380" fill-opacity=".06" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="570" y="1165" text-anchor="middle" fill="#9aa0b4" font-size="15">após conversar</text>
+<text x="570" y="1198" text-anchor="middle" fill="#9aa0b4" font-size="14">não informa quase nada</text>
+<rect x="60" y="1240" width="821" height="84" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="86" y="1274" fill="#e9e9f0" font-size="17">O que sobe a cada repetição é a FLUÊNCIA de produzir a resposta.</text>
+<text x="86" y="1304" fill="#9aa0b4" font-size="17">A confiança acompanha a fluência; o acerto, não. A relação se desfaz por aí.</text>
+
+<text x="470" y="1400" text-anchor="middle" fill="#9aa0b4" font-size="18">O monitor é rápido porque não confere.</text>
+<text x="470" y="1434" text-anchor="middle" fill="#9aa0b4" font-size="18">Todos os erros dele são o preço dessa velocidade.</text>
+<text x="470" y="1510" text-anchor="middle" fill="#9cb380" font-size="19">Confiança não é um traço seu: é uma medida com data.</text>
+<text x="470" y="1620" text-anchor="middle" fill="#2c2c45" font-size="15">NeuroLab · extra 03</text>
+</svg>
