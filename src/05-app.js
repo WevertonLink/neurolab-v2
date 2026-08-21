@@ -216,12 +216,12 @@ const MINI_QUIZZES = {
     ],
     [
       {lvl:0,q:"O que caracteriza um ambiente de baixa validade?",o:["Falta padrão estável, ou o retorno chega tarde e ruidoso","Os problemas são muito difíceis","Há pouca informação disponível"], c:0,er:"São as duas condições da aula anterior, vistas pelo avesso: sem uma delas, não há intuição a formar.",ew:"Dificuldade e escassez de informação não decidem: xadrez é dificílimo e é de alta validade, porque o resultado volta limpo."},
-      {lvl:1,q:"Meteorologista e analista de ações fazem previsões a vida toda. O que separa os dois?",o:["Um recebe retorno rápido e limpo sobre cada previsão; o outro, não","Um trabalha com ciência, o outro com opinião","Um lida com sistemas simples, o outro com sistemas complexos"], c:0,er:"A atmosfera é caótica e mesmo assim a previsão do tempo calibra — porque o resultado aparece amanhã, milhares de vezes.",ew:"Não é rigor da área nem simplicidade do sistema: o tempo é dos sistemas mais complexos que existem, e ainda assim permite aprender."},
+      {lvl:1,q:"Prever o tempo, contratar para uma vaga, escolher ações. Qual falha por FALTA DE PADRÃO, e não por retorno?",o:["Escolher ações","Contratar para uma vaga","Prever o tempo"], c:0,er:"Na bolsa o retorno é rápido: o preço aparece amanhã. O que falta é regularidade — se houvesse informação pública capaz de prever, o preço já a refletiria.",ew:"Contratar tem padrão real e falha no retorno, que vem cortado pela sua própria escolha. E prever o tempo tem as duas condições, que é por isso que ali o faro se forma."},
       {lvl:2,q:"Qual mecanismo do primeiro módulo desta trilha reaparece aqui, numa escala de anos?",o:["Recuperar sem correção fortalece o que saiu, certo ou errado","O espaçamento entre as repetições","A intercalação entre tipos de problema"], c:0,er:"É a mesma coisa: sem retorno, a repetição fortalece a resposta produzida, e não a resposta certa.",ew:"Espaçamento e intercalação são sobre COMO distribuir a prática. Aqui o problema é a correção não chegar — outra peça."}
     ],
     [
-      {lvl:0,q:"Em ambientes de baixa validade, fórmulas simples tendem a:",o:["Empatar ou superar, dependendo do estudo","Superar sempre, e por larga margem","Perder para quem tem mais anos de prática"], c:0,er:"Na maior meta-análise, mecânico e clínico empatam em cerca de metade dos estudos e o mecânico vence na outra metade. Empate é tão comum quanto vitória.",ew:"Superar sempre é forte demais, e anos de prática não revertem — o que falta não é prática, é validade do ambiente."},
-      {lvl:1,q:"E em ambientes de alta validade?",o:["O especialista ganha com folga","O resultado se inverte apenas um pouco","As fórmulas seguem à frente"], c:0,er:"É o contrapeso obrigatório: onde há regularidade e retorno, a expertise é real e vence com margem.",ew:"A assimetria é grande, não sutil — e é ela que transforma um achado desconfortável em ferramenta de decisão."},
+      {lvl:0,q:"Em ambientes de baixa validade, fórmulas simples tendem a:",o:["Empatar ou superar, dependendo do estudo","Superar sempre, e por larga margem","Perder para quem tem mais anos de prática"], c:0,er:"Na maior meta-análise, o mecânico vence em cerca de 40% dos estudos, o clínico em cerca de 10%, e o resto empata. Empate é tão comum quanto vitória do mecânico.",ew:"Superar sempre é forte demais, e anos de prática não revertem — o que falta não é prática, é validade do ambiente."},
+      {lvl:1,q:"E em ambientes de alta validade, o especialista vence a fórmula?",o:["Não necessariamente: ali a fórmula também costuma ganhar, por lapsos de atenção humanos","Sim, com folga: é o contrapeso ao achado sobre baixa validade","Sim, mas por pouco"], c:0,er:"Algoritmos superam humanos em DUAS pontas: validade baixa, e validade muito alta, onde um deslize ocasional custa caro. O contrapeso não é vencer a fórmula.",ew:"O contrapeso verdadeiro é outro: ali a intuição do especialista é genuinamente VÁLIDA, ele acha as pistas certas, e para a maior parte dessas decisões nunca chegou a existir fórmula."},
       {lvl:2,q:"Qual é a leitura ERRADA que se faz quando o contrapeso é omitido?",o:["Que especialistas em geral não são confiáveis","Que fórmulas deveriam substituir todo julgamento clínico","Que a experiência não muda nada"], c:0,er:"Sem o contrapeso, o achado vira desconfiança geral de especialista — conclusão que o próprio dado contradiz.",ew:"As outras duas também são erradas, mas são consequências dessa primeira leitura. A raiz é generalizar de um tipo de ambiente para todos."}
     ]
   ],
@@ -234,11 +234,11 @@ const MINI_QUIZZES = {
     [
       {lvl:0,q:"Na ponta da língua, o que costuma estar disponível?",o:["O significado e um pedaço da forma, como a primeira letra","Só a certeza de conhecer a palavra, sem nada mais","A palavra inteira, mas sem o significado"], c:0,er:"Sentido e fragmento sonoro aparecem juntos, sem a palavra — que é justamente o que o argumento precisa.",ew:"Se sobrasse só a certeza, o estado seria compatível com a palavra ser um bloco inacessível. E ter o som sem o sentido é outro quadro, bem mais raro."},
       {lvl:1,q:"Por que a ponta da língua é considerada informativa, e não só um incômodo?",o:["Porque o que sobra quando o acesso falha revela como ele é montado","Porque mostra que a palavra ainda está guardada","Porque indica que a memória está sobrecarregada"], c:0,er:"O padrão do que sobra PROÍBE o acesso em bloco. Uma falha raramente é tão informativa quanto esta.",ew:"Que a palavra está guardada é verdade e é o menos interessante — você já sabia disso pela própria sensação. E não há evidência de sobrecarga aqui."},
-      {lvl:2,q:"Entre as duas explicações da ponta da língua, o que o teste direto mostrou?",o:["Que dar uma palavra parecida antes REDUZ o estado, o que pesa contra o bloqueio","Que dar uma palavra parecida antes aumenta o estado, confirmando o bloqueio","Que as duas explicações preveem exatamente o mesmo resultado"], c:0,er:"Se um competidor bloqueasse o acesso, ativá-lo antes deveria piorar. Piorou o contrário — o que favorece a ativação insuficiente.",ew:"É justamente por preverem resultados DIFERENTES que as duas puderam ser testadas. O bloqueio segue como componente possível, não como explicação de igual peso."}
+      {lvl:2,q:"Entre as duas explicações da ponta da língua, o que o teste direto mostrou?",o:["Que dar uma palavra parecida antes REDUZ o estado, o que pesa contra o bloqueio","Que dar uma palavra parecida antes aumenta o estado, confirmando o bloqueio","Que as duas explicações preveem exatamente o mesmo resultado"], c:0,er:"Se um competidor bloqueasse o acesso, ativá-lo antes deveria piorar. Aconteceu o contrário — o que favorece a ativação insuficiente.",ew:"É justamente por preverem resultados DIFERENTES que as duas puderam ser testadas. O bloqueio segue como componente possível, não como explicação de igual peso."}
     ],
     [
       {lvl:0,q:"Monitoramento de fonte é:",o:["Reconstruir de onde veio uma informação que você lembra","Verificar se a informação é verdadeira","Escolher fontes confiáveis antes de ler"], c:0,er:"É um trabalho de atribuição feito na hora de lembrar, e ele falha antes da memória do conteúdo.",ew:"Verificar e escolher são atos deliberados, de fora. O monitoramento de fonte é interno, automático, e não checa nada no mundo."},
-      {lvl:1,q:"Uma afirmação falsa que você leu num lugar em que não confia tende a, com o tempo:",o:["Parecer mais verdadeira, porque a etiqueta some antes do conteúdo","Ser esquecida junto com a fonte ruim","Ficar igual: você sabe de onde veio"], c:0,er:"O conteúdo sobrevive à própria procedência, e cada reencontro aumenta a familiaridade sem nada para descontar.",ew:"Conteúdo e fonte não somem juntos — é justamente a diferença de duração entre os dois que cria o problema."},
+      {lvl:1,q:"Uma afirmação falsa que você leu num lugar em que não confia tende a, com o tempo:",o:["Parecer mais verdadeira, porque cada reencontro aumenta a fluência dela","Ser esquecida junto com a fonte ruim","Ficar igual, desde que você lembre de onde veio"], c:0,er:"A fluência sobe com a repetição e é lida como sinal de verdade. Não é preciso esquecer a origem: o efeito aparece com a fonte marcada como não confiável.",ew:"Conteúdo e fonte não somem juntos, mas lembrar a origem também não protege — foi testado. São dois mecanismos, e consertar um deixa o outro de pé."},
       {lvl:2,q:"Por que a repetição aumenta a sensação de verdade mesmo quando a fonte é ruim?",o:["Porque a familiaridade produzida pela repetição não vem marcada com a origem","Porque repetir é interpretado como várias pessoas concordando","Porque a memória prefere informações simples"], c:0,er:"O sinal é contado, não avaliado. Você pode saber que a fonte era péssima e ainda assim sentir que a afirmação procede.",ew:"Não é uma inferência sobre consenso — o efeito aparece mesmo quando a repetição vem da mesma fonte. E simplicidade é outro fator, que age em separado."}
     ],
     [
@@ -255,7 +255,7 @@ const MINI_QUIZZES = {
     ],
     [
       {lvl:0,q:"Nas revisões de utilidade das técnicas de estudo, grifar e resumir aparecem como:",o:["Baixa utilidade","Alta utilidade, junto de recuperação e espaçamento","Utilidade moderada, como a intercalação"], c:0,er:"As duas rendem pouco pelo tempo que custam, e o grifo ainda tem um custo próprio.",ew:"O topo é de recuperação e prática distribuída; a intercalação fica no meio. Grifar e resumir ficam no rodapé."},
-      {lvl:1,q:"O grifo ajuda nas questões factuais, sobre itens isolados?",o:["Não: nesses testes ele empata com a simples leitura","Sim, e é aí que ele mostra serventia","Sim, mas só se você grifar pouco"], c:0,er:"Não há benefício documentado nem nas factuais. O grifo não é uma técnica com nicho: é uma que não rende.",ew:"Essa é a intuição comum, e o dado não a apoia: os grupos empatam. Quantidade de grifo também não muda o resultado."},
+      {lvl:1,q:"Onde está o ganho do grifo, e onde ele não está?",o:["Ganho pequeno em reter o que foi marcado; quase nenhum em ligar uma parte à outra","Ganho em compreender o texto; nenhum em memorizar trechos","Nenhum ganho em nada, em nenhum tipo de questão"], c:0,er:"Ele rende na metade que menos importa. Reter o trecho marcado é o registro barato; o caro é a relação entre trechos, e aí ele não entrega.",ew:"É o inverso do que se observa: compreensão é justamente onde ele não ajuda. E dizer que não rende em nada é forte demais — o ganho existe, só é pequeno e mal colocado."},
       {lvl:2,q:"O que grifar e resumir têm em comum que explica o baixo rendimento?",o:["As duas trabalham no texto, e não exigem que você produza sem a fonte","As duas são feitas rápido demais para deixar marca","As duas dependem de material impresso"], c:0,er:"Marcar onde a informação está e organizar o que está na página deixam a fonte disponível o tempo todo.",ew:"Não é questão de pressa nem de suporte: resumir com calma e no computador esbarra no mesmo limite."}
     ],
     [
@@ -936,9 +936,11 @@ function shuffleOptions(options, correctIdx){
   return arr;
 }
 function dashboardStats(){
-  const totalLessons = MODULES.reduce((a,m)=>a+m.lessons.length,0);
+  /* Mesmos números-troféu da barra: contam só a trilha principal. */
+  const t = trilhaPrincipal();
+  const totalLessons = t.reduce((a,m)=>a+m.lessons.length,0);
   let readLessons=0, masteredTopics=0;
-  for(const m of MODULES){
+  for(const m of t){
     for(let i=0;i<m.lessons.length;i++){
       if(state.lessons[m.id+'-'+i]) readLessons++;
       if(topicMastery(m.id,i)>=0.75) masteredTopics++;
@@ -1113,6 +1115,8 @@ function renderHeader(){
    DASHBOARD
    ===================================================================== */
 function buildNodes(){
+  /* Os nós representam vias do cérebro, então saem da trilha principal. Quem
+     consome NODES precisa indexar pela MESMA lista — ver renderSynMap. */
   const n=trilhaPrincipal().length, W=340, H=210, padX=34, padTop=40, padBot=40;
   const cols=Math.min(n,5), rows=Math.ceil(n/cols);
   const usableW=W-2*padX, usableH=H-padTop-padBot;
@@ -1801,14 +1805,20 @@ function reviewTopic(mi,li){
 function renderSynMap(){
   const svg=document.getElementById('synmap');
   const NODES=buildNodes();
+  /* NODES sai de trilhaPrincipal(), então o que indexa NODES tem de indexar a
+     MESMA lista. Antes isto usava MODULES cru e funcionava por coincidência:
+     os extras caíram nas últimas posições. Um módulo principal acrescentado
+     depois deles desalinharia o mapa em silêncio, desenhando um extra como
+     nó e sumindo com o módulo novo. */
+  const VIAS=trilhaPrincipal();
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let s='';
   // connections (path of the course): i -> i+1, active if module i has mastery
   for(let i=0;i<NODES.length-1;i++){
     const a=NODES[i], b=NODES[i+1];
-    const on=(state.mastery[MODULES[i].id]||0)>0 && (state.mastery[MODULES[i+1].id]||0)>=0;
-    const bothOn=(state.mastery[MODULES[i].id]||0)>0;
-    const col=MODULES[i].hex;
+    const on=(state.mastery[VIAS[i].id]||0)>0 && (state.mastery[VIAS[i+1].id]||0)>=0;
+    const bothOn=(state.mastery[VIAS[i].id]||0)>0;
+    const col=VIAS[i].hex;
     s+=`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${bothOn?col:'#20203050'}" stroke-width="${bothOn?2:1.2}" stroke-linecap="round" opacity="${bothOn?0.8:0.5}"/>`;
     if(bothOn && !reduce){
       s+=`<circle r="2.4" fill="${col}"><animateMotion dur="2.6s" repeatCount="indefinite" path="M${a.x},${a.y} L${b.x},${b.y}"/><animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite"/></circle>`;
@@ -1819,7 +1829,7 @@ function renderSynMap(){
   web.forEach(([i,j])=>{ const a=NODES[i],b=NODES[j]; s+=`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#1a1a2820" stroke-width="1"/>`; });
   // nodes
   NODES.forEach((nd,i)=>{
-    const m=MODULES[i];
+    const m=VIAS[i];
     const mastery=state.mastery[m.id]||0;
     const prog=moduleProgress(m);
     const col=m.hex;
@@ -2587,7 +2597,7 @@ ANATOMY['palpite']={
   parts:[
     {id:'regularidade', label:'Regularidade', blurb:'O ambiente tem padrão estável o bastante para haver o que aprender. Sem ela, não existe intuição a formar — só repetição.'},
     {id:'retorno', label:'Retorno', blurb:'O resultado volta rápido e limpo o bastante para corrigir a próxima previsão. É a peça que transforma repetição em aprendizado, e a que falta com mais frequência.'},
-    {id:'validos', label:'Alta validade', blurb:'Regularidade e retorno presentes. Aqui a intuição do especialista se forma de verdade, e ele supera fórmulas com folga. Xadrez, meteorologia, sala de emergência.'},
+    {id:'validos', label:'Alta validade', blurb:'Regularidade e retorno presentes. Aqui a intuição do especialista se forma de verdade e é genuinamente válida — o que não significa vencer uma fórmula, porque em ambiente muito previsível ela também ganha. Xadrez, meteorologia, sala de emergência.'},
     {id:'invalidos', label:'Baixa validade', blurb:'Falta uma das duas, quase sempre o retorno. As repetições acontecem, o aprendizado não — e fórmulas simples chegam a superar o julgamento experiente.'},
     {id:'confianca', label:'A confiança', blurb:'Sobe com a repetição nos DOIS quadrantes. É por isso que a certeza de quem decide não informa em qual deles ele aprendeu, e por isso a pergunta precisa ser sobre o ambiente.'}
   ],
@@ -6247,9 +6257,9 @@ palpite:[
  {q:"Alguém diz: trabalho com isso há vinte anos, confie no meu faro. O que essa frase responde?", o:["Que houve prática prolongada, o que é uma das duas condições","Que a intuição dessa pessoa é confiável","Que ela conhece o assunto melhor que os manuais"], c:0,
   after:"Responde metade. A outra condição é o ambiente ter regularidade e dar retorno — e ela não depende de esforço nem de tempo. Vinte anos num ambiente que não devolve resultado produzem confiança, não calibração."},
  {q:"Meteorologista e analista de ações fazem previsões a vida toda. Por que só um dos dois desenvolve intuição confiável?", o:["Porque prever o tempo é mais fácil","Porque só um deles recebe retorno rápido e claro sobre cada previsão","Porque o outro trabalha com dinheiro, e isso enviesa"], c:1,
-  after:"Pelo retorno. O meteorologista descobre no dia seguinte se acertou, milhares de vezes. O outro descobre tarde, com ruído, e com o resultado dependendo de fatores que não estavam na análise. As repetições acontecem nos dois; o aprendizado, não."},
+  after:"Pelo retorno. O meteorologista descobre no dia seguinte se acertou, milhares de vezes; quem contrata acompanha quem entrou e nunca fica sabendo como teriam ido os que rejeitou. Repare que a bolsa é outro caso: lá o retorno é rápido, e o que falta é padrão a aprender."},
  {q:"Fórmulas simples às vezes superam o julgamento de profissionais experientes. Isso significa que:", o:["A experiência não vale muito em decisões importantes","Que naquele ambiente a intuição não tinha como se formar","Que fórmulas são melhores que pessoas em geral"], c:1,
-  after:"Que o ambiente era de baixa validade. O achado não é contra expertise: é contra aplicá-la onde ela não pode se formar. Onde há regularidade e retorno, o especialista ganha com folga."}
+  after:"Que o ambiente era de baixa validade. O achado não é contra expertise: é contra aplicá-la onde ela não pode se formar. Onde há regularidade e retorno a intuição do especialista é genuinamente válida — o que não quer dizer que ele vença uma fórmula, porque em ambiente muito previsível ela costuma ganhar dele também."}
 ],
 };
 
@@ -6728,9 +6738,9 @@ palpite:[
   wa:"O sistema se autorregularia: em domínios sem retorno, os especialistas se sentiriam inseguros e recorreriam a métodos formais. O que se observa é o contrário, e é justamente essa desconexão que faz a pergunta sobre o ambiente valer mais que a pergunta sobre a pessoa."},
  {s:["Uma previsão é feita","O resultado aparece rápido e claro: o retorno chegou","A previsão seguinte pode corrigir o desvio","Repetido milhares de vezes, isso calibra","Se o resultado demora, some, ou vem misturado a outros fatores","As repetições continuam acontecendo, e o aprendizado não"], h:5,
   hn:"Aqui aparece, numa escala de anos, o mesmo mecanismo da primeira aula desta trilha: recuperar sem correção fortalece o que saiu, certo ou errado. O profissional não está estagnado por falta de esforço ou de repetição — ele tem as duas de sobra. Falta a peça que transformaria repetição em aprendizado, e ela não depende dele.",
-  w:"E se o analista recebesse, no dia seguinte, o resultado limpo de cada decisão?",
-  wa:"O ambiente mudaria de categoria, e a intuição passaria a poder se formar ali. Isso mostra que a divisão não é entre profissões nobres e suspeitas: é entre estruturas de retorno. Mude o retorno e você muda o que é possível aprender."},
- {s:["Em ambiente de baixa validade, fórmulas simples superam o julgamento experiente","O achado é antigo e segue se replicando","Mas em ambiente de alta validade, o especialista ganha com folga","Logo, o que decide não é a expertise: é onde ela foi aplicada","E a pergunta prática deixa de ser sobre a pessoa","Passa a ser: este assunto tem padrão estável e retorno suficiente?"], h:3,
+  w:"E se você soubesse como foi cada candidato que rejeitou?",
+  wa:"A amostra deixaria de ser cortada pela sua própria decisão, e o faro passaria a poder se formar. Note que a peça removida é a metade invisível da evidência, não a velocidade dela — o retorno já chegava rápido sobre quem entrou."},
+ {s:["Em ambiente de baixa validade, fórmulas simples superam o julgamento experiente","O achado é antigo e segue se replicando","Mas em ambiente de alta validade a intuição dele é genuinamente válida","Logo, o que decide não é a expertise: é onde ela foi aplicada","E a pergunta prática deixa de ser sobre a pessoa","Passa a ser: este assunto tem padrão estável e retorno suficiente?"], h:3,
   hn:"O contrapeso é o passo que quase todo resumo popular corta, e cortá-lo inverte a lição. Sem ele, o achado vira desconfiança geral de especialista — que é exatamente a conclusão errada, e uma que o próprio dado contradiz. A leitura correta é mais útil e menos cínica: expertise é real, e é específica de ambientes em que ela pôde se formar.",
   w:"E se fórmulas simples vencessem também em ambientes de alta validade?",
   wa:"Aí sim a conclusão seria contra a expertise, e a recomendação seria substituir julgamento por regra em todo lugar. Não é o que se observa — e é essa assimetria que transforma um achado desconfortável numa ferramenta de decisão."}
@@ -7121,7 +7131,7 @@ MODULES.push({
     {t:'Misturar, e quando não misturar',
      b:`<p>Estudar um assunto até dominar e só então passar ao próximo parece organizado. Mas <span class="term">intercalar</span> — alternar entre tipos parecidos de problema — costuma render mais, e por um motivo específico: em bloco você aplica o mesmo método sem escolher; misturado, você precisa primeiro DESCOBRIR de que tipo é o problema, que é o que a prova vai exigir.</p><p>Só que aqui a evidência é bem mais fina, e ela depende do MATERIAL. O ganho é grande para categorias visuais confundíveis — estilos de pintura, espécies parecidas. Para matemática é pequeno e irregular. Para texto expositivo não aparece, e para listas de palavras a mistura chega a render MENOS que o bloco. Se o que você estuda é texto e terminologia, esta é a técnica que provavelmente não se aplica a você — e os próprios autores da meta-análise desaconselham usá-la aí.</p>`},
     {t:'Sem retorno, você treina o erro',
-     b:`<p>Recuperar fortalece — mas recuperar ERRADO, sem ninguém corrigir, fortalece o errado. O <span class="term">retorno</span> não é o que faz a técnica funcionar: sem ele o efeito continua existindo e cai quase pela metade. É bastante para valer a pena conferir, e pouco para tratar a conferência como opcional.</p><p>E há um segundo achado que contraria a intuição: errar antes de ver a resposta certa costuma ensinar MAIS do que ver a resposta direto. Mas ele tem uma condição que muda tudo para quem estuda vocabulário ou terminologia — a pista e a resposta precisam ter alguma relação de sentido. Chutar antes de virar um cartão de \"quarto em alemão\" não ajuda, porque não há erro parecido a gerar. Para conteúdo com sentido encadeado, ajuda.</p>`}
+     b:`<p>Recuperar fortalece — mas recuperar ERRADO, sem ninguém corrigir, fortalece o errado. O <span class="term">retorno</span> não é o que faz a técnica funcionar: sem ele o efeito continua existindo, mas cai quase pela metade — de um efeito grande para um médio. Conferir a resposta quase dobra o que a sessão rende, e é por isso que ela não é passo opcional.</p><p>E há um segundo achado que contraria a intuição: errar antes de ver a resposta certa costuma ensinar MAIS do que ver a resposta direto. Mas ele tem uma condição que muda tudo para quem estuda vocabulário ou terminologia — a pista e a resposta precisam ter alguma relação de sentido. Chutar antes de virar um cartão de \"quarto em alemão\" não ajuda, porque não há erro parecido a gerar. Para conteúdo com sentido encadeado, ajuda.</p>`}
   ],
   quiz:[
     {q:'Por que quem se testa acha que aprendeu menos do que quem relê?',
@@ -7151,7 +7161,7 @@ MODULES.push({
     {t:'A fluência engana',
      b:`<p>Você lê o capítulo pela terceira vez e tudo parece claro. Cada frase chega sem atrito, os termos são conhecidos, o raciocínio se acompanha sozinho. Feche o livro, tente explicar sem olhar, e boa parte some.</p><p>O que você mediu foi <span class="term">fluência</span>, e leu fluência como conhecimento. Reconhecer é barato: basta o material estar na sua frente ativando o que já está lá. Produzir é caro, porque exige montar sem a pista. São capacidades diferentes — e o estudo que treina a primeira deixa você confiante para uma prova que cobra a segunda.</p>`},
     {t:'Grifar não é estudar',
-     b:`<p>Grifar e resumir estão entre as técnicas mais usadas, e as revisões de utilidade colocam as duas no rodapé da lista. Não porque não façam nada — porque rendem pouco pelo tempo que custam.</p><p>O motivo é o da aula anterior: as duas trabalham no texto, não em você. Grifar marca onde a informação está; resumir organiza o que já está na página. Nenhuma exige que você produza sem a fonte — e, nos testes, grifar não supera a simples leitura nem nas perguntas factuais. Há um único estudo sugerindo que ele chegue a ATRAPALHAR, em questões de inferência e só para quem depois revisa a própria cópia marcada. Não foi replicado: trate como alerta, não como fato. Resumir rende mais quando a pessoa foi treinada a resumir, o que quase nunca é o caso.</p>`},
+     b:`<p>Grifar e resumir estão entre as técnicas mais usadas, e as revisões de utilidade colocam as duas no rodapé da lista. Não porque não façam nada — porque rendem pouco pelo tempo que custam.</p><p>O motivo é o da aula anterior: as duas trabalham no texto, não em você. Nenhuma exige que você produza sem a fonte. E a evidência mostra um perfil torto: grifar dá um ganho pequeno em RETER o trecho marcado, e quase nada em COMPREENDER — em ligar uma parte à outra. Ele não é inútil: rende na metade que menos importa. Há ainda um único estudo sugerindo que chegue a atrapalhar a inferência, e só para quem depois revisa a cópia marcada — alerta, não fato. Resumir rende mais quando a pessoa foi treinada a resumir, o que quase nunca é o caso.</p>`},
     {t:'O termômetro está no momento errado',
      b:`<p>Depois de estudar, você estima quanto vai lembrar. Essa estimativa tem nome — <span class="term">julgamento de aprendizado</span> — e feita logo após estudar, com o material fresco e a fluência no máximo, ela quase não distingue o que você sabe do que você não sabe.</p><p>O conserto é mudar o momento: faça o mesmo julgamento DEPOIS de um intervalo, sem o material à vista. O que melhora é específico e é o que te serve — a capacidade de ORDENAR, de separar o que precisa de revisão do que não precisa. Repare no que NÃO melhora: a estimativa absoluta piora, e você tende a se subestimar. Ganha-se um ranking confiável, não um termômetro. E há disputa sobre por que isso funciona: se por o adiamento forçar uma recuperação de verdade, ou por ele consultar uma memória diferente da que estava fresca.</p>`},
     {t:'Acompanhar não é entender',
@@ -7165,7 +7175,7 @@ MODULES.push({
     {q:'Qual é o custo específico de grifar, que outras técnicas fracas não têm?',
      o:['Há indício de que revisar a cópia marcada prejudique questões de inferência','Ele piora o desempenho em qualquer tipo de questão','Cria dependência do material físico','Faz o aluno memorizar sem entender'], c:0, l:1,
      er:'É o único indício de custo entre as técnicas fracas — e vem de um estudo, não replicado, na condição de revisar a cópia marcada. Alerta, não fato.',
-     ew:'Piorar em qualquer questão é forte demais: nas factuais o grifo empata com a simples leitura. Não é sobre dependência do papel nem sobre memorizar sem entender — é sobre treinar reconhecimento em vez de produção.'},
+     ew:'Piorar em qualquer questão é forte demais: nas factuais há até um ganho pequeno. Não é sobre dependência do papel nem sobre memorizar sem entender — é sobre treinar reconhecimento em vez de produção.'},
     {q:'Adiar o julgamento de aprendizado melhora o quê, exatamente?',
      o:['A capacidade de ORDENAR o que você sabe e o que não sabe','A estimativa de quantos por cento você vai lembrar','As duas coisas, por igual','Nenhuma das duas: o que muda é só a confiança'], c:0, l:2,
      er:'É o ranking que melhora, e muito. Basta para a decisão que importa: qual tópico revisar.',
@@ -7327,7 +7337,7 @@ DEEP['esforco']=[
   `<p>O experimento de referência dá a mesma passagem a três grupos e mede uma semana depois: estudar quatro vezes, estudar e recuperar, ou alternar. O grupo que mais recuperou ganha com folga — e, ao ser perguntado logo após o estudo, é o que se dá a NOTA MAIS BAIXA.</p><p>Esse descompasso tem nome próprio na literatura: <b>julgamento de aprendizado</b>. Ele se apoia na <b>fluência</b> do processamento, que é uma pista disponível e enganosa. Reler produz fluência alta e retenção baixa; recuperar produz o inverso. O efeito é robusto o bastante para as revisões de utilidade colocarem prática de recuperação e prática distribuída no topo — e note o plural: são duas técnicas no topo, não uma.</p>`,
   `<p>A explicação mais aceita para o espaçamento é a <b>variabilidade de codificação</b> somada à <b>dificuldade de recuperação</b>: sessões separadas acontecem em contextos internos diferentes, e cada recuperação difícil acrescenta uma via de acesso. Massar o estudo mantém contexto e facilidade constantes, e acrescenta pouco.</p><p>Há um refinamento prático que costuma ficar de fora: o intervalo ótimo escala com o prazo. Para lembrar daqui a uma semana, intervalos de um dia; para lembrar daqui a meses, intervalos de semanas. Não existe "o intervalo certo" — existe o intervalo certo PARA QUANDO você precisa lembrar.</p>`,
   `<p>A intercalação foi estudada sobretudo com problemas de matemática e com categorização visual, e é aí que o ganho é claro. O mecanismo proposto é <b>discriminação</b>: alternar força o aluno a notar o que diferencia um tipo do outro, comparação que o bloco nunca provoca.</p><p>As revisões de utilidade classificam intercalação como MODERADA, e espaçamento e recuperação como ALTA — a diferença não é de rigor, é de amplitude de material testado. E existe um custo real: em bloco o desempenho durante o estudo é melhor, o que torna a intercalação mais uma técnica que se sente pior enquanto funciona.</p>`,
-  `<p>A meta-análise põe o efeito do teste em torno de 0,73 com retorno e 0,39 sem — ou seja, o retorno quase dobra o ganho, e a técnica funciona mesmo sem ele. Vale notar que o estudo clássico da aula 0, com releitura contra recuperação, foi feito SEM retorno nenhum.</p><p>O fenômeno correlato tem nome: <b>tentativa geradora</b>. Tentar responder antes de receber a instrução melhora o aprendizado da instrução, mesmo quando a tentativa falha — desde que a correção venha em seguida. A leitura mais simples é que a busca malsucedida ativa o campo semântico ao redor da resposta, e a correção chega a uma rede já preparada em vez de a uma página em branco.</p>`
+  `<p>A meta-análise põe o efeito do teste em torno de <b>0,73</b> com retorno e <b>0,39</b> sem — grande contra médio. O retorno quase dobra o ganho, e a técnica segue funcionando sem ele: vale notar que o estudo clássico da aula 0, releitura contra recuperação, foi feito SEM retorno nenhum. Quem trata a conferência como opcional está abrindo mão de metade do resultado, não de um detalhe.</p><p>O fenômeno correlato tem nome: <b>tentativa geradora</b>. Tentar responder antes de receber a instrução melhora o aprendizado da instrução, mesmo quando a tentativa falha — desde que a correção venha em seguida. A leitura mais simples é que a busca malsucedida ativa o campo semântico ao redor da resposta, e a correção chega a uma rede já preparada em vez de a uma página em branco.</p>`
 ];
 DEEP['ilusoes']=[
   `<p>A distinção entre <b>reconhecimento</b> e <b>evocação</b> não é só de dificuldade: são processos com assinaturas diferentes. O reconhecimento pode se apoiar em <b>familiaridade</b> — uma sensação rápida e sem contexto, do tipo "já vi isso" — enquanto a evocação exige <b>recoleção</b>, que traz junto o contexto de quando e onde.</p><p>É por isso que reler é tão traiçoeiro: ele alimenta bem a familiaridade e quase nada a recoleção. E familiaridade é exatamente o tipo de sinal que a metacognição usa como atalho, porque chega rápido e sem esforço. O sistema que julga o próprio aprendizado está lendo o indicador que a releitura infla.</p>`,
@@ -7560,8 +7570,15 @@ try{
     MODULES.forEach(function(m){ if(novo.indexOf(m) < 0) novo.push(m); });
     if(novo.length !== MODULES.length) return;   // algo faltou: nao mexe
     MODULES.length = 0;
-    novo.forEach(function(m, i){
-      m.n = String(i + 1).length < 2 ? '0' + (i + 1) : String(i + 1);
+    /* A renumeração vale só para a trilha principal. Os extras trazem o
+       próprio `n` (01 a 04) e são numerados dentro da seção deles — sem esta
+       ressalva o cartão dizia "EXTRA 19". */
+    var seq = 0;
+    novo.forEach(function(m){
+      if(m.trilha !== 'extras'){
+        seq += 1;
+        m.n = seq < 10 ? '0' + seq : String(seq);
+      }
       MODULES.push(m);
     });
   }catch(e){}

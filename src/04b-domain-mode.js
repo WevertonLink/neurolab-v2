@@ -785,14 +785,26 @@ function ensureDomainState(){
 function domainClamp(v){ v=Number(v); return isFinite(v)?Math.max(0,Math.min(1,v)):0; }
 function domainPct(v){ return v===null||v===undefined?'—':Math.round(domainClamp(v)*100)+'%'; }
 function domainCoverageStats(){
-  const lessonTotal=MODULES.reduce((sum,m)=>sum+m.lessons.length,0);
+  /* É ESTA função que a barra do painel usa — não `overallProgress`, que é
+     ramo morto sempre que 04b está carregado, o que é sempre. Uma correção
+     feita lá não chega à tela.
+
+     Os módulos da trilha de extras ficam de fora do divisor. A barra é
+     troféu: ela só sobe, e quatro módulos novos fariam quem terminou os
+     dezoito cair de 100% para 82% sem ter desaprendido nada.
+
+     A guarda é `typeof trilhaPrincipal`, e não `window.trilhaPrincipal`:
+     `const` de topo em script clássico NÃO vira propriedade do window, e a
+     guarda errada falharia calada, devolvendo sempre MODULES inteiro. */
+  const alvo = (typeof trilhaPrincipal === 'function') ? trilhaPrincipal() : MODULES;
+  const lessonTotal=alvo.reduce((sum,m)=>sum+m.lessons.length,0);
   let lessonsDone=0, quizzesDone=0;
-  MODULES.forEach(m=>{
+  alvo.forEach(m=>{
     m.lessons.forEach((_,li)=>{ if(state.lessons[topicKey(m.id,li)]) lessonsDone++; });
     if(state.doneQuiz&&state.doneQuiz[m.id]) quizzesDone++;
   });
-  const total=lessonTotal+MODULES.length, done=lessonsDone+quizzesDone;
-  return {value:total?done/total:0,total,done,lessonTotal,lessonsDone,quizTotal:MODULES.length,quizzesDone};
+  const total=lessonTotal+alvo.length, done=lessonsDone+quizzesDone;
+  return {value:total?done/total:0,total,done,lessonTotal,lessonsDone,quizTotal:alvo.length,quizzesDone};
 }
 function domainStage(){
   const coverage=domainCoverageStats().value;
