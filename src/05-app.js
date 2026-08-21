@@ -4805,6 +4805,39 @@ const TERM_REL = {
    n=nome  q=o que é  a=mecanismo  t=termos  m=aulas  k=conceitos Topo  s=sinônimos  nota=aviso */
 const CONCEPTS = {
 
+/* ===== os que vieram com os módulos 17, 18 e a trilha de extras ===== */
+'ponta-lingua':{cat:'fenomeno', n:'Ponta da língua',
+ q:'Por que a palavra fica "na ponta da língua" sem sair?',
+ a:'Porque o acesso à palavra tem duas etapas, e só a segunda falhou. Você recupera o <b>significado</b> e um pedaço da <b>forma</b> — a primeira letra, o número de sílabas — sem a palavra inteira. Se ela fosse guardada num bloco só, viria inteira ou não viria nada: é o que sobra na falha que revela como o acesso é montado. O que trava segue em disputa, entre ativação que não alcança o limiar e um competidor no caminho. E o mesmo estado aparece em línguas de sinais, com acesso à configuração da mão sem o sinal completo — o que mostra que a divisão entre sentido e forma não depende do som.',
+ t:['ponta da língua','sensação de saber','evocação'],
+ m:[{m:'saber', l:1},{m:'saber', l:0}],
+ k:['hipocampo'],
+ s:['nome que nao vem','esqueci a palavra','ta na ponta da lingua','nao lembro o nome']},
+
+'falsa-memoria':{cat:'fenomeno', n:'Falsa memória',
+ q:'Como alguém lembra com nitidez de algo que não aconteceu?',
+ a:'Por duas rotas que se somam. A memória não guarda etiqueta de origem: ela guarda características da lembrança — vivacidade, detalhe, contexto — e INFERE de onde veio. Uma cena imaginada com nitidez pode ser atribuída a experiência direta, e é isso que o <b>monitoramento de fonte</b> tenta reconstruir. A segunda rota é a <b>reconsolidação</b>: evocar pode devolver o traço a um estado em que ele muda, e o que você sabe hoje, ou o que alguém acabou de sugerir, entra na regravação. Note o incômodo: nitidez e confiança não protegem — são justamente as pistas que o sistema usa para atribuir origem.',
+ t:['monitoramento de fonte','reconsolidação','calibração'],
+ m:[{m:'saber', l:2},{m:'memoria', l:3}],
+ k:['hipocampo'],
+ s:['lembrar errado','memoria falsa','jurar que aconteceu','lembranca inventada']},
+
+'achei-que-entendi':{cat:'estado', n:'Achei que tinha entendido',
+ q:'Por que acompanho a explicação e depois não consigo repetir?',
+ a:'Porque acompanhar e produzir são capacidades diferentes, e a segunda é a cobrada. Ler com o texto à frente gera <b>fluência</b>, e o cérebro usa fluência como sinal de domínio — mas metade do trabalho estava sendo feita pela página. Há um caso mais teimoso, a <b>ilusão de profundidade explicativa</b>: ela aparece para MECANISMOS e quase não para fatos. Você tem a imagem do objeto funcionando e confunde a nitidez dela com a completude da cadeia causal. O teste que desfaz é curto e vale para qualquer assunto: explique passo a passo, sem olhar, e o buraco aparece sozinho.',
+ t:['fluência','ilusão de profundidade explicativa','evocação','reconhecimento'],
+ m:[{m:'ilusoes', l:3},{m:'ilusoes', l:0}],
+ k:['hipocampo'],
+ s:['entendi mas nao sei explicar','achei que sabia','na hora nao sai','parecia facil']},
+
+'confiar-no-faro':{cat:'desempenho', n:'Confiar no faro',
+ q:'Quando dá para confiar num palpite, e quando não?',
+ a:'Duas condições, e as duas precisam valer. O ambiente tem de ter <b>regularidade previsível</b> o bastante para haver padrão a aprender, E é preciso ter havido prática longa com <b>retorno</b> sobre esse padrão. Xadrez e previsão do tempo têm as duas. Escolher ações falha a primeira: se existisse informação pública capaz de prever, o preço já a refletiria. Contratar falha a segunda, por seleção — você acompanha quem entrou e nunca descobre como teriam ido os que rejeitou. E o mais incômodo é que a confiança cresce com a repetição nos dois casos, então ela não avisa em qual deles você está.',
+ t:['reconhecimento de padrão','validade do ambiente','regularidade previsível','retorno'],
+ m:[{m:'palpite', l:1},{m:'palpite', l:2}],
+ k:['erro-previsao'],
+ s:['confiar na intuicao','sexto sentido','palpite','feeling','instinto']},
+
 /* ===== CONDIÇÕES ===== */
 ansiedade:{cat:'condicao', n:'Ansiedade',
  q:'Por que o corpo entra em estado de ameaça sem que haja ameaça real?',
@@ -4967,7 +5000,7 @@ memoriaruim:{cat:'estado', n:'Memória ruim',
  q:'Por que estudei e no dia seguinte não lembro?',
  a:'Registrar não é guardar. O hipocampo grava a experiência, mas a consolidação acontece depois — sobretudo no <b>NREM</b>, quando replay, oscilações lentas, fusos e ripples coordenam reativações entre hipocampo e córtex, favorecendo a reorganização do traço. Sem sono suficiente, o registro existe mas não é consolidado. E revisar tudo de uma vez fortalece pouco: o espaçamento vence porque cada recuperação com esforço reforça mais que a releitura.',
  t:['hipocampo','replay','ripples','NREM','fusos','LTP','reconsolidação','CREB'],
- m:[{m:'plasticidade',l:3},{m:'sono',l:0},{m:'plasticidade',l:2}], k:['hipocampo','sono'],
+ m:[{m:'plasticidade',l:3},{m:'sono',l:0},{m:'plasticidade',l:2},{m:'ritmos', l:3},{m:'esforco', l:1}], k:['hipocampo','sono'],
  s:['esquecimento','nao lembro','decorar','memorizar','estudo e esqueco','retencao']},
 
 nevoamental:{cat:'estado', n:'Névoa mental',
@@ -5104,7 +5137,7 @@ aprenderrapido:{cat:'desempenho', n:'Aprender mais rápido',
  q:'O que de fato faz o aprendizado grudar?',
  a:'Três coisas com base mecânica. <b>Espaçamento</b>: cada recuperação com esforço reforça mais que a releitura, e o intervalo permite consolidação entre sessões. <b>Sono</b>: o NREM coordena reativações entre hipocampo e córtex que favorecem estabilização e reorganização; dormir mal pode prejudicar esse processo, sem apagar automaticamente o que foi estudado. E <b>coincidência temporal</b>: conectar o novo a algo já sabido faz os dois dispararem juntos, e o que dispara junto se conecta.',
  t:['LTP','replay','ripples','NREM','reconsolidação','hipocampo','CREB','CaMKII'],
- m:[{m:'plasticidade',l:3},{m:'plasticidade',l:1},{m:'sono',l:0}], k:['coincidencia','plasticidade','sono'],
+ m:[{m:'plasticidade',l:3},{m:'plasticidade',l:1},{m:'sono',l:0},{m:'esforco', l:0},{m:'esforco', l:1}], k:['coincidencia','plasticidade','sono'],
  s:['estudar melhor','fixar conteudo','revisao espacada','tecnica de estudo','aprender']},
 
 provas:{cat:'desempenho', n:'Estudar para prova',
