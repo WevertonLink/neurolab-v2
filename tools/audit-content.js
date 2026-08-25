@@ -152,8 +152,8 @@ if (!errors.length) {
   }).length;
   ok(correctLongest <= 8,
     `a alternativa correta é a mais longa em ${correctLongest} de ${domainActivities.length} atividades`);
-  ok(/domainStartFocusSession/.test(guided) && /domainStartReconstruction/.test(guided),
-    'sessão guiada ou reconstrução causal ausente');
+  ok(/domainStartFocusSession/.test(guided),
+    'sessão guiada ausente');
   ok(/activityLog/.test(guided) && /sessions/.test(guided),
     'registros persistentes do Modo Domínio ausentes');
 

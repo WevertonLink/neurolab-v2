@@ -16,6 +16,14 @@ regex sobre o fonte.
 > infraestrutura (PWA, service worker, TWA, CI) e está **desatualizado** na parte
 > de "arquivo único" — o app deixou de ser single-file em 04/08/2026.
 
+> **Atualização 2026-08-25 — a reconstrução causal foi removida.** O item de
+> *Explicação causal* na revisão voltou a ser múltipla escolha, e o Modo Domínio
+> perdeu o passo "Reconstruir sem alternativas". As menções à reconstrução da
+> cadeia nas seções 4.3, 4.8, 5, 7.6 e 9 abaixo descrevem o estado anterior; ver
+> `docs/CHANGELOG_REMOCAO_RECONSTRUCAO_2026-08-25.md`. Com a cadeia fora da
+> derivação, *Explicação causal* cobre 87 dos 88 tópicos (só `sensorial-2` fica
+> sem caixa), o total de caixas é 344, e `test-srs` fica em 119 verificações.
+
 ---
 
 ## 1. Onde tudo mora
@@ -336,10 +344,12 @@ Cada evidência é uma média móvel exponencial por escopo × dimensão
 (`evidenceWeight`, `04:83`):
 
 ```
-review .48 · reconstruction .48 · domain-reconstruction .40
-mini-quiz .38 · diagram .38 · module-quiz .34 · prediction .34
+review .48 · mini-quiz .38 · diagram .38 · module-quiz .34 · prediction .34
 counterfactual .32 · domain-case .30 · self-rate .22 · (não listado) .28
 ```
+
+*(As fontes `reconstruction` .48 e `domain-reconstruction` .40 saíram do mapa
+com a remoção de 2026-08-25 — ver a atualização no topo.)*
 
 Duas observações sobre esse mapa. **Reconstruir a cadeia pesa no topo** — `.48`,
 junto com a revisão: acontece dentro dela e é a única prova sem alternativa para

@@ -1097,9 +1097,8 @@ for (const viewport of REVIEW_VIEWPORTS) {
 
    Desde que o cronograma passou a agendar tópico × dimensão, o item da fila
    deixou de ser um tópico e cada dimensão ganhou forma própria: Reconhecimento
-   pergunta em múltipla escolha, Aplicação serve a prova de previsão,
-   Explicação causal pede a cadeia remontada sem alternativas, e Localização
-   pede o toque no diagrama.
+   e Explicação causal perguntam em múltipla escolha, Aplicação serve a prova de
+   previsão, e Localização pede o toque no diagrama.
 
    O portão local (tools/test-srs.js) cobre a lógica das quatro com fartura,
    mas roda num DOM stubado — nunca abriu uma tela. Estes testes são a única
@@ -1122,34 +1121,15 @@ async function entrarNaRevisao(page, dim, reps) {
   await expect(page.locator('#rv-body .rv-card')).toBeVisible();
 }
 
-test('@smoke Explicação causal na revisão pede a cadeia, não alternativas', async ({ page }) => {
+test('@smoke Explicação causal na revisão é múltipla escolha', async ({ page }) => {
   await entrarNaRevisao(page, 'causality');
 
-  // A dimensão trocou a FORMA da pergunta, não só o enunciado.
-  await expect(page.locator('#rv-body .dm-reconstruct')).toBeVisible();
-  await expect(page.locator('#rv-body .mq-options')).toHaveCount(0);
-
-  const cadeia = await page.evaluate(() => ({
-    total: review.recon.chain.length,
-    // ordem em que os botões do pool precisam ser tocados para reconstruir
-    ordem: review.recon.chain.map((txt) => review.recon.available.findIndex((a) => a.text === txt)),
-    embaralhado: !review.recon.available.every((a, i) => a.index === i)
-  }));
-
-  // A guarda anti-brinde, vista ponta a ponta: se o pool viesse na ordem
-  // original, a cadeia estaria montada e a tarefa não pediria nada.
-  expect(cadeia.embaralhado, 'o pool veio na ordem original — a reconstrução seria de graça').toBe(true);
-  await expect(page.locator('#rv-body .dm-chain-pool button')).toHaveCount(cadeia.total);
-
-  // Toca pelos botões reais, na ordem causal.
-  for (const pos of cadeia.ordem) {
-    await page.locator('#rv-body .dm-chain-pool button').nth(pos).click();
-  }
-
-  await expect(page.locator('#rv-body .dm-reconstruct-result.right')).toBeVisible();
-  const caixa = await page.evaluate(() => state.dimensionEvidence['T:neuronio-0'].causality);
-  expect(caixa.sources.reconstruction, 'a fonte da evidência tem de ser a reconstrução').toBe(1);
-  expect(caixa.last, 'remontar na ordem certa tem de contar como acerto').toBe(1);
+  // A reconstrução saiu: a dimensão volta a ser cobrada por múltipla escolha,
+  // e o pool de etapas não pode mais existir.
+  await expect(page.locator('#rv-body .mq-options')).toBeVisible();
+  await expect(page.locator('#rv-body .dm-reconstruct')).toHaveCount(0);
+  await expect(page.locator('#rv-body .dm-chain-pool')).toHaveCount(0);
+  await expect(page.locator('#rv-body .mq-options button').first()).toBeVisible();
 });
 
 test('@smoke Localização na revisão responde no diagrama e não entrega a resposta', async ({ page }) => {
@@ -1209,33 +1189,24 @@ test('@smoke Aplicação na revisão serve a prova de previsão', async ({ page 
     .toEqual(['prediction']);
 });
 
-/* MEDIÇÃO — alcance do botão de continuar nas duas formas ALTAS.
+/* MEDIÇÃO — alcance do botão de continuar na forma ALTA da revisão.
 
    O teste de alcance que já existe acima foi calibrado contra o cartão mais
-   BAIXO dos quatro: quatro alternativas. A reconstrução mostra a lista montada
-   mais o pool inteiro de etapas, e a localização embute um SVG de anatomia —
-   os dois são bem mais altos, e é neles que o botão tem mais chance de cair
-   fora da dobra num celular pequeno. */
-for (const dim of ['causality', 'location']) {
+   BAIXO: quatro alternativas. A Localização embute um SVG de anatomia inteiro —
+   é bem mais alta, e é nela que o botão tem mais chance de cair fora da dobra
+   num celular pequeno. */
+for (const dim of ['location']) {
   for (const viewport of REVIEW_VIEWPORTS) {
     test(`@visual alcance do botão em ${dim} a ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
       test.skip(testInfo.project.name !== 'mobile-chromium', 'A medição usa os viewports retrato.');
       await page.setViewportSize(viewport);
       await entrarNaRevisao(page, dim);
 
-      if (dim === 'causality') {
-        const ordem = await page.evaluate(() =>
-          review.recon.chain.map((txt) => review.recon.available.findIndex((a) => a.text === txt)));
-        for (const pos of ordem) {
-          await page.locator('#rv-body .dm-chain-pool button').nth(pos).click();
-        }
-      } else {
-        // Aqui só interessa que HAJA resposta, para o bloco de resultado
-        // aparecer e o botão poder ser medido — se acertou ou errou é
-        // irrelevante. Ver o comentário no @smoke de Localização.
-        const parte = await page.evaluate(() => review.loc.part);
-        await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().dispatchEvent('click');
-      }
+      // Aqui só interessa que HAJA resposta, para o bloco de resultado aparecer
+      // e o botão poder ser medido — se acertou ou errou é irrelevante. Ver o
+      // comentário no @smoke de Localização.
+      const parte = await page.evaluate(() => review.loc.part);
+      await page.locator(`#rv-anat .apart[data-struct="${parte}"]`).first().dispatchEvent('click');
 
       const botao = page.locator('#rv-body .rv-card .bigbtn').last();
       await expect(botao).toBeVisible();
@@ -1406,7 +1377,7 @@ test('@smoke Modo Domínio existe desde a prévia e não bloqueia o percurso', a
   await expect(page.locator('.card')).toHaveCount(MODULE_COUNT);
 });
 
-test('@smoke Modo Domínio registra resposta, mostra veredito e reconstrói sem repetir alternativas', async ({ page }) => {
+test('@smoke Modo Domínio registra resposta e mostra veredito', async ({ page }) => {
   await page.evaluate(() => {
     MODULES.slice(0, 14).forEach((module) => {
       module.lessons.forEach((_, lessonIndex) => {
@@ -1436,86 +1407,12 @@ test('@smoke Modo Domínio registra resposta, mostra veredito e reconstrói sem 
   await expect(feedback.locator('.dm-option-audit article')).toHaveCount(4);
   await expect(feedback.locator('.dm-option-audit article.right')).toHaveCount(1);
 
-  await feedback.locator('.dm-reconstruct-btn').click();
-  await expect(page.locator('.dm-reconstruct')).toBeVisible();
-  await expect(page.locator('.dm-options')).toHaveCount(0);
-  await expect(page.locator('.dm-reconstruct')).toContainText(/A pergunta anterior não é repetida/i);
+  // A reconstrução saiu: o feedback não oferece mais "Reconstruir sem alternativas".
+  await expect(feedback.locator('.dm-reconstruct-btn')).toHaveCount(0);
 
-  const order = await page.evaluate(() => {
-    const r = DOMAIN_SESSION.reconstruction;
-    const item = DOMAIN_CASES.find(x => x.id === r.id);
-    return item.chain.map(step => r.available.findIndex(entry => entry.text === step));
-  });
-  for (const position of order) await page.locator('.dm-chain-pool button').nth(position).click();
-  await expect(page.locator('.dm-reconstruct-result.right')).toBeVisible();
-
-  const saved = await page.evaluate(() => ({
-    rec: state.domain.cases['noite-decisao'],
-    log: state.domain.activityLog
-  }));
-  expect(saved.rec.attempts).toBe(1);
-  expect(saved.rec.lastResult).toBe(1);
-  expect(saved.rec.reconBest).toBe(1);
-  expect(saved.log.some(row => row.kind === 'reconstruction' && row.result === 1)).toBe(true);
-});
-
-/* A reconstrução só tinha uma saída: acertar. Quem travava ficava permutando
-   os passos, o que não treina nada, e quem tinha dez minutos ficava preso. A
-   saída existe agora — e o que ela não pode fazer é virar um atalho: ver a
-   cadeia não pode marcar reconBest nem deixar o pool clicável com a resposta
-   na tela, senão o registro passa a dizer "reconstruiu" para quem copiou. */
-test('@smoke quem trava pode ver a cadeia, e ver não conta como reconstruir', async ({ page }) => {
-  await page.evaluate(() => {
-    MODULES.slice(0, 14).forEach((module) => {
-      module.lessons.forEach((_, lessonIndex) => {
-        const key = `${module.id}-${lessonIndex}`;
-        state.lessons[key] = true;
-        state.topicMastery[key] = 0.8;
-      });
-      state.mastery[module.id] = 0.8;
-      state.doneQuiz[module.id] = true;
-    });
-    renderDashboard();
-  });
-  await page.locator('#db-domain-entry button').click();
-  await page.locator('#dm-nav button').filter({ hasText: 'Casos' }).click();
-  await page.locator('.dm-case-card').first().locator('button').click();
-  await page.locator('.dm-options button').first().click();
-  await page.locator('.dm-feedback .dm-reconstruct-btn').click();
-  await expect(page.locator('.dm-reconstruct')).toBeVisible();
-
-  // A saída não é a primeira coisa que aparece: só depois de encostar na tarefa.
-  await expect(page.locator('.dm-reveal-link')).toHaveCount(0);
-  await page.locator('.dm-chain-pool button').first().click();
-  await expect(page.locator('.dm-reveal-link')).toBeVisible();
-
-  await page.locator('.dm-reveal-link').click();
-  const revelada = page.locator('.dm-reconstruct-result.revealed');
-  await expect(revelada).toBeVisible();
-  await expect(revelada).toContainText('Ver não é reconstruir');
-
-  // A cadeia aparece inteira e na ordem do dado, não na ordem embaralhada.
-  const mostrada = await revelada.locator('.dm-selected-chain li span').allTextContents();
-  const esperada = await page.evaluate(() => {
-    const r = DOMAIN_SESSION.reconstruction;
-    return DOMAIN_CASES.find((x) => x.id === r.id).chain;
-  });
-  expect(mostrada).toEqual(esperada);
-
-  // Com a resposta na tela, montar deixa de ser possível.
-  await expect(page.locator('.dm-chain-pool button:not([disabled])')).toHaveCount(0);
-
-  const saved = await page.evaluate(() => ({
-    rec: state.domain.cases['noite-decisao'],
-    log: state.domain.activityLog
-  }));
-  expect(saved.rec.reconRevealed, 'a cadeia vista não ficou registrada').toBe(true);
-  expect(saved.rec.reconBest, 'ver a cadeia contou como reconstruir').not.toBe(1);
-  expect(saved.log.some((row) => row.kind === 'reconstruction-reveal')).toBe(true);
-
-  // E a lista passa a dizer o que aconteceu, em vez de omitir.
-  await page.locator('#dm-nav button').filter({ hasText: 'Casos' }).click();
-  await expect(page.locator('.dm-case-card').first()).toContainText('cadeia vista, não reconstruída');
+  const saved = await page.evaluate(() => state.domain.cases['noite-decisao']);
+  expect(saved.attempts).toBe(1);
+  expect(saved.lastResult).toBe(1);
 });
 
 test('@coverage banco do Modo Domínio mantém padrão adversarial', async ({ page }) => {

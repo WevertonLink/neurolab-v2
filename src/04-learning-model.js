@@ -88,14 +88,8 @@ function evidenceRecord(scope, dim){
    o objetivo e não deveria mover a nota. Na revisão ela é prova de verdade, com
    a aula já lida — .34, o mesmo do quiz de módulo, que é a outra múltipla
    escolha respondida em contexto de avaliação. */
-/* reconstruction pesa como review (.48) por acontecer dentro da revisão e ser
-   a prova mais exigente que existe aqui: remontar a cadeia não tem alternativa
-   para reconhecer nem chute com 1/4 de chance.
-   domain-reconstruction passa a ser DECLARADA. Antes caía no default .28 por
-   omissão — a mesma atividade valendo menos que um contrafactual de múltipla
-   escolha (.32), o que era o inverso do razoável. */
 function evidenceWeight(source){
-  return ({review:.48,reconstruction:.48,'domain-reconstruction':.40,'mini-quiz':.38,diagram:.38,
+  return ({review:.48,'mini-quiz':.38,diagram:.38,
            'module-quiz':.34,prediction:.34,counterfactual:.32,'domain-case':.30,'self-rate':.22}[source]||.28);
 }
 function recordDimensionEvidence(scope, dim, result, source, meta){
@@ -178,10 +172,9 @@ function recordSelfRateEvidence(key,val){
    Quais dimensões este tópico consegue medir
 
    Derivada do conteúdo, nunca gravada no estado. É ela que decide quais
-   caixas do cronograma existem — e é por isso que acrescentar uma forma
-   nova de medição não exige migração: quando a reconstrução da cadeia
-   passar a valer para os 64 tópicos, 'causality' entra aqui e as caixas
-   nascem sozinhas na próxima interação.
+   caixas do cronograma existem — e é por isso que acrescentar (ou retirar)
+   uma forma de medição não exige migração: a caixa daquela dimensão passa a
+   nascer, ou a deixar de nascer, sozinha na próxima interação.
    --------------------------------------------------------------------- */
 const _measurableCache = {};
 function measurableDimensions(moduleId, lessonIndex){
@@ -196,13 +189,6 @@ function measurableDimensions(moduleId, lessonIndex){
   // a previsão do tópico é prova de Aplicação — mas só na revisão, nunca no
   // primeiro contato, onde ela é pré-teste (ver predictAsReviewQuestion)
   if(typeof PREDICT !== 'undefined' && PREDICT[moduleId] && PREDICT[moduleId][lessonIndex]) found.application = 1;
-  // a cadeia do tópico é prova de Explicação causal: remontá-la na ordem é a
-  // prova mais exigente que o app tem, porque não há alternativa para
-  // reconhecer. Exige 4 etapas ou mais — abaixo disso a permutação é pequena
-  // demais para distinguir quem entendeu de quem chutou.
-  if(typeof CHAIN !== 'undefined' && CHAIN[moduleId] && CHAIN[moduleId][lessonIndex]
-     && Array.isArray(CHAIN[moduleId][lessonIndex].s)
-     && CHAIN[moduleId][lessonIndex].s.length >= 4) found.causality = 1;
   /* A questão do quiz de módulo declara a aula que cobra (campo `l`), então
      ela é fonte do TÓPICO, não só do módulo. Fecha 4 dos 14 buracos de
      Reconhecimento sem escrever conteúdo novo. */
@@ -267,40 +253,6 @@ function commitEvidenceBatch(){
     });
   });
   return feito;
-}
-
-/* ---------------------------------------------------------------------
-   Reconstrução de cadeia — o núcleo puro
-
-   Remontar a sequência causal na ordem certa é a prova mais exigente que o
-   app tem: não existe alternativa para reconhecer. Nasceu no Modo Domínio,
-   presa aos 24 itens dele; estas duas funções são a parte que não depende
-   de tela nem de qual atividade está chamando, para a revisão poder usar a
-   mesma coisa nos 64 tópicos.
-   --------------------------------------------------------------------- */
-
-/* Embaralha determinístico pelo id: o mesmo tópico devolve sempre a mesma
-   ordem, o que torna a atividade reproduzível e testável. A guarda do fim é
-   o que impede a tarefa de virar brinde — sem ela, um id cuja soma de
-   caracteres cai numa permutação identidade entregaria a cadeia já montada. */
-function chainShuffle(chain, id){
-  const list = chain.map((text,index)=>({text:text, index:index}));
-  let seed = Array.from(String(id)).reduce((sum,ch)=>sum+ch.charCodeAt(0), 0);
-  for(let i=list.length-1; i>0; i--){
-    seed = (seed*9301+49297) % 233280;
-    const j = Math.floor(seed/233280*(i+1));
-    const tmp = list[i]; list[i] = list[j]; list[j] = tmp;
-  }
-  if(list.every((x,i)=>x.index===i) && list.length>1) list.push(list.shift());
-  return list;
-}
-
-/* Compara por TEXTO, não por índice: duas etapas com o mesmo texto seriam
-   intercambiáveis e ambas as ordens estariam causalmente certas. */
-function chainIsCorrect(selectedTexts, chain){
-  return Array.isArray(selectedTexts)
-      && selectedTexts.length === chain.length
-      && selectedTexts.every((text,index)=>text === chain[index]);
 }
 
 function setSrsReason(rec, code, key, score){

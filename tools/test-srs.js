@@ -459,87 +459,18 @@ const reset = ()=>ev('state = defaultState();');
      '14. e não pode gravar id de previsão');
 }
 
-/* ---------- 15. núcleo da reconstrução de cadeia ---------- */
+/* ---------- 16. CHAIN bem-formada (alimenta a "cadeia + e se" do módulo) ---------- */
 {
-  // é permutação de verdade: mesmos textos, mesma multiplicidade
-  const permutacaoOk = ev(`(function(){
-    const ruins=[];
-    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
-      const c=CHAIN[m.id] && CHAIN[m.id][li];
-      if(!c || !Array.isArray(c.s)) { ruins.push(m.id+'-'+li+': sem cadeia'); return; }
-      const emb=chainShuffle(c.s, topicKey(m.id,li)).map(x=>x.text).slice().sort();
-      const orig=c.s.slice().sort();
-      if(emb.length!==orig.length || emb.some((t,i)=>t!==orig[i])) ruins.push(m.id+'-'+li+': nao e permutacao');
-    }));
-    return ruins;
-  })()`);
-  eq(permutacaoOk.length, 0, '15. embaralhamento tem de preservar exatamente os textos: ' + permutacaoOk.slice(0,3).join(' | '));
-
-  // NUNCA a ordem original — é isso que impede a tarefa de virar brinde
-  const identidades = ev(`(function(){
-    const ruins=[];
-    MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
-      const c=CHAIN[m.id] && CHAIN[m.id][li]; if(!c||!Array.isArray(c.s)) return;
-      if(chainShuffle(c.s, topicKey(m.id,li)).every((x,i)=>x.index===i)) ruins.push(m.id+'-'+li);
-    }));
-    DOMAIN_COUNTERFACTUALS.concat(DOMAIN_CASES).forEach(it=>{
-      if(chainShuffle(it.chain, it.id).every((x,i)=>x.index===i)) ruins.push(it.id);
-    });
-    return ruins;
-  })()`);
-  eq(identidades.length, 0,
-     '15. o embaralhamento NUNCA pode devolver a ordem original — a cadeia sairia ' +
-     'montada e a reconstrução viraria brinde. Casos: ' + identidades.slice(0,5).join(', '));
-
-  /* O teste acima verifica a PROPRIEDADE nas 88 cadeias reais, mas não protege
-     a GUARDA: medi que nenhuma delas cai em identidade nem sem ela, então
-     removê-la não faria nada falhar. E a guarda não é decorativa — cerca de 2%
-     dos ids caem em identidade (182 em 10.000 sintéticos). Este caso exercita
-     a guarda diretamente: comprimento 4 com o id "aab" é uma identidade sem
-     ela. Se alguém remover a guarda, isto falha. */
-  ok(ev(`!chainShuffle(['p0','p1','p2','p3'],'aab').every((x,i)=>x.index===i)`),
-     '15. a guarda anti-identidade tem de agir no caso que a alcança (4 passos, id "aab")');
-
-  // determinístico: o mesmo id devolve sempre a mesma ordem
-  eq(ev(`JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))`),
-     ev(`JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))`),
-     '15. mesmo id tem de dar sempre a mesma ordem');
-  ok(ev(`JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))
-        !== JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-1').map(x=>x.index))`),
-     '15. ids diferentes devem embaralhar diferente');
-
-  // comparação
-  ok(ev(`chainIsCorrect(CHAIN.neuronio[0].s.slice(), CHAIN.neuronio[0].s)`),
-     '15. a ordem certa tem de passar');
-  ok(ev(`(function(){ const c=CHAIN.neuronio[0].s.slice();
-           const t=c[0]; c[0]=c[1]; c[1]=t;   // troca dois passos vizinhos
-           return !chainIsCorrect(c, CHAIN.neuronio[0].s); })()`),
-     '15. trocar dois passos vizinhos tem de reprovar');
-  ok(ev(`!chainIsCorrect(CHAIN.neuronio[0].s.slice(0,-1), CHAIN.neuronio[0].s)`),
-     '15. cadeia incompleta tem de reprovar');
-
-  // o apelido do Modo Domínio continua funcionando
-  eq(ev(`JSON.stringify(domainDeterministicShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))`),
-     ev(`JSON.stringify(chainShuffle(CHAIN.neuronio[0].s,'neuronio-0').map(x=>x.index))`),
-     '15. domainDeterministicShuffle tem de continuar sendo o mesmo algoritmo');
-}
-
-/* ---------- 16. a cadeia cobre Explicação causal em TODA aula ---------- */
-{
-  const totalAulas = ev(`MODULES.reduce((s,m)=>s+m.lessons.length,0)`);
-  const cau = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+(canMeasure(m.id,li,'causality')?1:0),0),0)`);
-  eq(cau, totalAulas, '16. toda aula tem cadeia com 4+ etapas, então Explicação causal deveria cobrir ' + totalAulas + '/' + totalAulas);
-
-  /* O total muda a cada fase que acrescenta fonte, então aferir um número aqui
-     vira falso na fase seguinte. O que é estável e é o ponto desta fase: a
-     cadeia cobre causalidade em TODO tópico, inclusive no único que o mini quiz
-     não cobria. */
+  /* A cadeia CHAIN não agenda mais Explicação causal — a reconstrução saiu, e
+     causalidade volta a ser medida por mini-questão, contrafactual e quiz de
+     módulo. Mas CHAIN continua na tela do módulo, na "cadeia + e se", então a
+     estrutura ainda precisa de portão. */
   const semCadeia = ev(`MODULES.flatMap(m=>m.lessons.map((_,li)=>
     (CHAIN[m.id] && CHAIN[m.id][li] && Array.isArray(CHAIN[m.id][li].s) && CHAIN[m.id][li].s.length>=4)
       ? null : m.id+'-'+li)).filter(Boolean)`);
   eq(semCadeia.length, 0, '16. todo tópico precisa de cadeia com 4+ etapas: ' + semCadeia.join(', '));
 
-  // se a caixa de causalidade existe, tem de haver com o que alimentá-la
+  // a cadeia mostrada no módulo precisa estar bem-formada: etapas, dobradiça e "e se"
   const malformadas = ev(`(function(){
     const r=[];
     MODULES.forEach(m=>m.lessons.forEach((_,li)=>{
@@ -556,7 +487,7 @@ const reset = ()=>ev('state = defaultState();');
   eq(malformadas.length, 0, '16. cadeias malformadas: ' + malformadas.slice(0,5).join(' | '));
 }
 
-/* ---------- 17. o item de causalidade na revisão é reconstrução ---------- */
+/* ---------- 17. o item de causalidade na revisão é múltipla escolha ---------- */
 {
   const abrirItem = `(function(dim){
     const m=MODULES[0], li=0, key=topicKey(m.id,li);
@@ -566,73 +497,35 @@ const reset = ()=>ev('state = defaultState();');
                ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] };
     loadReviewTopic();
   })`;
-  const montarNaOrdem = `(function(certo){
-    const r=review.recon;
-    const ordem = certo
-      ? r.chain.map(txt=>r.available.findIndex(a=>a.text===txt))
-      : (function(){ const idx=r.chain.map(txt=>r.available.findIndex(a=>a.text===txt));
-                     const t=idx[0]; idx[0]=idx[1]; idx[1]=t; return idx; })();
-    ordem.forEach(p=>pickReviewChainStep(p));
-  })`;
 
-  // um item de causalidade abre reconstrução, não múltipla escolha
+  // a reconstrução saiu: causalidade volta a ser cobrada por múltipla escolha
   reset();
   ev(`${abrirItem}('causality')`);
-  ok(ev(`!!review.recon`), '17. item de causalidade tem de abrir reconstrução');
-  eq(ev(`review.topicQs.length`), 0, '17. e não deve montar banco de múltipla escolha');
-  eq(ev(`review.recon.available.length`), ev(`CHAIN.neuronio[0].s.length`),
-     '17. o pool tem de ter todas as etapas da cadeia');
-  ok(ev(`!review.recon.available.every((x,i)=>x.index===i)`),
-     '17. e não pode vir na ordem original');
+  ok(ev(`!review.recon`), '17. item de causalidade NÃO pode abrir reconstrução');
+  ok(ev(`review.topicQs.length > 0`),
+     '17. item de causalidade tem de montar banco de múltipla escolha');
 
-  // ordem certa: evidência com fonte reconstruction, e a caixa anda
-  reset();
-  ev(`${abrirItem}('causality'); ${montarNaOrdem}(true); nextReview();`);
-  eq(ev(`(state.questionHistory['RC:neuronio-0']||{}).source`), 'reconstruction',
-     '17. acerto grava evidência com fonte reconstruction');
-  eq(ev(`state.dimensionEvidence['T:neuronio-0'].causality.sources.reconstruction`), 1,
-     '17. e conta na dimensão de Explicação causal');
-  eq(ev(`state.srs['neuronio-0'].dims.causality.reps`), 1,
-     '17. e a caixa de causalidade tem de registrar a tentativa');
-
-  // ordem errada: reprova
-  reset();
-  ev(`${abrirItem}('causality'); ${montarNaOrdem}(false); nextReview();`);
-  eq(ev(`state.dimensionEvidence['T:neuronio-0'].causality.last`), 0,
-     '17. trocar duas etapas vizinhas tem de reprovar');
-
-  // ver a cadeia não conta como reconstruir: nada gravado, nada agendado
-  reset();
-  ev(`${abrirItem}('causality'); revealReviewChain(); nextReview();`);
-  eq(ev(`state.questionHistory['RC:neuronio-0'] === undefined`), true,
-     '17. ver a cadeia NÃO pode gravar evidência — o item tem de continuar vencido');
-  eq(ev(`(((state.srs['neuronio-0']||{}).dims||{}).causality||{}).reps`), 0,
-     '17. e não pode contar tentativa na caixa');
-
-  // ver depois de errar não apaga o erro já registrado
-  reset();
-  ev(`${abrirItem}('causality'); ${montarNaOrdem}(false); revealReviewChain(); nextReview();`);
-  eq(ev(`state.dimensionEvidence['T:neuronio-0'].causality.attempts`), 1,
-     '17. ver depois de errar não apaga o erro que já foi gravado');
+  // as funções e o núcleo da reconstrução não podem mais existir
+  ok(ev(`typeof renderReviewReconstruction === 'undefined'
+        && typeof checkReviewReconstruction === 'undefined'
+        && typeof chainIsCorrect === 'undefined'
+        && typeof chainShuffle === 'undefined'`),
+     '17. nenhuma função da reconstrução pode sobreviver à remoção');
 }
 
 /* ---------- 18. pesos: nenhuma fonte real cai no default por omissão ---------- */
 {
-  eq(ev(`evidenceWeight('reconstruction')`), .48,
-     '18. reconstrução pesa como revisão: acontece nela e não tem alternativa para reconhecer');
-  eq(ev(`evidenceWeight('domain-reconstruction')`), .40,
-     '18. domain-reconstruction tem de ser declarada, não cair no default');
-  ok(ev(`evidenceWeight('domain-reconstruction') > evidenceWeight('counterfactual')`),
-     '18. reconstruir tem de pesar mais que escolher a alternativa certa');
+  eq(ev(`evidenceWeight('review')`), .48,
+     '18. a revisão é prova em contexto de avaliação, com a aula já lida');
   eq(ev(`evidenceWeight('diagram')`), .38,
      '18. apontar no diagrama pesa como mini quiz: é reconhecimento com 3 a 6 distratores');
-  ok(ev(`evidenceWeight('diagram') < evidenceWeight('reconstruction')`),
-     '18. e menos que reconstruir, que não tem alternativa para reconhecer');
+  ok(ev(`evidenceWeight('diagram') < evidenceWeight('review')`),
+     '18. e menos que a revisão em si');
 
   // toda fonte que o app realmente usa precisa estar no mapa
   const foraDoMapa = ev(`(function(){
-    const usadas=['review','reconstruction','mini-quiz','module-quiz','prediction',
-                  'domain-reconstruction','counterfactual','domain-case','self-rate','diagram'];
+    const usadas=['review','mini-quiz','module-quiz','prediction',
+                  'counterfactual','domain-case','self-rate','diagram'];
     return usadas.filter(s=>evidenceWeight(s)===.28 && s!=='__default__');
   })()`);
   eq(foraDoMapa.length, 0,
@@ -675,8 +568,8 @@ const reset = ()=>ev('state = defaultState();');
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 345,
-     '19. o total de caixas deveria ser 345 (339 + 6 buracos de Reconhecimento fechados)');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 344,
+     '19. o total de caixas deveria ser 344 (345 menos a única caixa de causalidade que só a cadeia media)');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.

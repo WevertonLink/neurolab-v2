@@ -1,9 +1,8 @@
 /* =====================================================================
    NEUROLAB · MODO DOMÍNIO 1.6.1
 
-   Camada de sessão guiada, reconstrução causal sem alternativas e
-   histórico de progresso. Este arquivo estende o Modo Domínio 1.6 sem
-   duplicar seu conteúdo editorial.
+   Camada de sessão guiada e histórico de progresso. Este arquivo estende o
+   Modo Domínio 1.6 sem duplicar seu conteúdo editorial.
    ===================================================================== */
 
 const DOMAIN_GUIDED_SIZE = 4;
@@ -17,7 +16,6 @@ const DOMAIN_BASE_OPEN_MODE = openDomainMode;
 const DOMAIN_BASE_RENDER_CASES = domainRenderCases;
 const DOMAIN_BASE_RENDER_COUNTER = domainRenderCounter;
 
-DOMAIN_SESSION.reconstruction = null;
 DOMAIN_SESSION.focusVisible = false;
 DOMAIN_SESSION.lastCompleted = null;
 
@@ -154,7 +152,6 @@ function domainOpenFocusCurrent(){
   const focus=domainCurrentFocus();
   if(!focus){ openDomainMode('today'); return; }
   DOMAIN_SESSION.focusVisible=true;
-  DOMAIN_SESSION.reconstruction=null;
   if(focus.current.type==='case') domainOpenCase(focus.current.id,'question');
   else domainOpenCounter(focus.current.id,'question');
   domainSyncFocusClass();
@@ -165,7 +162,6 @@ function domainSyncFocusClass(){
 }
 function domainPauseFocusSession(){
   DOMAIN_SESSION.focusVisible=false;
-  DOMAIN_SESSION.reconstruction=null;
   domainSyncFocusClass();
   openDomainMode('today');
 }
@@ -180,14 +176,13 @@ function domainFinishFocusSession(){
     endedAt:Date.now(),
     total:session.queue.length,
     completed:completed.length,
-    correct:completed.filter(x=>x.result===1).length,
-    reconstructed:completed.filter(x=>x.reconstructed===1).length
+    correct:completed.filter(x=>x.result===1).length
   };
   state.domain.sessions=domainBoundHistory([...(state.domain.sessions||[]),summary],40);
   state.domain.currentSession=null;
   DOMAIN_SESSION.focusVisible=false;
   DOMAIN_SESSION.lastCompleted=summary;
-  domainLogActivity({kind:'session-complete',sessionId:summary.id,total:summary.total,correct:summary.correct,reconstructed:summary.reconstructed,duration:summary.endedAt-summary.startedAt});
+  domainLogActivity({kind:'session-complete',sessionId:summary.id,total:summary.total,correct:summary.correct,duration:summary.endedAt-summary.startedAt});
   saveNow();
   openDomainMode('today');
 }
@@ -215,7 +210,7 @@ function domainAdvanceFocus(type,id,event){
   const bucket=type==='case'?state.domain.cases:state.domain.counterfactual;
   const rec=domainSafeRecord(bucket&&bucket[id]);
   const completed=domainSafeArray(session.completed).filter(x=>!(x.type===type&&x.id===id));
-  completed.push({type,id,result:Number(rec.lastResult)||0,reconstructed:Number(rec.lastReconResult)||0,at:Date.now()});
+  completed.push({type,id,result:Number(rec.lastResult)||0,at:Date.now()});
 
   let nextIndex=currentIndex+1;
   while(nextIndex<session.queue.length){
@@ -234,7 +229,6 @@ function domainAdvanceFocus(type,id,event){
   const nextItem=nextSession.queue[nextIndex];
   state.domain.currentSession=nextSession;
   DOMAIN_SESSION.focusVisible=true;
-  DOMAIN_SESSION.reconstruction=null;
   saveNow();
 
   // Abra diretamente o item calculado, em vez de recalcular a fila outra vez.
@@ -273,7 +267,7 @@ function domainSessionCard(){
       <button class="bigbtn" style="--mc:var(--violet)" onclick="domainResumeFocusSession()">Retomar atividade →</button>
     </section>`;
   }
-  const lastText=last?`Último bloco: ${last.correct}/${last.total} respostas corretas · ${last.reconstructed||0} reconstruções.`:'Ainda não há um bloco concluído.';
+  const lastText=last?`Último bloco: ${last.correct}/${last.total} respostas corretas.`:'Ainda não há um bloco concluído.';
   return `<section class="dm-focus-card">
     <div><span>BLOCO DE FOCO · 4 ATIVIDADES</span><h3>Entre em uma sequência linear, sem escolher a próxima tela.</h3><p>O NeuroLab alterna caso e contrafactual, mostra uma atividade por vez e registra o resultado de cada etapa. ${lastText}</p></div>
     <button class="bigbtn" style="--mc:var(--violet)" onclick="domainStartFocusSession()">Iniciar bloco guiado →</button>
@@ -287,29 +281,26 @@ function domainProgressSnapshot(){
   const weekAnswers=answers.filter(x=>x.at>=week);
   const first=weekAnswers.filter(x=>x.firstTry);
   const firstAccuracy=first.length?first.filter(x=>x.result===1).length/first.length:null;
-  const recon=(state.domain.activityLog||[]).filter(x=>x.kind==='reconstruction'&&x.result===1);
   const sessions=state.domain.sessions||[];
-  return {todayAnswers,weekAnswers,first,firstAccuracy,recon,sessions};
+  return {todayAnswers,weekAnswers,first,firstAccuracy,sessions};
 }
 function domainHistoryTitle(row){
   if(row.kind==='session-complete') return `Bloco concluído · ${row.correct}/${row.total} corretas`;
   const item=domainActivityItem(row.type,row.itemId);
   const base=item?item.title:'Atividade de domínio';
-  if(row.kind==='reconstruction') return `${row.result===1?'Reconstruída':'Reconstrução incompleta'} · ${base}`;
   return `${row.result===1?'Acertou':'Errou'} · ${base}`;
 }
 function domainHistoryMeta(row){
-  if(row.kind==='session-complete') return `${Math.max(1,Math.round((row.duration||0)/60000))} min · ${row.reconstructed||0} reconstruções`;
+  if(row.kind==='session-complete') return `${Math.max(1,Math.round((row.duration||0)/60000))} min`;
   return `${domainActivityLabel(row.type)} · ${new Date(row.at).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}`;
 }
 function domainProgressPanel(){
   const snapshot=domainProgressSnapshot();
-  const history=(state.domain.activityLog||[]).filter(x=>['answer','reconstruction','session-complete'].includes(x.kind)).slice(-6).reverse();
+  const history=(state.domain.activityLog||[]).filter(x=>['answer','session-complete'].includes(x.kind)).slice(-6).reverse();
   return `<section class="dm-section dm-records"><div class="dm-section-head"><div><span>REGISTRO DE PROGRESSO</span><h3>O que foi realmente praticado</h3></div></div>
     <div class="dm-record-grid">
       <article><span>Hoje</span><b>${snapshot.todayAnswers.length}</b><small>respostas registradas</small></article>
       <article><span>1ª tentativa · 7 dias</span><b>${snapshot.firstAccuracy===null?'—':domainPct(snapshot.firstAccuracy)}</b><small>${snapshot.first.length||0} atividades novas</small></article>
-      <article><span>Reconstruções</span><b>${snapshot.recon.length}</b><small>cadeias ordenadas corretamente</small></article>
       <article><span>Blocos concluídos</span><b>${snapshot.sessions.length}</b><small>sessões lineares finalizadas</small></article>
     </div>
     <div class="dm-history"><h4>Histórico recente</h4>${history.length?history.map(row=>`<div><i class="${row.result===0?'bad':'good'}"></i><span><b>${domainHistoryTitle(row)}</b><small>${domainHistoryMeta(row)}</small></span></div>`).join(''):'<p>As próximas respostas aparecerão aqui.</p>'}</div>
@@ -325,18 +316,12 @@ function domainRecordMeta(type,id){
   const attempts=Number(rec.attempts)||0;
   if(!attempts) return '<span class="dm-practice-meta empty">ainda não praticado</span>';
   const clarity=typeof rec.clarity==='number'?` · explicação ${domainPct(rec.clarity)}`:'';
-  // Ter visto a cadeia fica no registro para sempre. Não é punição: é a
-  // diferença entre "eu montei isso" e "eu li isso pronto", que some da
-  // memória em dois dias e é exatamente o que a lista precisa mostrar.
-  const recon=Number(rec.reconBest)===1
-    ? (rec.reconRevealed?' · cadeia reconstruída, depois de ver':' · cadeia reconstruída')
-    : (rec.reconRevealed?' · cadeia vista, não reconstruída':'');
-  return `<span class="dm-practice-meta">${attempts} tentativa${attempts!==1?'s':''}${clarity}${recon}</span>`;
+  return `<span class="dm-practice-meta">${attempts} tentativa${attempts!==1?'s':''}${clarity}</span>`;
 }
 domainRenderCases = function(){
   ensureDomainState();
   return `<section class="dm-section"><div class="dm-section-head"><div><span>CASOS INTEGRADOS</span><h3>Problemas que atravessam módulos</h3></div></div>
-    <p class="dm-section-intro">Cada caso possui uma cadeia causal principal. Depois da resposta, você pode reconstruir os passos em ordem, sem rever as alternativas.</p>
+    <p class="dm-section-intro">Cada caso atravessa vários módulos. Responda e, no diagnóstico, compare os quatro modelos e veja a cadeia causal principal.</p>
     <div class="dm-case-grid">${DOMAIN_CASES.map(c=>{
       const r=state.domain.cases[c.id],done=r&&r.attempts;
       return `<article class="dm-case-card ${done?'done':''}"><div class="dm-card-top"><span>${done?'PRATICADO':'CASO'}</span><small>${domainReadinessLabel(c.modules)}</small></div><h4>${c.title}</h4><p>${c.scenario}</p>${domainRecordMeta('case',c.id)}${domainModulesHTML(c.modules)}<button onclick="domainOpenCase('${c.id}')">${done?'Continuar prática':'Resolver'} →</button></article>`;
@@ -346,119 +331,17 @@ domainRenderCounter = function(){
   ensureDomainState();
   const grouped=MODULES.map(m=>({m,items:DOMAIN_COUNTERFACTUALS.filter(c=>c.module===m.id)})).filter(g=>g.items.length);
   return `<section class="dm-section"><div class="dm-section-head"><div><span>DESAFIOS CONTRAFACTUAIS</span><h3>Mude uma peça e deduza o restante</h3></div></div>
-    <p class="dm-section-intro">Depois de escolher a cadeia correta, o segundo passo é reconstruí-la em ordem sem as alternativas originais.</p>
+    <p class="dm-section-intro">Mude uma peça do mecanismo e deduza qual cadeia causal sobrevive ao teste.</p>
     <div class="dm-counter-list">${grouped.map(g=>g.items.map(c=>{
       const r=state.domain.counterfactual[c.id],done=r&&r.attempts;
       return `<article class="dm-counter-card" style="--mc:${g.m.color}"><div><span>MÓDULO ${g.m.n}</span><h4>${c.title}</h4><p>${c.prompt}</p>${domainRecordMeta('counter',c.id)}</div><button onclick="domainOpenCounter('${c.id}')">${done?'Continuar':'Responder'} →</button></article>`;
     }).join('')).join('')}</div></section>`;
 };
 
-// O algoritmo saiu daqui para 04-learning-model.js (chainShuffle), porque a
-// revisão passou a precisar dele nos 64 tópicos. Este nome fica como apelido:
-// é o que o resto deste arquivo chama, e trocar todos os pontos de uso seria
-// mexer em fluxo do Modo Domínio que esta fase não tem por que tocar.
-function domainDeterministicShuffle(chain,id){ return chainShuffle(chain,id); }
-function domainStartReconstruction(type,id){
-  const item=domainActivityItem(type,id); if(!item) return;
-  DOMAIN_SESSION.reconstruction={type,id,available:domainDeterministicShuffle(item.chain,id),selected:[],result:null};
-  DOMAIN_SESSION.focusVisible=domainIsFocusItem(type,id);
-  if(type==='case') domainOpenCase(id,'question'); else domainOpenCounter(id,'question');
-}
-function domainReconstructionState(type,id){
-  const r=DOMAIN_SESSION.reconstruction;
-  return r&&r.type===type&&r.id===id?r:null;
-}
-function domainPickChainStep(type,id,position){
-  // r.revealed trava o pool: sem isso, quem viu a cadeia continuaria montando
-  // com ela na tela e domainCheckReconstruction marcaria reconBest=1 por
-  // cópia — o registro passaria a dizer "reconstruiu" para quem só copiou.
-  const r=domainReconstructionState(type,id); if(!r||r.result!==null||r.revealed) return;
-  const pos=Number(position),entry=r.available[pos];
-  if(!entry||r.selected.includes(pos)) return;
-  r.selected.push(pos);
-  if(r.selected.length===r.available.length) domainCheckReconstruction(type,id);
-  else if(type==='case') domainOpenCase(id,'preserve'); else domainOpenCounter(id,'preserve');
-}
-function domainUndoChainStep(type,id){
-  const r=domainReconstructionState(type,id); if(!r||!r.selected.length||r.result!==null) return;
-  r.selected.pop();
-  if(type==='case') domainOpenCase(id,'preserve'); else domainOpenCounter(id,'preserve');
-}
-function domainResetReconstruction(type,id){
-  const r=domainReconstructionState(type,id); if(!r) return;
-  r.selected=[];r.result=null;r.revealed=false;
-  if(type==='case') domainOpenCase(id,'question'); else domainOpenCounter(id,'question');
-}
-
-/* Saída para quem travou. Antes a única forma de sair da reconstrução era
-   acertar, e ficar tentando permutação atrás de permutação não ensina nada —
-   é o oposto do que a atividade existe para treinar, e trava quem abriu o app
-   com dez minutos.
-
-   Ver NÃO conta como reconstruir: nada aqui toca reconBest, e nenhuma
-   evidência de dimensão é registrada. Se a pessoa já tinha errado, aquele
-   resultado já foi gravado por domainCheckReconstruction e continua valendo;
-   se ela nem tentou, não inventamos um erro que não houve. O que fica é a
-   marca de que a cadeia foi vista, para a atividade voltar. */
-function domainRevealChain(type,id){
-  const item=domainActivityItem(type,id),r=domainReconstructionState(type,id);
-  if(!item||!r||r.result===1||r.revealed) return;
-  r.revealed=true;
-  const bucket=domainActivityBucket(type),old=domainSafeRecord(bucket[id]);
-  bucket[id]=Object.assign({},old,{
-    reconRevealed:true,
-    reconRevealedAt:Date.now(),
-    history:domainBoundHistory([...(old.history||[]),{at:Date.now(),mode:'reconstruction',result:0,revealed:true}],30)
-  });
-  domainLogActivity({kind:'reconstruction-reveal',type,itemId:id,sessionId:domainCurrentFocus()?.session.id||null});
-  saveNow();
-  if(type==='case') domainOpenCase(id,'preserve'); else domainOpenCounter(id,'preserve');
-}
-function domainCheckReconstruction(type,id){
-  const item=domainActivityItem(type,id),r=domainReconstructionState(type,id); if(!item||!r) return;
-  const selected=r.selected.map(pos=>r.available[pos].text);
-  const right=chainIsCorrect(selected,item.chain);
-  r.result=right?1:0;
-  const bucket=domainActivityBucket(type),old=domainSafeRecord(bucket[id]);
-  bucket[id]=Object.assign({},old,{
-    reconAttempts:(Number(old.reconAttempts)||0)+1,
-    lastReconResult:right?1:0,
-    reconBest:Math.max(Number(old.reconBest)||0,right?1:0),
-    reconLastAt:Date.now(),
-    history:domainBoundHistory([...(old.history||[]),{at:Date.now(),mode:'reconstruction',result:right?1:0}],30)
-  });
-  domainLogActivity({kind:'reconstruction',type,itemId:id,result:right?1:0,sessionId:domainCurrentFocus()?.session.id||null});
-  // lote aberto: a reconstrução de um contrafactual agenda a caixa de
-  // explicação causal daquele tópico. O caso integrado mede o módulo, e
-  // escopo M: é descartado no commit — não credita tópico nenhum.
-  if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
-  if(type==='case') item.modules.forEach(mid=>recordDimensionEvidence(moduleScope(mid),'application',right?1:0,'domain-reconstruction',{questionId:'DRECON:'+id+':'+mid}));
-  else recordDimensionEvidence(topicScope(topicKey(item.module,item.lesson)),'causality',right?1:0,'domain-reconstruction',{questionId:'DRECON:'+id});
-  if(typeof commitEvidenceBatch==='function') commitEvidenceBatch();
-  saveNow();
-  if(type==='case') domainOpenCase(id,'reconstruction'); else domainOpenCounter(id,'reconstruction');
-}
-function domainRenderReconstruction(type,item){
-  const r=domainReconstructionState(type,item.id); if(!r) return '';
-  const selected=r.selected.map((pos,index)=>`<li><b>${index+1}</b><span>${r.available[pos].text}</span></li>`).join('');
-  const options=r.available.map((entry,pos)=>`<button type="button" ${r.selected.includes(pos)||r.result!==null||r.revealed?'disabled':''} onclick="domainPickChainStep('${type}','${item.id}',${pos})"><b>+</b><span>${entry.text}</span></button>`).join('');
-  let result='';
-  if(r.result===1) result=`<div class="dm-reconstruct-result right"><b>✓ Você remontou a cadeia sem as alternativas.</b><p>Agora o registro distingue reconhecer a resposta de reconstruir a sequência causal.</p>${domainLinearActions(type,item.id,true)}</div>`;
-  if(r.result===0) result=`<div class="dm-reconstruct-result wrong"><b>✕ A ordem ainda não fecha causalmente.</b><p>Nenhuma resposta foi apagada. Tente localizar qual passo depende de outro antes de reorganizar.</p><button class="bigbtn ghost" style="--mc:var(--violet)" onclick="domainResetReconstruction('${type}','${item.id}')">Reorganizar os passos</button><button class="dm-reveal-link" onclick="domainRevealChain('${type}','${item.id}')">não estou conseguindo — ver a cadeia</button></div>`;
-  if(r.revealed) result=`<div class="dm-reconstruct-result revealed"><b>A cadeia correta</b><ol class="dm-selected-chain">${item.chain.map((step,index)=>`<li><b>${index+1}</b><span>${step}</span></li>`).join('')}</ol><p>Ver não é reconstruir: esta atividade continua marcada como pendente e volta para você refazer sem ajuda. Leia procurando de qual passo cada um depende — é essa dependência que você vai precisar reproduzir.</p>${domainLinearActions(type,item.id,false)}</div>`;
-  return `<div class="dm-reconstruct"><div class="dm-reconstruct-head"><span>RECONSTRUÇÃO SEM ALTERNATIVAS</span><h4>Toque nos passos na ordem causal.</h4><p>A pergunta anterior não é repetida. Agora o teste é montar a cadeia usando apenas seus componentes.</p></div>
-    <ol class="dm-selected-chain">${selected||'<li class="placeholder">A sequência aparecerá aqui.</li>'}</ol>
-    <div class="dm-chain-pool">${options}</div>
-    ${r.selected.length&&r.result===null&&!r.revealed?`<button class="dm-undo" onclick="domainUndoChainStep('${type}','${item.id}')">← desfazer último passo</button>
-    <button class="dm-reveal-link" onclick="domainRevealChain('${type}','${item.id}')">não estou conseguindo — ver a cadeia</button>`:''}
-    ${result}
-  </div>`;
-}
-function domainLinearActions(type,id,reconstructed){
+function domainLinearActions(type,id){
   const inFocus=domainIsFocusItem(type,id);
   return `<div class="dm-linear-actions">
     <button type="button" class="bigbtn dm-next" style="--mc:var(--violet)" onclick="${inFocus?`domainAdvanceFocus('${type}','${id}',event)`:`domainOpenSuggestedNext('${type}','${id}')`}">${inFocus?'Próxima do bloco':'Próxima atividade'} →</button>
-    ${reconstructed?'':`<button class="bigbtn ghost dm-reconstruct-btn" style="--mc:var(--cyan)" onclick="domainStartReconstruction('${type}','${id}')">Reconstruir sem alternativas</button>`}
     <button class="dm-list-link" onclick="domainSetTab('${type==='case'?'cases':'counter'}')">Voltar à lista</button>
   </div>`;
 }
@@ -469,18 +352,18 @@ function domainRenderQuestion(type,item,rec,reveal){
 }
 
 domainRenderCaseDetail = function(item){
-  const rec=domainActivityRecord('case',item.id),recon=domainReconstructionState('case',item.id),reveal=Boolean(rec.lastAt&&!DOMAIN_SESSION.caseRetry[item.id]&&!recon);
+  const rec=domainActivityRecord('case',item.id),reveal=Boolean(rec.lastAt&&!DOMAIN_SESSION.caseRetry[item.id]);
   return `<section class="dm-detail" data-focus-item="case:${item.id}">${domainFocusRail('case',item.id)}<button class="backbtn" onclick="domainSetTab('cases')">← todos os casos</button>
     <div class="dm-detail-k">CASO INTEGRADO · ${domainReadinessLabel(item.modules)}</div><h3>${item.title}</h3><p class="dm-scenario">${item.scenario}</p>${domainModulesHTML(item.modules)}
-    ${recon?domainRenderReconstruction('case',item):domainRenderQuestion('case',item,rec,reveal)}
+    ${domainRenderQuestion('case',item,rec,reveal)}
     ${reveal?domainActivityFeedback('case',item,rec):''}
   </section>`;
 };
 domainRenderCounterDetail = function(item){
-  const module=domainModule(item.module),rec=domainActivityRecord('counter',item.id),recon=domainReconstructionState('counter',item.id),reveal=Boolean(rec.lastAt&&!DOMAIN_SESSION.counterRetry[item.id]&&!recon);
+  const module=domainModule(item.module),rec=domainActivityRecord('counter',item.id),reveal=Boolean(rec.lastAt&&!DOMAIN_SESSION.counterRetry[item.id]);
   return `<section class="dm-detail" data-focus-item="counter:${item.id}">${domainFocusRail('counter',item.id)}<button class="backbtn" onclick="domainSetTab('counter')">← todos os desafios</button>
     <div class="dm-detail-k" style="color:${module.color}">MÓDULO ${module.n} · CONTRAFACTUAL</div><h3>${item.title}</h3><p class="dm-scenario">${item.prompt}</p>
-    ${recon?domainRenderReconstruction('counter',item):domainRenderQuestion('counter',item,rec,reveal)}
+    ${domainRenderQuestion('counter',item,rec,reveal)}
     ${reveal?domainActivityFeedback('counter',item,rec):''}
   </section>`;
 };
@@ -507,8 +390,7 @@ domainScrollAfterRender = function(mode,previousY){
     // sticky da sessão cobrir justamente essa parte no celular.
     const selectors={
       feedback:'.dm-feedback',
-      question:'.dm-reconstruct, .dm-detail-k',
-      reconstruction:'.dm-reconstruct-result'
+      question:'.dm-detail-k'
     };
     const target=selectors[mode]?document.querySelector('#view-domain '+selectors[mode]):null;
     if(domainScrollTargetBelowSticky(target)) return;
@@ -539,7 +421,7 @@ domainAnswerCase = function(id,choice){
   bucket[id]=Object.assign({},old,{attempts:(Number(old.attempts)||0)+1,lastChoice:choice,lastResult:right?1:0,best:Math.max(Number(old.best)||0,right?1:0),lastAt:Date.now(),history:domainBoundHistory([...(old.history||[]),{at:Date.now(),mode:'choice',result:right?1:0,choice,firstTry}],30)});
   item.modules.forEach(mid=>recordDimensionEvidence(moduleScope(mid),'application',right?1:0,'domain-case',{questionId:'DCASE:'+id+':'+mid}));
   domainLogActivity({kind:'answer',type:'case',itemId:id,result:right?1:0,firstTry,sessionId:domainCurrentFocus()?.session.id||null});
-  DOMAIN_SESSION.caseRetry[id]=false;DOMAIN_SESSION.reconstruction=null;saveNow();domainOpenCase(id,'feedback');
+  DOMAIN_SESSION.caseRetry[id]=false;saveNow();domainOpenCase(id,'feedback');
 };
 domainAnswerCounter = function(id,choice){
   const item=DOMAIN_COUNTERFACTUALS.find(x=>x.id===id);if(!item)return;
@@ -549,7 +431,7 @@ domainAnswerCounter = function(id,choice){
   recordDimensionEvidence(topicScope(topicKey(item.module,item.lesson)),'causality',right?1:0,'counterfactual',{questionId:'DCF:'+id});
   if(typeof commitEvidenceBatch==='function') commitEvidenceBatch();
   domainLogActivity({kind:'answer',type:'counter',itemId:id,result:right?1:0,firstTry,sessionId:domainCurrentFocus()?.session.id||null});
-  DOMAIN_SESSION.counterRetry[id]=false;DOMAIN_SESSION.reconstruction=null;saveNow();domainOpenCounter(id,'feedback');
+  DOMAIN_SESSION.counterRetry[id]=false;saveNow();domainOpenCounter(id,'feedback');
 };
 
 function domainOptionAudit(item,rec){
@@ -575,7 +457,7 @@ domainActivityFeedback = function(type,item,rec){
   return `<div class="dm-feedback ${right?'right':'wrong'}"><div class="dm-verdict">${right?'✓ A cadeia ficou de pé':'✕ A primeira ruptura foi outra'}</div><p>${item.explanation}</p><ol>${item.chain.map(step=>`<li>${step}</li>`).join('')}</ol>${item.extend?`<div class="dm-extend"><span>Estenda a cadeia</span><p><b>${item.extend.q}</b> ${item.extend.a}</p></div>`:''}
     ${domainOptionAudit(item,rec)}
     <div class="dm-clarity"><span>Sem olhar, você conseguiria reconstruir a cadeia?</span><div>${buttons.map(([value,label])=>`<button class="${clarity!==null&&Number(value)===clarity?'picked':''}" onclick="domainRateActivity('${type}','${item.id}',${value})">${label}</button>`).join('')}</div></div>
-    ${domainLinearActions(type,item.id,false)}
+    ${domainLinearActions(type,item.id)}
   </div>`;
 };
 domainRateActivity = function(type,id,value){
@@ -585,19 +467,17 @@ domainRateActivity = function(type,id,value){
   saveNow();
   if(type==='case')domainOpenCase(id,'preserve');else domainOpenCounter(id,'preserve');
 };
-// Mantido para compatibilidade com eventuais links antigos: agora abre a
-// reconstrução causal, em vez de repetir exatamente a mesma questão.
-domainRetryActivity = function(type,id){ domainStartReconstruction(type,id); };
+// Mantido para compatibilidade com eventuais links antigos: reabre a atividade
+// na pergunta original.
+domainRetryActivity = function(type,id){ if(type==='case') domainOpenCase(id,'question'); else domainOpenCounter(id,'question'); };
 
 openDomainMode = function(tab){
   DOMAIN_SESSION.focusVisible=false;
-  DOMAIN_SESSION.reconstruction=null;
   DOMAIN_BASE_OPEN_MODE(tab);
   domainSyncFocusClass();
 };
 domainSetTab = function(tab){
   DOMAIN_SESSION.focusVisible=false;
-  DOMAIN_SESSION.reconstruction=null;
   DOMAIN_BASE_SET_TAB(tab);
   domainSyncFocusClass();
 };
