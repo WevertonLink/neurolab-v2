@@ -865,6 +865,79 @@ const reset = ()=>ev('state = defaultState();');
      '24. a aula do pré-frontal tem de abrir pela ficha de TDAH, e veio: ' + emAtencao2.slice(0,3).join(', '));
 }
 
+/* ---------- 25. baralho de terminologia (termos técnicos do glossário) ---------- */
+{
+  const TERMO = 'potencial de ação';   // existe no GLOSSARY
+  const CAP = ev('TERM_INTRO_PER_SESSION');
+  ok(ev(`!!GLOSSARY['${TERMO}']`), '25. o termo de teste precisa existir no GLOSSARY');
+
+  // agendar um termo novo o semeia na caixa 0, vencendo amanhã
+  reset();
+  ev(`scheduleTerm('${TERMO}', 1)`);
+  eq(ev(`state.termSrs['${TERMO}'].box`), 0, '25. termo novo entra na caixa 0');
+  eq(ev(`state.termSrs['${TERMO}'].reps`), 1, '25. e registra a tentativa');
+  eq(ev(`state.termSrs['${TERMO}'].due`), startOfDay(Date.now()) + INTERVALS[0]*DAY,
+     '25. a primeira volta do termo é em 1 dia');
+
+  // acertar quando vencido promove a caixa
+  reset();
+  ev(`state.termSrs['${TERMO}'] = { box:1, due: ${startOfDay(Date.now())} - ${DAY}, last:0, reps:1, lapses:0 }`);
+  ev(`scheduleTerm('${TERMO}', 1)`);
+  eq(ev(`state.termSrs['${TERMO}'].box`), 2, '25. acerto no prazo vencido promove a caixa');
+
+  // errar rebaixa, limitado por SRS_LAPSE_CAP, e conta o lapso
+  reset();
+  ev(`state.termSrs['${TERMO}'] = { box:5, due: ${startOfDay(Date.now())} - ${DAY}, last:0, reps:4, lapses:0 }`);
+  ev(`scheduleTerm('${TERMO}', 0)`);
+  ok(ev(`state.termSrs['${TERMO}'].box <= 2`), '25. erro nunca deixa acima da caixa de reconstrução (LAPSE_CAP)');
+  eq(ev(`state.termSrs['${TERMO}'].lapses`), 1, '25. e conta o lapso');
+
+  // treinar antes da hora NÃO avança
+  reset();
+  ev(`state.termSrs['${TERMO}'] = { box:2, due: ${startOfDay(Date.now())} + 5*${DAY}, last:0, reps:2, lapses:0 }`);
+  ev(`scheduleTerm('${TERMO}', 1)`);
+  eq(ev(`state.termSrs['${TERMO}'].box`), 2, '25. acertar antes do vencimento não promove');
+
+  // termo fora do glossário não agenda
+  reset();
+  ev(`scheduleTerm('termo-que-nao-existe-xyz', 1)`);
+  eq(ev(`state.termSrs['termo-que-nao-existe-xyz'] === undefined`), true,
+     '25. termo fora do glossário não pode ser agendado');
+
+  // dueTerms: baralho vazio oferece termos NOVOS, no máximo o teto por sessão
+  reset();
+  ok(ev(`dueTerms().length`) > 0 && ev(`dueTerms().length`) <= CAP,
+     '25. baralho vazio oferece termos novos, no máximo TERM_INTRO_PER_SESSION');
+  ok(ev(`dueTerms().every(x=>x.kind==='term' && x.novo===true)`),
+     '25. com baralho vazio todos os itens são termos novos');
+
+  // termo agendado para o futuro não vence hoje
+  reset();
+  ev(`state.termSrs['${TERMO}'] = { box:3, due: ${startOfDay(Date.now())} + 5*${DAY}, last:0, reps:2, lapses:0 }`);
+  ok(ev(`!dueTerms().some(x=>x.term==='${TERMO}' && !x.novo)`),
+     '25. termo com vencimento no futuro não entra como vencido');
+
+  // distratores: n distintos, nenhum igual ao alvo
+  reset();
+  eq(ev(`termDistractors('${TERMO}',3).length`), 3, '25. termDistractors devolve o número pedido');
+  ok(ev(`termDistractors('${TERMO}',3).every(t=>t!=='${TERMO}')`), '25. nenhum distrator é o próprio termo');
+  ok(ev(`new Set(termDistractors('${TERMO}',3)).size === 3`), '25. distratores são distintos');
+
+  // fluxo na revisão: monta 4 alternativas com a correta, e responder agenda a caixa
+  reset();
+  ev(`review = { queue:[{kind:'term', term:'${TERMO}', box:0, due:0, overdue:0, novo:true}],
+                 ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] }`);
+  ev(`loadReviewTerm()`);
+  eq(ev(`review.termOpts.length`), 4, '25. o item de termo monta 4 alternativas');
+  ok(ev(`review.termOpts.some(o=>o.correct && o.text==='${TERMO}')`),
+     '25. a alternativa correta é o termo certo');
+  // responde numa alternativa ERRADA (evita awardXP/renderHeader no stub) e avança
+  ev(`answerReviewTerm(review.termOpts.findIndex(o=>!o.correct)); nextReview();`);
+  eq(ev(`(state.termSrs['${TERMO}']||{}).reps`), 1, '25. responder o item agenda a caixa do termo');
+  ok(ev(`review.results.length===1 && review.results[0].kind==='term' && review.results[0].passed===false`),
+     '25. o resultado do termo entra no resumo da sessão');
+}
+
 /* ---------- resultado ---------- */
 if(errors.length){
   console.error('Cronograma por dimensão: ' + errors.length + ' falha(s) em ' + checks + ' verificações\n');

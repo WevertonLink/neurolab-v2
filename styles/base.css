@@ -433,6 +433,7 @@ header.top{
 .rv-bar{height:4px;border-radius:4px;background:var(--panel);border:1px solid var(--line-soft);overflow:hidden}
 .rv-bar i{display:block;height:100%;background:var(--mc);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
 .rv-card{margin:0}
+.rv-termdef{font-size:16px;line-height:1.55;margin:2px 0 15px;color:var(--ink)}
 .rv-summary{text-align:center;border:1px solid color-mix(in srgb,var(--cyan) 25%,var(--line));border-radius:20px;padding:26px 20px 22px;
   background:radial-gradient(420px 180px at 50% 0%, rgba(34,211,238,.12), transparent 66%),linear-gradient(180deg,var(--panel),var(--panel-2))}
 .rv-badge{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;font-size:24px;color:#04141a;

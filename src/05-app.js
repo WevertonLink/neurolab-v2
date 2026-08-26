@@ -505,6 +505,7 @@ const SRS_LAPSE_CAP = 2;   // ao errar, cai no máximo até esta caixa (7 dias) 
    então subir de 8 para 16 muda o trabalho médio real de 6,7 para 7,4 itens
    por dia a 85% de acerto — e derruba o pico da fila de 131 para 79. */
 const SESSION_CAP = 16;
+const TERM_INTRO_PER_SESSION = 8;  // termos novos do glossário que entram por sessão no baralho de Terminologia
 
 /* =====================================================================
    Estado + persistência
@@ -513,7 +514,7 @@ let state = defaultState();
 function defaultState(){
   return { v:STATE_VERSION, rev:0, xp:0, deepMode:true, selfRate:{}, topicExplain:{}, predCredit:{},
            lessons:{}, mastery:{}, topicMastery:{}, doneQuiz:{}, dimensionEvidence:{}, questionHistory:{},
-    creditC:{}, creditW:{}, miniCredit:{}, miniWrong:{}, srs:{},
+    creditC:{}, creditW:{}, miniCredit:{}, miniWrong:{}, srs:{}, termSrs:{},
     attempts:0, correctTotal:0, wrongTotal:0, lastModule:null, lastStudiedAt:0,
     domain:(typeof domainDefaultState==='function'?domainDefaultState():{}) };
 }
@@ -752,7 +753,7 @@ function migrateState(raw){
   if(!raw || typeof raw!=='object' || Array.isArray(raw)) return defaultState();
   const out = Object.assign(defaultState(), raw);
   // objetos aninhados: garante que existam e sejam objetos de verdade
-  ['lessons','mastery','topicMastery','doneQuiz','creditC','creditW','miniCredit','miniWrong','srs',
+  ['lessons','mastery','topicMastery','doneQuiz','creditC','creditW','miniCredit','miniWrong','srs','termSrs',
    'selfRate','topicExplain','predCredit','dimensionEvidence','questionHistory'].forEach(k=>{
     if(!out[k] || typeof out[k]!=='object' || Array.isArray(out[k])) out[k]={};
   });
@@ -1336,6 +1337,11 @@ function nextDueDate(){
       if(due && (next===null || due<next)) next = due;
     });
   });
+  Object.keys(state.termSrs||{}).forEach(term=>{
+    const d = state.termSrs[term];
+    const due = d && d.due;
+    if(due && (next===null || due<next)) next = due;
+  });
   return next;
 }
 function srsScheduledCount(){
@@ -1395,12 +1401,122 @@ function revealAfterAnswer(containerId){
     try{ alvo.scrollIntoView({block:'nearest',behavior:reduz?'auto':'smooth'}); }catch(e){}
   });
 }
+/* =====================================================================
+   TERMINOLOGIA — baralho de termos técnicos do GLOSSÁRIO
+
+   Um segundo cronograma, à parte do de tópico × dimensão: cobra o termo a
+   partir da sua definição, em múltipla escolha, sobre o GLOSSÁRIO inteiro.
+   A mecânica de Leitner é a mesma do cronograma de tópicos (SRS_INTERVALS,
+   jitter, promove quando venceu e acertou, rebaixa uma caixa limitada por
+   SRS_LAPSE_CAP quando errou), mas o registro é PLANO e indexado pelo termo:
+
+     state.termSrs['potencial de ação'] = { box, due, last, reps, lapses }
+
+   Como a chave é o próprio termo, o baralho cresce sozinho quando o glossário
+   crescer — não amarra ao tópico estudado, de propósito. Entram no máximo
+   TERM_INTRO_PER_SESSION termos novos por sessão, para o glossário inteiro não
+   despejar de uma vez; SESSION_CAP continua sendo a válvula do dia.
+   ===================================================================== */
+function glossaryTermList(){
+  return (typeof GLOSSARY==='object' && GLOSSARY) ? Object.keys(GLOSSARY) : [];
+}
+function termScheduleRec(term){
+  const r = state.termSrs && state.termSrs[term];
+  return (r && typeof r==='object' && !Array.isArray(r)) ? r : null;
+}
+function termSeededCount(){ return Object.keys(state.termSrs||{}).length; }
+
+function scheduleTerm(term, score){
+  if(!GLOSSARY[term]) return;                          // termo saiu do glossário: não agenda
+  if(typeof score === 'boolean') score = score?1:0;
+  score = Math.max(0, Math.min(1, Number(score)||0));
+  if(!state.termSrs || typeof state.termSrs!=='object') state.termSrs = {};
+  let d = termScheduleRec(term);
+  const isNew = !d;
+  if(isNew) d = state.termSrs[term] = { box:0, due:0, last:0, reps:0, lapses:0 };
+  const passed = score >= SRS_PASS;
+  const wasDue = Date.now() >= (d.due||0);
+  d.reps = (d.reps||0)+1;
+  d.last = Date.now();
+  if(!passed){
+    if((d.box||0) > 0) d.lapses = (d.lapses||0)+1;
+    d.box = Math.max(0, Math.min((d.box||0)-1, SRS_LAPSE_CAP));
+    d.due = startOfDay(Date.now()) + srsJitteredDays(SRS_INTERVALS[d.box])*DAY;
+  } else if(isNew){
+    // primeira volta do termo recém-visto: sempre amanhã (mesma regra do seedTopic)
+    d.box = 0;
+    d.due = startOfDay(Date.now()) + SRS_INTERVALS[0]*DAY;
+  } else if(wasDue){
+    // treinar antes da hora não avança, igual ao cronograma de tópico
+    d.box = Math.min((d.box||0)+1, SRS_INTERVALS.length-1);
+    d.due = startOfDay(Date.now()) + srsJitteredDays(SRS_INTERVALS[d.box])*DAY;
+  }
+}
+
+function dueTerms(){
+  const today = startOfDay(Date.now());
+  const seen = (state.termSrs && typeof state.termSrs==='object') ? state.termSrs : {};
+  const list = [];
+  // 1) termos já no baralho e vencidos
+  Object.keys(seen).forEach(term=>{
+    if(!GLOSSARY[term]) return;                         // termo saiu do glossário
+    const d = seen[term];
+    if(!d || typeof d!=='object' || Array.isArray(d)) return;
+    if((d.due||0) <= today) list.push({ kind:'term', term, box:d.box||0, due:d.due||0,
+                                        overdue: Math.max(0, Math.round((today-(d.due||0))/DAY)) });
+  });
+  list.sort((a,b)=> (a.due-b.due) || (a.box-b.box));
+  // 2) até TERM_INTRO_PER_SESSION termos novos, na ordem do glossário
+  let novos = 0;
+  const lista = glossaryTermList();
+  for(let i=0; i<lista.length && novos<TERM_INTRO_PER_SESSION; i++){
+    const term = lista[i];
+    if(seen[term]) continue;
+    list.push({ kind:'term', term, box:0, due:today, overdue:0, novo:true });
+    novos++;
+  }
+  return list;
+}
+
+/* Distratores plausíveis: prefere termos do MESMO módulo (via TERM_FIG 'mod:xxx')
+   e completa com aleatórios de fora quando faltar. Sem isso, uma definição de
+   anatomia poderia vir ao lado de termos de metacognição, e a escolha viraria
+   de graça. */
+function termModuleOf(term){
+  const v = (typeof TERM_FIG!=='undefined') ? TERM_FIG[term] : null;
+  return (typeof v==='string' && v.indexOf('mod:')===0) ? v.slice(4) : null;
+}
+function termDistractors(term, n){
+  const todos = glossaryTermList().filter(t=>t!==term);
+  const meu = termModuleOf(term);
+  const pick = [];
+  const puxar = (arr)=>{
+    arr = arr.slice();
+    for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=arr[i]; arr[i]=arr[j]; arr[j]=t; }
+    for(const c of arr){ if(pick.length>=n) break; if(!pick.includes(c)) pick.push(c); }
+  };
+  if(meu) puxar(todos.filter(t=>termModuleOf(t)===meu));
+  if(pick.length<n) puxar(todos.filter(t=>!pick.includes(t)));
+  return pick.slice(0,n);
+}
+
+/* Intercala tópicos e termos para que nenhum dos dois cronogramas seja
+   soterrado pelo outro. Tópicos entram primeiro em cada par, então o primeiro
+   item da fila é sempre um tópico quando houver algum vencido. */
+function interleaveReviewQueue(topics, terms){
+  const out=[]; let i=0, j=0;
+  while(i<topics.length || j<terms.length){
+    if(i<topics.length) out.push(topics[i++]);
+    if(j<terms.length) out.push(terms[j++]);
+  }
+  return out;
+}
+
 /* ---- sessão de revisão ---- */
 let review = { queue:[], ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] };
 function startReview(){
-  const due = dueTopics();
-  if(!due.length){ renderDashboard(); return; }
-  const queue = due.slice(0, SESSION_CAP);
+  const queue = interleaveReviewQueue(dueTopics(), dueTerms()).slice(0, SESSION_CAP);
+  if(!queue.length){ renderDashboard(); return; }
   review = { queue, ti:0, qi:0, topicQs:[], topicCorrect:0, answered:false, opts:[], results:[] };
   go('review');
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1408,6 +1524,7 @@ function startReview(){
 }
 function loadReviewTopic(){
   const t = review.queue[review.ti];
+  if(t.kind === 'term'){ loadReviewTerm(); return; }
   const m = MODULES[t.mi];
   const todas = (MINI_QUIZZES[m.id] && MINI_QUIZZES[m.id][t.li]) || [];
   review.loc = null;
@@ -1457,11 +1574,14 @@ function advanceReviewTopic(){
   else finishReview();
 }
 function renderReviewHead(){
-  const t = review.queue[review.ti]; const m = MODULES[t.mi];
-  document.documentElement.style.setProperty('--mc', m.color);
+  const t = review.queue[review.ti];
+  const isTerm = t.kind === 'term';
+  const cor = isTerm ? 'var(--cyan)' : ((MODULES[t.mi] && MODULES[t.mi].color) || 'var(--cyan)');
+  const label = isTerm ? 'Terminologia' : dimMeta(t.dim).label;
+  document.documentElement.style.setProperty('--mc', cor);
   const frac = review.ti / review.queue.length;
   document.getElementById('rv-head').innerHTML = `
-    <div class="rv-kick">Revisão espaçada · ${review.ti+1} de ${review.queue.length} · ${dimMeta(t.dim).label}</div>
+    <div class="rv-kick">Revisão espaçada · ${review.ti+1} de ${review.queue.length} · ${label}</div>
     <div class="rv-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(frac*100)}" aria-label="Progresso da revisão"><i style="width:${frac*100}%"></i></div>`;
 }
 function renderReviewQuestion(){
@@ -1510,6 +1630,61 @@ function answerReview(k){
   fb.innerHTML = `<div class="mq-verd" style="color:${right?'var(--good)':'var(--bad)'}">${right?'✓ Lembrou':'✕ Escapou'}${right?' · +'+XP.review+' XP':''}</div><p>${right?q.er:q.ew}</p>
     <div class="fbnav"><button class="bigbtn" onclick="nextReview()">${!last?'Próxima':(lastTopic?'Concluir revisão':'Próximo tópico')}</button></div>`;
   if(typeof linkGlossaryTerms === 'function') linkGlossaryTerms(fb);
+  if(right) awardXP(XP.review, {currentTarget:fb}); else saveState();
+  revealAfterAnswer('rv-fb');
+}
+/* =====================================================================
+   ITEM DE TERMINOLOGIA NA REVISÃO — definição → termo
+
+   Mostra a definição do glossário e pede o termo, em múltipla escolha. É
+   recuperação ativa do vocabulário técnico: a resposta é o próprio termo,
+   não uma paráfrase. Não alimenta dimensão nem topicMastery — o resultado
+   move só a caixa do baralho de termos (scheduleTerm), em nextReview.
+   ===================================================================== */
+function loadReviewTerm(){
+  const t = review.queue[review.ti];
+  review.loc = null;
+  review.topicQs = []; review.qi = 0; review.topicCorrect = 0;
+  review.termResult = null;
+  const distr = termDistractors(t.term, 3);
+  // a correta entra no índice 0 e shuffleOptions embaralha marcando .correct
+  review.termOpts = shuffleOptions([t.term].concat(distr), 0);
+  review.answered = false;
+  renderReviewHead();
+  renderReviewTerm();
+}
+function renderReviewTerm(){
+  const t = review.queue[review.ti];
+  const def = (typeof GLOSSARY!=='undefined' && GLOSSARY[t.term]) || '';
+  const letters=['A','B','C','D','E'];
+  document.getElementById('rv-body').innerHTML = `
+    <div class="miniquiz-card rv-card">
+      <div class="mq-k">Terminologia · qual termo é este?</div>
+      <p class="rv-termdef">${def}</p>
+      <div class="mq-options">
+        ${review.termOpts.map((op,k)=>`<button data-k="${k}" onclick="answerReviewTerm(${k})"><span class="mk">${letters[k]}</span><span>${escHtml(op.text)}</span></button>`).join('')}
+      </div>
+      <div class="mq-feedback" id="rv-fb" aria-live="polite"></div>
+    </div>`;
+  focusCardTop('#rv-body .rv-card');
+}
+function answerReviewTerm(k){
+  if(review.answered) return; review.answered=true;
+  const t = review.queue[review.ti];
+  const chosen = review.termOpts[k]; const right = !!(chosen && chosen.correct);
+  review.termResult = right;
+  document.querySelectorAll('#rv-body .mq-options button').forEach(btn=>{
+    const kk=+btn.dataset.k; btn.disabled=true;
+    if(review.termOpts[kk].correct) btn.classList.add('correct');
+    else if(kk===k) btn.classList.add('wrong');
+  });
+  state.attempts=(state.attempts||0)+1;
+  if(right){ state.correctTotal=(state.correctTotal||0)+1; } else { state.wrongTotal=(state.wrongTotal||0)+1; }
+  const last = review.ti+1 >= review.queue.length;
+  const fb = document.getElementById('rv-fb');
+  // a definição continua na tela (é o enunciado), então o feedback só nomeia o termo
+  fb.innerHTML = `<div class="mq-verd" style="color:${right?'var(--good)':'var(--bad)'}">${right?'✓ É <b>'+escHtml(t.term)+'</b> · +'+XP.review+' XP':'✕ Era <b>'+escHtml(t.term)+'</b>'}</div>
+    <div class="fbnav"><button class="bigbtn" onclick="nextReview()">${last?'Concluir revisão':'Próximo item'}</button></div>`;
   if(right) awardXP(XP.review, {currentTarget:fb}); else saveState();
   revealAfterAnswer('rv-fb');
 }
@@ -1563,6 +1738,17 @@ function answerReviewLocation(partId){
 }
 
 function nextReview(){
+  const cur = review.queue[review.ti];
+  if(cur && cur.kind === 'term'){
+    if(review.answered){
+      scheduleTerm(cur.term, review.termResult?1:0);
+      const d = termScheduleRec(cur.term) || {box:0};
+      review.results.push({ kind:'term', term:cur.term, passed:!!review.termResult, box:d.box||0 });
+    }
+    review.termOpts = null; review.termResult = null;
+    advanceReviewTopic();
+    return;
+  }
   if(review.loc){
     const t = review.queue[review.ti], L = review.loc;
     const agendadas = (typeof commitEvidenceBatch==='function') ? commitEvidenceBatch() : [];
@@ -1598,8 +1784,12 @@ function finishReview(){
   const days = nd? Math.max(0, Math.round((nd - startOfDay(Date.now()))/DAY)) : null;
   document.documentElement.style.setProperty('--mc','#22d3ee');
   document.getElementById('rv-head').innerHTML='';
-  const rows = review.results.map(r=>`
-    <div class="review-item">
+  const rows = review.results.map(r=> r.kind==='term'
+    ? `<div class="review-item">
+      <span style="display:flex;align-items:center;gap:9px;min-width:0"><span class="rdot" style="color:var(--cyan);background:var(--cyan)"></span><span style="min-width:0"><b>Terminologia</b><br><span class="rmeta">${escHtml(r.term)}</span></span></span>
+      <span class="rmeta">${r.passed? 'avançou · '+SRS_INTERVALS[r.box]+'d' : 'volta em '+SRS_INTERVALS[r.box]+'d'}</span>
+    </div>`
+    : `<div class="review-item">
       <span style="display:flex;align-items:center;gap:9px;min-width:0"><span class="rdot" style="color:${r.color};background:${r.color}"></span><span style="min-width:0"><b>Módulo ${r.mn}</b> · ${r.title}<br><span class="rmeta">${dimMeta(r.dim).label}</span></span></span>
       <span class="rmeta">${r.passed? 'avançou · '+SRS_INTERVALS[r.box]+'d' : 'volta em '+SRS_INTERVALS[r.box]+'d'}</span>
     </div>`).join('');
@@ -1618,9 +1808,13 @@ function finishReview(){
 function renderReview(){
   const el = document.getElementById('db-review');
   if(!el) return;
-  if(srsScheduledCount() === 0){ el.style.display='none'; return; }
+  const dueT = dueTopics();
+  const dueTerm = (typeof dueTerms==='function') ? dueTerms() : [];
+  // o baralho de termos cobre o glossário inteiro, então o cartão aparece mesmo
+  // para quem ainda não estudou nada: dá para começar a consolidar vocabulário.
+  if(srsScheduledCount() === 0 && termSeededCount() === 0 && dueTerm.length === 0){ el.style.display='none'; return; }
   el.style.display='block';
-  const due = dueTopics();
+  const due = interleaveReviewQueue(dueT, dueTerm);
   if(due.length === 0){
     const nd = nextDueDate();
     const days = nd? Math.max(0, Math.round((nd - startOfDay(Date.now()))/DAY)) : null;
@@ -1631,8 +1825,14 @@ function renderReview(){
   const sessionCount = Math.min(due.length, SESSION_CAP);
   const overflow = Math.max(0, due.length - SESSION_CAP);
   const previewCount = Math.min(sessionCount, 5);
-  const items = due.slice(0, previewCount).map(d=>`
-    <div class="review-item">
+  const items = due.slice(0, previewCount).map(d=> d.kind==='term'
+    ? `<div class="review-item">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <span class="rdot" style="color:var(--cyan);background:var(--cyan)"></span>
+        <span style="min-width:0"><b>Terminologia</b> — <b>termo técnico</b><br><span class="rmeta">${d.novo? 'termo novo' : (d.overdue>0? 'atrasado '+d.overdue+' dia'+(d.overdue!==1?'s':'') : 'vence hoje')}${d.novo?'':' · intervalo atual '+SRS_INTERVALS[d.box]+'d'}</span></span>
+      </div>
+    </div>`
+    : `<div class="review-item">
       <div style="display:flex;align-items:center;gap:10px;min-width:0">
         <span class="rdot" style="color:${d.color};background:${d.color}"></span>
         <span style="min-width:0"><b>Módulo ${d.mn}</b> · ${d.title} — <b>${dimMeta(d.dim).label}</b><br><span class="rmeta">${d.overdue>0? 'atrasado '+d.overdue+' dia'+(d.overdue!==1?'s':'') : 'vence hoje'} · intervalo atual ${SRS_INTERVALS[d.box]}d</span><span class="rwhy">${typeof reviewReasonText==='function'?reviewReasonText(d):''}</span></span>

@@ -24,6 +24,15 @@ regex sobre o fonte.
 > derivação, *Explicação causal* cobre 87 dos 88 tópicos (só `sensorial-2` fica
 > sem caixa), o total de caixas é 344, e `test-srs` fica em 119 verificações.
 
+> **Atualização 2026-08-25 — revisão de terminologia.** A revisão ganhou um
+> quinto tipo de item, **Terminologia**: definição → termo em múltipla escolha,
+> sobre o `GLOSSARY` inteiro (253 termos), num cronograma próprio e plano
+> (`state.termSrs[termo]`), à parte do de tópico × dimensão descrito abaixo. Usa
+> a mesma mecânica de Leitner, com rampa de `TERM_INTRO_PER_SESSION` termos novos
+> por sessão; a sessão de revisão intercala tópico e termo. Não alimenta
+> `dimensionEvidence` nem `topicMastery`. `test-srs` sobe para 138 verificações.
+> Ver `docs/CHANGELOG_TERMINOLOGIA_2026-08-25.md`.
+
 ---
 
 ## 1. Onde tudo mora
