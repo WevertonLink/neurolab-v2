@@ -7593,6 +7593,60 @@ Object.assign(TERM_FIG, {
   'dispositivo de compromisso':'mod:decisao'
 });
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 1 — vocabulário técnico dos módulos novos
+
+   Verbetes do glossário para memoria, ritmos, esforco, ilusoes, saber e
+   palpite, que antes não tinham termos ancorados a si. Alimentam a revisão
+   de Terminologia (definição -> termo) e o painel de mecanismo. Definições
+   curtas, no padrão do glossário, com cuidado nos pontos contestados.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  // memória: os sistemas
+  'memória procedural':'Memória de habilidades e hábitos — como andar de bicicleta — que se expressa no desempenho sem precisar ser verbalizada e depende de circuitos como os gânglios da base.',
+  'sistema declarativo':'O conjunto de memória de fatos e episódios que depende do hipocampo na formação e cujo conteúdo pode ser evocado e relatado.',
+  'engrama':'O conjunto físico de mudanças que guarda uma memória específica: as células e sinapses recrutadas quando ela se formou e reativadas quando ela é lembrada.',
+  'consolidação':'O processo pelo qual uma memória recém-formada, ainda instável, é estabilizada ao longo de horas a anos e fica mais resistente à interferência.',
+  // ritmos e oscilações
+  'oscilação':'Flutuação rítmica e coordenada da atividade elétrica de populações de neurônios, organizada em faixas de frequência e medida por exemplo no EEG.',
+  'ritmo theta':'Oscilação lenta, em torno de 4 a 8 Hz, proeminente no hipocampo, que organiza no tempo a atividade ligada à navegação e à memória.',
+  'ritmo gama':'Oscilação rápida, em torno de 30 a 100 Hz, associada ao processamento local e à sincronização de grupos de neurônios que representam um mesmo item.',
+  'acoplamento theta-gama':'Relação em que a fase do ritmo theta organiza a ocorrência dos surtos de gama, encaixando um ritmo rápido dentro de um lento.',
+  'sincronia neural':'Disparo coordenado no tempo entre neurônios ou regiões, que aumenta o efeito somado dos sinais sobre o alvo.',
+  'coerência':'Medida de quanto duas regiões mantêm uma relação de fase estável ao oscilar, usada como índice de comunicação funcional entre elas.',
+  'fuso do sono':'Surto breve de oscilação rápida do sono NREM, gerado pelo tálamo, associado à proteção do sono e à consolidação de memória.',
+  'ripple':'Oscilação muito rápida e breve do hipocampo (sharp-wave ripple) durante repouso e sono, quando sequências da experiência tendem a ser reproduzidas.',
+  'excitação-inibição':'O equilíbrio dinâmico entre neurônios que excitam e que inibem; a alternância dos dois no tempo é o que produz muitos ritmos corticais.',
+  // o esforço que gruda
+  'efeito de teste':'O ganho de retenção duradoura que vem de tentar recuperar a informação, maior do que o de reencontrá-la relendo.',
+  'prática espaçada':'Distribuir os estudos no tempo, com intervalos, em vez de concentrá-los — o que produz memória mais durável que a mesma prática amontoada.',
+  'intercalação':'Alternar entre tipos de problema ou tópico durante o estudo; dificulta na hora e melhora a discriminação e a transferência depois.',
+  'efeito de geração':'Lembrar melhor aquilo que a própria pessoa produziu do que aquilo que apenas leu pronto.',
+  'feedback':'A informação de retorno sobre acerto ou erro que permite corrigir o traço; sem ela, a repetição pode consolidar o erro.',
+  'curva de esquecimento':'A queda da retenção ao longo do tempo desde o aprendizado; recuperar perto do ponto de esquecer é o que mais fortalece a memória.',
+  // as ilusões do estudo
+  'fluência de processamento':'A facilidade subjetiva com que uma informação é lida ou processada; costuma ser tomada como sinal de conhecimento mesmo quando não é.',
+  'ilusão de competência':'A sensação de domínio produzida por material fácil de reconhecer, que não acompanha a capacidade de produzir a resposta sem apoio.',
+  'julgamento de aprendizagem':'A previsão que a pessoa faz sobre o quanto vai lembrar depois; costuma se apoiar na fluência do momento e por isso engana.',
+  'desfluência':'Dificuldade deliberada de processamento, como uma fonte mais difícil de ler; o efeito na retenção é pequeno e inconstante, mas ela expõe a fluência como sinal falso.',
+  'massificação':'Concentrar a prática num único bloco; produz desempenho alto na hora e retenção pior do que a prática espaçada.',
+  // a máquina de saber o que se sabe
+  'metacognição':'O monitoramento e o controle da própria cognição: saber o que se sabe, avaliar o quanto se aprendeu e decidir onde investir esforço.',
+  'julgamento de confiança':'A avaliação, feita depois de responder, de quão provável é que a resposta esteja certa; sua qualidade depende da calibração.',
+  // quando confiar no palpite
+  'intuição':'Uma resposta que chega pronta à consciência, sem os passos que a produziram; é reconhecimento de padrão, confiável só quando o ambiente é regular.',
+  'heurística':'Um atalho de julgamento que costuma acertar de forma rápida e barata, mas que produz erros sistemáticos em certas situações.',
+  'expertise':'Domínio construído por muita prática com retorno num domínio regular, que permite reconhecer padrões que o iniciante não vê.'
+});
+Object.assign(TERM_FIG, {
+  'memória procedural':'mod:memoria', 'sistema declarativo':'mod:memoria', 'engrama':'mod:memoria', 'consolidação':'mod:memoria',
+  'oscilação':'mod:ritmos', 'ritmo theta':'mod:ritmos', 'ritmo gama':'mod:ritmos', 'acoplamento theta-gama':'mod:ritmos', 'sincronia neural':'mod:ritmos', 'coerência':'mod:ritmos', 'fuso do sono':'mod:ritmos', 'ripple':'mod:ritmos', 'excitação-inibição':'mod:ritmos',
+  'efeito de teste':'mod:esforco', 'prática espaçada':'mod:esforco', 'intercalação':'mod:esforco', 'efeito de geração':'mod:esforco', 'feedback':'mod:esforco', 'curva de esquecimento':'mod:esforco',
+  'fluência de processamento':'mod:ilusoes', 'ilusão de competência':'mod:ilusoes', 'julgamento de aprendizagem':'mod:ilusoes', 'desfluência':'mod:ilusoes', 'massificação':'mod:ilusoes',
+  'metacognição':'mod:saber', 'julgamento de confiança':'mod:saber',
+  'intuição':'mod:palpite', 'heurística':'mod:palpite', 'expertise':'mod:palpite'
+});
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
