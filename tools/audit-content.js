@@ -77,8 +77,8 @@ if (!errors.length) {
   const caseBlock = domain.match(/const DOMAIN_CASES = \[(.*?)\];\n\nconst DOMAIN_CONNECTIONS/s);
   const connectionBlock = domain.match(/const DOMAIN_CONNECTIONS = \[(.*?)\];\n\nconst DOMAIN_TRAILS/s);
   const trailBlock = domain.match(/const DOMAIN_TRAILS = \[(.*?)\];\n\nconst DOMAIN_SESSION/s);
-  ok(counterBlock && (counterBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 16,
-    'o Modo Domínio deve manter 16 desafios contrafactuais');
+  ok(counterBlock && (counterBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 22,
+    'o Modo Domínio deve manter 22 desafios contrafactuais');
   ok(caseBlock && (caseBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 8,
     'o Modo Domínio deve manter 8 casos integrados');
   ok(connectionBlock && (connectionBlock[1].match(/\{a:'/g)||[]).length === 12,
@@ -140,10 +140,10 @@ if (!errors.length) {
       `${label}: cadeia deve conter 4 ou 5 elos`);
   });
 
-  ok(correctPositions.every((count) => count === 6),
-    `posições corretas devem ser balanceadas em 6/6/6/6; encontrado ${correctPositions.join('/')}`);
-  ok(domainCounters.length === 16 && new Set(domainCounters.map((item) => item.module)).size === 16,
-    'os contrafactuais devem cobrir os 16 módulos sem repetição de módulo');
+  ok(Math.max(...correctPositions) - Math.min(...correctPositions) <= 1,
+    `posições corretas devem ficar equilibradas (diferença máxima de 1 entre A/B/C/D); encontrado ${correctPositions.join('/')}`);
+  ok(domainCounters.length === 22 && new Set(domainCounters.map((item) => item.module)).size === 22,
+    'os contrafactuais devem cobrir os 22 módulos sem repetição de módulo');
   domainCases.forEach((item) => ok(Array.isArray(item.modules) && item.modules.length >= 3,
     `${item.id}: caso integrado deve exigir pelo menos 3 módulos`));
   const correctLongest = domainActivities.filter((item) => {

@@ -20,6 +20,198 @@ const DOMAIN_TABS = [
 
 const DOMAIN_COUNTERFACTUALS = [
   {
+    "id": "memoria-reconsolidacao",
+    "module": "memoria",
+    "lesson": 3,
+    "title": "Reabrir a gravação para poder apagá-la",
+    "prompt": "Uma memória antiga e estável é evocada e, logo em seguida, a pessoa recebe algo que bloqueia a síntese de novas proteínas. Qual sequência descreve melhor o efeito?",
+    "options": [
+      "A evocação reabre o traço a um estado instável; sem novas proteínas para reestabilizá-lo, a memória evocada enfraquece, enquanto as não evocadas seguem intactas.",
+      "Nada muda na memória evocada, porque uma memória já consolidada é permanente e nunca mais volta a depender de síntese de proteínas em qualquer situação posterior.",
+      "Todas as memórias da pessoa enfraquecem juntas, já que o bloqueio das proteínas apaga o armazenamento de longo prazo de forma global, não só o traço reaberto.",
+      "A memória evocada fica mais forte, porque impedir a síntese de proteínas trava o esquecimento e fixa justamente o conteúdo que estava ativo no momento da evocação."
+    ],
+    "correct": 0,
+    "optionFeedback": [
+      "Separa reconsolidação de consolidação: evocar devolve o traço a um estado lábil que precisa de novas proteínas para voltar a ser estável.",
+      "Trata a memória consolidada como imutável; a evocação pode reabri-la, e é aí que a síntese de proteínas volta a ser necessária.",
+      "Confunde efeito específico com global: o bloqueio atinge o traço reaberto pela evocação, não todo o armazenamento de uma vez.",
+      "Inverte o papel da síntese: sem novas proteínas o traço reaberto não se reestabiliza, então o bloqueio enfraquece em vez de fortalecer."
+    ],
+    "explanation": "Evocar uma memória não é só lê-la. Em certas condições ela volta a um estado instável e precisa ser regravada para persistir — a reconsolidação —, e essa regravação depende de síntese de novas proteínas. Bloquear as proteínas logo após a evocação impede a reestabilização, e o traço reaberto enfraquece. Uma memória que não foi evocada não passou por essa janela e não é afetada: o alvo é específico, não global.",
+    "chain": [
+      "memória estável é evocada",
+      "a evocação reabre o traço a um estado lábil",
+      "reestabilizar exige síntese de novas proteínas",
+      "o bloqueio impede a reestabilização",
+      "o traço evocado enfraquece"
+    ],
+    "extend": {
+      "q": "E se a mesma substância fosse dada sem evocar a memória antes?",
+      "a": "Aí a memória não é afetada: sem a evocação não há janela de reconsolidação para o bloqueio atingir. É a evocação que reabre o traço."
+    }
+  },
+  {
+    "id": "ritmos-fase",
+    "module": "ritmos",
+    "lesson": 2,
+    "title": "A mesma frequência, mas fora de fase",
+    "prompt": "Dois grupos de neurônios oscilam exatamente na mesma frequência, porém em fases opostas: quando um está mais excitável, o outro está menos. Como isso afeta a comunicação entre eles?",
+    "options": [
+      "A comunicação é máxima, porque compartilhar a mesma frequência já garante que os sinais de um cheguem sempre no melhor momento de excitabilidade do outro grupo.",
+      "A comunicação fica prejudicada: os sinais de um chegam quando o outro está menos excitável, então a mesma frequência não basta — a relação de fase é que decide.",
+      "A frequência de um dos grupos muda sozinha para corrigir a diferença, de modo que a comunicação nunca depende do momento exato em que o sinal chega ao alvo.",
+      "A comunicação some e os dois ritmos param juntos, porque oscilar em fases opostas cancela a atividade elétrica das duas populações no mesmo instante e as silencia."
+    ],
+    "correct": 1,
+    "optionFeedback": [
+      "Confunde frequência com fase: dividir a frequência não garante nada se os picos de excitabilidade não coincidirem no tempo.",
+      "Acerta o ponto: a janela de excitabilidade do alvo precisa coincidir com a chegada do sinal, e em antifase ela não coincide.",
+      "Inventa uma correção automática de fase que não existe; a fase relativa pode se manter oposta e prejudicar a troca.",
+      "Exagera para o cancelamento total: estar em antifase desencontra as janelas, mas não faz os osciladores pararem."
+    ],
+    "explanation": "Comunicar por oscilação não é só bater na mesma frequência: é chegar na hora certa. Cada grupo tem janelas rítmicas em que fica mais excitável, e um sinal rende mais quando chega dentro da janela do alvo. Se dois grupos oscilam na mesma frequência mas em fases opostas, os picos de um caem nos vales do outro: o sinal chega quando o alvo está menos responsivo. Por isso a fase relativa, e não só a frequência, decide se sincronizar vira comunicar.",
+    "chain": [
+      "dois grupos oscilam na mesma frequência",
+      "cada grupo tem janelas rítmicas de excitabilidade",
+      "em antifase, o pico de um cai no vale do outro",
+      "o sinal chega fora da janela do alvo",
+      "a comunicação efetiva cai"
+    ],
+    "extend": {
+      "q": "E se os dois passassem a oscilar em fase, com os picos alinhados?",
+      "a": "Aí a comunicação melhora: o sinal de um chega quando o outro está mais excitável. Mesma frequência, fase alinhada — a janela abre no momento certo."
+    }
+  },
+  {
+    "id": "esforco-recuperacao",
+    "module": "esforco",
+    "lesson": 0,
+    "title": "Reler quatro vezes ou recuperar três",
+    "prompt": "Com o mesmo tempo, um aluno relê o capítulo quatro vezes; outro lê uma vez e depois tenta recuperar de memória três vezes. Uma semana depois, o que se espera na prova?",
+    "options": [
+      "O que recuperou lembra mais: puxar da memória, mesmo com erros, modifica o traço, enquanto reler eleva a fluência do momento sem o mesmo efeito duradouro.",
+      "O que releu quatro vezes lembra mais, porque a exposição repetida ao texto é o que consolida a memória, e recuperar sem o material à frente apenas cansa o aluno.",
+      "Os dois lembram praticamente o mesmo, já que o tempo total de estudo foi idêntico, e é a quantidade de horas, não o tipo de prática, que fixa a retenção final.",
+      "O que releu sente menos confiança na prova, mas acerta mais questões, porque a fluência alta se converte de forma direta em desempenho melhor na hora de recuperar."
+    ],
+    "correct": 0,
+    "optionFeedback": [
+      "Nomeia o mecanismo: a recuperação bem-sucedida modifica o traço, enquanto reler dá familiaridade sem a mesma durabilidade.",
+      "Toma exposição por aprendizado; releitura reconhece o texto, mas não treina produzir sem ele, que é o que a prova cobra.",
+      "Iguala pela conta do tempo e ignora que o tipo de prática, não só as horas, decide o quanto permanece.",
+      "Confunde fluência com domínio: sentir-se fluente ao reler não prevê o desempenho de recuperar depois."
+    ],
+    "explanation": "Reler e recuperar não fazem a mesma coisa com a memória. A releitura mantém o texto à vista e sobe a fluência — a sensação de que já se sabe — sem exigir que a resposta seja produzida sem apoio. Tentar recuperar de memória, ainda que com erros, é justamente o ato de produzir sem a fonte, e é ele que modifica o traço e o torna mais recuperável depois. Com o mesmo tempo, três recuperações batem quatro releituras no prazo de uma semana.",
+    "chain": [
+      "mesmo tempo de estudo nos dois casos",
+      "reler mantém o texto à vista e sobe a fluência",
+      "recuperar produz a resposta sem apoio",
+      "produzir sem apoio modifica o traço",
+      "a retenção uma semana depois é maior no que recuperou"
+    ],
+    "extend": {
+      "q": "E se, depois de cada tentativa de recuperar, o aluno conferisse a resposta no texto?",
+      "a": "Melhora ainda mais: a recuperação modifica o traço e o retorno corrige o que saiu errado. Sem conferir, um erro recuperado pode ser treinado como se fosse certo."
+    }
+  },
+  {
+    "id": "ilusoes-fluencia",
+    "module": "ilusoes",
+    "lesson": 0,
+    "title": "Fácil de ler, fácil de achar que aprendeu",
+    "prompt": "Um material é reformatado para ficar mais fácil e agradável de ler, e os alunos passam a se dizer mais confiantes de que aprenderam. O que essa fluência maior garante sobre a retenção real?",
+    "options": [
+      "Garante retenção maior: a leitura fácil reduz o esforço, e com menos esforço o conteúdo acaba codificado de forma mais profunda e mais duradoura na memória.",
+      "Não garante nada: a fluência é a facilidade do momento e serve de sinal para o julgamento de aprendizado, mas se descola do quanto de fato vai ficar retido depois.",
+      "Garante retenção menor, porque todo material fácil de ler produz memória fraca, e dificultar a leitura sempre melhora a lembrança quando a prova finalmente chega.",
+      "Garante confiança e retenção ao mesmo tempo, já que a sensação de estar aprendendo e a quantidade aprendida são a mesma medida vista de dois ângulos diferentes."
+    ],
+    "correct": 1,
+    "optionFeedback": [
+      "Troca facilidade por profundidade: ler sem esforço não implica codificar melhor, e a fluência não é prova de retenção.",
+      "Acerta a distinção: a fluência informa o julgamento de aprendizado, mas não mede o que permanecerá na memória.",
+      "Supergeneraliza o oposto: dificultar às vezes ajuda, mas nem sempre, e nem todo material fácil produz memória fraca.",
+      "Funde sensação com quantidade: sentir que aprendeu e ter aprendido são medidas diferentes, e é isso que a ilusão explora."
+    ],
+    "explanation": "A fluência é o quanto algo parece fácil de ler ou processar agora. O cérebro a usa como atalho para julgar o próprio aprendizado — se lê liso, sente que sabe. O problema é que a fluência do momento e a retenção futura se descolam: um texto polido pode dar alta sensação de domínio sem que mais conteúdo fique guardado. Por isso a fluência maior não garante retenção maior; ela é um sinal, e um sinal que engana com frequência.",
+    "chain": [
+      "o material fica mais fácil de ler",
+      "a fluência do momento aumenta",
+      "a fluência vira sinal para o julgamento de aprendizado",
+      "esse sinal se descola da retenção real",
+      "a confiança sobe sem garantia de que ficou retido"
+    ],
+    "extend": {
+      "q": "Então dificultar a leitura sempre faz aprender mais?",
+      "a": "Não — esse é o exagero oposto. Dificultar pode ajudar em certas condições, mas o efeito é pequeno e inconstante. A lição segura é outra: a fluência não é medida de aprendizado."
+    }
+  },
+  {
+    "id": "saber-ponta-lingua",
+    "module": "saber",
+    "lesson": 1,
+    "title": "Ter o sentido sem a palavra",
+    "prompt": "Numa ponta da língua, a pessoa não consegue dizer a palavra, mas afirma saber o significado dela e até quantas sílabas ela tem. O que esse estado revela sobre a memória?",
+    "options": [
+      "Revela que a palavra foi esquecida por completo, e o que resta é só um palpite: se houvesse memória de verdade, a palavra sairia inteira ou não sairia coisa alguma.",
+      "Revela uma falha de atenção momentânea, não de memória; com foco suficiente a palavra apareceria na hora, porque o sentido e a forma são sempre recuperados juntos.",
+      "Revela que sentido e forma sonora são acessados por vias em parte separadas: ter um sem o outro só é possível se eles não vierem como um bloco único e indivisível.",
+      "Revela que a memória guarda somente o significado das palavras, e que a forma sonora de cada uma é recalculada do zero toda vez que a pessoa tenta finalmente falar."
+    ],
+    "correct": 2,
+    "optionFeedback": [
+      "Trata a memória como tudo ou nada; a ponta da língua mostra exatamente um meio-termo estável, com sentido presente e forma ausente.",
+      "Reduz a atenção o que é dissociação de vias: ter o sentido sem a forma não é distração, é acesso parcial.",
+      "Acerta a leitura: sentido e forma sonora têm vias em parte separadas, e é isso que permite um sem o outro.",
+      "Exagera para o recálculo do zero; a forma existe guardada, só não está acessível naquele instante."
+    ],
+    "explanation": "Na ponta da língua a pessoa tem o significado, sente que a palavra existe e às vezes acessa pedaços da forma — a primeira letra, o número de sílabas — sem conseguir produzir a palavra inteira. Isso só é possível porque sentido e forma sonora não são um bloco único: são acessados por vias em parte separadas. Se viessem sempre juntos, ou tudo apareceria ou nada apareceria. O estado intermediário é a prova da dissociação.",
+    "chain": [
+      "a pessoa tem o significado da palavra",
+      "acessa pedaços da forma, como o número de sílabas",
+      "não consegue produzir a palavra inteira",
+      "sentido e forma têm vias em parte separadas",
+      "o acesso parcial revela a dissociação"
+    ],
+    "extend": {
+      "q": "E se uma pista com o primeiro som fosse dada?",
+      "a": "Muitas vezes a palavra destrava: a pista alcança a via da forma, que estava acessível só em parte. É mais evidência de que sentido e forma são recuperados por caminhos distintos."
+    }
+  },
+  {
+    "id": "palpite-validade",
+    "module": "palpite",
+    "lesson": 1,
+    "title": "Dois especialistas, dois ambientes",
+    "prompt": "Dois especialistas com anos de prática: um em xadrez, outro em previsão de ações de longo prazo. Sobre a intuição de cada um, o que a pesquisa leva a esperar?",
+    "options": [
+      "A dos dois é igualmente confiável, porque anos de prática deliberada produzem intuição válida em qualquer domínio, sem depender de como o ambiente se comporta ao redor.",
+      "A do previsor de ações é melhor, já que quanto mais imprevisível o ambiente, mais a longa experiência acumulada se converte em vantagem real sobre quem não a tem.",
+      "Nenhuma das duas é confiável: intuição é sempre um viés disfarçado, e a sensação de saber do especialista não se distingue em nada da de um iniciante confiante.",
+      "A do enxadrista tende a ser válida e a do previsor, não: intuição confiável exige ambiente regular e retorno claro — condições que o xadrez tem e a bolsa de longo prazo não."
+    ],
+    "correct": 3,
+    "optionFeedback": [
+      "Ignora a condição decisiva: prática só vira intuição válida onde o ambiente é regular o bastante para haver padrão a aprender.",
+      "Inverte a relação: ambiente mais imprevisível dá menos base para intuição válida, não mais, por mais experiência que se acumule.",
+      "Joga fora o caso válido: no xadrez, ambiente regular e retorno claro, a intuição do especialista acerta acima do acaso.",
+      "Reúne as duas condições: regularidade do ambiente e retorno claro separam a intuição válida do excesso de confiança."
+    ],
+    "explanation": "Intuição é reconhecimento de padrão: uma resposta que chega pronta porque a situação se parece com muitas já vistas. Ela é confiável só quando duas condições valem — o ambiente tem regularidade estável o bastante para haver padrão a aprender, e há retorno claro que corrige o aprendizado. O xadrez preenche as duas; a previsão de ações de longo prazo, não. Por isso a mesma quantidade de experiência gera intuição válida num caso e só confiança no outro.",
+    "chain": [
+      "intuição é reconhecimento de padrão",
+      "aprender padrão exige um ambiente regular",
+      "corrigir o aprendizado exige retorno claro",
+      "o xadrez tem as duas condições e a bolsa não",
+      "a mesma experiência gera intuição válida só onde as condições valem"
+    ],
+    "extend": {
+      "q": "E se o previsor tivesse retorno imediato e claro a cada aposta?",
+      "a": "Ainda faltaria a regularidade do ambiente: sem padrão estável para aprender, nem o melhor retorno constrói intuição válida. As duas condições precisam valer juntas."
+    }
+  },
+  {
     "id": "neuronio-bomba",
     "module": "neuronio",
     "lesson": 0,
