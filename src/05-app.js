@@ -69,7 +69,11 @@ const MODULES = [
       {q:'Qual é o papel do hipocampo na formação de memórias declarativas?',
        o:['Ele guarda permanentemente todas as memórias em um único local','Ele ajuda a ligar elementos da memória nova e participa de sua reorganização com redes corticais','Ele apenas controla o sono e não participa da memória declarativa','Ele produz a dopamina necessária para que a memória seja gravada'], c:1, l:3,
        er:'Isso. O hipocampo ajuda a <strong>ligar elementos distribuídos</strong> da experiência. Com reativações posteriores, sua relação com redes corticais se reorganiza — uma parte da consolidação sistêmica.',
-       ew:'O hipocampo não é um depósito único nem apenas uma ponte temporária. Ele participa da ligação inicial e da recuperação de memórias; com o tempo, hipocampo e redes corticais reorganizam suas contribuições.'}
+       ew:'O hipocampo não é um depósito único nem apenas uma ponte temporária. Ele participa da ligação inicial e da recuperação de memórias; com o tempo, hipocampo e redes corticais reorganizam suas contribuições.'},
+      {q:'Aprender fortalece sinapses (LTP). Qual processo faz o trabalho oposto — e igualmente necessário?',
+       o:['A LTD e a poda, que enfraquecem e eliminam os contatos pouco usados','A mielinização, que isola os axônios mais usados','A liberação de mais neurotransmissor em todas as sinapses ativas','A troca do glutamato pelo GABA nas sinapses mais antigas'], c:0, l:4,
+       er:'Isso. A <strong>LTD</strong> enfraquece e a <strong>poda</strong> elimina o que a atividade não confirma. Aprender é somar <strong>e</strong> remover.',
+       ew:'O oposto de fortalecer é <strong>enfraquecer e eliminar</strong> — LTD e poda sináptica. Mielinizar acelera o sinal, e as outras opções não descrevem o enfraquecimento seletivo das sinapses.'}
     ]
   },
   {
@@ -5719,6 +5723,9 @@ const TERM_NODE_EXTRA = {
   /* 02 plasticidade */
   'PKA':'plasticidade:pos',
   'CREB':'plasticidade:pos',
+  // A espinha dendrítica é a estrutura pós-sináptica onde a LTD retira AMPA e o
+  // contato encolhe: ancora "onde fica" no lado pós da sinapse (dá Localização à aula da poda).
+  'espinha dendrítica':'plasticidade:pos',
   /* 03 recompensa */
   'dopamina':'recompensa:vta',
   'estriado ventral':'recompensa:accumbens',
@@ -7705,6 +7712,57 @@ Object.assign(TERM_FIG, {
     'astrócito':{steps:[],kind:'context',note:'Participa do módulo, mas não é uma etapa da cadeia da mielina.'},
     'micróglia':{steps:[],kind:'context',note:'Participa do módulo, mas não é uma etapa da cadeia da mielina.'},
     'glia':{steps:[],kind:'context',note:'Conceito geral do tópico.'}
+  };
+})();
+
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — plasticidade ganha uma 5ª aula: a poda
+
+   O módulo conta bem o lado de FORTALECER (Hebb, LTP, Kandel, consolidação).
+   Esta aula desenvolve a outra metade — enfraquecer (LTD) e eliminar (poda),
+   com o mecanismo molecular da LTD (a dose de cálcio decide), a poda pela
+   micróglia e os períodos críticos. Mesmo padrão de append idempotente da
+   aula de glia: só entra se o módulo ainda tiver 4 aulas. Verbetes novos
+   ancorados a mod:plasticidade; LTD, micróglia e períodos críticos são
+   reusados dos módulos onde já moram.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'poda sináptica':'A eliminação física de sinapses pouco usadas: os contatos fracos são marcados e a micróglia os envolve e digere, esculpindo o circuito que a experiência confirmou. Aprender também é apagar.',
+  'espinha dendrítica':'Pequena protrusão do dendrito onde se instala a maioria das sinapses excitatórias; cresce e se estabiliza com a LTP e encolhe ou desaparece com a LTD e a poda.',
+  'metaplasticidade':'A plasticidade da própria plasticidade: a atividade recente de uma sinapse desloca o limiar que decide se o próximo estímulo vai fortalecê-la ou enfraquecê-la, o que impede que ela dispare rumo a um extremo.'
+});
+Object.assign(TERM_FIG, {
+  'poda sináptica':'mod:plasticidade', 'espinha dendrítica':'mod:plasticidade', 'metaplasticidade':'mod:plasticidade'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='plasticidade');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O cérebro que poda: enfraquecer e eliminar',
+    b:'<p>As aulas anteriores contaram a metade animadora: fortalecer. Mas um cérebro que só somasse conexões logo saturaria, guardando ruído com a mesma força que guarda o que importa. A outra metade do aprendizado é <b>enfraquecer e eliminar</b> — e ela é tão ativa e tão precisa quanto a primeira.</p>'
+     +'<p>O enfraquecimento tem nome: a <span class="term">LTD</span> (depressão de longo prazo), espelho da LTP. O detalhe elegante é que as duas nascem do <b>mesmo</b> sinal — o cálcio que entra pelo receptor NMDA. Muito cálcio, de golpe, ativa a CaMKII e <b>instala</b> receptores AMPA: a sinapse fortalece. Pouco cálcio, prolongado, ativa <b>fosfatases</b> que <b>retiram</b> AMPA: a sinapse enfraquece e a <span class="term">espinha dendrítica</span> encolhe. Mesmo íon, doses opostas, destinos opostos — e o limiar que separa os dois desliza com a história da sinapse (a <span class="term">metaplasticidade</span>).</p>'
+     +'<p>Enfraquecer o bastante leva a apagar. Na <span class="term">poda sináptica</span>, os contatos fracos são marcados por moléculas de sinalização e a <span class="term">micróglia</span> — a mesma célula imune da aula da glia — os envolve e os digere. O cérebro em desenvolvimento primeiro produz sinapses em excesso e depois <b>remove</b> as que a atividade não confirmou: a escultura vale mais que o volume.</p>'
+     +'<p>Essa escultura é mais intensa em janelas do desenvolvimento, os <span class="term">períodos críticos</span> — quando a experiência (enxergar, ouvir a língua) fixa circuitos com uma força que costuma não se repetir depois. Daí o "use ou perca" ser quase literal: o que não é reativado enfraquece e caminha para a poda. É também a razão de fundo da revisão espaçada — reativar o circuito antes que ele seja marcado para remoção.</p>'
+  });
+  MINI_QUIZZES.plasticidade[4] = [
+    {lvl:0, q:'O que é a LTD (depressão de longo prazo)?', o:['O enfraquecimento duradouro de uma sinapse pouco usada','A morte do neurônio inteiro por falta de estímulo','A troca de um neurotransmissor por outro na mesma sinapse'], c:0, er:'Isso: a LTD é o enfraquecimento duradouro de uma sinapse — o espelho da LTP, e parte do aprender.', ew:'A LTD não mata a célula nem troca transmissores: ela enfraquece de forma duradoura uma sinapse pouco usada.'},
+    {lvl:1, q:'Você domina uma habilidade e para de praticá-la por meses. O que tende a acontecer com os circuitos dela?', o:['As sinapses enfraquecem e entram na fila da poda','Ficam congeladas, intactas, esperando você voltar','Fortalecem sozinhas, porque já estavam consolidadas'], c:0, er:'Exato: sem reativação, as sinapses enfraquecem (LTD) e podem ser marcadas para poda. Não usar não é neutro.', ew:'O circuito não fica congelado nem se fortalece sozinho: sem uso, ele enfraquece e caminha para a poda. Por isso revisar importa.'},
+    {lvl:2, q:'Por que o mesmo cálcio que entra pelo NMDA ora fortalece, ora enfraquece a sinapse?', o:['Porque a quantidade e a duração do cálcio decidem: muito e rápido chama a CaMKII (mais AMPA); pouco e prolongado chama fosfatases (menos AMPA)','Porque o cálcio muda de carga elétrica conforme a hora do dia','Porque em umas sinapses entra cálcio e em outras é o sódio que faz esse papel'], c:0, er:'Isso: não é o íon, é a dose e o ritmo. Muito cálcio de golpe fortalece; pouco e sustentado enfraquece.', ew:'O cálcio não troca de carga nem é substituído pelo sódio: o que muda é a QUANTIDADE e a DURAÇÃO do sinal, que ativam enzimas opostas.'}
+  ];
+  DEEP.plasticidade[4] = '<p>Por décadas a <b>LTP</b> monopolizou a história do aprendizado, como se lembrar fosse só somar. A <b>LTD</b> mostrou o outro lado: a mesma sinapse tem um botão de <b>baixar o volume</b>, e usá-lo importa tanto quanto subir. O truque é que ambos saem do <b>mesmo</b> sinal — o cálcio via NMDA. Um pulso forte e breve ativa a CaMKII e instala AMPA; uma entrada fraca e sustentada ativa fosfatases (como a calcineurina) que retiram AMPA. Dose e ritmo, não o íon, decidem o destino.</p><p>Enfraquecer prepara o terreno para <b>eliminar</b>. Sinapses pouco ativas são marcadas por moléculas de sinalização — entre elas proteínas do sistema complemento — e a <b>micróglia</b> as envolve e digere. No desenvolvimento, o cérebro produz sinapses em excesso e depois poda: a experiência não constrói do zero, ela <b>escolhe</b> o que fica. Essa poda é mais intensa nos <b>períodos críticos</b> e vai se fechando à medida que a inibição amadurece e redes de sustentação se firmam ao redor dos circuitos.</p><p>O saldo prático é duro e útil: não reativar um circuito não o deixa parado — deixa-o vulnerável. A <b>metaplasticidade</b> ajusta o limiar para que nada dispare a um extremo, mas não impede o esquecimento por desuso. Revisar de forma espaçada é, no fim, um jeito de dizer à poda: este aqui ainda importa.</p>';
+  PREDICT.plasticidade[4] = {q:'O que você acha que acontece com uma sinapse que você deixa de usar por muito tempo?', o:['É preservada intacta, para o caso de você precisar','Enfraquece e pode ser eliminada na poda','Fortalece para compensar a falta de uso'], c:1, after:'Enfraquece — e, se o desuso persistir, pode ser marcada e eliminada na poda. O cérebro não guarda por precaução: ele libera espaço. É por isso que "saber e não revisar" custa, e por que a revisão espaçada reativa o circuito antes que ele entre nessa fila.'};
+  CHAIN.plasticidade[4] = {
+    s:['Glutamato chega ao NMDA de forma fraca e prolongada','Entra POUCO cálcio, mas de modo sustentado','Pouco cálcio ativa fosfatases (não a CaMKII)','As fosfatases retiram receptores AMPA da membrana','A resposta ao sinal cai e a espinha encolhe: LTD'],
+    h:2, hn:'A decisão está na DOSE de cálcio, não no íon. Muito e rápido chama a CaMKII e INSTALA AMPA (LTP); pouco e prolongado chama as fosfatases e RETIRA AMPA (LTD). O mesmo cálcio, lido de dois jeitos.',
+    w:'E se, em vez de fraco e prolongado, o cálcio entrasse muito e de golpe?',
+    wa:'Seria LTP: a CaMKII assumiria e instalaria mais AMPA, fortalecendo a sinapse. Dose e ritmo opostos, resultado oposto — com a mesmíssima molécula.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.plasticidade) BRIDGE.plasticidade[4] = 'A aula vira a chave do módulo: aprender não é só fortalecer, é também enfraquecer (LTD) e eliminar (poda). Aqui, como o mesmo cálcio decide os dois rumos e por que "use ou perca" é quase literal.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.plasticidade) CONTEXT_TOPIC_TERMS.plasticidade['4'] = {
+    'espinha dendrítica':{steps:[4],kind:'direct'},
+    'metaplasticidade':{steps:[],kind:'context',note:'Regula o limiar entre LTP e LTD, mas não é uma etapa desta cadeia.'},
+    'poda sináptica':{steps:[],kind:'context',note:'É o passo seguinte: eliminar o que a LTD enfraqueceu.'},
+    'micróglia':{steps:[],kind:'context',note:'Executa a poda; participa do módulo, não desta cadeia molecular.'}
   };
 })();
 
