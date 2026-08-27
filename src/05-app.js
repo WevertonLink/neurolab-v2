@@ -32,7 +32,11 @@ const MODULES = [
       {q:'Por que um único neuromodulador, como a dopamina, consegue afetar algo tão amplo quanto motivação e humor?',
        o:['Porque viaja bem mais rápido pelo axônio do que os demais sinais químicos','Porque modula circuitos inteiros de uma vez, não uma só sinapse','Porque é liberada em quantidade muito maior que o glutamato na fenda','Porque age diretamente no DNA de cada neurônio que ela alcança'], c:1, l:3,
        er:'Isso mesmo. Neuromoduladores ajustam o <strong>modo de operação de regiões inteiras</strong> — não entregam uma mensagem pontual. Daí o efeito amplo sobre estados mentais.',
-       ew:'A razão é o alcance: neuromoduladores <strong>ajustam circuitos inteiros</strong> ao mesmo tempo, em vez de transmitir uma mensagem ponto-a-ponto. Por isso um só ajuste químico muda humor, foco e motivação juntos.'}
+       ew:'A razão é o alcance: neuromoduladores <strong>ajustam circuitos inteiros</strong> ao mesmo tempo, em vez de transmitir uma mensagem ponto-a-ponto. Por isso um só ajuste químico muda humor, foco e motivação juntos.'},
+      {q:'A glia não dispara potenciais de ação. Mesmo assim, por que a mielina — produzida pelos oligodendrócitos — é decisiva para o sinal?',
+       o:['Porque assume o disparo do axônio quando ele falha','Porque isola o axônio e faz o impulso saltar entre os nós','Porque substitui os neurotransmissores liberados na fenda','Porque aumenta a amplitude de cada potencial de ação'], c:1, l:4,
+       er:'Isso. A <strong>mielina</strong> isola o axônio em segmentos, e o impulso é regenerado só nos nós entre eles, <strong>saltando</strong> de um ao outro — a condução saltatória, muito mais rápida. A glia não dispara, mas define a velocidade.',
+       ew:'A glia não dispara nem transmite. O que a <strong>mielina</strong> faz é <strong>isolar o axônio</strong> em segmentos, e o impulso salta de nó em nó (condução saltatória). Sem essa capa, o sinal percorre cada ponto e desacelera.'}
     ]
   },
   {
@@ -7646,6 +7650,63 @@ Object.assign(TERM_FIG, {
   'metacognição':'mod:saber', 'julgamento de confiança':'mod:saber',
   'intuição':'mod:palpite', 'heurística':'mod:palpite', 'expertise':'mod:palpite'
 });
+
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — neuronio ganha uma 5ª aula: a glia
+
+   Aula nova acrescentada pelo padrão de append do próprio app (as estruturas
+   já estão definidas acima e em 03-context). Idempotente: só entra se o
+   neuronio ainda tiver 4 aulas. Traz corpo, mini quiz (3 dimensões), DEEP,
+   PREDICT, CHAIN (5 elos), BRIDGE e as âncoras de contexto — além dos
+   verbetes de glia no glossário, ancorados a mod:neuronio.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'glia':'Conjunto das células do sistema nervoso que não são neurônios e não disparam; sustentam, isolam, defendem e regulam o ambiente em que os neurônios trabalham.',
+  'astrócito':'Célula glial em forma de estrela que cuida do ambiente da sinapse: recapta neurotransmissores, equilibra íons e acopla o fluxo sanguíneo à atividade neural.',
+  'oligodendrócito':'Célula glial do sistema nervoso central que produz mielina e envolve vários axônios, tornando a condução do sinal mais rápida.',
+  'micróglia':'Célula imune residente do sistema nervoso; vigia o tecido, responde a lesões e participa da poda de sinapses no desenvolvimento.',
+  'mielina':'Capa isolante de origem glial que envolve o axônio em segmentos e permite a condução saltatória; perdê-la desacelera ou bloqueia o sinal.',
+  'condução saltatória':'Propagação do potencial de ação em saltos entre os intervalos sem mielina (nós de Ranvier), o que a torna muito mais rápida que a condução contínua.',
+  'célula de Schwann':'Célula glial do sistema nervoso periférico que mieliniza um único segmento de axônio, equivalente ao oligodendrócito do sistema central.',
+  'sinapse tripartite':'Visão da sinapse como uma unidade de três partes — o neurônio que envia, o que recebe e o astrócito que regula o ambiente entre eles.'
+});
+Object.assign(TERM_FIG, {
+  'glia':'mod:neuronio', 'astrócito':'mod:neuronio', 'oligodendrócito':'mod:neuronio', 'micróglia':'mod:neuronio',
+  'mielina':'mod:neuronio', 'condução saltatória':'mod:neuronio', 'célula de Schwann':'mod:neuronio', 'sinapse tripartite':'mod:neuronio'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='neuronio');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'A glia: o cérebro que não dispara',
+    b:'<p>Metade do cérebro não dispara. Ao lado dos neurônios, em número parecido, está a <span class="term">glia</span> — por muito tempo tida como mero enchimento, já que o nome quer dizer cola. Hoje sabe-se que ela faz o sinal ser possível, rápido e limpo.</p>'
+     +'<p>O <span class="term">astrócito</span> cuida do ambiente da sinapse: recolhe o neurotransmissor que sobra, equilibra o potássio que os disparos deixam para fora e acopla o fluxo de sangue à atividade — o acoplamento que a ressonância funcional lê como área ativa. A participação é tão próxima que se fala em sinapse de três lados: os dois neurônios e o astrócito.</p>'
+     +'<p>O <span class="term">oligodendrócito</span> resolve a velocidade. Ele enrola o axônio em <span class="term">mielina</span>, uma capa isolante com pequenos intervalos. Com isolamento, o potencial de ação não percorre cada ponto: ele salta de intervalo em intervalo — a <span class="term">condução saltatória</span> —, muito mais rápida. Fora do cérebro, quem enrola é a célula de Schwann.</p>'
+     +'<p>A <span class="term">micróglia</span> é a defesa. Vigia o tecido, corre para focos de dano e, no desenvolvimento, ajuda a podar sinapses pouco usadas — a mesma poda do módulo de desenvolvimento. Longe de cola, a glia sustenta, acelera e esculpe o circuito.</p>'
+  });
+  MINI_QUIZZES.neuronio[4] = [
+    {lvl:0, q:'Qual é uma função dos astrócitos?', o:['Recolher o neurotransmissor que sobra e equilibrar o ambiente da sinapse','Conduzir o potencial de ação no lugar do axônio','Produzir a mielina que isola os axônios no cérebro'], c:0, er:'Astrócitos cuidam do ambiente: recaptam transmissor, tamponam potássio e acoplam fluxo sanguíneo.', ew:'Quem conduz é o axônio; quem faz mielina no cérebro é o oligodendrócito. O astrócito sustenta a sinapse.'},
+    {lvl:1, q:'Numa doença que destrói a mielina dos axônios, o que se espera do sinal?', o:['Fica mais lento ou é bloqueado, porque a condução saltatória depende da bainha','Fica mais rápido, porque sem isolamento o sinal encontra menos resistência','Não muda, porque a mielina não tem relação com a velocidade de condução'], c:0, er:'Sem mielina não há salto de nó a nó: a condução desacelera ou trava — é o que ocorre na desmielinização.', ew:'A mielina acelera; perdê-la desacelera. Por isso doenças desmielinizantes afetam força, visão e coordenação.'},
+    {lvl:2, q:'Por que a mielina torna a condução mais rápida?', o:['Porque o potencial de ação salta de intervalo em intervalo, em vez de percorrer cada ponto','Porque a mielina gera uma corrente elétrica extra que empurra o sinal adiante','Porque a mielina aumenta o número de canais de sódio ao longo de todo o axônio'], c:0, er:'O isolamento faz o sinal ser regenerado só nos intervalos (nós), e ele salta entre eles: condução saltatória.', ew:'A mielina não gera corrente nem espalha canais; ela isola, e o sinal salta entre os pontos sem isolamento.'}
+  ];
+  DEEP.neuronio[4] = '<p>A <b>glia</b> ganhou nome de cola no século XIX e passou décadas como coadjuvante. A conta de que haveria dez glias para cada neurônio caiu: hoje se estima uma proporção perto de um para um, variando por região. Coadjuvante ela não é.</p><p>O <b>astrócito</b> é o zelador ativo da sinapse: recapta glutamato para encerrar o sinal, tampona o K⁺ que os disparos jogam para fora e, ao sinalizar os vasos, acopla fluxo sanguíneo à atividade — a base do sinal que a ressonância funcional mede. Daí a ideia de <b>sinapse tripartite</b>: dois neurônios e um astrócito.</p><p>O <b>oligodendrócito</b> é engenharia de velocidade: uma célula mieliniza vários axônios de uma vez, e o sinal salta entre os intervalos da bainha (os nós de Ranvier). No sistema nervoso periférico, a <b>célula de Schwann</b> faz o papel, uma para cada trecho. A <b>micróglia</b>, por fim, é imune e escultora: poda sinapses no desenvolvimento e responde a lesão no adulto.</p>';
+  PREDICT.neuronio[4] = {q:'O que você acha que aconteceria com a velocidade do sinal se um axônio perdesse a mielina?', o:['Ficaria mais rápido, sem a capa atrapalhando','Ficaria mais lento ou seria bloqueado','Não mudaria nada'], c:1, after:'Mais lento — ou bloqueado. A mielina não atrapalha: ela isola o axônio para o sinal SALTAR de intervalo em intervalo. Sem ela, o sinal volta a percorrer cada ponto, devagar, e às vezes nem completa o caminho.'};
+  CHAIN.neuronio[4] = {
+    s:['O oligodendrócito enrola o axônio em mielina','A bainha isola trechos, deixando pequenos intervalos (nós)','O potencial de ação é regenerado só nos nós','Ele salta de nó a nó: condução saltatória','Sem mielina, o sinal volta a percorrer cada ponto e desacelera'],
+    h:3, hn:'O salto é a virada: isolar não é enfeite, é o que permite pular os trechos. Por isso perder mielina cobra tão caro na velocidade.',
+    w:'E se a mielina fosse perdida aos poucos, como numa doença desmielinizante?',
+    wa:'A condução desacelera e pode falhar de forma intermitente — daí sintomas que vêm e vão, de visão a coordenação, conforme quais axônios perdem a bainha.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.neuronio) BRIDGE.neuronio[4] = 'A aula tira a glia do papel de enchimento e mostra os três tipos que sustentam, aceleram e podam o circuito. Aqui, quem faz o quê — e por que a mielina é o segredo da velocidade.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.neuronio) CONTEXT_TOPIC_TERMS.neuronio['4'] = {
+    'mielina':{steps:[0,1],kind:'direct'},
+    'condução saltatória':{steps:[3],kind:'direct'},
+    'oligodendrócito':{steps:[0],kind:'direct'},
+    'astrócito':{steps:[],kind:'context',note:'Participa do módulo, mas não é uma etapa da cadeia da mielina.'},
+    'micróglia':{steps:[],kind:'context',note:'Participa do módulo, mas não é uma etapa da cadeia da mielina.'},
+    'glia':{steps:[],kind:'context',note:'Conceito geral do tópico.'}
+  };
+})();
 
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{

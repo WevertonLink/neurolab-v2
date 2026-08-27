@@ -550,7 +550,7 @@ const reset = ()=>ev('state = defaultState();');
   eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
 
   const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
-  eq(totalAncoras, 224, '19. o número de âncoras utilizáveis mudou — era 224 (207 + 17 do bloco B)');
+  eq(totalAncoras, 225, '19. o número de âncoras utilizáveis mudou — era 225 (207 + 17 do bloco B + 1 da aula de glia, neuronio-4, que ancora a mielina no axônio)');
 
   /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
      dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por
@@ -568,8 +568,8 @@ const reset = ()=>ev('state = defaultState();');
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 344,
-     '19. o total de caixas deveria ser 344 (345 menos a única caixa de causalidade que só a cadeia media)');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 348,
+     '19. o total de caixas deveria ser 348 (344 + 4 da aula de glia, neuronio-4, que mede as quatro dimensões: reconhecimento, localização, causalidade e aplicação)');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.
