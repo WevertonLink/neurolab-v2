@@ -272,7 +272,10 @@ test('@smoke módulo oferece navegação local livre e alcançável', async ({ p
   await openModule(page, 0);
   const nav = page.locator('#md-section-nav');
   await expect(nav).toBeVisible();
-  await expect(nav.locator('button')).toHaveCount(9); // visuais + 4 aulas + metáfora + mapa + fontes + teste
+  // visuais + (uma por aula) + metáfora + mapa + fontes + teste = aulas + 5.
+  // Derivado do módulo para não quebrar quando um módulo ganha aula nova.
+  const navCount = await page.evaluate(() => MODULES[0].lessons.length + 5);
+  await expect(nav.locator('button')).toHaveCount(navCount);
 
   const lessonButton = nav.locator('button').filter({ hasText: '2 ·' }).first();
   await expect(lessonButton).toBeVisible();
@@ -1392,8 +1395,13 @@ test('@smoke Modo Domínio registra resposta e mostra veredito', async ({ page }
   });
   await page.locator('#db-domain-entry button').click();
   await page.locator('#dm-nav button').filter({ hasText: 'Casos' }).click();
+
+  // O primeiro cartão é DOMAIN_CASES[0]. Derivamos o id e a alternativa correta
+  // dele em vez de fixar um caso: assim o teste não quebra quando o banco cresce
+  // e a ordem dos casos muda (foi o que aconteceu na expansão da Fatia 1).
+  const firstCase = await page.evaluate(() => ({ id: DOMAIN_CASES[0].id, correct: DOMAIN_CASES[0].correct }));
   await page.locator('.dm-case-card').first().locator('button').click();
-  await page.locator('.dm-options button').first().click();
+  await page.locator('.dm-options button').nth(firstCase.correct).click();
 
   const feedback = page.locator('.dm-feedback');
   await expect(feedback).toBeVisible();
@@ -1410,7 +1418,7 @@ test('@smoke Modo Domínio registra resposta e mostra veredito', async ({ page }
   // A reconstrução saiu: o feedback não oferece mais "Reconstruir sem alternativas".
   await expect(feedback.locator('.dm-reconstruct-btn')).toHaveCount(0);
 
-  const saved = await page.evaluate(() => state.domain.cases['noite-decisao']);
+  const saved = await page.evaluate((id) => state.domain.cases[id], firstCase.id);
   expect(saved.attempts).toBe(1);
   expect(saved.lastResult).toBe(1);
 });
@@ -1429,11 +1437,15 @@ test('@coverage banco do Modo Domínio mantém padrão adversarial', async ({ pa
       integratedCases: DOMAIN_CASES.every((item) => item.modules.length >= 3)
     };
   });
-  expect(report.total).toBe(24);
-  expect(report.positions).toEqual([6, 6, 6, 6]);
+  expect(report.total).toBe(34);
+  // Balanceamento anti-viés de posição. O padrão do projeto passou de "6/6/6/6
+  // exato" para "diferença máxima de 1 entre A/B/C/D" quando o banco cresceu na
+  // Fatia 1 (ver audit-content e o CHANGELOG). Hoje: [9,9,8,8]. Esta catraca
+  // acompanha a mesma intenção, sem fixar a distribuição exata.
+  expect(Math.max(...report.positions) - Math.min(...report.positions)).toBeLessThanOrEqual(1);
   expect(report.allFour).toBe(true);
   expect(report.unique).toBe(true);
-  expect(report.counterModules).toBe(16);
+  expect(report.counterModules).toBe(22);
   expect(report.integratedCases).toBe(true);
 });
 
