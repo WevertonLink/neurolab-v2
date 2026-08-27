@@ -671,6 +671,122 @@ const DOMAIN_COUNTERFACTUALS = [
 
 const DOMAIN_CASES = [
   {
+    "id": "disparo-a-lembranca",
+    "title": "Do disparo à lembrança que dura",
+    "modules": ["neuronio", "plasticidade", "memoria"],
+    "scenario": "Depois de uma tarde de estudo intenso, alguém lembra bem do conteúdo no dia seguinte; semanas depois a lembrança continua lá, mesmo sem o hipocampo ser tão necessário para acessá-la.",
+    "question": "Qual modelo liga o que acontece na sinapse ao que torna a memória durável e cada vez menos dependente do hipocampo?",
+    "options": [
+      "Atividade coordenada fortalece sinapses (LTP) e forma um traço inicial ligado ao hipocampo; com tempo e sono, a consolidação sistêmica redistribui a memória para redes corticais.",
+      "A memória nasce pronta e permanente já na primeira exposição, sem qualquer mudança sináptica, e o hipocampo apenas copia esse traço intacto para o córtex sem alterá-lo em nada.",
+      "O fortalecimento da sinapse e a consolidação são o mesmo evento no mesmo instante da experiência, e por isso nenhuma memória chega a depender do hipocampo em momento algum.",
+      "A durabilidade vem só da repetição consciente nos dias seguintes; sem repetir de propósito, nenhuma sinapse muda e nenhuma memória se estabiliza em redes fora do hipocampo."
+    ],
+    "correct": 0,
+    "optionFeedback": [
+      "Liga os dois andares: a mudança sináptica forma o traço e a consolidação sistêmica o redistribui ao córtex ao longo do tempo.",
+      "Trata a memória como cópia pronta e ignora que ela nasce de mudança sináptica e é remodelada na consolidação.",
+      "Funde sinapse e sistema num só instante e apaga o papel inicial do hipocampo, que o caso descreve.",
+      "Reduz a durabilidade a repetir de propósito e ignora a consolidação que ocorre com o tempo e o sono."
+    ],
+    "explanation": "O caso atravessa dois andares. No de baixo, atividade coordenada entre neurônios fortalece sinapses — a potenciação de longo prazo — e monta o traço inicial, que depende do hipocampo para ser acessado. No de cima, ao longo de dias e com a ajuda do sono, a consolidação sistêmica reorganiza essa memória em redes corticais, e o hipocampo vai deixando de ser indispensável. Uma coisa não substitui a outra: a mudança sináptica cria, a consolidação sistêmica estabiliza e realoca.",
+    "chain": [
+      "atividade coordenada fortalece sinapses",
+      "forma-se um traço inicial dependente do hipocampo",
+      "sono e tempo movem a consolidação sistêmica",
+      "a memória se redistribui para redes corticais",
+      "o acesso deixa de depender tanto do hipocampo"
+    ],
+    "extend": {"q": "E se o hipocampo fosse lesado logo após o aprendizado?", "a": "As memórias muito recentes, ainda dependentes dele, seriam as mais prejudicadas, enquanto as já consolidadas em redes corticais tenderiam a sobreviver. O contraste mostra que o papel do hipocampo é maior no início e diminui com a consolidação."}
+  },
+  {
+    "id": "sentia-pronto",
+    "title": "O aluno que se sentia pronto",
+    "modules": ["esforco", "ilusoes", "saber"],
+    "scenario": "Um estudante relê a matéria até tudo parecer óbvio, sente-se pronto na véspera e, na prova, trava em questões que jurava dominar.",
+    "question": "Qual modelo explica melhor por que a sensação de estar pronto não se converteu em desempenho?",
+    "options": [
+      "A matéria foi de fato aprendida e o único problema foi a ansiedade na prova; sem o nervosismo, o desempenho teria correspondido exatamente à alta confiança sentida na véspera.",
+      "A releitura elevou a fluência, que virou um julgamento de aprendizado alto sem medir a retenção; faltou recuperar sem apoio, e a confiança se apoiou num sinal que engana.",
+      "A confiança da véspera prova que o conteúdo estava retido; se o aluno travou, foi porque a prova cobrava algo que simplesmente não constava do material que ele releu.",
+      "Reler é a forma mais eficiente de estudar, e o travamento indica só que faltou reler mais vezes; com o dobro de releituras, a fluência teria garantido o acerto na hora."
+    ],
+    "correct": 1,
+    "optionFeedback": [
+      "Joga tudo na ansiedade e ignora que a confiança se formou a partir da fluência, não da retenção medida.",
+      "Nomeia o mecanismo: fluência vira julgamento de aprendizado, e sem recuperar sem apoio a confiança fica sem lastro.",
+      "Toma a confiança como prova de retenção, que é justamente a ilusão que o caso descreve.",
+      "Confunde reler com aprender e propõe mais do mesmo, sem a recuperação que modifica o traço."
+    ],
+    "explanation": "Três peças se encaixam. Reler deixa a matéria fluente, fácil de reconhecer — e o cérebro lê essa fluência como um julgamento de que aprendeu. Mas fluência mede a facilidade do momento, não o que ficará retido, e o aluno nunca chegou a recuperar o conteúdo sem o texto à frente, que é o que a prova cobra. A confiança da véspera era real como sensação e falsa como previsão: apoiava-se num sinal que engana. Faltou o esforço de recuperar, não mais releitura.",
+    "chain": [
+      "reler eleva a fluência da matéria",
+      "a fluência vira julgamento de aprendizado alto",
+      "falta recuperar o conteúdo sem apoio",
+      "a confiança se descola da retenção real",
+      "o desempenho na prova fica abaixo da confiança"
+    ],
+    "extend": {"q": "O que teria mudado se ele testasse a si mesmo sem o texto na véspera?", "a": "O próprio ato de recuperar teria fortalecido o traço e, de quebra, revelado o que ainda não sabia — corrigindo a confiança para um valor mais honesto. Testar-se é ao mesmo tempo estudo e medida."}
+  },
+  {
+    "id": "noite-que-grava",
+    "title": "A noite que grava",
+    "modules": ["ritmos", "sono", "memoria"],
+    "scenario": "Depois de aprender algo novo, a pessoa dorme bem numa noite e, na outra, tem o sono profundo repetidamente interrompido. A retenção do que aprendeu difere entre as duas manhãs.",
+    "question": "Qual modelo liga o que acontece durante o sono à consolidação do que foi aprendido?",
+    "options": [
+      "O sono é um período de inatividade em que nada acontece com a memória; a diferença entre as manhãs vem apenas de a pessoa estar mais ou menos descansada para fazer o teste.",
+      "A consolidação ocorre inteiramente na vigília e o sono só serve para evitar novas informações; interromper o sono profundo não afeta em nada o que já havia sido aprendido antes.",
+      "No sono profundo, ondas lentas, fusos e ripples do hipocampo se sincronizam e reativam o que foi aprendido, favorecendo a consolidação; cortar esse sono reduz essa reativação.",
+      "Qualquer estágio do sono serve igualmente e só o total de horas importa; a estrutura do sono e os ritmos específicos não têm papel nenhum na consolidação da memória nova."
+    ],
+    "correct": 2,
+    "optionFeedback": [
+      "Trata o sono como inatividade e ignora a reativação coordenada que ocorre nele, no centro do caso.",
+      "Confina a consolidação à vigília e desconsidera o papel do sono profundo que o caso manipula.",
+      "Integra ritmos e sistemas: ondas lentas, fusos e ripples sincronizam a reativação que consolida.",
+      "Reduz tudo a horas de sono e apaga a estrutura e os ritmos que fazem a consolidação acontecer."
+    ],
+    "explanation": "Dormir não é pausa para a memória. No sono profundo, ondas lentas corticais, fusos gerados pelo tálamo e ripples do hipocampo se encaixam no tempo, e nessas janelas as sequências do que foi aprendido são reativadas num diálogo entre hipocampo e córtex — o passo que estabiliza o traço. Interromper repetidamente o sono profundo desfaz essa sincronia e reduz a reativação, então menos se consolida. Por isso a mesma quantidade de estudo rende retenção diferente conforme a estrutura da noite.",
+    "chain": [
+      "o aprendizado deixa um traço recente",
+      "no sono profundo ondas lentas, fusos e ripples se sincronizam",
+      "as sequências aprendidas são reativadas",
+      "hipocampo e córtex consolidam o traço",
+      "interromper o sono profundo reduz a consolidação"
+    ],
+    "extend": {"q": "E se a pessoa tirasse um cochilo com sono profundo em vez da noite interrompida?", "a": "Mesmo curto, um sono com fases profundas pode oferecer janelas de reativação e ajudar a consolidar — sinal de que o que importa é a estrutura do sono, e não só o número de horas na cama."}
+  },
+  {
+    "id": "confiar-no-palpite",
+    "title": "Quando confiar no palpite",
+    "modules": ["palpite", "decisao", "atencao"],
+    "scenario": "Diante de uma decisão rápida, a pessoa tem um palpite forte. Numa versão do caso ela é enxadrista escolhendo um lance; na outra, aposta no preço de uma ação para o ano seguinte.",
+    "question": "Qual modelo diz melhor quando esse palpite deve ser levado a sério?",
+    "options": [
+      "O palpite deve ser seguido nas duas situações por igual, porque a força da intuição que a pessoa sente é, por si só, um indicador confiável de que a resposta encontrada está certa.",
+      "O palpite não deve ser seguido em nenhuma das duas, já que toda intuição é um viés e decisões boas exigem sempre cálculo deliberado e explícito, sem qualquer exceção possível.",
+      "O palpite da aposta é o mais confiável, porque quanto mais incerto o domínio, mais os anos de experiência acumulada se transformam em vantagem intuitiva sobre quem decide sem ela.",
+      "O do enxadrista merece peso e o da aposta não: intuição é confiável onde o ambiente é regular e há retorno claro — o xadrez oferece isso, a bolsa de longo prazo não oferece."
+    ],
+    "correct": 3,
+    "optionFeedback": [
+      "Toma a força sentida como prova de acerto e ignora que ela vale só onde há padrão a aprender.",
+      "Descarta a intuição inteira e joga fora o caso do xadrez, onde ela de fato acerta acima do acaso.",
+      "Inverte a relação: ambiente mais incerto dá menos base para intuição válida, não mais.",
+      "Aplica as duas condições: regularidade do ambiente e retorno claro separam intuição válida de confiança vazia."
+    ],
+    "explanation": "O palpite é reconhecimento de padrão: uma resposta que chega pronta porque a cena lembra muitas já vividas. Ele merece peso quando duas condições valem juntas — o ambiente é regular o bastante para haver padrão estável a aprender, e existe retorno claro que corrige o aprendizado. O xadrez preenche as duas: posições se repetem e o resultado ensina. A previsão de ações de longo prazo não: o ambiente é ruidoso e o retorno chega tarde e confuso. A mesma sensação de certeza, portanto, vale nas duas apenas por fora.",
+    "chain": [
+      "o palpite é reconhecimento de padrão",
+      "aprender padrão exige ambiente regular",
+      "corrigir o aprendizado exige retorno claro",
+      "o xadrez tem as duas condições e a bolsa não",
+      "só onde as condições valem o palpite merece peso"
+    ],
+    "extend": {"q": "Como a pessoa poderia saber, por dentro, se o próprio palpite é dos confiáveis?", "a": "Não dá para saber pela força sentida, que é igual nos dois casos. O caminho é olhar o ambiente: ele tem regularidade e retorno claro? Se sim, confie mais; se não, trate o palpite como hipótese a checar."}
+  },
+  {
     "id": "noite-decisao",
     "title": "Decidir depois de uma noite ruim",
     "modules": [

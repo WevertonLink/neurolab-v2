@@ -79,8 +79,8 @@ if (!errors.length) {
   const trailBlock = domain.match(/const DOMAIN_TRAILS = \[(.*?)\];\n\nconst DOMAIN_SESSION/s);
   ok(counterBlock && (counterBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 22,
     'o Modo Domínio deve manter 22 desafios contrafactuais');
-  ok(caseBlock && (caseBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 8,
-    'o Modo Domínio deve manter 8 casos integrados');
+  ok(caseBlock && (caseBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 12,
+    'o Modo Domínio deve manter 12 casos integrados');
   ok(connectionBlock && (connectionBlock[1].match(/\{a:'/g)||[]).length === 12,
     'o mapa de conexões deve manter 12 relações explícitas');
   ok(trailBlock && (trailBlock[1].match(/\{id:'/g)||[]).length === 4,
