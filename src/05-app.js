@@ -8231,6 +8231,57 @@ Object.assign(TERM_FIG, {
     ew:'O que se constrói é um <strong>modelo interno</strong> preditivo, não músculo novo, atalho nem estoque de dopamina. É ele que torna o gesto automático.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — desenvolvimento ganha uma 5ª aula: envelhecer
+
+   O módulo constrói o cérebro e para no adulto ("desacelera, não fecha"). Esta
+   aula fecha o arco na outra ponta: o cérebro que envelhece — o que declina
+   (velocidade, volume, dopamina), o que se preserva (conhecimento, regulação) e
+   a reserva cognitiva que decide como o mesmo dano se manifesta. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'reserva cognitiva':'A capacidade de resistir a dano cerebral sem mostrar sintomas, construída por educação, trabalho mentalmente exigente, aprendizado e convívio — por isso um mesmo dano pesa diferente em pessoas diferentes.',
+  'inteligência cristalizada':'O conhecimento acumulado — vocabulário, fatos, expertise. Tende a se manter ou até crescer por décadas, ao contrário da velocidade de processamento.',
+  'inteligência fluida':'A capacidade de raciocinar e resolver problemas novos na hora, sem apoio no conhecimento prévio; é a que mais declina com a idade.'
+});
+Object.assign(TERM_FIG, {
+  'reserva cognitiva':'mod:desenvolvimento', 'inteligência cristalizada':'mod:desenvolvimento', 'inteligência fluida':'mod:desenvolvimento'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='desenvolvimento');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O cérebro que envelhece: declínio e reserva',
+    b:'<p>O módulo construiu o cérebro e terminou dizendo que o desenvolvimento "desacelera, mas não fecha". Esta aula é a outra ponta dessa linha: o que acontece ao cérebro ao longo da vida adulta e na velhice — e, importante, "cérebro que envelhece" <b>não</b> é uma só história de perda.</p>'
+     +'<p>O que declina: a <b>velocidade</b> de processamento cai (a mielina fica menos íntegra — a fiação da aula de neuroanatomia), algum <b>volume</b> encolhe, sobretudo no pré-frontal e no hipocampo, e a sinalização de <b>dopamina</b> diminui. Por isso o idoso costuma ser mais lento e a memória de trabalho e a <span class="term">inteligência fluida</span> (resolver o novo na hora) ficam mais custosas. Isso é o envelhecimento <b>normal</b>, distinto de doença.</p>'
+     +'<p>O que se preserva — ou cresce: a <span class="term">inteligência cristalizada</span> (vocabulário, fatos, expertise) se mantém por décadas, e a <b>regulação emocional</b> muitas vezes melhora (o cérebro maduro tende ao positivo). O cérebro também <b>compensa</b>: em tarefas que o jovem resolve com um hemisfério, o idoso recruta os dois. Envelhecer é um reequilíbrio — perde-se velocidade, ganha-se conhecimento e regulação.</p>'
+     +'<p>E há uma alavanca: a <span class="term">reserva cognitiva</span>. Educação, trabalho exigente, aprender coisas novas e convívio constroem uma folga que <b>absorve</b> o dano — duas pessoas com a mesma patologia podem ter sintomas muito diferentes conforme a reserva. E ela se constrói em qualquer idade: exercício físico (que eleva o <b>BDNF</b> e apoia a neurogênese no hipocampo), aprendizado e vínculo social protegem de forma mensurável. O "use ou perca" do desenvolvimento vale até o fim — e este app, nesse sentido, é construção de reserva.</p>'
+  });
+  MINI_QUIZZES.desenvolvimento[4] = [
+    {lvl:0, q:'No envelhecimento normal, o que tipicamente DECLINA e o que se PRESERVA?', o:['Declina a velocidade de processamento; preserva-se o conhecimento acumulado (vocabulário, fatos)','Declina o vocabulário; preserva-se a velocidade','Tudo declina no mesmo ritmo, sem exceção'], c:0, er:'Isso: cai a velocidade e a inteligência fluida; a cristalizada (conhecimento) se mantém ou cresce.', ew:'É quase o oposto: o que cai é a VELOCIDADE; o conhecimento acumulado (cristalizado) tende a se preservar.'},
+    {lvl:1, q:'Duas pessoas morrem com a MESMA quantidade de dano tipo Alzheimer no cérebro, mas uma teve demência clara e a outra quase nenhum sintoma. O que melhor explica?', o:['A reserva cognitiva: educação e engajamento amorteceram o mesmo dano','Erro na medição do dano','Uma simplesmente teve mais força de vontade'], c:0, er:'Exato: mesma patologia, sintomas diferentes — a reserva decide quanto dano o cérebro absorve antes de aparecer.', ew:'Não é erro de medida nem força de vontade: é a RESERVA COGNITIVA, que permite absorver o mesmo dano com menos sintomas.'},
+    {lvl:2, q:'Por que o exercício físico protege o cérebro que envelhece, e não só o corpo?', o:['Porque eleva o BDNF e apoia a neurogênese no hipocampo e a saúde vascular do cérebro','Porque cansa a pessoa e ela dorme mais','Porque aumenta o tamanho dos músculos da cabeça'], c:0, er:'Isso: é biológico — mais BDNF, suporte à neurogênese e melhor irrigação. O corpo em movimento cuida do cérebro.', ew:'Não é pelo sono nem por músculo: o exercício eleva o BDNF e favorece neurogênese e vascularização cerebral.'}
+  ];
+  DEEP.desenvolvimento[4] = '<p>O envelhecimento cognitivo normal tem uma assinatura razoavelmente clara: cai a <b>velocidade de processamento</b> (ligada à integridade da substância branca), encolhem preferencialmente o córtex pré-frontal e o hipocampo, e a neurotransmissão dopaminérgica diminui. O efeito de rede é a queda da <b>inteligência fluida</b> — raciocínio e memória de trabalho — enquanto a <b>cristalizada</b>, o acervo de conhecimento, resiste. Raymond Cattell e John Horn separaram essas duas décadas atrás, e a dissociação se manteve.</p><p>Nem tudo minga. Laura Carstensen documentou o <b>efeito de positividade</b>: com a idade, a atenção e a memória pendem para o positivo, e a regulação emocional costuma melhorar — coerente com a aula de emoção. E o cérebro <b>compensa</b>: o padrão HAROLD mostra idosos recrutando os dois hemisférios onde jovens usam um, uma reorganização, não só um déficit.</p><p>A ideia mais acionável é a <b>reserva</b>, de Yaakov Stern. A reserva <b>cerebral</b> (mais neurônios e sinapses) e a <b>cognitiva</b> (estratégias e redes flexíveis, construídas por educação e engajamento) explicam por que a relação entre patologia e sintoma é tão frouxa: o mesmo acúmulo de placas produz demência numa pessoa e quase nada em outra. E a reserva é construível em qualquer fase — exercício aeróbico (BDNF, neurogênese hipocampal, vascularização), aprendizado desafiador e vida social têm efeito medido. O desenvolvimento, afinal, nunca fecha: só muda de tarefa.</p>';
+  PREDICT.desenvolvimento[4] = {q:'Duas pessoas morrem com exatamente a MESMA quantidade de lesões tipo Alzheimer no cérebro. Uma teve demência evidente; a outra, quase nenhum sintoma. O que melhor explica a diferença?', o:['Provável erro na medição do dano','A reserva cognitiva construída ao longo da vida (educação, engajamento)','Uma teve mais força de vontade que a outra'], c:1, after:'A reserva cognitiva. Educação, trabalho mentalmente exigente e engajamento constroem uma folga — mais conexões e estratégias — que absorve o mesmo dano, adiando e amenizando os sintomas. Por isso patologia e sintoma andam tão soltos um do outro.'};
+  CHAIN.desenvolvimento[4] = {
+    s:['Com a idade, o cérebro perde velocidade e algum volume','Uma patologia (placas, por exemplo) começa a se acumular','Quem tem mais reserva — conexões e estratégias — absorve o dano','Os sintomas aparecem mais tarde e mais leves','Sem reserva, o mesmo dano se manifesta cedo e forte'],
+    h:2, hn:'A virada: o MESMO dano biológico rende sintomas muito diferentes conforme a reserva. O cérebro não é só a sua patologia — é também a folga que você construiu. E dá para construir folga em qualquer idade.',
+    w:'E se a pessoa passasse a vida aprendendo, se exercitando e convivendo?',
+    wa:'Constrói reserva — mais sinapses, redes alternativas, BDNF e saúde vascular —, e o mesmo dano rende sintomas mais leves e mais tarde. O "use ou perca" do desenvolvimento vale até o fim.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.desenvolvimento) BRIDGE.desenvolvimento[4] = 'A aula fecha o arco do módulo: da construção ao envelhecer. O que declina (velocidade), o que se preserva (conhecimento, regulação) e a reserva que decide como o mesmo dano se manifesta.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.desenvolvimento) CONTEXT_TOPIC_TERMS.desenvolvimento['4'] = {
+    'reserva cognitiva':{steps:[2,3,4],kind:'direct'},
+    'inteligência cristalizada':{steps:[],kind:'context',note:'O que se preserva no envelhecimento.'},
+    'inteligência fluida':{steps:[],kind:'context',note:'O que mais declina com a idade.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo terminou dizendo que o desenvolvimento "desacelera, mas não fecha". No envelhecimento, o que mais decide a gravidade dos sintomas diante de um mesmo dano cerebral?',
+    o:['A reserva cognitiva acumulada — educação, engajamento, conexões','A cor dos olhos da pessoa','O tamanho do corpo','O número de horas dormidas numa única noite'], c:0, l:4,
+    er:'Isso. A <strong>reserva cognitiva</strong> amortece o dano: mesma patologia, sintomas diferentes conforme a folga construída ao longo da vida.',
+    ew:'Quem decide é a <strong>reserva cognitiva</strong> (educação, engajamento, conexões), não traços físicos nem uma única noite de sono.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
