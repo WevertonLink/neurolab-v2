@@ -8589,6 +8589,57 @@ Object.assign(TERM_FIG, {
     ew:'Sincronia demais <strong>trava</strong> a rede (crise, beta do Parkinson) — não deixa o cérebro mais eficiente, nem faz os ritmos sumirem. A dose é o que importa.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — esforco ganha uma 5ª aula: elaborar
+
+   O módulo cobre COMO praticar (recuperar, espacar, misturar, retorno). Falta
+   a familia de como PROCESSAR: elaboracao ("por que?"), autoexplicacao e
+   aprender ensinando (efeito protege). Reusa efeito de geracao. Mesma honestidade
+   de caveat (depende de conhecimento previo). Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'elaboração':'Gerar uma explicação para o que se estuda — perguntar "por que isto é assim?" e ligar ao que já se sabe — em vez de só reler; cria mais rotas de acesso à memória.',
+  'autoexplicação':'Explicar a si mesmo cada passo de um exemplo ou raciocínio ("por que este passo segue?"), o que torna explícito o que estava implícito e revela as próprias lacunas.',
+  'efeito protégé':'A melhora do próprio aprendizado ao ensinar — ou se preparar para ensinar — outra pessoa, mesmo imaginária, porque ensinar força organizar, recuperar e achar as lacunas.'
+});
+Object.assign(TERM_FIG, {
+  'elaboração':'mod:esforco', 'autoexplicação':'mod:esforco', 'efeito protégé':'mod:esforco'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='esforco');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Elaborar e explicar: por que ensinar fixa',
+    b:'<p>As técnicas até aqui foram sobre <b>como praticar</b>: recuperar, espaçar, misturar, conferir. Esta é sobre como <b>processar</b> enquanto estuda — não só mover informação, mas <b>ligá-la</b>. A melhora mais confiável na codificação é parar de perguntar "o que diz?" e passar a perguntar <b>"por quê — por que é assim, como se encaixa no que eu já sei?"</b>.</p>'
+     +'<p>É a <span class="term">elaboração</span>. Pegue um fato e gere uma explicação para ele — "por que isso seria verdade?". Comparado a reler ou repetir, elaborar constrói <b>mais ligações</b> do novo com o que você já sabe, e mais ligações são mais <b>rotas de acesso</b> depois (lembra da aula de esquecimento: o problema é achar a pista certa). Só funciona bem quando há mesmo conhecimento a que ligar — para uma palavra estrangeira solta, há pouco a elaborar, a mesma ressalva das outras técnicas do módulo.</p>'
+     +'<p>Um caso poderoso é a <span class="term">autoexplicação</span>: ao seguir um exemplo ou uma demonstração, explique <b>cada passo</b> a si mesmo — "por que este passo decorre do anterior?". Quem autoexplica entende mais fundo e transfere melhor, porque é forçado a tornar <b>explícito</b> o raciocínio escondido e a notar as próprias lacunas. Converte o seguir passivo — que, pela aula das ilusões, <b>parece</b> compreensão — em construção ativa.</p>'
+     +'<p>A versão mais forte é <b>ensinar</b>. Explicar a outra pessoa — ou só se preparar para ensinar, ou explicar a um aluno imaginário — melhora o seu próprio aprendizado: é o <span class="term">efeito protégé</span>. Ensinar obriga a organizar, expõe as lacunas e exige recuperar e elaborar ao mesmo tempo. Na prática: ao fim de um bloco, feche o livro e explique a ideia em voz alta, com suas palavras, como se ensinasse. Esse único gesto empilha recuperação, elaboração e detecção de lacunas — e é o jeito mais rápido de descobrir que você ainda não entendeu.</p>'
+  });
+  MINI_QUIZZES.esforco[4] = [
+    {lvl:0, q:'O que é a elaboração como técnica de estudo?', o:['Gerar uma explicação para o que se estuda ("por que isso é assim?"), ligando ao que já se sabe','Reler o material até que ele fique fluente','Copiar o texto à mão várias vezes'], c:0, er:'Isso: elaborar é perguntar POR QUÊ e conectar ao conhecido — constrói ligações, não só repete.', ew:'Não é reler nem copiar: é GERAR uma explicação e ligar o novo ao que você já sabe.'},
+    {lvl:1, q:'Por que explicar um conceito a outra pessoa (ou se preparar para ensinar) melhora o SEU aprendizado?', o:['Ensinar força organizar, recuperar e elaborar de uma vez, e expõe as lacunas que você não veria','Porque a outra pessoa corrige todos os seus erros','Porque falar em voz alta grava melhor por si só'], c:0, er:'Exato: é o efeito protégé. Ensinar empilha organização, recuperação e elaboração — e revela o que falta.', ew:'Não depende do outro corrigir nem é o "falar alto" por si: ensinar FORÇA você a organizar, recuperar e achar as lacunas.'},
+    {lvl:2, q:'Por que elaborar um fato o torna mais fácil de lembrar depois?', o:['Porque cria mais ligações (rotas de acesso) do novo com o que você já sabe','Porque apaga as memórias concorrentes','Porque deixa o fato mais curto e simples'], c:0, er:'Isso: mais conexões, mais pistas capazes de chegar à memória depois. Elaborar é construir rotas.', ew:'Não apaga concorrentes nem encurta o fato: elaborar MULTIPLICA as ligações, e são elas as rotas de volta à memória.'}
+  ];
+  DEEP.esforco[4] = '<p>As revisões de John Dunlosky e colegas, que ordenaram técnicas de estudo por eficácia, colocaram a <b>prática de recuperação</b> e o <b>espaçamento</b> no topo — e logo abaixo, com utilidade moderada e subindo, a <b>interrogação elaborativa</b> ("por que isto é verdade?") e a <b>autoexplicação</b>. As duas partilham um mecanismo antigo, a <b>profundidade de processamento</b> de Craik e Lockhart: quanto mais você processa o significado e o liga ao que já sabe, mais durável o traço — porque cria mais vias de recuperação, exatamente o que a aula de esquecimento aponta como o gargalo.</p><p>A autoexplicação tem um bônus diagnóstico: ao forçar você a dizer por que cada passo segue, ela <b>quebra a ilusão de fluência</b> do módulo das ilusões — acompanhar um exemplo parece entender, até você tentar explicá-lo e travar. E há o parente próximo, o <b>efeito de geração</b> já visto: produzir a resposta bate lê-la pronta.</p><p>Aprender <b>ensinando</b> é a forma concentrada disso. Fiorella e Mayer mostraram que até <b>preparar-se para ensinar</b>, ou explicar a uma câmera, melhora a retenção — o <b>efeito protégé</b> —, e a tutoria entre pares beneficia quem explica tanto quanto quem ouve. A razão é que ensinar reúne organização, recuperação e elaboração numa tarefa só. A ressalva honesta, na linha do módulo: elaborar custa tempo e depende de haver conhecimento prévio para conectar; é um multiplicador da compreensão, não um atalho para decorar listas soltas.</p>';
+  PREDICT.esforco[4] = {q:'Dois estudantes leem o mesmo capítulo. Um relê o texto; o outro, depois de ler, fecha o livro e explica em voz alta, como se ensinasse a um amigo. Quem tende a entender e lembrar mais?', o:['O que relê: teve mais exposição ao texto','O que explica: ensinar força organizar e recuperar','Não há diferença: os dois passaram o mesmo tempo'], c:1, after:'O que explica. Reler é fluente e passivo; explicar como se ensinasse obriga a organizar a ideia, recuperá-la sem o texto e elaborar as ligações — e ainda revela na hora o que você não sabia. É o efeito protégé, e vale mesmo com um "aluno" imaginário.'};
+  CHAIN.esforco[4] = {
+    s:['Você para de só reler e pergunta "por quê / como se encaixa?"','Para responder, puxa o que já sabe e liga ao novo','Cada ligação vira uma rota de acesso a mais','Depois, mais pistas conseguem chegar à memória','Explicar para alguém força tudo isso de uma vez'],
+    h:2, hn:'A virada: a memória não é um depósito que você reabastece relendo — é uma teia que você reforça conectando. Perguntar "por quê" cria ligações, e ligações são as estradas de volta. Ensinar é elaborar e recuperar ao mesmo tempo — por isso explicar é o jeito mais rápido de descobrir que você não entendeu.',
+    w:'E se o material for uma lista solta, sem nada a que se ligar (uma palavra estrangeira nova)?',
+    wa:'Aí a elaboração rende pouco: não há conhecimento prévio a conectar, a mesma ressalva das outras técnicas do módulo. Elaborar é multiplicador de compreensão, não truque para decoreba solta.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.esforco) BRIDGE.esforco[4] = 'A aula acrescenta uma família nova às técnicas do módulo: em vez de COMO praticar, como PROCESSAR — elaborar ("por quê?"), autoexplicar e ensinar. Por que explicar em voz alta fixa mais.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.esforco) CONTEXT_TOPIC_TERMS.esforco['4'] = {
+    'elaboração':{steps:[0,1,2,3],kind:'direct'},
+    'autoexplicação':{steps:[],kind:'context',note:'A elaboração aplicada a cada passo de um raciocínio.'},
+    'efeito protégé':{steps:[4],kind:'direct'}
+  };
+  if(m.quiz) m.quiz.push({q:'As técnicas do módulo tratam de COMO praticar (recuperar, espaçar, misturar, retorno). Que família esta aula acrescenta?',
+    o:['Como PROCESSAR: elaborar ("por quê?"), autoexplicar e ensinar — construir ligações, não só mover informação','Um jeito de reler que fixa mais','Uma forma de estudar sem nenhum esforço','Uma técnica que dispensa qualquer conhecimento prévio'], c:0, l:4,
+    er:'Isso. A aula traz o <strong>processar</strong>: elaborar, autoexplicar e ensinar constroem ligações (rotas de acesso) — não só movem a informação.',
+    ew:'Não é reler melhor nem estudo sem esforço: é <strong>elaborar/explicar</strong>, que constrói conexões — e, como as outras técnicas, depende de conhecimento prévio.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
