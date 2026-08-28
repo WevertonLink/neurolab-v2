@@ -8742,6 +8742,58 @@ Object.assign(TERM_FIG, {
     ew:'A outra metade não é "monitorar melhor", nem dopamina ou sono: é o <strong>controle</strong> — usar os julgamentos do monitor para decidir o estudo.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — palpite ganha uma 5ª aula: o conserto
+
+   O modulo DIAGNOSTICA quando a intuicao vale (as duas condicoes) e onde falha,
+   e ja adverte contra a versao forte de "dois sistemas". Falta o TRATAMENTO:
+   quando o faro nao vale, o que usar no lugar — formula/checklist, visao de
+   fora (taxa-base) e decisao estruturada. Reusa regularidade previsivel e
+   retorno. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'visão de fora':'Julgar um caso a partir da taxa-base de casos parecidos ("como costumam terminar projetos assim?") em vez de montar uma história com os detalhes deste caso; corrige o excesso de otimismo da visão de dentro.',
+  'taxa-base':'A frequência com que algo ocorre numa classe de casos parecidos; ponto de partida mais confiável que a narrativa vívida de um caso isolado.',
+  'previsão estatística':'Combinar de forma consistente uns poucos fatores que importam (uma fórmula ou checklist) em vez de um julgamento holístico; em ambientes de baixa validade, iguala ou supera o especialista.'
+});
+Object.assign(TERM_FIG, {
+  'visão de fora':'mod:palpite', 'taxa-base':'mod:palpite', 'previsão estatística':'mod:palpite'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='palpite');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Quando o palpite não serve: o que usar no lugar',
+    b:'<p>O módulo diagnosticou <b>quando</b> a intuição vale — ambiente regular <b>mais</b> retorno — e onde não vale. Esta aula é o tratamento: uma vez que você sabe que seu faro <b>não</b> é confiável ali (baixa validade, sem retorno de verdade), o que fazer? A resposta não é "tentar palpitar melhor"; é <b>trocar</b> o palpite holístico por <b>estrutura</b>.</p>'
+     +'<p>Use a fórmula. O módulo já mostrou que regras simples igualam ou batem especialistas em baixa validade — a conclusão prática é: nesses casos, <b>use uma</b>. A <span class="term">previsão estatística</span> — pontuar sempre os poucos fatores que importam — vence uma mente que dá notas diferentes ao mesmo caso em dias diferentes. Checklists (como o cirúrgico de Atul Gawande) cortam erros justamente por tirar o faro dos passos em que ele só acrescenta ruído.</p>'
+     +'<p>Tome a <span class="term">visão de fora</span>. Diante de um julgamento, o impulso é a visão de dentro — montar uma história com os detalhes deste caso. O conserto é olhar de fora: achar a classe de referência ("como costumam terminar casos assim?") e partir da <span class="term">taxa-base</span>, ajustando depois. Vence porque a história é vívida e a taxa-base é <b>verdadeira</b> — é o antídoto da falácia do planejamento num gesto só.</p>'
+     +'<p>Estruture e decomponha — lembre a contratação do módulo. Entrevistas soltas, no puro faro, mal preveem desempenho; <b>estruturadas</b> — as mesmas perguntas, notas em dimensões fixas, combinadas só no fim em vez de virarem uma impressão holística cedo — preveem bem melhor. O princípio das três ferramentas é o mesmo: quebre o julgamento em partes, pontue cada uma com consistência e <b>adie</b> (ou dispense) a intuição de conjunto. Guarde o palpite para onde as duas condições valem; no resto, construa andaime.</p>'
+  });
+  MINI_QUIZZES.palpite[4] = [
+    {lvl:0, q:'Num ambiente de baixa validade (sem padrão estável nem retorno), o que deve substituir o faro do especialista?', o:['Uma regra consistente: fórmula, checklist, pontuação estruturada','Mais anos de experiência no mesmo ambiente','Um palpite mais rápido e confiante'], c:0, er:'Isso: onde a intuição não pode se formar, estrutura consistente rende mais que o faro.', ew:'Nem tempo nem confiança consertam a baixa validade: o que serve é ESTRUTURA — uma regra consistente no lugar do palpite.'},
+    {lvl:1, q:'A "visão de dentro" monta uma história com os detalhes do caso. Qual é a alternativa mais precisa?', o:['A visão de fora: partir da taxa-base de casos parecidos e ajustar','Contar uma história ainda mais detalhada','Confiar na primeira impressão, que costuma acertar'], c:0, er:'Exato: a taxa-base de uma classe de referência é ponto de partida mais confiável que a narrativa vívida de um caso.', ew:'Nem mais detalhe nem primeira impressão: a correção é a VISÃO DE FORA — a taxa-base de casos parecidos.'},
+    {lvl:2, q:'Por que uma fórmula simples supera um especialista em ambiente de baixa validade, mesmo o especialista sabendo mais?', o:['Porque a fórmula é consistente (mesmo caso, mesma nota) e o especialista é ruidoso, e não há padrão estável para a expertise explorar','Porque a fórmula tem acesso a mais informação que o especialista','Porque especialistas não se esforçam de verdade'], c:0, er:'Isso: a consistência vence o ruído, e em baixa validade não há regularidade para a experiência aproveitar.', ew:'Não é mais informação nem falta de esforço: é a CONSISTÊNCIA da fórmula contra o ruído humano, num terreno sem padrão a explorar.'}
+  ];
+  DEEP.palpite[4] = '<p>A base vem de Paul Meehl, que em 1954 já mostrava a <b>previsão estatística</b> igualando ou superando o julgamento clínico numa longa série de estudos. O argumento mais forte não é que a fórmula saiba mais — é que ela é <b>consistente</b>: o especialista dá notas diferentes ao mesmo caso conforme o humor, a ordem, o cansaço, um ruído que Daniel Kahneman detalhou no livro "Ruído". Onde não há regularidade a explorar, tirar esse ruído já ganha a disputa. Checklists, na linha de Atul Gawande, aplicam a mesma lógica a processos: padronizam os passos em que a intuição só varia.</p><p>A <b>visão de fora</b>, de Kahneman e Dan Lovallo, ataca outro erro: prever a partir das especificidades de um caso (a visão de dentro) ignora a <b>taxa-base</b> de casos parecidos e alimenta a falácia do planejamento. Começar pela classe de referência — "quanto costumam atrasar reformas como esta?" — e só então ajustar produz estimativas bem melhores, porque a história é sedutora e a base é factual.</p><p>Na decisão sob incerteza, o princípio unificador é <b>decompor e adiar o holístico</b>. Entrevistas <b>estruturadas</b> preveem desempenho muito melhor que as livres, exatamente o caso do módulo: perguntas fixas, notas por dimensão, combinação mecânica no fim, com a impressão global deixada para o final ou descartada. Kahneman chama esse conjunto de práticas de <b>higiene de decisão</b>. E a fronteira honesta permanece a do módulo: onde há <b>regularidade previsível</b> e <b>retorno</b>, a intuição treinada é válida e a estrutura rende menos — a ferramenta certa depende do terreno.</p>';
+  PREDICT.palpite[4] = {q:'Para escolher o melhor candidato a uma vaga, o que prevê MELHOR o desempenho no trabalho: uma entrevista aberta e descontraída em que você vai no seu faro, ou as mesmas perguntas fixas pontuadas em critérios definidos e combinadas só no fim?', o:['A entrevista aberta: você "lê" as pessoas','A estruturada e pontuada','As duas preveem igual'], c:1, after:'A estruturada. A entrevista solta vira uma impressão holística cedo, cheia de ruído; a estruturada quebra o julgamento em dimensões fixas, pontua cada uma com consistência e adia a nota de conjunto. Mesmo material humano, muito mais poder de previsão — é a decisão estruturada vencendo o faro.'};
+  CHAIN.palpite[4] = {
+    s:['O ambiente é de baixa validade: sem padrão estável nem retorno','O palpite holístico ali é ruído, não sinal','Você troca o faro por estrutura: uma fórmula ou checklist consistente','Pontua os poucos fatores que importam, sempre igual','A decisão consistente supera o especialista que varia'],
+    h:2, hn:'A virada: o conserto de um ambiente ruim para a intuição não é um palpite melhor — é estrutura que remove o ruído. Regra consistente vence mente inconsistente, e a taxa-base vence a história vívida. Guarde o faro para onde as duas condições valem; no resto, andaime.',
+    w:'E se o ambiente FOSSE de alta validade, com padrão e retorno?',
+    wa:'Aí a intuição do especialista é genuinamente válida (a aula anterior), e a estrutura rende menos — pode até atrapalhar num ambiente muito previsível, onde ele acha as pistas certas. A ferramenta depende do terreno: fórmula onde falta validade, faro onde ela sobra.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.palpite) BRIDGE.palpite[4] = 'A aula é o lado prático do módulo: se o seu faro não é válido aqui, o que usar no lugar. Fórmula e checklist, a visão de fora (taxa-base) e a decisão estruturada — e quando ainda vale confiar no especialista.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.palpite) CONTEXT_TOPIC_TERMS.palpite['4'] = {
+    'previsão estatística':{steps:[2,3,4],kind:'direct'},
+    'visão de fora':{steps:[],kind:'context',note:'Outra ferramenta de estrutura: partir da taxa-base.'},
+    'taxa-base':{steps:[],kind:'context',note:'O ponto de partida da visão de fora.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo diz QUANDO confiar no palpite. Quando o ambiente é de baixa validade (sem padrão nem retorno), o que esta aula recomenda no lugar do faro?',
+    o:['Estrutura: fórmula/checklist consistente, a visão de fora (taxa-base) e a decisão decomposta','Confiar mais no palpite, com mais atenção','Esperar até acumular mais anos de experiência','Pedir sempre a opinião de outro especialista'], c:0, l:4,
+    er:'Isso. Onde a intuição não vale, entra a <strong>estrutura</strong>: previsão estatística consistente, visão de fora (taxa-base) e decisão decomposta. O faro fica para onde as duas condições valem.',
+    ew:'Baixa validade não se conserta com mais faro, mais anos ou outro especialista: entra a <strong>estrutura</strong> — fórmula/checklist, taxa-base e decisão decomposta.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
