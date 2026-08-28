@@ -8127,6 +8127,58 @@ Object.assign(TERM_FIG, {
     ew:'A substância branca não é corpo celular, líquido nem energia: são os <strong>axônios que conectam</strong> as regiões — a fiação que faz do cérebro uma rede.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — sensorial ganha uma 5ª aula: prever
+
+   O módulo repete que a percepção é "construção", mas nunca dá o mecanismo.
+   Esta aula traz a codificação preditiva: o cérebro prevê e checa, os sentidos
+   sobem sobretudo o erro, e ilusões (máscara côncava, McGurk) são a previsão
+   vencendo o sinal. "erro de previsao" fica em prosa (o verbete e do modulo de
+   recompensa/dopamina). Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'codificação preditiva':'Ideia de que o cérebro percebe gerando previsões do que está lá fora e propagando adiante sobretudo o ERRO — a parte que a previsão não acertou. Você experimenta a previsão corrigida, não o sinal cru.',
+  'inferência inconsciente':'Expressão de Helmholtz para a percepção como um palpite automático: o cérebro infere a causa mais provável dos sinais, sem você notar o cálculo.',
+  'efeito McGurk':'Ilusão em que ver os lábios formando uma sílaba muda qual sílaba você OUVE — prova de que a percepção integra os sentidos e é moldada pela previsão, não uma cópia de um canal só.'
+});
+Object.assign(TERM_FIG, {
+  'codificação preditiva':'mod:sensorial', 'inferência inconsciente':'mod:sensorial', 'efeito McGurk':'mod:sensorial'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='sensorial');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Perceber é prever: a construção da realidade',
+    b:'<p>O módulo repetiu que a percepção é uma <b>construção</b>, não uma cópia. Esta aula diz <b>como</b>. O cérebro não espera os sentidos e monta a cena de baixo para cima: ele <b>prevê</b> o que está lá fora e confere a previsão contra o que chega. A percepção é o melhor <b>palpite</b> do cérebro, corrigido pelos sentidos — não os sentidos corrigidos até virar imagem.</p>'
+     +'<p>É a <span class="term">codificação preditiva</span>. As previsões descem pela hierarquia sensorial; os sentidos mandam de volta, sobretudo, o <b>erro</b> — a parte que a previsão errou. Como quase sempre a previsão acerta, pouco erro sobe, e o sistema fica barato. Você vive a previsão, atualizada pelo erro. Helmholtz já chamava isso de <span class="term">inferência inconsciente</span>: um cálculo que você não percebe fazendo.</p>'
+     +'<p>Dá para flagrar o mecanismo. Ouça uma gravação distorcida e só escute ruído; depois que te dizem a frase, ela salta <b>nítida</b> — a previsão agora molda o percepto. Na máscara côncava, você vê um rosto <b>saltar para fora</b> mesmo sendo oco, porque "rostos são convexos" é uma expectativa forte demais para o sinal derrubar. E entre sentidos: no <span class="term">efeito McGurk</span>, o que os olhos veem muda a sílaba que os ouvidos <b>ouvem</b>. Ilusões não são o cérebro falhando — são a previsão <b>vencendo</b> o sinal.</p>'
+     +'<p>A consequência é dos dois lados. O que você percebe é moldado pelo que espera — expectativas de uma vida e do instante. Isso é poderoso (rápido, robusto no ruído) e falível (dá para ver e ouvir o que não está lá). Para estudar: a expectativa molda o que entra, então dizer de antemão o que procurar muda o que se capta — e serve de alerta, porque perceber com confiança ainda é palpitar.</p>'
+  });
+  MINI_QUIZZES.sensorial[4] = [
+    {lvl:0, q:'Na codificação preditiva, o que os sentidos mandam sobretudo para cima na hierarquia?', o:['O erro da previsão — a parte que a previsão do cérebro não acertou','Uma cópia fiel e completa de tudo que captaram','Apenas a cor e o brilho, nunca a forma'], c:0, er:'Isso: sobe o ERRO, não o sinal cru. A previsão desce; a correção sobe.', ew:'Não é uma cópia completa nem só cor: o que sobe é o ERRO da previsão, a parte que ela não acertou.'},
+    {lvl:1, q:'Por que uma gravação distorcida vira nítida assim que te contam a frase?', o:['Porque a previsão (agora fornecida) molda o percepto: percepção é previsão mais erro','Porque o volume aumenta quando você presta atenção','Porque a segunda audição é sempre mais limpa que a primeira'], c:0, er:'Exato: o áudio é o mesmo; o que mudou foi a previsão, que agora dá forma ao que você ouve.', ew:'O áudio não muda de volume nem melhora: o que mudou foi a PREVISÃO fornecida, que passa a moldar o percepto.'},
+    {lvl:2, q:'Por que ilusões como a máscara côncava são evidência A FAVOR da percepção preditiva?', o:['Porque mostram uma expectativa forte (rostos são convexos) vencendo o sinal real','Porque provam que os olhos enxergam errado por defeito','Porque mostram que a percepção ignora toda expectativa'], c:0, er:'Isso: a ilusão é a previsão ganhando do sinal. O mecanismo aparecendo, não falhando.', ew:'Não é defeito do olho nem ausência de expectativa: é uma expectativa forte (a convexidade dos rostos) vencendo o que o sinal diz.'}
+  ];
+  DEEP.sensorial[4] = '<p>A intuição de que a percepção é inferência é antiga: Hermann von Helmholtz, no século XIX, falava em <b>inferência inconsciente</b> — o cérebro adivinhando a causa mais provável dos sinais. A versão moderna, a <b>codificação preditiva</b> (Rao e Ballard; depois a energia livre de Friston), dá a arquitetura: em cada nível da hierarquia, previsões descem e <b>unidades de erro</b> sobem apenas com o que a previsão não explicou. O cérebro minimiza esse erro ora atualizando a previsão, ora agindo para mudar a entrada.</p><p>Isso reorganiza fatos espalhados do módulo. O preenchimento do ponto cego, a modulação da dor pela expectativa, a adaptação dos receptores — todos são a mesma lógica: o cérebro representa o que <b>prevê</b> e gasta recurso só com a surpresa. A integração entre sentidos entra aqui também: o <b>efeito McGurk</b> mostra que a previsão combina visão e audição num único percepto, e vence quando um canal é ambíguo.</p><p>Levada ao extremo, a ideia toca a clínica: um desequilíbrio entre previsão e erro é uma hipótese para alucinações (a previsão forte demais gera percepto sem sinal) e para certos traços do autismo (peso alto demais no erro, mundo excessivamente imprevisível). Não é palavra final, mas mostra a força do enquadramento. Para o estudante, fica a lição dupla: preparar a expectativa (saber o que procurar) melhora o que se percebe — e a confiança perceptual, ainda assim, é um palpite calibrável.</p>';
+  PREDICT.sensorial[4] = {q:'Você ouve uma gravação muito distorcida e só entende ruído. Então te mostram a frase escrita e você ouve de novo — o MESMO áudio. Você acha que vai soar mais claro?', o:['Não, o áudio é idêntico, então soa igual','Sim: de repente você "ouve" as palavras','Só se aumentarem o volume'], c:1, after:'Fica nítido — e o áudio não mudou. Ao receber a frase, você ganhou a PREVISÃO que faltava, e ela molda o que você ouve. É a percepção preditiva ao vivo: o sinal é o mesmo; a previsão é que virou o percepto.'};
+  CHAIN.sensorial[4] = {
+    s:['O cérebro gera uma previsão do que está lá fora','Essa previsão desce pela hierarquia sensorial','Os sentidos mandam de volta sobretudo o ERRO da previsão','A previsão corrigida pelo erro vira o que você percebe','Com uma previsão forte, o percepto segue a previsão, não o sinal'],
+    h:2, hn:'A virada: você não monta a percepção a partir da sensação crua — você prevê e confere. Quase sempre a previsão acerta e só o erro sobe. Você experimenta seu melhor palpite, afinado pelos sentidos, não uma cópia.',
+    w:'E se a previsão for forte demais e o sinal, fraco ou ambíguo?',
+    wa:'O percepto segue a previsão — é a ilusão (a máscara côncava que "salta") ou ouvir a palavra assim que te dizem qual é. A previsão vencer o sinal não é falha: é o mecanismo à mostra.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.sensorial) BRIDGE.sensorial[4] = 'A aula dá o mecanismo por trás do "perceber é construir" que o módulo repete: o cérebro prevê e checa. Aqui, codificação preditiva, o erro de previsão e por que ilusões são a previsão vencendo o sinal.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.sensorial) CONTEXT_TOPIC_TERMS.sensorial['4'] = {
+    'codificação preditiva':{steps:[0,1,2,3],kind:'direct'},
+    'inferência inconsciente':{steps:[],kind:'context',note:'O nome histórico (Helmholtz) da mesma ideia.'},
+    'efeito McGurk':{steps:[],kind:'context',note:'A previsão moldando a percepção entre sentidos; um exemplo.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo repete que a percepção é uma "construção". Que mecanismo esta aula aponta por trás disso?',
+    o:['O cérebro prevê o que está lá fora e corrige a previsão pelo erro dos sentidos','Os sentidos enviam uma cópia fiel e completa ao córtex','Cada receptor decide sozinho o que será percebido','A percepção é montada só de baixo para cima, sem expectativa'], c:0, l:4,
+    er:'Isso. É a <strong>codificação preditiva</strong>: perceber é prever e conferir. Você experimenta a previsão corrigida pelo erro — por isso a expectativa molda o que se vê e se ouve.',
+    ew:'A "construção" tem mecanismo: o cérebro <strong>prevê</strong> e corrige pelo erro. Não é cópia fiel, nem receptor decidindo sozinho, nem só de baixo para cima.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
