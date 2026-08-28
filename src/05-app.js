@@ -8435,6 +8435,57 @@ Object.assign(TERM_FIG, {
     ew:'O placebo não é "efeito nenhum": a <strong>expectativa</strong> recruta os sistemas do próprio cérebro e produz efeito real — por isso os ensaios precisam de grupo placebo.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — metodos ganha uma 5ª aula: ler com ceticismo
+
+   Correlacao vs causa e evidencia convergente ja estao no modulo. Falta o kit
+   do LEITOR: como um achado real e mal lido — inferencia reversa, amostras
+   pequenas + comparacoes multiplas (o salmao morto), a crise de
+   reprodutibilidade — e as perguntas certas. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'inferência reversa':'Concluir um estado mental a partir de uma região ativa ("a amígdala acendeu, logo sentiu medo"). É falho porque cada região participa de muitas funções — a ativação não fixa o estado.',
+  'comparações múltiplas':'Testar milhares de pontos do cérebro de uma vez; sem correção estatística, alguns "acendem" só por acaso — foi assim que um salmão morto "mostrou" atividade numa fMRI.',
+  'crise de reprodutibilidade':'A constatação de que muitos resultados chamativos não se repetem quando refeitos, por amostras pequenas e análises flexíveis; a resposta é convergência, amostras maiores e pré-registro.'
+});
+Object.assign(TERM_FIG, {
+  'inferência reversa':'mod:metodos', 'comparações múltiplas':'mod:metodos', 'crise de reprodutibilidade':'mod:metodos'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='metodos');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Ler o cérebro com ceticismo: as armadilhas',
+    b:'<p>O módulo deu as ferramentas e a regra de ouro (correlação não é causa). Esta última aula é o <b>kit de sobrevivência do leitor</b>: os jeitos mais comuns de um achado — até um verdadeiro — ser <b>exagerado</b>, por manchetes e por cientistas. Conhecer as ferramentas é metade; conhecer as armadilhas delas é a outra.</p>'
+     +'<p>A mais comum é a <span class="term">inferência reversa</span>. Um exame mostra a amígdala ativa e a manchete diz "sentiram medo". Só que a amígdala faz muitas coisas — saliência, novidade, até excitação positiva —, então a atividade dela <b>não implica</b> medo. "Medo ativa a amígdala" (para a frente) não é o mesmo que "amígdala ativa significa medo" (para trás). Quase todo exagero de neuroimagem é esse salto.</p>'
+     +'<p>Depois vêm as armadilhas de <b>estatística</b>. Estudos de cérebro costumam ter <b>poucos participantes</b> e milhares de pontos medidos, então alguns "blobs" significativos são ruído — famosamente, um <b>salmão morto</b> "mostrou" atividade quando a estatística não foi corrigida para tantas <span class="term">comparações múltiplas</span>. E escolhas flexíveis de análise (quais pontos, qual limiar) deixam achar quase qualquer coisa. Isso alimentou uma <span class="term">crise de reprodutibilidade</span>: muitos resultados chamativos não se repetem.</p>'
+     +'<p>O antídoto é o próprio método do módulo, levado a sério: amostras maiores, correção estatística, pré-registro e <b>evidência convergente</b>. E o leitor tem cinco perguntas: é correlação ou manipulação? Quantos participantes? Tem inferência reversa? Já foi replicado? Há um <b>mecanismo</b> ligando os pontos ou só um blob? Este é, talvez, o presente mais útil do curso inteiro — não um fato, e sim um <b>filtro</b>. A neurociência é jovem e se autocorrige; lê-la bem é segurar cada estudo isolado com folga e confiar na convergência.</p>'
+  });
+  MINI_QUIZZES.metodos[4] = [
+    {lvl:0, q:'O que é a inferência reversa?', o:['Concluir um estado mental a partir de uma região ativa ("a área acendeu, logo sentiu X")','Repetir um experimento para confirmar o resultado','Manipular uma área para provar que ela causa a função'], c:0, er:'Isso: é ler o estado mental "de trás para frente" a partir de um blob — falho, porque a região faz muitas coisas.', ew:'Não é replicar nem manipular: é o salto de inferir um sentimento SÓ porque uma área ativou.'},
+    {lvl:1, q:'Uma manchete diz: "exame prova que as pessoas sentem X porque a região Y acendeu". Qual é a falha principal?', o:['Inferência reversa: Y faz muitas coisas, então sua ativação não fixa o estado mental','Nenhuma: se Y acendeu, está provado','Que a fMRI lê o pensamento diretamente'], c:0, er:'Exato: a ativação sugere participação, não prova o sentimento. Ler o estado a partir do blob é inferência reversa.', ew:'A falha é a INFERÊNCIA REVERSA — a região faz muitas coisas. A fMRI não lê pensamento, e "acendeu" não é "provado".'},
+    {lvl:2, q:'Por que um salmão MORTO chegou a "mostrar" atividade cerebral num estudo de fMRI?', o:['Milhares de pontos foram testados sem corrigir para comparações múltiplas, e o acaso gerou falsos positivos','Porque peixes têm atividade cerebral escondida após a morte','Porque a fMRI simplesmente não funciona'], c:0, er:'Isso: testar milhares de voxels sem correção faz o ruído parecer sinal. Foi uma demonstração proposital do problema.', ew:'O salmão estava morto e a fMRI funciona: o ponto é estatístico — sem corrigir tantos testes, o acaso vira "ativação".'}
+  ];
+  DEEP.metodos[4] = '<p>A <b>inferência reversa</b>, nome dado por Russell Poldrack, é a falha lógica mais frequente na divulgação de neuroimagem. Como a maioria das regiões é <b>polivalente</b> — a ínsula aparece em nojo, dor, empatia e interocepção; a amígdala em medo, novidade e saliência positiva —, observar a região acesa raramente identifica o processo mental. "A tarefa T ativa a região R" é um dado; "vi R ativa, logo houve T" é um salto que só se sustenta se R for razoavelmente específica de T, o que é raro.</p><p>As armadilhas estatísticas foram dramatizadas por Craig Bennett, que pôs um <b>salmão do Atlântico morto</b> num scanner, mostrou-lhe fotos e "encontrou" ativação — a menos que se corrigisse para as milhares de <b>comparações múltiplas</b>. Some-se a isso o baixo <b>poder</b> de muitos estudos (poucos sujeitos), a flexibilidade de análise (o "jardim dos caminhos que se bifurcam") e a pressão por resultados positivos, e chega-se à <b>crise de reprodutibilidade</b> que a psicologia e a neurociência encararam na última década.</p><p>A boa notícia é que o campo respondeu com o próprio método: <b>pré-registro</b> (declarar a análise antes de ver os dados), amostras maiores e colaborativas, correção estatística e, sobretudo, a <b>evidência convergente</b> da última aula — uma conclusão vale quando EEG, fMRI, lesão e modelo apontam junto. Para o leitor, o resumo cabe em cinco perguntas: correlação ou manipulação? quantos participantes? inferência reversa? replicou? há mecanismo, ou só um blob? Sair do curso com esse filtro é mais valioso do que sair com qualquer fato.</p>';
+  PREDICT.metodos[4] = {q:'Um estudo famoso colocou um salmão MORTO num aparelho de fMRI, mostrou fotos a ele e encontrou "atividade cerebral" no salmão. O que isso demonstra?', o:['Que peixes têm atividade cerebral escondida','Que, sem corrigir para milhares de testes estatísticos, ruído puro parece ativação real','Que a fMRI é inútil e não deve ser usada'], c:1, after:'Demonstra a armadilha das comparações múltiplas. Testar milhares de pontos do cérebro sem correção estatística faz o acaso produzir "ativações" — até num salmão morto. Foi uma demonstração proposital de por que amostras maiores e correção importam, não uma prova contra a fMRI.'};
+  CHAIN.metodos[4] = {
+    s:['Um exame mostra a área X ativa numa tarefa','A manchete conclui: "então a pessoa sentiu Y"','Mas a área X participa de muitas coisas, não só de Y','Ler o estado mental a partir do blob é inferência reversa','A ativação sugere participação, não prova o sentimento'],
+    h:3, hn:'A virada: "Y ativa X" (para a frente) não é "X ativo significa Y" (para trás). Como cada região faz muitas coisas, ler o estado mental de um blob é um salto — o erro por trás de quase toda manchete de neuroimagem.',
+    w:'E se, além do blob, o estudo tivesse pouquíssimos participantes e testasse milhares de pontos?',
+    wa:'Aí some até a certeza de que o blob é real: sem corrigir tantos testes, ruído puro vira "ativação" — o caso do salmão morto. Poucos sujeitos e muitos pontos são a receita do falso-positivo; por isso replicar e convergir importa.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.metodos) BRIDGE.metodos[4] = 'A aula fecha o curso com o kit de sobrevivência do leitor: as armadilhas que fazem um achado real ser mal lido. Inferência reversa, amostras pequenas, o salmão morto — e as cinco perguntas certas a fazer.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.metodos) CONTEXT_TOPIC_TERMS.metodos['4'] = {
+    'inferência reversa':{steps:[3,4],kind:'direct'},
+    'comparações múltiplas':{steps:[],kind:'context',note:'A armadilha estatística; aparece no "e se".'},
+    'crise de reprodutibilidade':{steps:[],kind:'context',note:'O sintoma coletivo dessas armadilhas.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo deu as ferramentas. Qual armadilha de leitura está por trás de manchetes como "o exame prova que a pessoa sentiu X porque a área Y acendeu"?',
+    o:['A inferência reversa: a área Y faz muitas coisas, então sua ativação não fixa o estado mental','Nenhuma: se Y acendeu, o sentimento está provado','Que a fMRI mede diretamente o pensamento','Que correlação e causa são exatamente a mesma coisa'], c:0, l:4,
+    er:'Isso. É a <strong>inferência reversa</strong> — ler o estado mental de trás para frente a partir de um blob. A ativação sugere participação, não prova o sentimento.',
+    ew:'A armadilha é a <strong>inferência reversa</strong>: como Y participa de muitas funções, "Y acendeu" não prova "sentiu X". A fMRI não lê pensamento.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
