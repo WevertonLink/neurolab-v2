@@ -8075,6 +8075,58 @@ Object.assign(TERM_FIG, {
     ew:'Quem reprocessa a emoção é o <strong>REM</strong>. Faxina glinfática, melatonina e adenosina são outros mecanismos do módulo, não a função do REM.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — neuroanatomia ganha uma 5ª aula: fiação
+
+   O módulo dá as PARTES (lobos, estruturas, endereços) — toda substância
+   cinzenta. Falta a fiação: a substância branca que liga as regiões, os três
+   tipos de feixe, a ideia de rede/conectoma e as síndromes de desconexão.
+   Reusa substância branca, corpo caloso, fascículo arqueado. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'conectoma':'O mapa completo das conexões do cérebro — quais regiões se ligam a quais. Pensar em conectoma é tratar o cérebro como uma rede, não uma coleção de peças.',
+  'síndrome de desconexão':'Déficit que surge quando o feixe que liga duas regiões é lesado, embora as próprias regiões estejam intactas — a função morava na conexão.',
+  'cérebro dividido':'Condição em que o corpo caloso foi seccionado e os dois hemisférios deixam de compartilhar informação, passando a agir de forma quase independente.'
+});
+Object.assign(TERM_FIG, {
+  'conectoma':'mod:neuroanatomia', 'síndrome de desconexão':'mod:neuroanatomia', 'cérebro dividido':'mod:neuroanatomia'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='neuroanatomia');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'A fiação: substância branca e redes',
+    b:'<p>O módulo deu os endereços — lobos, estruturas profundas, o que fica onde. Mas um mapa de cidades não é um mapa do país: faltam as <b>estradas</b>. Quase metade do cérebro, em volume, é <span class="term">substância branca</span>: os axônios mielinizados que <b>ligam</b> as regiões. Boa parte da função mora tanto nas conexões quanto nas próprias áreas.</p>'
+     +'<p>Essa fiação tem três tipos. Fibras que unem os <b>dois hemisférios</b> (comissurais — o <span class="term">corpo caloso</span> é a maior); fibras que ligam regiões <b>dentro</b> de um hemisfério (de associação — como o <span class="term">fascículo arqueado</span>, que amarra as áreas da linguagem); e fibras que <b>sobem e descem</b> até o corpo e as estruturas profundas (de projeção — como a via corticoespinhal). Conheça as estradas e verá regiões distantes agirem como uma só.</p>'
+     +'<p>Isso muda como se lê o cérebro: ele é uma <b>rede</b>. Muitas funções não estão numa região, e sim num circuito que atravessa várias — e cortar a <b>conexão</b> pode quebrar a função com as regiões intactas. É a <span class="term">síndrome de desconexão</span>: lese o fascículo arqueado e Broca e Wernicke continuam funcionando, mas não conseguem mais conversar (a afasia de condução).</p>'
+     +'<p>A neurociência moderna mapeia o <span class="term">conectoma</span> — o conjunto das conexões, hoje visível por imagem de difusão — e pensa em redes, como a rede de modo padrão ativa em repouso. O endereço importa, mas é a fiação que transforma endereços numa mente. E fecha com a aula da glia: doenças que atacam a mielina (como a esclerose múltipla) silenciam as cidades sem destruí-las — só cortando as estradas.</p>'
+  });
+  MINI_QUIZZES.neuroanatomia[4] = [
+    {lvl:0, q:'O que é a substância branca?', o:['Os axônios mielinizados que conectam regiões do cérebro — a fiação','Os corpos celulares que formam o córtex — o processamento','O líquido que preenche os ventrículos do cérebro'], c:0, er:'Isso: é a fiação (axônios com mielina) que liga as regiões, distinta da substância cinzenta (corpos celulares).', ew:'Não são corpos celulares nem líquido: são os AXÔNIOS mielinizados que conectam as regiões — a fiação do cérebro.'},
+    {lvl:1, q:'O fascículo arqueado liga as áreas de Broca e Wernicke. Se ele for cortado, mas as duas áreas continuarem sadias, o que acontece?', o:['Uma síndrome de desconexão: as áreas funcionam, mas não trocam informação','Nada: com as áreas sadias, a linguagem fica intacta','As duas áreas param de funcionar por completo'], c:0, er:'Exato: é a afasia de condução, uma desconexão. As regiões estão vivas, mas isoladas uma da outra.', ew:'As áreas seguem vivas, mas incomunicáveis — uma síndrome de desconexão. Não é "nada" nem a morte das duas áreas.'},
+    {lvl:2, q:'Por que cortar uma conexão pode quebrar uma função com as regiões intactas?', o:['Porque muitas funções vivem no CIRCUITO entre regiões, e a conexão é parte da função','Porque a substância branca também pensa, como a cinzenta','Porque toda função mora numa única região'], c:0, er:'Isso: a função é distribuída pela rede. Tirar a estrada silencia as cidades mesmo sadias.', ew:'Não é que a substância branca "pense", nem que tudo esteja numa região: a função mora no circuito, e a conexão é parte dele.'}
+  ];
+  DEEP.neuroanatomia[4] = '<p>A substância branca se divide em três famílias de feixes. As <b>comissurais</b> cruzam a linha média e unem os hemisférios — o corpo caloso é a maior ponte do corpo humano. As de <b>associação</b> correm dentro de um hemisfério ligando regiões (o fascículo arqueado, o cíngulo, o fascículo longitudinal superior). As de <b>projeção</b> sobem e descem entre o córtex e o resto (a via corticoespinhal do movimento, as radiações do tálamo). A cor branca vem da mielina que reveste todos eles.</p><p>Pensar em <b>conectoma</b> — o mapa dessas ligações, hoje reconstruído por tractografia de difusão — reorganizou a neurociência em torno de <b>redes</b>: a rede de modo padrão (ativa quando você não faz nada dirigido), a rede de saliência, a executiva. O comportamento emerge da conversa entre nós, não de centros isolados.</p><p>As <b>síndromes de desconexão</b>, descritas por Norman Geschwind, são a prova viva disso. No <b>cérebro dividido</b> (corpo caloso seccionado para tratar epilepsia grave), cada hemisfério vê e decide por conta própria, e uma mão pode desfazer o que a outra faz. Na afasia de condução, Broca e Wernicke intactos não se falam. Na alexia pura, os olhos veem as letras mas a informação não chega à área da leitura. Em todos, o dano é na estrada — e é uma dobradiça direta para a aula da glia: sem mielina, a fiação falha, e regiões sadias ficam mudas.</p>';
+  PREDICT.neuroanatomia[4] = {q:'A área da fala (Broca) e a da compreensão (Wernicke) estão perfeitamente sadias, mas o feixe de fibras que as conecta foi cortado. Você acha que fala e compreensão vão funcionar bem juntas?', o:['Sim, as duas áreas estão sadias, então tudo funciona','Não: sem a conexão, elas não coordenam — uma desconexão','Só a compreensão falharia; a fala ficaria normal'], c:1, after:'Não funcionam bem juntas. As duas áreas estão vivas, mas o feixe que as liga (o fascículo arqueado) foi cortado — é a afasia de condução, uma síndrome de desconexão. A função morava na conexão, e não só nas regiões.'};
+  CHAIN.neuroanatomia[4] = {
+    s:['Broca (fala) e Wernicke (compreensão) estão intactos','O feixe que os liga (o fascículo arqueado) é cortado','Cada área funciona, mas elas não trocam informação','Surge um déficit sem nenhuma "região" estar lesada','A função morava na CONEXÃO, não só nas regiões'],
+    h:4, hn:'A virada: corte a estrada e as cidades ficam mudas uma para a outra, mesmo sadias. O cérebro é rede — muito do que ele faz mora na fiação, não nas caixas.',
+    w:'E se, em vez de um feixe dentro de um hemisfério, cortássemos a ponte entre os dois — o corpo caloso?',
+    wa:'Os hemisférios deixam de compartilhar: é o cérebro dividido, em que uma metade não sabe o que a outra viu ou fez. De novo, as partes intactas e a função quebrada pela conexão perdida.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.neuroanatomia) BRIDGE.neuroanatomia[4] = 'A aula completa a geografia do módulo: das partes para as estradas. Substância branca, os três tipos de feixe e a ideia de rede — e por que cortar uma conexão quebra a função com as regiões intactas.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.neuroanatomia) CONTEXT_TOPIC_TERMS.neuroanatomia['4'] = {
+    'substância branca':{steps:[],kind:'context',note:'A fiação como um todo — o assunto da aula.'},
+    'fascículo arqueado':{steps:[1],kind:'direct'},
+    'síndrome de desconexão':{steps:[3],kind:'direct'},
+    'conectoma':{steps:[],kind:'context',note:'O mapa das conexões; a visão de rede.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo mapeou as regiões — a substância cinzenta. O que a substância branca acrescenta a esse mapa?',
+    o:['A fiação que liga as regiões, revelando o cérebro como uma rede, não só um conjunto de peças','Mais corpos celulares para processar informação','O líquido que protege e amortece o cérebro','Uma reserva de energia para os neurônios do córtex'], c:0, l:4,
+    er:'Isso. A substância branca é a <strong>fiação</strong>: liga as regiões e mostra o cérebro como rede — por isso cortar uma conexão pode quebrar a função com as regiões intactas.',
+    ew:'A substância branca não é corpo celular, líquido nem energia: são os <strong>axônios que conectam</strong> as regiões — a fiação que faz do cérebro uma rede.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
