@@ -7973,6 +7973,57 @@ Object.assign(TERM_FIG, {
     ew:'Quem regula de verdade é a <strong>reavaliação</strong> (muda o significado, baixa a amígdala). Suprimir esconde sem baixar, e as outras opções não regulam.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — autonomo ganha uma 5ª aula: interocepção
+
+   O módulo é quase todo EFERENTE (o cérebro comandando o corpo: acelerador,
+   freio, tônus). A 4ª aula só menciona que "o intestino informa". Esta aula
+   desenvolve a via AFERENTE: interocepção — o corpo reportando ao cérebro, a
+   ínsula, e como o sinal interno vira sensação. Reusa 'interocepção' (âncora
+   autonomo:enterico). Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'ínsula':'Região cortical que recebe e integra os sinais do corpo — batimento, respiração, vísceras; é o principal mapa interoceptivo e participa da construção das emoções.',
+  'acurácia interoceptiva':'O quanto uma pessoa percebe com precisão os próprios sinais internos, como os batimentos; maior acurácia costuma acompanhar emoções mais intensas ou mais rápidas.'
+});
+Object.assign(TERM_FIG, {
+  'ínsula':'mod:autonomo', 'acurácia interoceptiva':'mod:autonomo'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='autonomo');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Interocepção: o cérebro lendo o corpo',
+    b:'<p>Até aqui o módulo foi quase todo numa direção: o cérebro <b>comandando</b> o corpo — acelerar, frear, ajustar o tônus. Mas existe um canal de volta enorme, que a 4ª aula só espiou ao dizer que o intestino informa mais do que obedece. O corpo reporta seu estado o tempo todo para cima, e ler esse relatório é a <span class="term">interocepção</span> — a matéria-prima do que chamamos de sentir.</p>'
+     +'<p>Esse mapa do corpo chega sobretudo à <span class="term">ínsula</span>, o córtex interoceptivo: batimento, respiração, fome, temperatura, tensão visceral, tudo representado ali. E as pessoas diferem na <span class="term">acurácia interoceptiva</span> — o quanto percebem bem os próprios sinais, medido, por exemplo, pela capacidade de contar os batimentos sem tocar o pulso. Quem lê melhor esses sinais tende a sentir emoções de forma mais intensa ou mais rápida.</p>'
+     +'<p>Aqui o módulo encosta na emoção. Um coração acelerado <b>não é</b>, por si só, uma emoção: vira uma quando o cérebro o <b>lê e interpreta</b> no contexto. O mesmo disparo cardíaco, sob uma moldura de ameaça, é <b>ansiedade</b>; sob uma de prontidão, é <b>excitação</b> — a mesma reavaliação da aula de emoção, agora vista pelo lado do corpo. É por isso que o pânico pode nascer de uma leitura catastrófica de um sinal corporal comum.</p>'
+     +'<p>A consequência fecha o círculo do estresse. Seus sentimentos não flutuam soltos: são montados em parte a partir de sinais que você lê com mais ou menos precisão. Daí <b>respirar devagar</b> mudar o que se sente — não é distração: você desacelera o coração e sobe o tônus vagal, e a interocepção lê esse sinal novo. "Ouvir o corpo" é bom conselho, desde que o leitor esteja calibrado.</p>'
+  });
+  MINI_QUIZZES.autonomo[4] = [
+    {lvl:0, q:'O que é a interocepção?', o:['A percepção que o cérebro tem do estado interno do corpo (batimento, respiração, vísceras)','O comando do cérebro sobre os músculos esqueléticos','A digestão feita pelo intestino sem o cérebro'], c:0, er:'Isso: é o corpo informando o cérebro — a leitura dos sinais internos, base do sentir.', ew:'Não é comando motor nem só digestão: é a PERCEPÇÃO, pelo cérebro, dos sinais internos do corpo.'},
+    {lvl:1, q:'Por que exatamente o mesmo coração acelerado pode virar ansiedade ou excitação?', o:['Porque o sentimento é o sinal do corpo MAIS a interpretação que o cérebro faz dele','Porque o coração bate diferente em cada emoção','Porque a ansiedade usa o vago e a excitação, o simpático'], c:0, er:'Exato: interocepção é sinal + leitura. Muda a moldura, muda o sentimento, com o mesmo sinal.', ew:'O sinal cardíaco é o mesmo; o que muda é a INTERPRETAÇÃO no contexto. Sinal igual, molduras diferentes, sentimentos diferentes.'},
+    {lvl:2, q:'Por que respirar devagar muda de verdade o que você sente, e não só distrai?', o:['Porque muda o próprio sinal do corpo (desacelera o coração, sobe o tônus vagal), e a interocepção lê esse sinal novo','Porque ocupa a mente e faz esquecer a emoção','Porque desliga a ínsula temporariamente'], c:0, er:'Isso: você edita a ENTRADA da interocepção. Sinal corporal diferente, leitura diferente, sentimento diferente.', ew:'Não é distração nem desligar a ínsula: respirar devagar muda o sinal do corpo, e é esse sinal novo que a interocepção lê.'}
+  ];
+  DEEP.autonomo[4] = '<p>A ideia de que o sentimento vem do corpo é antiga (William James já dizia que corremos e por isso sentimos medo, não o contrário), mas ganhou anatomia. A <b>ínsula</b> — em especial sua porção anterior — é o ponto onde os sinais viscerais viram representação consciente, o que Bud Craig chamou de um mapa do "como o corpo está". Tarefas de <b>detecção de batimentos</b> mostram que a acurácia interoceptiva varia muito entre pessoas e prevê a intensidade da experiência emocional.</p><p>A leitura desses sinais é <b>construção</b>, não medida crua. Schachter e Singer já mostravam que a mesma ativação fisiológica era rotulada como euforia ou raiva conforme o contexto; Lisa Feldman Barrett levou isso adiante: a emoção é o cérebro <b>dando sentido</b> a sinais corporais dentro de uma situação. Boa parte da interocepção é até <b>preditiva</b> — o cérebro antecipa o estado do corpo e corrige pelo erro, como faz com os sentidos externos.</p><p>O lado clínico é direto. No pânico, um sinal corporal comum (um coração que dispara) é lido como catástrofe iminente, e a leitura realimenta o sinal. Terapias eficazes trabalham exatamente essa leitura. E fecha com a 4ª aula: a variabilidade da frequência cardíaca e o tônus vagal não são só saída — são também o material que a interocepção lê. Mexer na respiração mexe nos dois lados de uma vez.</p>';
+  PREDICT.autonomo[4] = {q:'Seu coração está disparado. Esse sinal do corpo, sozinho, já diz se você está com ansiedade ou com empolgação?', o:['Sim, coração disparado é sinal de ansiedade','Não: o mesmo sinal pode virar um ou outro, conforme a interpretação','Só dá para saber medindo a pressão arterial'], c:1, after:'Não diz sozinho. O coração disparado é só um sinal; ele vira ansiedade ou excitação quando o cérebro o LÊ e interpreta no contexto. Por isso a mesma reação física pode sustentar sentimentos opostos — e por que reenquadrar (ou respirar) muda o resultado.'};
+  CHAIN.autonomo[4] = {
+    s:['O corpo reporta seu estado ao cérebro (coração, respiração, intestino)','Esses sinais chegam à ínsula, o córtex interoceptivo','O cérebro lê e interpreta o sinal dentro de um contexto','Coração acelerado + moldura de ameaça vira ansiedade','O mesmo sinal + moldura de prontidão vira excitação'],
+    h:2, hn:'A virada: um sinal do corpo não é um sentimento até o cérebro lê-lo e enquadrá-lo. O mesmo coração acelerado sustenta dois sentimentos opostos, conforme a leitura. "Ouvir o corpo" exige um bom leitor.',
+    w:'E se você respirasse devagar de propósito?',
+    wa:'Você muda o próprio sinal — desacelera o coração, sobe o tônus vagal — e a interocepção lê esse sinal novo. Por isso respirar muda o que se sente, não só distrai: você edita a entrada.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.autonomo) BRIDGE.autonomo[4] = 'A aula vira a seta do módulo: até aqui, o cérebro comandando o corpo; agora, o corpo informando o cérebro. Interocepção é como o sinal interno vira sensação — e por que respirar muda o que se sente.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.autonomo) CONTEXT_TOPIC_TERMS.autonomo['4'] = {
+    'interocepção':{steps:[0,1],kind:'direct'},
+    'ínsula':{steps:[1],kind:'direct'},
+    'acurácia interoceptiva':{steps:[],kind:'context',note:'O quanto você lê bem esses sinais; varia entre pessoas.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo mostrou o cérebro comandando o corpo. Que direção a interocepção acrescenta?',
+    o:['O corpo informando o cérebro: sinais internos que viram sensação e emoção','O cérebro comandando os músculos esqueléticos com mais força','A digestão funcionando por conta própria, sem nenhum neurônio','O simpático substituindo de vez o parassimpático'], c:0, l:4,
+    er:'Isso. A interocepção é a via <strong>aferente</strong>: o corpo reportando ao cérebro (via ínsula), e esse sinal lido vira sensação e emoção.',
+    ew:'A interocepção acrescenta a direção <strong>de volta</strong> — corpo informando o cérebro, e não mais comando motor nem digestão isolada.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
