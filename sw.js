@@ -7,7 +7,7 @@
    Ao publicar uma versão nova do conteúdo, incremente VERSION. É isso que
    dispara o precache do index.html novo e apaga o cache anterior.
    ===================================================================== */
-const VERSION = 'neurolab-v1-27-0';
+const VERSION = 'neurolab-v1-28-0';
 
 const ASSETS = [
   './',
@@ -90,6 +90,14 @@ self.addEventListener('activate', event => {
       ))
       .then(() => self.clients.claim())
   );
+});
+
+/* Continua sem skipWaiting automático (trocar de worker no meio de um quiz
+   recarregaria a página sob o aluno). Mas agora a PÁGINA pode pedir a troca:
+   quando o aluno toca "Atualizar" no aviso de nova versão, ela manda esta
+   mensagem, o worker novo assume na hora e o registro recarrega uma vez só. */
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 /* A chave de cache ignora a query string. Isso não é cosmético: a auditoria

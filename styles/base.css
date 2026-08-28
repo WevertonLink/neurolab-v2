@@ -333,6 +333,23 @@ header.top{
 #toast .tt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;line-height:1.15}
 #toast .ts{font-size:13px;color:var(--ink-3)}
 
+/* aviso de nova versão (service worker) */
+#sw-update{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140px);z-index:211;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--cyan);
+  border-radius:14px;padding:12px 14px 12px 16px;box-shadow:0 20px 50px -15px rgba(0,0,0,.85);
+  display:flex;align-items:center;gap:12px;transition:transform .5s cubic-bezier(.22,1,.36,1);max-width:92vw}
+#sw-update.show{transform:translateX(-50%) translateY(0)}
+#sw-update .ti{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#1f7f8c,#1a2a34);flex:0 0 auto}
+#sw-update .su-txt{min-width:0}
+#sw-update .tt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;line-height:1.15}
+#sw-update .ts{font-size:13px;color:var(--ink-3)}
+#sw-update .su-btn{flex:0 0 auto;margin-left:4px;border:1px solid var(--cyan);border-radius:10px;
+  background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--ink);
+  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;padding:9px 16px;cursor:pointer;
+  transition:background .15s ease}
+#sw-update .su-btn:hover{background:color-mix(in srgb,var(--cyan) 26%,transparent)}
+#sw-update .su-btn:disabled{opacity:.6;cursor:default}
+
 /* ---------- topic meter ---------- */
 .topic-meter{display:flex;align-items:center;gap:10px;margin:14px 0 2px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.04em;color:var(--ink-3)}
 .topic-meter .tmbar{flex:1;height:5px;border-radius:5px;background:var(--panel);border:1px solid var(--line-soft);overflow:hidden;position:relative}
