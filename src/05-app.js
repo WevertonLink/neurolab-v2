@@ -8024,6 +8024,57 @@ Object.assign(TERM_FIG, {
     ew:'A interocepção acrescenta a direção <strong>de volta</strong> — corpo informando o cérebro, e não mais comando motor nem digestão isolada.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — sono ganha uma 5ª aula: REM e sonhos
+
+   A aula de arquitetura cita o REM em uma linha. Esta desenvolve o estado:
+   sono paradoxal (cérebro ativo, corpo paralisado), a "terapia noturna" que
+   rebaixa a carga emocional de uma memória mantendo o conteúdo, e por que os
+   últimos ciclos importam. Append idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'sono paradoxal':'Outro nome do sono REM: o cérebro fica quase tão ativo quanto acordado, os olhos se movem rápido e o corpo fica paralisado — é o palco dos sonhos vívidos.',
+  'atonia muscular':'A paralisia temporária dos músculos esqueléticos durante o sono REM, que impede o corpo de encenar o que se sonha.',
+  'terapia noturna':'Hipótese de que o sono REM reativa memórias emocionais num cérebro com pouca noradrenalina, rebaixando a carga afetiva enquanto preserva o conteúdo.'
+});
+Object.assign(TERM_FIG, {
+  'sono paradoxal':'mod:sono', 'atonia muscular':'mod:sono', 'terapia noturna':'mod:sono'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='sono');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O sono REM e os sonhos: processar o dia',
+    b:'<p>A aula da arquitetura citou o REM de passagem. Ele merece mais. É o estado mais estranho em que você entra toda noite: o cérebro quase tão ativo quanto acordado, os olhos disparando de um lado a outro — e o corpo de propósito <b>paralisado</b>. Chama-se <span class="term">sono paradoxal</span>, é o palco dos sonhos vívidos, e a <span class="term">atonia muscular</span> existe para você não encenar o que sonha.</p>'
+     +'<p>Seu trabalho mais notável é emocional. Na chamada <span class="term">terapia noturna</span>, memórias carregadas são reativadas no REM — só que num cérebro com <b>pouca noradrenalina</b>, o químico do estresse. O resultado é elegante: a <b>carga</b> emocional da lembrança é rebaixada enquanto o <b>conteúdo</b> é mantido. É parte de por que "dormir sobre o assunto" costuma amanhecer o fato com menos peso.</p>'
+     +'<p>Há também um trabalho de integração. No REM o cérebro afrouxa as regras do dia e conecta memórias que normalmente não se encontram — daí soluções e associações distantes melhorarem depois de uma fase REM. Os sonhos talvez sejam a vista de canto dessa recombinação, e não uma mensagem cifrada a decodificar.</p>'
+     +'<p>A consequência é prática e ingrata: o REM <b>se alonga</b> ao longo da noite e se concentra nos últimos ciclos. Cortar o fim do sono — acordar duas horas mais cedo — corta sobretudo o REM. Você perde justamente o processamento emocional e a integração no ciclo que pulou. Para o humor e para o estudo, as duas últimas horas não são enchimento.</p>'
+  });
+  MINI_QUIZZES.sono[4] = [
+    {lvl:0, q:'Por que o sono REM é chamado de "paradoxal"?', o:['Porque o cérebro fica muito ativo, quase como acordado, mas o corpo fica paralisado','Porque é o sono mais profundo e sem sonhos','Porque acontece só uma vez, no começo da noite'], c:0, er:'Isso: atividade cerebral alta com o corpo em atonia — o paradoxo que dá nome ao estado.', ew:'Não é o mais profundo nem único: é "paradoxal" porque o cérebro está ativíssimo enquanto o corpo está paralisado.'},
+    {lvl:1, q:'Por que "dormir sobre" um acontecimento chato costuma amanhecer com menos peso?', o:['No REM, a memória é reativada com pouca noradrenalina, e a carga emocional cai enquanto o conteúdo fica','Porque o sono simplesmente apaga memórias ruins','Porque o cansaço faz esquecer o que aconteceu'], c:0, er:'Exato: é a terapia noturna. O REM separa a carga do conteúdo — você mantém o fato, perde parte da dor.', ew:'O sono não apaga a memória nem é esquecimento por cansaço: o REM rebaixa a CARGA emocional e mantém o conteúdo.'},
+    {lvl:2, q:'Por que acordar duas horas mais cedo tira sobretudo o sono REM?', o:['Porque o REM se alonga ao longo da noite e se concentra nos últimos ciclos','Porque o REM só acontece de manhã, nunca antes','Porque o despertador destrói seletivamente o sono profundo'], c:0, er:'Isso: os períodos de REM crescem em direção à manhã. Cortar o fim da noite corta o ciclo mais rico em REM.', ew:'O REM acontece a noite toda, mas ALONGA nos últimos ciclos — por isso cortar o fim da noite tira mais REM, não o sono profundo.'}
+  ];
+  DEEP.sono[4] = '<p>O REM é fisiologicamente contraditório: o EEG cortical se parece com o da vigília, há ondas de atividade que varrem o tronco e o córtex visual, e ao mesmo tempo os motoneurônios do músculo esquelético são <b>ativamente inibidos</b> — a atonia. Sem ela, a pessoa encena o sonho (é o que ocorre no transtorno comportamental do REM). Os olhos e o diafragma escapam da paralisia; o resto do corpo, não.</p><p>A <b>terapia noturna</b>, hipótese de Matthew Walker e colegas, propõe que o REM é o único momento em que o cérebro reativa material emocional com a noradrenalina em baixa. Isso permitiria uma espécie de reconsolidação que <b>despotencia</b> o tom afetivo mantendo a informação — coerente com achados de que uma noite com REM reduz a reatividade da amígdala no dia seguinte, e com o vínculo entre REM perturbado e transtornos do humor. É influente e ainda em teste, como toda boa hipótese.</p><p>O segundo papel é <b>integrativo</b>. Depois de REM, pessoas resolvem melhor problemas que exigem ligar ideias distantes (testes de associados remotos) e abstraem regras escondidas em exemplos. O cérebro adormecido parece recombinar memórias fora das trilhas do dia; o sonho seria a experiência dessa recombinação, não um recado a traduzir. Como o REM mora no fim da noite, dormir pouco corta primeiro esse trabalho.</p>';
+  PREDICT.sono[4] = {q:'Você dorme tarde e acorda no despertador, cortando 2 horas do FIM da noite. Que estágio do sono você mais perde?', o:['O sono profundo de ondas lentas','O sono REM','Perde os dois igualmente'], c:1, after:'O REM. Ele se alonga ao longo da noite e domina os últimos ciclos, enquanto o sono profundo se concentra no começo. Cortar o fim da noite tira sobretudo o REM — e com ele o processamento emocional e a integração daquele ciclo.'};
+  CHAIN.sono[4] = {
+    s:['Durante o dia, uma memória emocional é gravada com carga forte','No REM, ela é reativada num cérebro com pouca noradrenalina','A carga emocional é rebaixada, o conteúdo é mantido','De manhã, você lembra o fato com menos peso','Cortar o REM deixa a reatividade emocional alta'],
+    h:1, hn:'A virada está no banho químico: reativar a memória com a noradrenalina em baixa deixa o cérebro separar o CONTEÚDO da CARGA. É a terapia noturna — guardar a lição, perder parte da dor.',
+    w:'E se você dormisse só as primeiras horas e cortasse o fim da noite?',
+    wa:'Você perde justamente o REM, que se concentra nos últimos ciclos, e acorda com a memória ainda "quente", sem o processamento que baixa a carga.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.sono) BRIDGE.sono[4] = 'A aula abre o que a arquitetura só nomeou: o REM. Sono paradoxal, sonhos e a "terapia noturna" que separa o conteúdo da carga emocional — e por que os últimos ciclos importam.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.sono) CONTEXT_TOPIC_TERMS.sono['4'] = {
+    'terapia noturna':{steps:[1,2,3],kind:'direct'},
+    'sono paradoxal':{steps:[],kind:'context',note:'O estado em que tudo isso acontece.'},
+    'atonia muscular':{steps:[],kind:'context',note:'A paralisia que impede encenar o sonho; não é etapa da cadeia da carga emocional.'}
+  };
+  if(m.quiz) m.quiz.push({q:'A aula da arquitetura citou o REM de passagem. Qual função central ele cumpre, além de descansar?',
+    o:['Reprocessar memórias emocionais, rebaixando a carga afetiva e mantendo o conteúdo','Fazer a faxina glinfática dos resíduos metabólicos','Produzir a melatonina que inicia o sono à noite','Acumular a adenosina que gera a pressão do sono'], c:0, l:4,
+    er:'Isso. O REM faz a "terapia noturna" — reativa memórias emocionais com pouca noradrenalina e separa a carga do conteúdo.',
+    ew:'Quem reprocessa a emoção é o <strong>REM</strong>. Faxina glinfática, melatonina e adenosina são outros mecanismos do módulo, não a função do REM.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
