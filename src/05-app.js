@@ -8691,6 +8691,57 @@ Object.assign(TERM_FIG, {
     ew:'Fluência, profundidade explicativa e desfluência agem ANTES ou durante. A nova é o <strong>viés da retrospectiva</strong>, que age ao ver a resposta.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — saber ganha uma 5ª aula: controle
+
+   O módulo todo é MONITORAMENTO (julgar a propria memoria). Falta a outra
+   metade da metacognicao: o CONTROLE — usar os julgamentos para alocar estudo,
+   estudar a borda aprendivel e saber parar. Fecha o par com o modulo de ilusoes.
+   Reusa metacognicao e julgamento de aprendizado. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'controle metacognitivo':'A metade "ação" da metacognição: usar os julgamentos sobre a própria memória para decidir o que estudar, por quanto tempo, quando parar e se vale continuar procurando.',
+  'região de aprendizado próximo':'A faixa de itens na borda de serem aprendidos — nem já dominados, nem difíceis demais por ora; é onde o estudo tende a render mais.',
+  'efeito trabalho em vão':'A constatação de que despejar tempo em itens difíceis demais no momento rende quase nada; melhor deixá-los e voltar depois.'
+});
+Object.assign(TERM_FIG, {
+  'controle metacognitivo':'mod:saber', 'região de aprendizado próximo':'mod:saber', 'efeito trabalho em vão':'mod:saber'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='saber');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Do monitorar ao agir: alocar o estudo',
+    b:'<p>O módulo inteiro foi sobre o <b>monitor</b> — o sistema que julga a sua memória. Mas monitorar é só metade da metacognição. A outra é o <span class="term">controle metacognitivo</span>: usar esses julgamentos para <b>decidir</b> — o que estudar, por quanto tempo, quando parar, se vale seguir procurando. Um monitor perfeito é inútil se não <b>dirigir</b> a ação. Esta aula fecha o laço.</p>'
+     +'<p>O laço, descrito por Nelson e Narens: o monitoramento alimenta o controle, e o controle muda o que você vai monitorar em seguida. Na prática, seus julgamentos de aprendizado (o módulo das ilusões) deveriam <b>guiar</b> onde você gasta tempo: estude o que ainda não sabe, pule o que já sabe. Solto para alocar, o estudante em geral faz isso — dá mais tempo ao que julga não aprendido. Mas vale só o quanto o monitor vale: se o julgamento está <b>descalibrado</b>, o controle é mal dirigido, e você estuda com afinco o alvo errado.</p>'
+     +'<p>O bom controle tem forma. As pessoas tendem a estudar numa <span class="term">região de aprendizado próximo</span> — nem os itens sem esperança, nem os já dominados, e sim os que estão na <b>borda</b> de serem aprendidos. E há uma armadilha, o <span class="term">efeito trabalho em vão</span>: despejar tempo em itens hoje difíceis demais rende quase nada — melhor largá-los e voltar depois. Bom controle não é "estudar o mais difícil": é estudar o difícil-porém-<b>aprendível</b> e saber a hora de parar.</p>'
+     +'<p>A síntese dos dois módulos metacognitivos é uma receita: primeiro, acerte o <b>monitor</b> — adie o julgamento, comprometa a resposta, teste-se (consertando as ilusões) —, porque o controle herda os erros dele. Depois, deixe-o <b>guiar</b> — invista no que balança, largue o sem-esperança por ora, pare quando o retorno achata. Estudar bem é um laço de controle: medir com honestidade, agir sobre a medida, medir de novo. A revisão espaçada deste app é esse laço, automatizado — ela monitora a sua memória e aloca a próxima revisão por você.</p>'
+  });
+  MINI_QUIZZES.saber[4] = [
+    {lvl:0, q:'A metacognição tem duas metades. O módulo cobriu o monitoramento; qual é a outra?', o:['O controle: usar os julgamentos para decidir o que e por quanto tempo estudar','Uma forma de monitorar com ainda mais precisão','A consolidação da memória durante o sono'], c:0, er:'Isso: monitorar julga; controlar age. O julgamento só serve se dirigir a decisão de estudo.', ew:'Não é "monitorar melhor" nem consolidação: a outra metade é o CONTROLE — agir com base no que o monitor diz.'},
+    {lvl:1, q:'Você tem uma hora e uma pilha de cartões: alguns fáceis, alguns difíceis demais, e alguns no meio. Onde o tempo rende MAIS?', o:['Nos itens do meio, na borda de serem aprendidos','Nos difíceis demais, que precisam de mais trabalho','Nos fáceis, para travá-los de vez'], c:0, er:'Exato: é a região de aprendizado próximo. Os difíceis demais caem no trabalho em vão; os fáceis já estão prontos.', ew:'Os difíceis demais rendem quase nada agora (trabalho em vão) e os fáceis já estão firmes: o ganho está na BORDA aprendível.'},
+    {lvl:2, q:'Por que um monitor descalibrado (do módulo das ilusões) estraga o estudo mesmo que você aloque o tempo "certo"?', o:['Porque o controle herda os erros do monitor: se o julgamento do que você sabe é errado, você estuda o alvo errado com afinco','Porque alocar tempo não tem efeito nenhum','Porque a calibração só importa em provas, não no estudo'], c:0, er:'Isso: controlar bem pressupõe medir bem. Julgamento torto leva esforço disciplinado ao lugar errado.', ew:'Alocar tempo importa muito, e a calibração importa no estudo: o problema é o controle HERDAR o erro do monitor.'}
+  ];
+  DEEP.saber[4] = '<p>Thomas Nelson e Louis Narens formalizaram a metacognição como dois níveis em conversa: um nível-objeto (a cognição fazendo a tarefa) e um metanível que o <b>monitora</b> e o <b>controla</b>. O monitoramento manda informação para cima (o quanto parece sabido); o controle manda ordens para baixo (continuar, parar, mudar de item). O módulo detalhou o primeiro fluxo; este é o segundo. E os dois são interdependentes: um bom controle depende de um bom monitoramento, e cada decisão de controle muda o que haverá para monitorar depois.</p><p>Deixadas livres, as pessoas alocam tempo de forma sensata — mais para o que julgam não saber (redução de discrepância). Mas John Dunlosky e Janet Metcalfe refinaram isso: acima de um limite de dificuldade, insistir não paga — é o <b>efeito trabalho em vão</b> de Nelson e Leonesio —, e o estudo eficiente se concentra na <b>região de aprendizado próximo</b>, a borda do que está prestes a ser aprendido. Some-se a isso uma <b>regra de parada</b>: reconhecer quando o retorno de uma sessão achatou e é hora de espaçar, não insistir.</p><p>O elo com o módulo das ilusões é a moral central da metacognição aplicada: o controle é tão bom quanto o monitor que o guia. Adiar julgamentos, comprometer respostas e se testar não são só formas de aprender — são formas de <b>calibrar o monitor</b>, para que a alocação seguinte acerte o alvo. E vale reparar que a própria revisão espaçada é um laço monitor-controle <b>externalizado</b>: o sistema mede o seu desempenho em cada item e agenda a próxima exposição, assumindo o controle que a intuição, sozinha, faz pior.</p>';
+  PREDICT.saber[4] = {q:'Você tem uma hora fixa para estudar uma pilha de cartões — uns fáceis, uns dificílimos, uns intermediários. Onde gastar o tempo rende MAIS?', o:['Nos dificílimos: precisam de mais trabalho','Nos intermediários, na borda de serem aprendidos','Nos fáceis, para fixá-los de vez'], c:1, after:'Nos intermediários. Os fáceis já estão firmes e os dificílimos, por ora, caem no "trabalho em vão" — muito esforço, quase nenhum ganho. O rendimento mora na região de aprendizado próximo: os itens na borda de serem aprendidos. Bom controle é mirar essa borda e voltar aos impossíveis mais tarde.'};
+  CHAIN.saber[4] = {
+    s:['O monitor julga o que você já sabe e o que não sabe','Esse julgamento decide onde você gasta tempo (controle)','Você estuda o que está na borda de ser aprendido','Reavalia: o que firmou sai da fila, o que falta continua','Se o monitor erra, você estuda com afinco o alvo errado'],
+    h:1, hn:'A virada: monitorar não vale nada até GUIAR a ação, e o controle é só tão bom quanto o monitor. Os dois módulos são um laço: medir com honestidade (consertar as ilusões), deixar a medida decidir onde trabalhar, medir de novo.',
+    w:'E se você despejasse o tempo nos itens hoje difíceis demais?',
+    wa:'Rende quase nada — é o efeito "trabalho em vão". Bom controle não é estudar o mais difícil: é estudar o difícil-porém-aprendível e saber a hora de largar e voltar depois.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.saber) BRIDGE.saber[4] = 'A aula fecha o par de módulos metacognitivos: o monitor da memória só serve se GUIAR a ação. Do monitorar ao controlar — alocar o tempo, estudar a borda aprendível e saber quando parar.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.saber) CONTEXT_TOPIC_TERMS.saber['4'] = {
+    'controle metacognitivo':{steps:[1,2,3],kind:'direct'},
+    'região de aprendizado próximo':{steps:[2],kind:'direct'},
+    'efeito trabalho em vão':{steps:[],kind:'context',note:'A armadilha do controle mal-feito; aparece no "e se".'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo todo tratou do MONITOR (julgar a própria memória). Qual é a outra metade da metacognição que esta aula acrescenta?',
+    o:['O controle: usar esses julgamentos para decidir o que e por quanto tempo estudar','Uma forma de monitorar com mais precisão ainda','A produção de dopamina durante o estudo','O sono necessário para consolidar o que se estudou'], c:0, l:4,
+    er:'Isso. A outra metade é o <strong>controle metacognitivo</strong>: agir sobre os julgamentos — alocar tempo, mirar a borda aprendível, saber parar. Monitorar só serve se guiar a ação.',
+    ew:'A outra metade não é "monitorar melhor", nem dopamina ou sono: é o <strong>controle</strong> — usar os julgamentos do monitor para decidir o estudo.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {

@@ -568,7 +568,7 @@ const reset = ()=>ev('state = defaultState();');
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 412,
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 416,
      '19. o total de caixas sobe deliberadamente a cada 5ª aula da Fatia 2 (base 344; cada aula nova mede 3 ou 4 dimensões). Atualize ao acrescentar aula e confira se subiu o quanto devia');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
