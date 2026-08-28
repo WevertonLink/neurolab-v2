@@ -7870,6 +7870,57 @@ Object.assign(TERM_FIG, {
     ew:'A aula mostra que o valor não é absoluto: ele é medido de um <strong>ponto de referência</strong> e muda com enquadramento e contexto, sem depender de mercado nem do córtex motor.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — atencao ganha uma 5ª aula: cegueira
+
+   A 1ª aula diz que a atenção prioriza e o resto "compete em desvantagem".
+   Falta mostrar até onde vai essa desvantagem: sem atenção, um objeto óbvio
+   pode nem ser percebido (cegueira por desatenção, cegueira à mudança,
+   piscar atencional). Append idempotente. Registro cuidadoso, sem exagero.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'cegueira por desatenção':'Não perceber um objeto visível e óbvio porque a atenção estava ocupada com outra coisa; mostra que a seleção pode barrar o acesso à consciência, não só reduzi-lo.',
+  'cegueira à mudança':'Não notar uma alteração grande numa cena quando ela acontece durante um corte, um piscar ou uma breve interrupção que impede a comparação direta.',
+  'piscar atencional':'Janela de cerca de meio segundo após identificar um alvo em que um segundo alvo tende a passar despercebido — a atenção precisa se "recarregar".'
+});
+Object.assign(TERM_FIG, {
+  'cegueira por desatenção':'mod:atencao', 'cegueira à mudança':'mod:atencao', 'piscar atencional':'mod:atencao'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='atencao');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O que escapa: cegueira por desatenção',
+    b:'<p>A primeira aula disse que a atenção prioriza uns sinais e deixa os outros competindo em desvantagem. Esta aula mostra <b>até onde</b> vai essa desvantagem: atender forte a uma coisa pode deixar você <b>sem ver</b> outra, óbvia, bem na frente. A seleção não só abaixa o volume do resto — às vezes ela fecha a porta da consciência.</p>'
+     +'<p>A demonstração clássica: peça a alguém para contar quantos passes um time de basquete faz e mande uma pessoa de fantasia de gorila atravessar a cena. Cerca de <b>metade</b> não vê o gorila — é a <span class="term">cegueira por desatenção</span>. Parente próxima é a <span class="term">cegueira à mudança</span>: alterações grandes numa cena passam batidas quando acontecem durante um corte ou um piscar, que impede a comparação direta.</p>'
+     +'<p>O gargalo também é no <b>tempo</b>. Se dois alvos aparecem em sequência rápida, identificar o primeiro abre uma janela de cerca de meio segundo em que o segundo costuma escapar: o <span class="term">piscar atencional</span>. A atenção precisa "processar" o primeiro antes de capturar o próximo — não é preguiça, é um limite de recarga.</p>'
+     +'<p>A moral desmancha uma ilusão confortável: a sensação de que você <b>vê tudo</b> à sua volta é reconstruída a partir do pouco que atendeu, mais suposições sobre o resto. Para o estudo, isso é direto — o que não recebe atenção tende a nem ser codificado, então exposição passiva não é aprendizado. E ecoa a aula da multitarefa: dividir a atenção não só desacelera, faz <b>perder</b>.</p>'
+  });
+  MINI_QUIZZES.atencao[4] = [
+    {lvl:0, q:'O que é a cegueira por desatenção?', o:['Não perceber algo visível e óbvio porque a atenção estava ocupada com outra coisa','Perder a visão por cansaço dos olhos','Enxergar bem, mas esquecer logo depois'], c:0, er:'Isso: com a atenção ocupada, um objeto óbvio pode nem chegar à consciência.', ew:'Não é cansaço ocular nem esquecimento: é não PERCEBER o que estava visível, porque a atenção estava em outro lugar.'},
+    {lvl:1, q:'Por que estudar com a atenção dividida faz você PERDER conteúdo, não só ir mais devagar?', o:['Porque o que não recebe atenção tende a nem ser codificado','Porque a leitura fica fisicamente mais lenta','Porque a memória de longo prazo enche e trava'], c:0, er:'Exato: a atenção é a porta da codificação. Sem atender, o material não entra — não é só lentidão.', ew:'Não é a velocidade da leitura nem a memória "enchendo": sem atenção, o material sequer é codificado, então some.'},
+    {lvl:2, q:'Por que existe uma janela curta, após identificar um alvo, em que um segundo alvo é perdido?', o:['Porque a atenção precisa "processar" o primeiro antes de capturar o próximo — um limite de recarga','Porque os olhos precisam piscar de verdade entre os dois','Porque o segundo alvo é sempre mais fraco que o primeiro'], c:0, er:'Isso: é o piscar atencional. O gargalo é temporal — capturar um alvo custa um instante antes do próximo.', ew:'Não é o piscar dos olhos nem a força do alvo: a atenção precisa de um instante para consolidar o primeiro antes de pegar o segundo.'}
+  ];
+  DEEP.atencao[4] = '<p>O experimento do gorila (Simons e Chabris) é o cartão de visitas de um achado maior: a experiência visual rica e contínua que você sente é, em boa parte, uma <b>reconstrução</b>. Você não guarda uma foto detalhada do campo visual; amostra o que atende e preenche o resto com suposições estáveis. Quando a atenção está em outro lugar, o não-atendido pode simplesmente não entrar — a <b>cegueira por desatenção</b>.</p><p>A <b>cegueira à mudança</b> mostra o mesmo por outro ângulo: troque um detalhe grande de uma cena durante um flicker ou um corte de câmera e o observador não nota, porque falta o sinal de movimento que normalmente denuncia a mudança. E o <b>piscar atencional</b> leva o limite ao tempo: num fluxo rápido de itens, o segundo alvo cai numa janela de ~200–500 ms em que a atenção ainda está ocupada com o primeiro.</p><p>Junto, os três desfazem a intuição de um olho-câmera que registra tudo. A atenção é o <b>portão</b> entre o mundo e a consciência — e entre o mundo e a memória. Daí a consequência para quem estuda: sem atenção, não há codificação; e a atenção dividida (a aula da multitarefa) não apenas atrasa, ela apaga. Há um lado de segurança também — dirigir usando o celular produz cegueira por desatenção real na estrada.</p>';
+  PREDICT.atencao[4] = {q:'Você está contando, concentrado, os passes de um time de basquete num vídeo. Uma pessoa fantasiada de gorila atravessa a cena bem no meio. Você acha que perceberia?', o:['Claro, é impossível não ver algo tão óbvio','Talvez não: cerca de metade das pessoas não vê','Só perceberia se estivesse cansado'], c:1, after:'Cerca de metade não vê — é a cegueira por desatenção. Com a atenção ocupada em contar, o gorila óbvio pode nem chegar à consciência. A sensação de "eu com certeza veria" é justamente a ilusão que o experimento desmonta.'};
+  CHAIN.atencao[4] = {
+    s:['A atenção prioriza uma tarefa (contar os passes)','O que não é priorizado compete em forte desvantagem','Sem atenção, o item pode nem chegar à consciência','Metade das pessoas não vê o gorila em cena','A sensação de "ver tudo" é reconstruída, não registrada'],
+    h:2, hn:'A virada é esta: a seleção não só abaixa o volume do resto — pode fechar a porta da consciência. Você sente que vê tudo, mas só "tem" o que atendeu; o resto é suposição.',
+    w:'E se, em vez de no espaço, o segundo alvo viesse logo depois no tempo?',
+    wa:'Você também o perde por um instante — o piscar atencional. Depois de capturar o primeiro alvo, a atenção precisa recarregar. O gargalo é espacial E temporal.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.atencao) BRIDGE.atencao[4] = 'A aula mostra o custo extremo do foco: atender forte a uma coisa pode deixar você cego para outra óbvia. Aqui, o gorila invisível, a cegueira à mudança e o piscar atencional — e por que "ver tudo" é ilusão.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.atencao) CONTEXT_TOPIC_TERMS.atencao['4'] = {
+    'cegueira por desatenção':{steps:[3],kind:'direct'},
+    'cegueira à mudança':{steps:[],kind:'context',note:'A mesma cegueira quando o que muda ocorre durante um corte ou piscar.'},
+    'piscar atencional':{steps:[],kind:'context',note:'A versão no tempo do mesmo limite; aparece no "e se".'}
+  };
+  if(m.quiz) m.quiz.push({q:'A 1ª aula disse que a atenção prioriza e o resto compete em desvantagem. Até onde vai essa desvantagem, segundo esta aula?',
+    o:['Pode chegar à cegueira: sem atenção, um objeto óbvio pode nem ser percebido','O resto é sempre percebido, só um pouco mais devagar','O resto é codificado igual, apenas esquecido depois','Nada muda: a atenção não afeta o que se percebe'], c:0, l:4,
+    er:'Isso. Sem atenção, algo óbvio pode nem chegar à consciência — a <strong>cegueira por desatenção</strong>. A seleção pode barrar o acesso, não só reduzi-lo.',
+    ew:'A aula mostra que a desvantagem pode virar <strong>cegueira</strong>: o não-atendido pode nem ser percebido nem codificado, em vez de só chegar mais devagar.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
