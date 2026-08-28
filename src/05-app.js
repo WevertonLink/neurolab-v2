@@ -7817,6 +7817,59 @@ Object.assign(TERM_FIG, {
     ew:'O oposto de buscar é <strong>evitar</strong>, e quem sinaliza isso é a <strong>habênula lateral</strong> (freia a dopamina). Accumbens e VTA são do lado da recompensa; o pré-frontal planeja, não gera o sinal.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — decisao ganha uma 5ª aula: valor relativo
+
+   A 1ª aula trata o valor como um número numa régua comum. Falta o que a
+   psicologia da decisão mais mostrou: esse número é RELATIVO — medido de um
+   ponto de referência e reajustado ao contexto (enquadramento, chamariz,
+   codificação adaptativa). Append idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'ponto de referência':'O nível a partir do qual o cérebro mede ganhos e perdas; o mesmo resultado vira ganho ou perda conforme a referência, em vez de ter um valor absoluto.',
+  'efeito de enquadramento':'Mudança de escolha quando a mesma opção é descrita de formas diferentes (ex.: "90% de sobrevivência" vs. "10% de mortalidade"), sem que nada de real mude.',
+  'codificação adaptativa':'Tendência dos neurônios de valor a se reajustarem à faixa de opções disponível: o mesmo bem vale mais ou menos conforme a companhia — eficiente, mas explorável.',
+  'efeito chamariz':'Quando acrescentar uma terceira opção claramente pior desloca a preferência entre as duas primeiras; mostra que o valor é comparado no contexto, não medido isolado.'
+});
+Object.assign(TERM_FIG, {
+  'ponto de referência':'mod:decisao', 'efeito de enquadramento':'mod:decisao', 'codificação adaptativa':'mod:decisao', 'efeito chamariz':'mod:decisao'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='decisao');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O valor é relativo: enquadramento e contexto',
+    b:'<p>A primeira aula disse que o cérebro converte tudo num <b>valor</b> numa régua comum. Verdade — mas esse número não é absoluto. Ele é medido a partir de um <span class="term">ponto de referência</span>, e o mesmo resultado é <b>ganho</b> ou <b>perda</b> conforme de onde você mede. A aversão à perda da aula anterior é só um sintoma disto: não há valor sem referência.</p>'
+     +'<p>Se o valor é medido de uma referência, então <b>como</b> você descreve a opção move a escolha. "Esta cirurgia tem 90% de sobrevivência" e "esta cirurgia tem 10% de mortalidade" são o <b>mesmo</b> fato, e ainda assim decidem diferente: o <span class="term">efeito de enquadramento</span>. A primeira frase põe a referência no ganho; a segunda, na perda — e perder pesa mais.</p>'
+     +'<p>Não são só palavras: é a <b>companhia</b> que a opção tem. Acrescente uma terceira alternativa claramente pior e a preferência entre as duas primeiras se desloca — o <span class="term">efeito chamariz</span>. Por baixo está a <span class="term">codificação adaptativa</span>: os neurônios de valor <b>reescalam</b> para a faixa de opções presente, então o mesmo suco dispara "muito" entre opções pequenas e "pouco" entre grandes. É eficiente — usa toda a régua —, mas deixa a escolha aberta à manipulação.</p>'
+     +'<p>A consequência é desconfortável: dá para dirigir sua decisão <b>sem tocar nas opções</b>, só mudando a moldura e a comparação — é o que fazem cardápios, valores "de" riscados e opções-âncora. O contrapeso é notar a referência e reenquadrar de propósito: volte ao absoluto, pergunte "ganho ou perda a partir de onde?". O valor que o cérebro calcula é real, mas está sempre medido <b>de algum lugar</b>.</p>'
+  });
+  MINI_QUIZZES.decisao[4] = [
+    {lvl:0, q:'O que é um "ponto de referência" na avaliação de valor?', o:['O nível a partir do qual o cérebro mede ganhos e perdas','O valor de mercado fixo de um bem','A velocidade com que a decisão é tomada'], c:0, er:'Isso: valor não é absoluto — é medido de uma referência, e o mesmo resultado pode ser ganho ou perda conforme ela.', ew:'Não é o preço de mercado nem a velocidade: é o nível de onde o cérebro mede ganhos e perdas.'},
+    {lvl:1, q:'"90% de sobrevivência" e "10% de mortalidade" descrevem a mesma cirurgia. Por que as pessoas escolhem diferente?', o:['O enunciado muda a referência: uma moldura destaca o ganho, a outra a perda','Porque os números são de fato diferentes','Porque a segunda frase descreve uma cirurgia mais arriscada'], c:0, er:'Exato: é o efeito de enquadramento. Os fatos são idênticos; a moldura escolhe a referência, e perder pesa mais.', ew:'Os fatos são idênticos — 90% vivem é 10% morrem. O que muda é a MOLDURA, que põe a referência no ganho ou na perda.'},
+    {lvl:2, q:'Por que acrescentar uma terceira opção claramente pior muda qual das duas primeiras você prefere?', o:['Porque o valor é codificado em relação ao contexto, e os neurônios reescalam para as opções presentes','Porque a terceira opção rouba a atenção da melhor','Porque decidir entre três é sempre mais lento'], c:0, er:'Isso: codificação adaptativa. O valor é comparado no contexto, não medido isolado — por isso o chamariz desloca a escolha.', ew:'Não é atenção nem lentidão: é que o valor é RELATIVO ao conjunto presente, então mudar o conjunto muda a comparação.'}
+  ];
+  DEEP.decisao[4] = '<p>A "moeda comum" da primeira aula é verdadeira e incompleta. Kahneman e Tversky mostraram que a mente não avalia <b>estados</b> absolutos de riqueza ou saúde, e sim <b>mudanças</b> a partir de um ponto de referência — e que perdas pesam mais que ganhos equivalentes. A aversão à perda é a inclinação dessa curva perto da referência.</p><p>No cérebro, isso tem assinatura. Neurônios de valor no orbitofrontal fazem <b>codificação adaptativa</b>: reescalam sua resposta à faixa de recompensas em jogo (uma normalização parecida com a que a retina faz com luz). Ganha-se sensibilidade dentro do contexto e perde-se a referência absoluta — a mesma recompensa parece grande entre pequenas e pequena entre grandes. O <b>efeito chamariz</b> (dominância assimétrica) é a versão comportamental disso: a opção que "domina" o chamariz fica mais atraente só pela companhia.</p><p>O lado prático é uma faca de dois gumes. Quem desenha escolhas — cardápios, planos, defaults, o preço "de/por" — explora referência e contexto o tempo todo. E quem decide pode se defender: reconverter para termos absolutos, tornar a referência explícita e perguntar de onde o ganho ou a perda está sendo contado. Não elimina o efeito, mas tira dele o automatismo.</p>';
+  PREDICT.decisao[4] = {q:'Um médico diz que a cirurgia tem "90% de sobrevivência"; outro diz que a MESMA cirurgia tem "10% de mortalidade". Você acha que os pacientes decidem igual?', o:['Sim, os fatos são idênticos, então a escolha é a mesma','Não: a formulação desloca a escolha, mesmo com fatos idênticos','Só decidem diferente se não souberem matemática'], c:1, after:'Decidem diferente — e não é falta de conta. "90% vivem" enquadra no ganho; "10% morrem" enquadra na perda, e perder pesa mais. A mesma cirurgia é aceita ou recusada conforme a moldura. Reconhecer a moldura é o que devolve a decisão a você.'};
+  CHAIN.decisao[4] = {
+    s:['O cérebro mede valor a partir de um ponto de referência','"90% sobrevivem" põe a referência no ganho','"10% morrem" põe a referência na perda','Como perder pesa mais que ganhar, a segunda moldura assusta mais','A mesma cirurgia é aceita ou recusada conforme a moldura'],
+    h:0, hn:'A virada é que não existe valor absoluto: existe sempre uma referência, e a moldura a escolhe. Muda a referência, muda a decisão — com zero mudança no fato.',
+    w:'E se, em vez de trocar as palavras, alguém acrescentasse uma terceira opção claramente pior?',
+    wa:'A preferência entre as duas primeiras se desloca — o efeito chamariz. Porque o valor é comparado no contexto, mexer no contexto move a escolha sem mexer nas opções.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.decisao) BRIDGE.decisao[4] = 'A aula corrige a "moeda comum" da 1ª: o valor existe, mas é medido de uma referência e se reajusta ao contexto. Aqui, por que enquadrar diferente muda a escolha sem mudar nada real.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.decisao) CONTEXT_TOPIC_TERMS.decisao['4'] = {
+    'ponto de referência':{steps:[0],kind:'direct'},
+    'efeito de enquadramento':{steps:[1,2,4],kind:'direct'},
+    'codificação adaptativa':{steps:[],kind:'context',note:'O mecanismo neural por trás do contexto; não é uma etapa desta cadeia de enquadramento.'},
+    'efeito chamariz':{steps:[],kind:'context',note:'A versão por contexto do mesmo princípio; aparece no "e se".'}
+  };
+  if(m.quiz) m.quiz.push({q:'A 1ª aula disse que o cérebro converte tudo num "valor". O que esta aula acrescenta sobre esse valor?',
+    o:['Que ele é medido a partir de um ponto de referência e muda com o enquadramento e o contexto','Que ele é fixo e idêntico para todas as pessoas','Que ele depende apenas do valor de mercado do bem','Que ele é calculado no córtex motor pouco antes da ação'], c:0, l:4,
+    er:'Isso. O valor é <strong>relativo</strong>: medido de uma referência e reescalado ao contexto — por isso enquadrar diferente muda a escolha.',
+    ew:'A aula mostra que o valor não é absoluto: ele é medido de um <strong>ponto de referência</strong> e muda com enquadramento e contexto, sem depender de mercado nem do córtex motor.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
