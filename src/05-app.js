@@ -8384,6 +8384,57 @@ Object.assign(TERM_FIG, {
     ew:'Quem recupera são as regiões <strong>sobreviventes</strong>, reorganizando-se com o uso — não os neurônios mortos, nem células pelo sangue, nem o repouso sozinho.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — farmacologia ganha uma 5ª aula: placebo
+
+   O módulo é todo sobre a molécula agindo no cérebro. Esta aula é o espelho:
+   o cérebro abrindo a própria farmácia pela expectativa. Placebo com prova de
+   biologia (opioides endógenos, reversão por naloxona), nocebo, e por que todo
+   ensaio precisa de grupo placebo. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'efeito placebo':'Melhora real e mensurável produzida por um tratamento sem princípio ativo, movida pela expectativa; não é "imaginação" — recruta os próprios sistemas químicos do cérebro.',
+  'efeito nocebo':'O oposto do placebo: a expectativa de dano produz sintomas reais — efeitos colaterais que surgem de um comprimido inerte quando a pessoa é avisada deles.',
+  'opioides endógenos':'Analgésicos que o próprio cérebro fabrica (as endorfinas e afins); o placebo contra a dor os recruta — e bloqueá-los faz o alívio do placebo desaparecer.'
+});
+Object.assign(TERM_FIG, {
+  'efeito placebo':'mod:farmacologia', 'efeito nocebo':'mod:farmacologia', 'opioides endógenos':'mod:farmacologia'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='farmacologia');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O efeito placebo: expectativa vira farmacologia',
+    b:'<p>Até aqui, sempre havia uma <b>molécula</b> fazendo o trabalho. O <span class="term">efeito placebo</span> é o espelho estranho disso: um tratamento <b>sem</b> princípio ativo que ainda assim produz mudanças reais e mensuráveis no cérebro — porque a <b>expectativa</b> de melhora é, ela mesma, um sinal biológico. Não é "imaginação" nem fraude: é a própria farmácia do cérebro, aberta pela crença.</p>'
+     +'<p>A prova de que é biologia de verdade: um placebo analgésico dispara os <span class="term">opioides endógenos</span> — os analgésicos que o próprio cérebro fabrica. E se você <b>bloqueia</b> esses opioides com naloxona, a analgesia do placebo <b>desaparece</b>. Ou seja, a crença recrutou o mesmo sistema opioide que um remédio de verdade usaria. O placebo também mobiliza <b>dopamina</b> — no Parkinson, chega a liberar dopamina e aliviar sintomas. A expectativa é uma <b>porta de entrada</b> para os mesmos sistemas que as drogas do módulo miram.</p>'
+     +'<p>O que constrói o efeito é expectativa mais <b>condicionamento</b> e contexto: o ritual do jaleco, do comprimido, da injeção. Um comprimido maior ou de marca, uma injeção em vez de pílula, um médico confiante — tudo eleva a resposta porque eleva a expectativa. O reverso existe e é o <span class="term">efeito nocebo</span>: esperar dano gera dano — efeitos colaterais reais nascem de uma pílula de açúcar quando você é avisado deles. A crença corta para os dois lados.</p>'
+     +'<p>Isso reenquadra toda a farmacologia. O efeito medido de qualquer droga real carrega uma parcela de placebo em cima — por isso os ensaios precisam de um <b>grupo placebo</b>, para isolar o efeito verdadeiro da substância. E não é um truque a explorar: é uma alavanca real e ética — o ritual, a explicação e a confiança em torno de um tratamento são <b>parte</b> do tratamento. O ponto mais fundo do módulo: o cérebro não é só alvo da farmacologia; a expectativa faz dele uma <b>fonte</b>.</p>'
+  });
+  MINI_QUIZZES.farmacologia[4] = [
+    {lvl:0, q:'O que é o efeito placebo?', o:['Uma melhora real e mensurável a partir de um tratamento sem princípio ativo, movida pela expectativa','A ausência total de qualquer efeito de um comprimido','Um efeito colateral perigoso de remédios fortes'], c:0, er:'Isso: é melhora REAL movida pela expectativa — não "imaginação", e sim os sistemas do próprio cérebro.', ew:'Não é "efeito nenhum" nem efeito colateral: é uma melhora real e mensurável produzida pela expectativa.'},
+    {lvl:1, q:'Um placebo alivia a dor de alguém; então se dá naloxona, que bloqueia os opioides do cérebro, e o alívio some. O que isso prova?', o:['Que o placebo funcionou recrutando os opioides endógenos do próprio cérebro','Que o alívio era falso desde o começo','Que a naloxona é o verdadeiro analgésico'], c:0, er:'Exato: se bloquear os opioides derruba o alívio, é porque o placebo os havia recrutado. Biologia real.', ew:'O alívio não era falso: a naloxona só o remove porque o placebo agia PELOS opioides do próprio cérebro.'},
+    {lvl:2, q:'Por que um ensaio clínico precisa de um grupo que recebe placebo?', o:['Porque o efeito medido de um remédio real inclui uma parcela de placebo, e só a comparação isola o efeito verdadeiro','Porque placebos curam melhor que remédios','Porque assim se gasta menos remédio de verdade'], c:0, er:'Isso: sem o grupo placebo, você não separa o efeito da droga do efeito da expectativa. A comparação é o que isola.', ew:'Não é que placebo cure mais nem economia: é que o efeito da droga vem MISTURADO com o placebo, e só o grupo controle os separa.'}
+  ];
+  DEEP.farmacologia[4] = '<p>A virada científica do placebo veio quando ele deixou de ser "ruído do estudo" e virou objeto. Jon Levine e Howard Fields mostraram, nos anos 1970, que a analgesia por placebo é <b>revertida por naloxona</b> — logo, mediada por <b>opioides endógenos</b>. Depois vieram imagens confirmando a queda de atividade em regiões da dor e o recrutamento de circuitos pré-frontais de expectativa. No Parkinson, Fabrizio Benedetti e Raúl de la Fuente-Fernández mostraram <b>liberação de dopamina</b> após placebo, com melhora motora objetiva. A expectativa não imita o efeito de longe: entra pelos mesmos sistemas.</p><p>O efeito é construído por <b>expectativa</b> (o que dizem que vai acontecer) e <b>condicionamento</b> (o que a experiência passada associou ao ritual). Por isso o tamanho e a cor do comprimido, a via (injeção &gt; pílula), a marca e a confiança de quem trata modulam a resposta — todos operam sobre a expectativa. Curiosamente, há evidência de placebo de <b>rótulo aberto</b>: em algumas condições, ele ajuda mesmo quando a pessoa sabe que é placebo, provavelmente pelo ritual e pelo condicionamento.</p><p>O gêmeo sombrio é o <b>nocebo</b>: avisar sobre efeitos colaterais os faz aparecer, e a expectativa de piora ativa vias de dor e ansiedade — um problema real na prática clínica. Tudo isso tem duas consequências. Metodológica: sem <b>grupo placebo</b>, o efeito de qualquer droga fica inflado pela expectativa, e é por isso que o ensaio randomizado controlado é padrão. E clínica: como a expectativa é parte ativa do resultado, comunicar bem — sem enganar — é terapêutico. O cérebro do módulo, sempre alvo das moléculas, aqui também as dispensa.</p>';
+  PREDICT.farmacologia[4] = {q:'Uma pessoa sente alívio da dor com um placebo (comprimido sem droga). Então recebe naloxona, que bloqueia os opioides do próprio cérebro. O que você acha que acontece com o alívio?', o:['Nada: o alívio nunca foi real','O alívio desaparece — o placebo usava os opioides do próprio cérebro','A dor fica ainda pior que no começo'], c:1, after:'O alívio desaparece. Isso prova que o placebo não era "imaginação": ele havia recrutado os opioides endógenos do cérebro, e bloqueá-los remove o efeito. A expectativa agiu pela química real do próprio cérebro.'};
+  CHAIN.farmacologia[4] = {
+    s:['Você espera alívio (disseram que o comprimido ajuda)','A expectativa ativa circuitos de recompensa e de controle da dor','O cérebro libera seus PRÓPRIOS opioides','A dor diminui de verdade, de forma mensurável','Bloqueie esses opioides (naloxona) e o alívio some'],
+    h:2, hn:'A virada: expectativa não é "imaginação". Ela abre a farmácia do próprio cérebro — os mesmos opioides (e dopamina) que uma droga acionaria. Bloqueie-os e o placebo morre: prova de que a crença agiu por química real.',
+    w:'E se, em vez de esperar alívio, a pessoa fosse avisada de efeitos colaterais assustadores?',
+    wa:'Aparece o efeito nocebo — sintomas reais nascem da expectativa negativa. A crença corta para os dois lados: expectativa boa alivia, expectativa ruim adoece.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.farmacologia) BRIDGE.farmacologia[4] = 'A aula é o espelho do módulo: em vez de uma molécula agindo no cérebro, o cérebro abrindo a própria farmácia pela expectativa. Placebo, opioides endógenos, nocebo — e por que todo ensaio precisa de um grupo placebo.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.farmacologia) CONTEXT_TOPIC_TERMS.farmacologia['4'] = {
+    'efeito placebo':{steps:[0,1,3],kind:'direct'},
+    'opioides endógenos':{steps:[2,4],kind:'direct'},
+    'efeito nocebo':{steps:[],kind:'context',note:'O reverso: expectativa negativa gera sintomas reais; aparece no "e se".'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo mostrou moléculas agindo no cérebro. O que o efeito placebo acrescenta a essa história?',
+    o:['Que a expectativa sozinha recruta os sistemas do próprio cérebro (opioides, dopamina) e produz efeito real','Que alguns comprimidos simplesmente não têm efeito nenhum','Que a serotonina é o único alvo que importa','Que a barreira hematoencefálica bloqueia todos os remédios'], c:0, l:4,
+    er:'Isso. O placebo mostra o cérebro como <strong>fonte</strong>, não só alvo: a expectativa abre a própria farmácia (opioides, dopamina) e o efeito é real e mensurável.',
+    ew:'O placebo não é "efeito nenhum": a <strong>expectativa</strong> recruta os sistemas do próprio cérebro e produz efeito real — por isso os ensaios precisam de grupo placebo.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
