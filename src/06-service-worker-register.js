@@ -22,6 +22,8 @@ window.addEventListener("load", function(){
       updateRequested = true;
       btn.disabled = true;
       btn.textContent = 'Atualizando…';
+      // esconde o aviso na hora, para não ficar preso na tela se o reload demorar
+      box.classList.remove('show');
       // se por algum motivo a troca não gerar controllerchange, força o reload
       setTimeout(function(){ if(!refreshing){ refreshing = true; window.location.reload(); } }, 2500);
       worker.postMessage({ type: 'SKIP_WAITING' });
