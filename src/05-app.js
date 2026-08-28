@@ -8179,6 +8179,58 @@ Object.assign(TERM_FIG, {
     ew:'A "construção" tem mecanismo: o cérebro <strong>prevê</strong> e corrige pelo erro. Não é cópia fiel, nem receptor decidindo sozinho, nem só de baixo para cima.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — motor ganha uma 5ª aula: aprender
+
+   O módulo cita numa linha que o gesto treinado "migra" e vira automático.
+   Esta aula abre isso: os estágios da aprendizagem motora, o modelo interno
+   do cerebelo (cópia eferente, por que não dá cócegas em si mesmo) e o erro
+   que afina o gesto. Cross-link com a codificacao preditiva. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'aprendizagem motora':'O processo pelo qual um movimento vai de desajeitado e consciente a preciso e automático; é guiado por erro e migra o controle do córtex para o cerebelo e os gânglios da base.',
+  'modelo interno':'A representação que o cerebelo aprende do próprio corpo e do mundo, usada para prever o resultado sensorial de um movimento antes de ele terminar.',
+  'cópia eferente':'Uma cópia do comando motor que o cérebro guarda para si; com ela prevê a sensação que o próprio movimento vai causar — e pode cancelá-la (por isso não dá para fazer cócegas em si mesmo).'
+});
+Object.assign(TERM_FIG, {
+  'aprendizagem motora':'mod:motor', 'modelo interno':'mod:motor', 'cópia eferente':'mod:motor'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='motor');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Aprender o movimento: do desajeitado ao automático',
+    b:'<p>O módulo disse que um gesto muito treinado "migra" e vira automático. Esta aula abre essa frase: como um movimento vai de <b>desajeitado e cansativo</b> a <b>suave e automático</b> — e o que o cérebro constrói pelo caminho.</p>'
+     +'<p>No começo, cada movimento é deliberado, guiado passo a passo pelo córtex, e você é lento e truncado. Com a prática, os erros diminuem e você pensa menos. No fim, o gesto é <b>automático</b>: o córtex recua e o <span class="term">cerebelo</span> e os gânglios da base assumem, liberando sua atenção. É a migração que o módulo citou — o controle passa do circuito deliberado para o automático. Chamamos o conjunto de <span class="term">aprendizagem motora</span>.</p>'
+     +'<p>A peça que o cerebelo constrói é um <span class="term">modelo interno</span>. A cada comando, o cérebro guarda uma <span class="term">cópia eferente</span> e <b>prevê</b> o resultado sensorial do movimento; compara com o que de fato ocorreu e usa o <b>erro</b> para refinar o modelo. É o mesmo prever-e-conferir da aula de percepção, agora na ação. Daí você não conseguir fazer <b>cócegas em si mesmo</b> — o cérebro prevê a sensação do próprio gesto e a cancela — e um movimento dominado parecer sem esforço: a previsão acerta, sobra pouca correção.</p>'
+     +'<p>A consequência para treinar é direta. A aprendizagem motora é guiada por <b>erro</b>, então precisa dos erros certos — prática em que você sente e corrige a diferença, não repetição no piloto automático. As habilidades também se <b>agrupam</b>: passos separados fundem-se num bloco que você dispara inteiro (uma escala no piano, a assinatura). E ficam duráveis — é a memória procedural do módulo de memória, a razão de nunca se esquecer de andar de bicicleta.</p>'
+  });
+  MINI_QUIZZES.motor[4] = [
+    {lvl:0, q:'À medida que um movimento vira automático, quais estruturas passam a conduzi-lo, liberando o córtex?', o:['O cerebelo e os gânglios da base','A retina e o nervo óptico','A amígdala e o hipotálamo'], c:0, er:'Isso: o controle migra do córtex deliberado para o cerebelo e os gânglios da base — o gesto vira automático.', ew:'Não são estruturas sensoriais nem límbicas: o gesto automático corre no cerebelo e nos gânglios da base.'},
+    {lvl:1, q:'Por que você não consegue fazer cócegas em si mesmo, mas outra pessoa consegue?', o:['O cérebro prevê a sensação do próprio movimento (cópia eferente) e a cancela','Suas mãos não alcançam os pontos certos do corpo','Você se distrai e não presta atenção no toque'], c:0, er:'Exato: com a cópia eferente, o cérebro prevê a sensação do próprio gesto e a atenua. O toque do outro é imprevisto.', ew:'Não é alcance nem distração: o cérebro PREVÊ a sensação do próprio movimento e a cancela; a do outro não é prevista.'},
+    {lvl:2, q:'Por que um movimento dominado parece sem esforço, enquanto um novo é exaustivo?', o:['Com um bom modelo interno a previsão acerta e sobra pouca correção; um gesto novo tem modelo ruim e exige correção deliberada','Porque o músculo do gesto novo é mais fraco','Porque o movimento novo usa mais oxigênio no braço'], c:0, er:'Isso: o esforço está na correção. Modelo afinado, pouca correção; modelo cru, tudo é ajuste consciente.', ew:'Não é força nem oxigênio do músculo: é o MODELO INTERNO. Bom modelo prevê certo e corrige pouco; modelo cru exige correção consciente o tempo todo.'}
+  ];
+  DEEP.motor[4] = '<p>Paul Fitts descreveu a aprendizagem motora em três fases: <b>cognitiva</b> (você pensa cada passo, comete muitos erros, vai devagar), <b>associativa</b> (os erros caem e o gesto se afina) e <b>autônoma</b> (o movimento roda sozinho, quase sem atenção). Por trás da passagem está uma mudança de circuito: o que começa muito cortical vai sendo assumido pelo cerebelo e pelos gânglios da base — o mesmo deslocamento para o automático que a aula de recompensa descreve nos hábitos.</p><p>O motor da correção é o <b>modelo interno</b>, ideia de Daniel Wolpert e outros. O cérebro não manda só o comando: guarda uma <b>cópia eferente</b> e prevê a consequência sensorial. Quando o previsto bate com o realizado, o gesto está afinado; quando não bate, o erro ajusta o modelo. Sarah-Jayne Blakemore mostrou o corolário mais famoso: como o cérebro prevê e atenua a sensação do próprio toque, você não se faz cócegas — mas um robô que introduz um pequeno atraso, quebrando a previsão, faz.</p><p>Duas propriedades fecham o quadro. As sequências se <b>agrupam</b> (chunking): os gânglios da base fundem passos num único programa que dispara como bloco — daí a fluidez de uma escala tocada mil vezes. E a memória motora <b>consolida</b>, inclusive no sono, virando procedural e resistente ao esquecimento. Para o treino, a lição é a mesma da aula de esforço: repetição sem erro sentido ensina pouco; é a diferença entre o previsto e o obtido que lapida o gesto.</p>';
+  PREDICT.motor[4] = {q:'Outra pessoa te faz cócegas com facilidade, mas você não consegue fazer em si mesmo. Por quê?', o:['Suas próprias mãos não são sensíveis o bastante','Seu cérebro prevê a sensação do próprio movimento e a cancela','É só questão de não alcançar os pontos certos'], c:1, after:'Porque o cérebro prevê a sensação do próprio gesto — via cópia eferente — e a atenua antes de ela chegar. O toque do outro é imprevisto, então não é cancelado. É a prova de que o sistema motor também PREVÊ, como a percepção.'};
+  CHAIN.motor[4] = {
+    s:['O cérebro envia o comando e guarda uma cópia dele (cópia eferente)','A partir da cópia, prevê o resultado sensorial do movimento','Compara a previsão com o que de fato aconteceu','O erro entre os dois refina o modelo interno','Com o modelo afinado, o gesto fica preciso e quase automático'],
+    h:1, hn:'A virada: o cérebro não só manda o comando — prevê o próprio resultado e aprende com a diferença. É por isso que a prática funciona (cada erro afina o modelo) e que um gesto dominado parece sem esforço (o modelo acerta, nada a corrigir).',
+    w:'E se você tentasse fazer cócegas em si mesmo?',
+    wa:'Não funciona: o cérebro prevê a sensação do próprio movimento e a cancela. A previsão do modelo interno chega antes e apaga o efeito — a prova de que o sistema motor também prevê.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.motor) BRIDGE.motor[4] = 'A aula abre o que o módulo só citou: como o gesto vira automático. Os estágios da aprendizagem, o modelo interno do cerebelo (cópia eferente) e por que você não faz cócegas em si mesmo.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.motor) CONTEXT_TOPIC_TERMS.motor['4'] = {
+    'cópia eferente':{steps:[0],kind:'direct'},
+    'modelo interno':{steps:[1,3,4],kind:'direct'},
+    'aprendizagem motora':{steps:[],kind:'context',note:'O processo geral que a cadeia detalha.'},
+    'cerebelo':{steps:[],kind:'context',note:'A estrutura que constrói e afina o modelo interno.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo disse que um gesto muito treinado "migra" e vira automático. O que o cérebro constrói para isso acontecer?',
+    o:['Um modelo interno que prevê o resultado do movimento e é afinado pelo erro','Um músculo novo, mais forte, dedicado ao gesto treinado','Uma via mais curta que dispensa o cerebelo','Um estoque permanente de dopamina na junção neuromuscular'], c:0, l:4,
+    er:'Isso. O cerebelo constrói um <strong>modelo interno</strong> que prevê o resultado do gesto e se afina pelo erro — por isso o movimento vira preciso e automático.',
+    ew:'O que se constrói é um <strong>modelo interno</strong> preditivo, não músculo novo, atalho nem estoque de dopamina. É ele que torna o gesto automático.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
