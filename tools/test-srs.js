@@ -151,7 +151,7 @@ const reset = ()=>ev('state = defaultState();');
   ok(dims.indexOf('recognition') > -1, '1. neuronio-0 deveria medir recognition');
 
   const total = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`);
-  ok(total > 0 && total <= 400, `1. total de caixas possíveis fora de faixa: ${total}`);
+  ok(total > 0 && total <= 450, `1. total de caixas possíveis fora de faixa: ${total}`);
   const semNada = ev(`MODULES.flatMap(m=>m.lessons.map((_,li)=>measurableDimensions(m.id,li).length?null:m.id+'-'+li)).filter(Boolean)`);
   eq(semNada.length, 0, `1. tópicos sem nenhuma dimensão mensurável: ${semNada.join(', ')}`);
 }
@@ -562,13 +562,13 @@ const reset = ()=>ev('state = defaultState();');
      "onde fica" não é pergunta com resposta. Se um módulo novo entrar sem
      âncora de diagrama, ele aparece nesta lista e o portão fecha. */
   const semLoc = ev(`MODULES.reduce((a,m)=>a.concat(m.lessons.map((_,li)=>canMeasure(m.id,li,'location')?null:m.id+'-'+li).filter(Boolean)),[])`);
-  const ABSTRATOS = ['emocao-3','linguagem-2','linguagem-3','clinica-0','clinica-3','metodos-0','metodos-2','decisao-4','sono-4','neuroanatomia-4','sensorial-4','desenvolvimento-4','clinica-4','farmacologia-4','metodos-4'];
+  const ABSTRATOS = ['emocao-3','linguagem-2','linguagem-3','clinica-0','clinica-3','metodos-0','metodos-2','decisao-4','sono-4','neuroanatomia-4','sensorial-4','desenvolvimento-4','clinica-4','farmacologia-4','metodos-4','memoria-4'];
   eq(semLoc.slice().sort().join(' '), ABSTRATOS.slice().sort().join(' '),
      '19. mudou o conjunto de tópicos sem Localização — veio: ' + semLoc.join(' '));
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 400,
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 403,
      '19. o total de caixas sobe deliberadamente a cada 5ª aula da Fatia 2 (base 344; cada aula nova mede 3 ou 4 dimensões). Atualize ao acrescentar aula e confira se subiu o quanto devia');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de

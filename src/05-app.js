@@ -8486,6 +8486,57 @@ Object.assign(TERM_FIG, {
     ew:'A armadilha é a <strong>inferência reversa</strong>: como Y participa de muitas funções, "Y acendeu" não prova "sentiu X". A fMRI não lê pensamento.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — memoria ganha uma 5ª aula: esquecer
+
+   O módulo trata de como a memória DURA (sistemas, consolidação,
+   reconsolidação). Falta o avesso: por que ela SOME — interferência,
+   esquecimento adaptativo (esquecer como recurso, tie com a poda) e memórias
+   falsas. Reusa reconsolidação. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'interferência':'A principal causa do esquecimento no dia a dia: outras memórias competem com a que você busca. Nova aprendizagem atrapalha a antiga (retroativa) e a antiga atrapalha a nova (proativa).',
+  'esquecimento adaptativo':'A ideia de que esquecer é, em parte, um recurso e não só falha: deixar detalhes desbotarem mantém a memória atual e favorece generalizar o essencial.',
+  'memória falsa':'Lembrança confiante de algo que não ocorreu, ou ocorreu diferente; surge porque a memória é reconstruída a cada evocação e pode incorporar informação nova ou sugerida.'
+});
+Object.assign(TERM_FIG, {
+  'interferência':'mod:memoria', 'esquecimento adaptativo':'mod:memoria', 'memória falsa':'mod:memoria'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='memoria');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Por que esquecemos — e por que isso ajuda',
+    b:'<p>O módulo foi sobre como a memória <b>dura</b>. Esta aula faz a pergunta oposta e igualmente importante: por que a gente <b>esquece</b> — e a resposta surpreendente de que esquecer não é (só) falha. Uma memória que guardasse tudo, para sempre, com o mesmo peso, seria <b>inútil</b>.</p>'
+     +'<p>Antes, o mecanismo. Esquecer no dia a dia é menos desbotar com o tempo e mais <span class="term">interferência</span>: outras memórias disputam o mesmo traço. O novo atrapalha o antigo (retroativa), o antigo atrapalha o novo (proativa). Muito "esquecimento" é <b>competição</b>, não apagamento — por isso uma pista certa às vezes traz de volta o que parecia perdido, como a solução por lugar reaparecendo quando o hábito se cala.</p>'
+     +'<p>Agora a virada: esquecer é, em boa parte, <b>projeto</b>. Um cérebro que nunca esquecesse afogaria-se em detalhe velho e irrelevante. O <span class="term">esquecimento adaptativo</span> mantém a memória <b>atual</b> (some o lugar onde você estacionou ontem) e permite <b>generalizar</b> — largar o específico e ficar com a essência é o que deixa você reconhecer uma cadeira que nunca viu. E parte do esquecer é <b>ativo</b>: mecanismos removem sinapses pouco usadas — a poda do módulo de plasticidade. Os raros casos de memória quase total vêm com custos reais.</p>'
+     +'<p>Há um reverso perigoso. Como a memória é <b>reconstruída</b> a cada evocação (a reconsolidação da aula anterior), ela não só desbota — ela <b>distorce</b>. Elizabeth Loftus mostrou como uma pergunta capciosa planta uma <span class="term">memória falsa</span> de algo que não houve. Ou seja, o risco não é só esquecer: é lembrar com <b>confiança</b> e errado. Daí recuperar com precisão (a prática de recuperação) render tanto — fortalece o traço e flagra a distorção — e a confiança de uma testemunha não ser prova.</p>'
+  });
+  MINI_QUIZZES.memoria[4] = [
+    {lvl:0, q:'O que causa a maior parte do esquecimento no dia a dia?', o:['A interferência — outras memórias competindo com a que você busca','Só a passagem do tempo, que apaga o traço','A falta de espaço de armazenamento no cérebro'], c:0, er:'Isso: é competição entre memórias, mais que desbotar puro. Por isso uma pista pode recuperar o "esquecido".', ew:'Não é só o tempo nem falta de espaço: no dia a dia, o que mais faz esquecer é a INTERFERÊNCIA entre memórias.'},
+    {lvl:1, q:'Por que esquecer pode ser BOM para a memória?', o:['Mantém a memória atual e permite generalizar — largar detalhes e ficar com a essência','Porque libera espaço físico para novos neurônios','Porque memória fraca é sempre melhor que memória forte'], c:0, er:'Exato: soltar o específico é o que deixa você reconhecer o novo. Guardar tudo seria um atoleiro de detalhes.', ew:'Não é espaço físico nem "fraco é melhor": esquecer detalhe mantém a memória atual e sustenta a GENERALIZAÇÃO.'},
+    {lvl:2, q:'Por que uma pergunta capciosa pode criar a "lembrança" de algo que nunca aconteceu?', o:['Porque a memória é reconstruída a cada evocação e pode incorporar informação nova ou sugerida','Porque a pessoa está mentindo de propósito','Porque memórias antigas são gravadas em pedra e não mudam'], c:0, er:'Isso: evocar reabre o traço (reconsolidação), e a sugestão pode entrar na regravação — a memória falsa.', ew:'Não é mentira consciente nem memória imutável: ao ser reconstruída, a lembrança pode absorver o que foi sugerido.'}
+  ];
+  DEEP.memoria[4] = '<p>Desde Ebbinghaus se via a memória desbotar, mas a pesquisa moderna mostra que a <b>interferência</b> pesa mais que o simples decaimento: memórias semelhantes competem, e aprender algo novo pode encobrir o antigo (retroativa) ou ser encoberto por ele (proativa). Robert Bjork propôs distinguir <b>disponibilidade</b> (o traço ainda existe) de <b>acessibilidade</b> (você consegue chegar a ele agora): muito do "esquecido" está disponível, mas inacessível sem a pista certa — o mesmo "coberto, não apagado" da aula do estriado. Recuperar um item chega a <b>suprimir ativamente</b> os concorrentes (esquecimento induzido pela recuperação).</p><p>O reenquadramento importante é funcional. Um sistema que retivesse cada detalhe, para sempre, seria péssimo: os casos de memória autobiográfica altamente superior, ou o famoso paciente S. de Luria, revelam o custo de não conseguir descartar. Esquecer detalhe é o que permite <b>abstrair regularidades</b> — formar o conceito de "cadeira" em vez de guardar mil cadeiras. E há <b>esquecimento ativo</b>: processos moleculares que enfraquecem e removem sinapses, a poda do módulo de plasticidade vista pelo lado da memória.</p><p>Por fim, a memória <b>reconstrutiva</b> tem um lado sombrio que fecha com o módulo de métodos. Elizabeth Loftus demonstrou o <b>efeito da desinformação</b> e implantou lembranças inteiras (o clássico "perdido no shopping") com mera sugestão. Como cada evocação pode regravar o traço, a memória confiante não é garantia de exatidão — um alerta sério para testemunhos. Para o estudo, a moral é dupla: recuperar com precisão consolida e detecta distorções; e vale desconfiar da própria certeza tanto quanto se confia nela.</p>';
+  PREDICT.memoria[4] = {q:'Você jura ter esquecido por completo o endereço da casa da infância. Um dia passa pela antiga escola e ele volta de repente. O que isso sugere sobre a memória "esquecida"?', o:['Foi apagada de vez e reconstruída na hora','Não foi apagada: estava lá, mas inacessível sem a pista certa','Você imaginou o endereço agora'], c:1, after:'Não foi apagada. O traço continuava disponível, só inacessível — faltava a pista que o destravasse. Muito do que chamamos de esquecer é problema de ACESSO, não de apagamento: a memória estava coberta pela interferência, e a pista certa a trouxe de volta.'};
+  CHAIN.memoria[4] = {
+    s:['Guardar cada detalhe, para sempre e igual, saturaria o sistema','O cérebro deixa detalhes específicos desbotarem','Fica a essência — o padrão comum a muitos casos','Com a essência, você reconhece e generaliza o que é novo','Logo, esquecer detalhe é o preço (útil) de aprender o geral'],
+    h:3, hn:'A virada: largar o específico é justamente o que deixa formar conceitos. Uma memória total seria uma prisão de particulares — você guardaria mil cadeiras e não teria a ideia de "cadeira". Esquecer é, em boa parte, projeto.',
+    w:'E se, ao lembrar, você misturasse a lembrança com uma informação nova sugerida?',
+    wa:'Pode nascer uma memória falsa — como Loftus mostrou. A memória é reconstruída a cada evocação, então o perigo não é só esquecer: é lembrar com confiança e errado. Recuperar com precisão protege; sugestão contamina.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.memoria) BRIDGE.memoria[4] = 'A aula é o avesso do módulo: não como a memória dura, mas como e por que ela some — e por que isso é, em boa parte, projeto. Interferência, esquecimento adaptativo e memórias falsas.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.memoria) CONTEXT_TOPIC_TERMS.memoria['4'] = {
+    'esquecimento adaptativo':{steps:[0,1,2,3,4],kind:'direct'},
+    'interferência':{steps:[],kind:'context',note:'A causa mecânica de muito esquecer — competição, não apagamento.'},
+    'memória falsa':{steps:[],kind:'context',note:'O reverso perigoso: não esquecer, e sim lembrar errado; aparece no "e se".'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo mostrou como a memória DURA. O que esta aula acrescenta sobre o esquecer?',
+    o:['Que esquecer é, em boa parte, adaptativo: mantém a memória atual e permite generalizar','Que esquecer é sempre uma falha do cérebro a ser evitada','Que memórias somem apenas pela passagem do tempo','Que, uma vez gravada, nenhuma memória muda mais'], c:0, l:4,
+    er:'Isso. Esquecer detalhe mantém a memória <strong>atual</strong> e sustenta a <strong>generalização</strong> — é projeto, não só falha. E a memória se reconstrói, podendo distorcer.',
+    ew:'A aula mostra o esquecer como <strong>adaptativo</strong> (atualizar, generalizar) e a memória como reconstrutiva — não uma falha pura, nem só o tempo, nem algo imutável.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
