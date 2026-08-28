@@ -8640,6 +8640,57 @@ Object.assign(TERM_FIG, {
     ew:'Não é reler melhor nem estudo sem esforço: é <strong>elaborar/explicar</strong>, que constrói conexões — e, como as outras técnicas, depende de conhecimento prévio.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — ilusoes ganha uma 5ª aula: retrospectiva
+
+   As ilusoes do modulo inflam a confianca ANTES da prova (fluencia, JOL,
+   profundidade explicativa). Falta a que age DEPOIS de ver a resposta: o vies
+   da retrospectiva ("eu ja sabia"), que corrompe o autojulgamento. Conserto:
+   comprometer a resposta antes. Reusa julgamento de aprendizado. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'viés da retrospectiva':'A tendência a, depois de saber o resultado (ou ver a resposta), sentir que "já sabia" — a certeza atual reescreve a incerteza que você tinha antes.',
+  'maldição do conhecimento':'Uma vez que você sabe algo, fica difícil imaginar não saber; isso piora a avaliação das próprias lacunas e atrapalha explicar para quem ainda não sabe.',
+  'determinismo rastejante':'Nome de Fischhoff para o efeito: assim que um desfecho é conhecido, ele passa a parecer que sempre foi inevitável e previsível — a base do viés da retrospectiva.'
+});
+Object.assign(TERM_FIG, {
+  'viés da retrospectiva':'mod:ilusoes', 'maldição do conhecimento':'mod:ilusoes', 'determinismo rastejante':'mod:ilusoes'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='ilusoes');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O viés da retrospectiva: "eu já sabia"',
+    b:'<p>As ilusões do módulo inflam a confiança <b>antes</b> da prova. Esta ataca <b>depois</b>: no instante em que você lê a resposta certa, ela parece <b>óbvia</b> — como se você já soubesse o tempo todo. É o <span class="term">viés da retrospectiva</span>, e ele sabota em silêncio o passo mais importante do estudo: julgar com honestidade se você <b>de fato</b> sabia.</p>'
+     +'<p>O mecanismo é de memória. Uma vez que o desfecho é conhecido, o cérebro não consegue mais <b>não</b> sabê-lo: a resposta reorganiza a lembrança do que você pensava antes, e a incerteza anterior é sobrescrita pela certeza atual. Baruch Fischhoff mostrou que quem descobre um resultado passa a "lembrar" que o havia previsto — o <span class="term">determinismo rastejante</span>. Estudando: você tenta recuperar, espia o gabarito e pensa "é, isso eu já sabia" — creditando um conhecimento que a tentativa acabou de mostrar que faltava.</p>'
+     +'<p>O custo é traiçoeiro porque bate justo na calibração (a aula do termômetro). Se todo gabarito revelado parece algo que você sabia, você vai <b>deixar de revisar</b> exatamente o que está errando. E alimenta um primo da ilusão de profundidade: a <span class="term">maldição do conhecimento</span> — depois de saber algo, você não consegue imaginar não saber, o que te torna pior juiz das próprias lacunas e pior professor.</p>'
+     +'<p>O conserto é estrutural, no espírito do módulo: não confie na sensação de depois — <b>comprometa-se antes</b>. Escreva a resposta (ou diga em voz alta) <b>antes</b> de virar o cartão; só então compare. Uma resposta comprometida no papel não pode ser promovida a "eu já sabia". É por isso que recuperar com uma resposta de verdade produzida vence "olhar e concordar": força um registro que a retrospectiva não consegue reescrever. O juiz honesto é o que anotou o palpite primeiro.</p>'
+  });
+  MINI_QUIZZES.ilusoes[4] = [
+    {lvl:0, q:'O que é o viés da retrospectiva no estudo?', o:['Depois de ver a resposta certa, sentir que "já sabia" e superestimar o que sabia antes','Esquecer a resposta logo depois de vê-la','Achar o material difícil demais para aprender'], c:0, er:'Isso: ver o gabarito faz tudo parecer óbvio em retrospecto, inflando a sensação de já ter sabido.', ew:'Não é esquecer nem achar difícil: é, DEPOIS de ver a resposta, sentir que já a sabia — superestimando seu conhecimento anterior.'},
+    {lvl:1, q:'Por que escrever sua resposta ANTES de virar o cartão vence o viés da retrospectiva?', o:['Uma resposta comprometida no papel não pode ser "promovida" a "eu já sabia"; você compara a tentativa real ao gabarito','Porque escrever cansa e faz prestar mais atenção','Porque o gabarito fica mais fácil de ler depois'], c:0, er:'Exato: o compromisso prévio cria um registro que a retrospectiva não reescreve. Você confronta o que realmente produziu.', ew:'Não é o cansaço de escrever nem a leitura do gabarito: é que a resposta COMPROMETIDA antes não pode ser reinterpretada como "eu sabia".'},
+    {lvl:2, q:'Por que o viés da retrospectiva faz você revisar as coisas erradas?', o:['Porque todo gabarito revelado parece "conhecido", então você deixa de revisar justo o que está errando','Porque ele apaga as respostas certas da memória','Porque faz você revisar tudo em excesso'], c:0, er:'Isso: se tudo parece que você já sabia, a calibração quebra e o que falha não recebe revisão.', ew:'Não apaga acertos nem gera excesso de revisão: ele faz o que falha PARECER sabido, então você para de revisá-lo.'}
+  ];
+  DEEP.ilusoes[4] = '<p>O <b>viés da retrospectiva</b> foi isolado por Baruch Fischhoff nos anos 1970: ao receber o desfecho de um evento, as pessoas ajustam para cima a probabilidade que dizem ter atribuído a ele <b>antes</b> — ele chamou o efeito de <b>determinismo rastejante</b>, a sensação de que o que aconteceu era, no fundo, inevitável. É um dos vieses mais robustos e difíceis de desligar só pela vontade de ser objetivo; saber que ele existe quase não protege contra ele.</p><p>A raiz é a memória <b>reconstrutiva</b> da aula de esquecimento: a informação nova (a resposta) contamina a lembrança do estado anterior de incerteza, e não há como "descontar" o que já se sabe. Daí o parente clínico e pedagógico, a <b>maldição do conhecimento</b> (Camerer, Loewenstein e Weber): um especialista superestima o quanto os outros — e ele mesmo, antes — sabiam, o que degrada tanto a autoavaliação quanto o ensino, porque some a experiência de não saber.</p><p>Para quem estuda, a consequência aterrissa na calibração do módulo: o autoteste "olhe e diga se sabia" é corrompido, porque o gabarito à vista sempre parece familiar. O antídoto não é desconfiar mais de si em abstrato — é <b>procedimental</b>: produzir e registrar a resposta <b>antes</b> de conferir. Um palpite escrito é um compromisso que a retrospectiva não pode reescrever, e transforma o autoteste de uma impressão numa medida. É a mesma lição da prática de recuperação, vista pelo lado do juiz.</p>';
+  PREDICT.ilusoes[4] = {q:'Você se testa, espia a resposta e pensa "é, isso eu sabia". Uma semana depois, a MESMA pergunta te trava. O que provavelmente aconteceu da primeira vez?', o:['Você soube e esqueceu no intervalo','Você não sabia de verdade — ver a resposta fez parecer que sabia (retrospectiva)','A pergunta mudou de alguma forma'], c:1, after:'Você provavelmente não sabia. Ver o gabarito fez a resposta parecer óbvia em retrospecto, e você se creditou um conhecimento que a tentativa não tinha mostrado. Se tivesse escrito o palpite antes de espiar, o viés não teria como agir — e a semana seguinte não surpreenderia.'};
+  CHAIN.ilusoes[4] = {
+    s:['Você tenta lembrar e dá uma olhada na resposta','Ver a resposta a faz parecer óbvia, como se você já soubesse','Você se dá o crédito: "isso eu sabia"','Mas a tentativa mostrou que você NÃO produziu sozinho','Resultado: você deixa de revisar o que está errando'],
+    h:1, hn:'A virada: saber a resposta reescreve a lembrança de não sabê-la. O gabarito revelado parece algo que você tinha, então você para de revisar justo o que falha. O juiz honesto anota o palpite primeiro — um compromisso que a retrospectiva não consegue promover a "eu já sabia".',
+    w:'E se você escrevesse sua resposta ANTES de virar o cartão?',
+    wa:'Aí o viés não tem como agir: a resposta comprometida no papel não pode ser "promovida" a "eu já sabia". Você compara a tentativa real com o gabarito — por isso produzir vence olhar e concordar.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.ilusoes) BRIDGE.ilusoes[4] = 'A aula acrescenta uma ilusão que age DEPOIS da resposta: ver o gabarito faz tudo parecer óbvio ("eu já sabia") e corrompe o autojulgamento. Aqui, o viés da retrospectiva e o conserto: comprometer a resposta antes.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.ilusoes) CONTEXT_TOPIC_TERMS.ilusoes['4'] = {
+    'viés da retrospectiva':{steps:[1,2],kind:'direct'},
+    'maldição do conhecimento':{steps:[],kind:'context',note:'Parente próximo: não conseguir imaginar não saber.'},
+    'determinismo rastejante':{steps:[],kind:'context',note:'O nome do mecanismo (Fischhoff).'}
+  };
+  if(m.quiz) m.quiz.push({q:'As ilusões do módulo inflam a confiança ANTES da prova. Qual ilusão esta aula acrescenta, que age DEPOIS de ver a resposta?',
+    o:['O viés da retrospectiva: ver o gabarito faz parecer que você "já sabia", corrompendo o autojulgamento','A fluência: o material presente parece dominado','A ilusão de profundidade: achar que entende um mecanismo','A desfluência: material difícil de ler engana'], c:0, l:4,
+    er:'Isso. O <strong>viés da retrospectiva</strong> age depois da resposta: o gabarito parece óbvio, você sente que "já sabia" e deixa de revisar o que falha. O conserto é comprometer a resposta antes.',
+    ew:'Fluência, profundidade explicativa e desfluência agem ANTES ou durante. A nova é o <strong>viés da retrospectiva</strong>, que age ao ver a resposta.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
