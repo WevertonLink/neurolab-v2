@@ -8282,6 +8282,57 @@ Object.assign(TERM_FIG, {
     ew:'Quem decide é a <strong>reserva cognitiva</strong> (educação, engajamento, conexões), não traços físicos nem uma única noite de sono.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — linguagem ganha uma 5ª aula: aquisição
+
+   O módulo mostra a rede ADULTA, a quebra (afasias) e as variedades. Falta a
+   origem: como a criança chega à rede, aprendendo a lingua a partir da fala.
+   Estreitamento perceptual, aprendizagem estatistica, a explosao de vocabulario
+   e a janela sensivel. Reusa 'periodos criticos'. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'aprendizagem estatística':'A capacidade de extrair padrões da experiência sem instrução — por exemplo, achar onde uma palavra termina na fala contínua rastreando quais sons costumam se seguir.',
+  'estreitamento perceptual':'O processo pelo qual o bebê, que no início distingue os sons de todas as línguas, afina-se à língua materna por volta de 1 ano e deixa de ouvir os contrastes que ela não usa.',
+  'balbucio':'A fase em que o bebê pratica sons repetidos (ba-ba, da-da) antes das primeiras palavras — um ensaio motor e sonoro da fala que vem.'
+});
+Object.assign(TERM_FIG, {
+  'aprendizagem estatística':'mod:linguagem', 'estreitamento perceptual':'mod:linguagem', 'balbucio':'mod:linguagem'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='linguagem');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Como a criança aprende a falar',
+    b:'<p>O módulo mostrou a rede adulta da linguagem e o que a quebra. Mas de onde ela vem? Ninguém ensina gramática a um bebê, e ainda assim quase toda criança domina uma língua em poucos anos, a partir de uma fala <b>bagunçada e incompleta</b>. A aquisição é uma das façanhas mais impressionantes do cérebro em desenvolvimento — e segue um calendário nítido.</p>'
+     +'<p>Começa por afinar o ouvido. O recém-nascido distingue os sons de <b>todas</b> as línguas; por volta de 1 ano ele se <b>especializa</b> na sua e perde contrastes que ela não usa — bebês de lares japoneses deixam de separar o "r" do "l" do inglês. É o <span class="term">estreitamento perceptual</span>: o cérebro <b>poda</b> as distinções que não precisa, o mesmo "use ou perca" do módulo de desenvolvimento, agora nos sons da fala.</p>'
+     +'<p>Depois, achar as palavras. Na fala corrida não há espaços, e mesmo assim o bebê descobre onde uma palavra termina — por <span class="term">aprendizagem estatística</span>, rastreando quais sons costumam se seguir (Saffran mostrou bebês de 8 meses fazendo isso em minutos). Do <span class="term">balbucio</span> às primeiras palavras (~1 ano) e à <b>explosão de vocabulário</b> (~18 meses), a criança está rodando estatística sobre a língua, não decorando regras. E há uma janela: sotaque nativo e fluência vêm fácil cedo e difícil depois da puberdade (os <span class="term">períodos críticos</span>).</p>'
+     +'<p>Fica o grande debate, com honestidade. A fala que o bebê ouve parece <b>pobre demais</b> para explicar a gramática rica que ele adquire — Chomsky usou isso para propor uma faculdade de linguagem inata. Abordagens baseadas no uso respondem que a aprendizagem estatística somada à interação social dá conta de mais do que parece. O meio-termo honesto: a língua não é puro instinto nem pura aprendizagem — é um cérebro <b>preparado</b> encontrando input rico e social na hora certa. E mostra quanto o cérebro em formação extrai de mera exposição, quando a janela está aberta.</p>'
+  });
+  MINI_QUIZZES.linguagem[4] = [
+    {lvl:0, q:'O que acontece com a capacidade do bebê de ouvir contrastes de som ao longo do primeiro ano?', o:['No início distingue os de todas as línguas; por volta de 1 ano afina-se à sua e perde os outros','Só passa a ouvir qualquer som depois de 1 ano','Fica igual a vida toda, sem mudança'], c:0, er:'Isso: é o estreitamento perceptual. O bebê começa universal e se especializa na língua que ouve.', ew:'É o contrário de "só depois" e de "não muda": o bebê começa distinguindo tudo e vai ESTREITANDO para a língua materna.'},
+    {lvl:1, q:'Na fala corrida não há espaços entre as palavras. Como o bebê descobre onde uma termina e a outra começa?', o:['Por aprendizagem estatística: rastreando quais sons costumam se seguir','Esperando os pais pronunciarem cada palavra separada','Lendo a escrita das palavras'], c:0, er:'Exato: transições prováveis entre sons marcam as fronteiras. É aprendizagem estatística, e é rápida.', ew:'Não é fala pausada dos pais nem leitura: o bebê usa a ESTATÍSTICA dos sons — o que segue o quê — para achar as palavras.'},
+    {lvl:2, q:'Por que crianças pequenas pegam o sotaque nativo sem esforço, enquanto adultos penam?', o:['Há um período sensível: os circuitos são muito plásticos para fala cedo, e essa plasticidade cai depois da puberdade','Porque adultos têm a boca em formato diferente','Porque crianças ouvem melhor os sons agudos'], c:0, er:'Isso: a janela sensível. A moldabilidade para os sons da fala é máxima cedo e diminui com a idade.', ew:'Não é anatomia da boca nem audição de agudos: é o PERÍODO SENSÍVEL — a plasticidade para a fala cai após a puberdade.'}
+  ];
+  DEEP.linguagem[4] = '<p>A aquisição tem um relógio notavelmente regular. Por volta dos 6 meses vem o <b>balbucio</b> canônico; perto de 1 ano, as primeiras palavras; aos ~18 meses, uma <b>explosão de vocabulário</b>; e logo a fala telegráfica de duas palavras que já respeita a ordem da língua. Antes disso, na percepção, Janet Werker e Richard Tees documentaram o <b>estreitamento perceptual</b>: aos 6 meses o bebê separa contrastes de qualquer língua; aos 12, só os da sua. Patricia Kuhl descreveu o "ímã perceptual" que puxa os sons para as categorias nativas.</p><p>O motor de descobrir palavras é a <b>aprendizagem estatística</b>. Jenny Saffran, Richard Aslin e Elissa Newport mostraram que bebês de 8 meses, ouvindo poucos minutos de uma fala artificial contínua, extraem as "palavras" só pelas <b>probabilidades de transição</b> entre sílabas. Não é instrução: é um cérebro que computa regularidades — o mesmo tipo de máquina preditiva das aulas de percepção e de movimento, aqui apontada para a língua.</p><p>Sobre nature vs nurture, vale a honestidade. O argumento da <b>pobreza do estímulo</b> (Chomsky) sustenta uma gramática universal inata; as abordagens <b>baseadas no uso</b> (Tomasello) enfatizam estatística poderosa mais interação social. A evidência do <b>período sensível</b> é sólida (aquisição tardia de uma primeira língua deixa marcas duradouras), e a língua de sinais é adquirida no mesmo calendário — o que reforça que o alvo é a linguagem, não o som. A síntese razoável: cérebro preparado, input rico, hora certa.</p>';
+  PREDICT.linguagem[4] = {q:'Um bebê de 10 meses de uma casa que só fala japonês ouve os sons ingleses "r" e "l". Comparado a um bebê de 6 meses, você acha que ele distingue esses sons melhor ou pior?', o:['Melhor: está mais maduro e treinado','Pior: o cérebro já se afinou à língua que ouve e podou o contraste não usado','Exatamente igual'], c:1, after:'Pior — e isso é sinal de desenvolvimento, não de atraso. Pelo estreitamento perceptual, por volta de 1 ano o bebê se especializa nos sons da própria língua e perde contrastes que ela não usa. O de 6 meses ainda é "universal"; o de 10 já está afinando.'};
+  CHAIN.linguagem[4] = {
+    s:['O recém-nascido distingue os sons de TODAS as línguas','A partir da fala que ouve, o cérebro rastreia quais contrastes importam','Os contrastes usados são reforçados; os não usados, podados','Por volta de 1 ano, o bebê afina-se à língua materna','Contrastes de outra língua ficam difíceis de ouvir depois'],
+    h:2, hn:'A virada: o bebê não ACRESCENTA a língua sobre uma folha em branco — ele SUBTRAI as opções que a língua dele não usa. Especialização por poda, o mesmo "use ou perca" do desenvolvimento, aqui para os sons.',
+    w:'E se a criança crescesse ouvindo duas línguas ao mesmo tempo?',
+    wa:'Mantém os contrastes das duas: o cérebro bilíngue preserva as distinções de ambas porque as duas são "usadas". A poda segue o que o ambiente confirma.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.linguagem) BRIDGE.linguagem[4] = 'A aula conta a origem que o módulo pula: como o bebê chega à rede adulta. Estreitamento perceptual, aprendizagem estatística, a explosão de vocabulário e a janela sensível.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.linguagem) CONTEXT_TOPIC_TERMS.linguagem['4'] = {
+    'estreitamento perceptual':{steps:[2,3,4],kind:'direct'},
+    'aprendizagem estatística':{steps:[1],kind:'direct'},
+    'balbucio':{steps:[],kind:'context',note:'A fase de ensaio antes das primeiras palavras.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo mostra a rede adulta da linguagem. Como a criança chega até ela, aprendendo a língua a partir da fala que ouve?',
+    o:['Por aprendizagem estatística e estreitamento perceptual, dentro de uma janela sensível','Decorando as regras de gramática que os pais ensinam','Nascendo já com o vocabulário todo pronto','Copiando letra por letra a partir da escrita'], c:0, l:4,
+    er:'Isso. A criança <strong>extrai</strong> a língua da fala — acha as palavras por estatística e afina os sons por estreitamento perceptual, numa janela sensível. Ninguém ensina as regras.',
+    ew:'A aquisição é por <strong>aprendizagem estatística e estreitamento perceptual</strong> na janela sensível — não por decorar regras, vocabulário inato nem a escrita.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
