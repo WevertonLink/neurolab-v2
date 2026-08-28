@@ -7766,6 +7766,57 @@ Object.assign(TERM_FIG, {
   };
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — recompensa ganha uma 5ª aula: o avesso
+
+   O módulo cobre a fundo o sistema que busca recompensa (dopamina, erro de
+   previsão, hábito). Falta o espelho: o sistema que aprende a EVITAR. A
+   habênula lateral dispara quando algo sai pior que o esperado e freia a
+   dopamina. Append idempotente, no padrao das aulas de glia e poda.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'habênula lateral':'Pequeno núcleo que age como "anti-recompensa": dispara quando o resultado sai pior que o esperado e freia os neurônios de dopamina, ensinando o cérebro a evitar.',
+  'aprendizagem de evitação':'Aprender a não fazer algo, ou a escapar, guiado por sinais de que o resultado será pior que o previsto — o espelho do aprendizado por recompensa.',
+  'desamparo aprendido':'Estado em que punições repetidas e incontroláveis levam a parar de tentar; associado à hiperatividade da habênula e estudado como modelo de depressão.'
+});
+Object.assign(TERM_FIG, {
+  'habênula lateral':'mod:recompensa', 'aprendizagem de evitação':'mod:recompensa', 'desamparo aprendido':'mod:recompensa'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='recompensa');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O avesso: prever e evitar a punição',
+    b:'<p>O módulo inteiro fala em ir <b>atrás</b> da recompensa. Mas metade de aprender é aprender a ficar <b>longe</b> — e isso não é só "menos recompensa": é um sistema próprio, com sinal próprio.</p>'
+     +'<p>A peça central é a <span class="term">habênula lateral</span>, uma espécie de <b>anti-recompensa</b>. Onde os neurônios de dopamina disparam com a surpresa boa, a habênula dispara com a surpresa <b>ruim</b> — quando o resultado sai pior que o esperado — e então <b>freia</b> a dopamina. Um diz "faça de novo"; o outro, "não faça".</p>'
+     +'<p>O detalhe elegante fecha o círculo com a aula do erro de previsão: quando uma recompensa esperada <b>não vem</b>, a dopamina cai <b>abaixo</b> do basal. Essa queda é ela mesma um sinal de ensino — marca "isto foi pior que o previsto" e alimenta a <span class="term">aprendizagem de evitação</span>. Recompensa e punição dividem a mesma moeda (o erro de previsão), com o sinal trocado.</p>'
+     +'<p>Há um custo quando esse lado fica preso ligado. Punição <b>incontrolável</b> e repetida mantém a habênula em alta e a dopamina suprimida, e o animal — ou a pessoa — <b>para de tentar</b>: é o <span class="term">desamparo aprendido</span>, um modelo clássico de depressão. Na prática do estudo, uma única falha dura e sem saída ensina rápido a evitar; por isso o retorno precisa ser informativo e controlável, não só punitivo.</p>'
+  });
+  MINI_QUIZZES.recompensa[4] = [
+    {lvl:0, q:'O que faz a habênula lateral?', o:['Dispara quando algo sai pior que o esperado e freia a dopamina','Produz a sensação de prazer no momento da recompensa','Guarda a memória das recompensas passadas'], c:0, er:'Isso: é a "anti-recompensa" — dispara com a surpresa ruim e freia os neurônios de dopamina.', ew:'Ela não produz prazer nem guarda memória: dispara com a surpresa ruim (pior que o esperado) e freia a dopamina.'},
+    {lvl:1, q:'Uma recompensa que você esperava simplesmente não chega. O que fazem os neurônios de dopamina?', o:['Caem abaixo do nível basal, sinalizando "pior que o previsto"','Disparam mais forte, para compensar a falta','Ficam exatamente no mesmo nível de sempre'], c:0, er:'Exato: a queda abaixo do basal é um sinal de ensino que marca a surpresa negativa e alimenta a evitação.', ew:'Eles caem ABAIXO do basal — essa queda é o sinal de "pior que o esperado", não um disparo maior nem estabilidade.'},
+    {lvl:2, q:'Por que uma única falha dura e sem saída pode derrubar a motivação por muito tempo?', o:['Porque a evitação se aprende rápido e a punição incontrolável mantém a habênula alta e a dopamina suprimida','Porque a dopamina some para sempre depois de qualquer erro','Porque o córtex pré-frontal deixa de existir após a falha'], c:0, er:'Isso: a evitação é aprendizado veloz, e o incontrolável leva ao desamparo — habênula alta, dopamina baixa.', ew:'A dopamina não some para sempre nem o córtex "deixa de existir": o que pesa é a evitação rápida somada ao desamparo por punição incontrolável.'}
+  ];
+  DEEP.recompensa[4] = '<p>A neurociência da recompensa passou décadas olhando só para o lado bom da moeda. A <b>habênula lateral</b> trouxe o outro: um núcleo minúsculo que, via uma estação de retransmissão (o RMTg), <b>inibe</b> os neurônios de dopamina exatamente quando as coisas saem piores que o previsto. É o negativo fotográfico do sinal de Schultz.</p><p>Isso dá simetria ao sistema. O <b>erro de previsão</b> é uma só régua: acima de zero (melhor que o esperado) a dopamina sobe e o comportamento é reforçado; abaixo de zero (pior) a dopamina cai, a habênula acende, e o comportamento é <b>evitado</b>. Um mecanismo, dois sentidos.</p><p>O lado clínico é direto. Quando a punição é <b>incontrolável</b> e se repete, a habênula fica cronicamente ativa e a dopamina, suprimida: o organismo entra em <b>desamparo aprendido</b> — para de tentar mesmo quando a saída reaparece. É um dos modelos animais mais usados de depressão, e ajuda a entender por que "só se esforçar mais" não é conselho útil para quem já está nesse estado. Retorno controlável e informativo é o que reabre o sistema.</p>';
+  PREDICT.recompensa[4] = {q:'O que você acha que aconteceria com a capacidade de aprender a EVITAR se a habênula lateral fosse silenciada?', o:['Ficaria mais forte, sem o freio atrapalhando','Ficaria prejudicada: sem o sinal de "pior que o esperado"','Não mudaria — evitar não depende dela'], c:1, after:'Ficaria prejudicada. Sem a habênula, falta o sinal que marca "pior que o previsto" e freia a dopamina — e é justamente esse sinal que ensina a evitar. Ela não atrapalha a recompensa: ela dá ao cérebro o outro sentido da régua.'};
+  CHAIN.recompensa[4] = {
+    s:['O resultado sai pior que o previsto','A habênula lateral dispara (surpresa negativa)','Ela freia a dopamina, que cai abaixo do basal','Essa queda marca "isto foi pior que o esperado"','O cérebro aprende a evitar aquele caminho'],
+    h:1, hn:'A virada é ter um sistema PRÓPRIO para o ruim. Não é "menos recompensa": é um núcleo que acende com a surpresa negativa e freia a dopamina. Recompensa e punição são a mesma régua, com o sinal trocado.',
+    w:'E se a punição fosse incontrolável e se repetisse muitas vezes?',
+    wa:'A habênula fica cronicamente alta e a dopamina, suprimida; o organismo para de tentar — o desamparo aprendido, um modelo de depressão.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.recompensa) BRIDGE.recompensa[4] = 'A aula mostra o avesso do módulo: além de buscar recompensa, o cérebro aprende a evitar, com um sistema próprio (a habênula) que espelha o da dopamina. Aqui, o sinal de "pior que o esperado" e onde ele leva.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.recompensa) CONTEXT_TOPIC_TERMS.recompensa['4'] = {
+    'habênula lateral':{steps:[1],kind:'direct'},
+    'aprendizagem de evitação':{steps:[4],kind:'direct'},
+    'desamparo aprendido':{steps:[],kind:'context',note:'É o que acontece quando esse sistema fica preso ligado; não é uma etapa da cadeia.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo mostra o sistema que busca recompensa. Qual estrutura faz o trabalho oposto — aprender a evitar?',
+    o:['A habênula lateral, que dispara quando algo sai pior que o previsto','O núcleo accumbens, sede do prazer e da recompensa consumada','A área tegmental ventral, a própria fonte da dopamina','O córtex pré-frontal, que planeja e inibe a ação'], c:0, l:4,
+    er:'Isso. A <strong>habênula lateral</strong> é a "anti-recompensa": acende com a surpresa negativa e freia a dopamina, ensinando a evitar.',
+    ew:'O oposto de buscar é <strong>evitar</strong>, e quem sinaliza isso é a <strong>habênula lateral</strong> (freia a dopamina). Accumbens e VTA são do lado da recompensa; o pré-frontal planeja, não gera o sinal.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
