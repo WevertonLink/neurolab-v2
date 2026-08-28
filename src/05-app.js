@@ -8333,6 +8333,57 @@ Object.assign(TERM_FIG, {
     ew:'A aquisição é por <strong>aprendizagem estatística e estreitamento perceptual</strong> na janela sensível — não por decorar regras, vocabulário inato nem a escrita.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — clinica ganha uma 5ª aula: recuperar
+
+   O módulo é todo sobre o que DÁ ERRADO. Falta a outra metade, esperançosa e
+   honesta: como o cérebro se RECUPERA — penumbra, reorganização funcional e a
+   reabilitação que dirige a plasticidade (desuso aprendido, contenção induzida),
+   com limites. Cross-link com plasticidade e motor. Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'reorganização funcional':'A capacidade do cérebro lesado de redistribuir uma função para regiões sobreviventes, vizinhas ou conectadas — a base da recuperação após um AVC, guiada pelo uso.',
+  'desuso aprendido':'Ciclo em que, após uma lesão, a pessoa evita usar a parte afetada porque ela falha, e o desuso enfraquece ainda mais o circuito; a reabilitação existe para quebrá-lo.',
+  'penumbra isquêmica':'A zona em volta do núcleo de um AVC onde o tecido está atordoado, mas ainda vivo, e pode ser salvo se o sangue voltar depressa — a razão de "tempo é cérebro".'
+});
+Object.assign(TERM_FIG, {
+  'reorganização funcional':'mod:clinica', 'desuso aprendido':'mod:clinica', 'penumbra isquêmica':'mod:clinica'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='clinica');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'O cérebro que se recupera: plasticidade após a lesão',
+    b:'<p>O módulo inteiro falou do que dá <b>errado</b>. Mas cérebros também se <b>curam</b> — não regenerando os neurônios perdidos (isso quase não acontece), e sim se <b>reorganizando</b>. Depois de um AVC, a recuperação não é o tecido morto voltando: é o cérebro sobrevivente <b>assumindo</b> a função. É a plasticidade dos módulos anteriores, agora posta a trabalhar.</p>'
+     +'<p>Veja o AVC. Quando o sangue é cortado, um núcleo morre rápido — mas em volta há a <span class="term">penumbra isquêmica</span>, tecido atordoado e ainda vivo, salvável se o fluxo voltar a tempo ("tempo é cérebro"). Depois, ao longo de semanas e meses, regiões vizinhas e conectadas fazem a <span class="term">reorganização funcional</span>: aos poucos assumem o trabalho da área perdida. A recuperação é real e muitas vezes grande — mas é reconstruir rotas, não ressuscitar as antigas.</p>'
+     +'<p>A reabilitação <b>dirige</b> essa plasticidade, porque a reorganização depende do <b>uso</b> — a mesma regra de "disparar junto" e "usar ou perder". Há uma armadilha, o <span class="term">desuso aprendido</span>: depois do AVC, o braço fraco falha, a pessoa passa a evitá-lo, e o circuito dele definha mais. A terapia por <b>contenção induzida</b> quebra o ciclo prendendo o braço bom e forçando o uso do afetado — e o mapa cortical do membro afetado se expande de forma mensurável. Prática intensa, precoce e específica é o que recruta o tecido que sobrou.</p>'
+     +'<p>Com honestidade sobre os limites: nem tudo se recupera — dano extenso ou doença progressiva vencem a plasticidade, e costuma haver uma janela em que os ganhos vêm mais rápido. Mas o princípio é poderoso e é o mesmo do curso inteiro: o cérebro é moldado pelo que faz, na saúde e no reparo. Este módulo, que começou no que falha, fecha no que se reconstrói.</p>'
+  });
+  MINI_QUIZZES.clinica[4] = [
+    {lvl:0, q:'Como o cérebro costuma recuperar uma função depois de um AVC?', o:['Regiões sobreviventes se reorganizam e assumem a função (remapeamento)','Os neurônios mortos crescem de novo e se reconectam','O sangue traz neurônios novos que substituem os perdidos'], c:0, er:'Isso: é a reorganização funcional. Os sobreviventes assumem — não há ressurreição do tecido morto.', ew:'Os neurônios mortos não voltam nem chegam pelo sangue: quem recupera a função são as regiões SOBREVIVENTES, reorganizando-se.'},
+    {lvl:1, q:'Após um AVC enfraquecer um braço, por que prender o braço BOM e forçar o uso do fraco pode ajudar?', o:['Força o uso do braço afetado, quebrando o desuso aprendido e dirigindo o remapeamento','Dá descanso ao braço fraco, que se cura sozinho','Fortalece o braço bom para compensar o outro'], c:0, er:'Exato: é a contenção induzida. Forçar o uso recruta o tecido sobrevivente e expande o mapa do membro afetado.', ew:'O objetivo não é descansar o fraco nem treinar o bom: é FORÇAR o uso do afetado, contra o desuso aprendido.'},
+    {lvl:2, q:'Por que é a reabilitação — e não só o repouso — que restaura a função?', o:['Porque a reorganização depende do uso: praticar recruta e fortalece os circuitos sobreviventes','Porque o repouso faz os neurônios mortos voltarem','Porque a fisioterapia aumenta o fluxo de sangue permanentemente'], c:0, er:'Isso: o remapeamento é guiado pelo uso. Sem prática, o circuito não é recrutado e a janela passa.', ew:'Não é o repouso ressuscitando células nem só circulação: a reorganização é USO-dependente, e a prática é que a dirige.'}
+  ];
+  DEEP.clinica[4] = '<p>Na isquemia, o dano tem geografia e tempo. O <b>núcleo</b> — onde o fluxo despencou — morre em minutos; a <b>penumbra isquêmica</b> em volta recebe sangue de vias colaterais e sobrevive um tempo, funcionalmente calada mas resgatável. Restaurar o fluxo (trombólise, trombectomia) nas primeiras horas salva penumbra: é o sentido literal de "tempo é cérebro".</p><p>Passada a fase aguda, entra a <b>reorganização funcional</b>. Regiões peri-lesionais e áreas conectadas (às vezes no hemisfério oposto) assumem parte do trabalho perdido, num remapeamento que segue as regras de plasticidade — potenciação do que é usado, poda do que não é. Daí a armadilha do <b>desuso aprendido</b>, descrita por Edward Taub: o membro afetado falha, é abandonado, e o mapa dele encolhe. A <b>terapia por contenção induzida</b> — imobilizar o membro são e treinar intensamente o afetado — reverte isso e alarga o território cortical do membro tratado, um dos resultados mais claros de plasticidade dirigida em humanos.</p><p>A honestidade fecha a aula. A extensão do dano impõe teto; doenças degenerativas corroem mais rápido do que a plasticidade repara; e há uma janela em que o cérebro está especialmente reorganizável após a lesão. Ainda assim, prática precoce, intensa e específica para a tarefa é hoje o alicerce da neurorreabilitação — a mesma aprendizagem motora do módulo do movimento, agora reconstruindo o que a doença tirou.</p>';
+  PREDICT.clinica[4] = {q:'Depois de um AVC enfraquecer o braço de alguém, um terapeuta PRENDE o braço bom por semanas, obrigando a pessoa a usar o braço fraco. Você acha que isso ajuda ou atrapalha a recuperação?', o:['Atrapalha: o braço fraco deveria descansar para se curar','Ajuda: forçar o uso leva o cérebro a remapear a função','Não faz diferença nenhuma'], c:1, after:'Ajuda — é a terapia por contenção induzida. Forçar o uso do braço afetado quebra o desuso aprendido e dirige a reorganização: o mapa cortical do membro treinado se expande. A recuperação é guiada pelo uso; poupar o braço fraco, aqui, é perdê-lo.'};
+  CHAIN.clinica[4] = {
+    s:['Um AVC mata uma região e enfraquece a função dela','A pessoa evita usar a parte afetada, que enfraquece mais (desuso aprendido)','A reabilitação força o uso da parte afetada','O uso repetido recruta regiões vizinhas e conectadas','O mapa da função se reorganiza e ela volta em parte'],
+    h:3, hn:'A virada: o cérebro não regrow as células mortas — os SOBREVIVENTES assumem, e só se a função for USADA. A reabilitação é engenharia de plasticidade: a mesma regra de usar ou perder, apontada para o reparo. Repouso sozinho deixa o circuito definhar.',
+    w:'E se, em vez de forçar o uso, a pessoa poupasse a parte afetada?',
+    wa:'Instala-se o desuso aprendido: o circuito enfraquecido é abandonado e definha, e a janela de melhor recuperação passa. Poupar, aqui, é perder.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.clinica) BRIDGE.clinica[4] = 'A aula vira a chave do módulo: do que dá errado para como o cérebro se recupera. Penumbra, reorganização funcional e a reabilitação que dirige a plasticidade — com limites honestos.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.clinica) CONTEXT_TOPIC_TERMS.clinica['4'] = {
+    'reorganização funcional':{steps:[3,4],kind:'direct'},
+    'desuso aprendido':{steps:[1],kind:'direct'},
+    'penumbra isquêmica':{steps:[],kind:'context',note:'A janela de salvamento logo após o AVC; contexto, não etapa do remapeamento.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo mostrou o que dá errado no cérebro. Como ele costuma se recuperar de um AVC?',
+    o:['Regiões sobreviventes se reorganizam e assumem a função, guiadas pelo uso','Os neurônios mortos voltam a crescer e se reconectam','O sangue traz células novas que substituem as perdidas','A função volta sozinha com repouso total, sem reabilitação'], c:0, l:4,
+    er:'Isso. A recuperação é <strong>reorganização funcional</strong>: os sobreviventes assumem a função, e a reabilitação dirige isso pelo uso. O tecido morto não volta.',
+    ew:'Quem recupera são as regiões <strong>sobreviventes</strong>, reorganizando-se com o uso — não os neurônios mortos, nem células pelo sangue, nem o repouso sozinho.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
