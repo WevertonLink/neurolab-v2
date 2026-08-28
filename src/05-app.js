@@ -8537,6 +8537,58 @@ Object.assign(TERM_FIG, {
     ew:'A aula mostra o esquecer como <strong>adaptativo</strong> (atualizar, generalizar) e a memória como reconstrutiva — não uma falha pura, nem só o tempo, nem algo imutável.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — ritmos ganha uma 5ª aula: quando desanda
+
+   O módulo é todo sobre ritmo saudável e sua função. Falta a metade clínica:
+   quando o mesmo laço excitação-inibição desanda para sincronia DEMAIS —
+   epilepsia (hipersincronia), a beta patológica do Parkinson e a estimulação
+   que re-sintoniza. Reusa excitacao-inibicao e estimulacao cerebral profunda.
+   Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'hipersincronia':'Sincronia excessiva: neurônios que deveriam se revezar disparam juntos numa onda que se recruta e cresce. Levada ao extremo, é a base da crise epiléptica.',
+  'ritmo beta':'Oscilação em torno de 13–30 Hz; nos gânglios da base, um excesso de beta sincronizado acompanha a lentidão e a rigidez do Parkinson.',
+  'oscilopatia':'A ideia de tratar certas doenças como distúrbios de ritmo — sincronia de menos ou de mais — e não só de química ou de estrutura.'
+});
+Object.assign(TERM_FIG, {
+  'hipersincronia':'mod:ritmos', 'ritmo beta':'mod:ritmos', 'oscilopatia':'mod:ritmos'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='ritmos');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Quando o ritmo desanda: sincronia demais',
+    b:'<p>O módulo mostrou o ritmo como o <b>endereço temporal</b> do cérebro, nascido do laço entre excitação e inibição. Mas o mesmo laço pode <b>desandar</b>. Sincronia de menos e o endereço borra; sincronia <b>demais</b> e o cérebro trava numa batida só, que abafa a computação. Algumas das doenças mais importantes são ritmo virando patologia.</p>'
+     +'<p>A epilepsia é <span class="term">hipersincronia</span>. O laço gama da primeira aula equilibra excitação contra inibição; incline a balança para a excitação e neurônios que deveriam se <b>revezar</b> passam a disparar <b>juntos</b>, recrutando cada vez mais numa onda que cresce — a crise. É o próprio laço do módulo empurrado além do limite: sincronia é útil na medida, catastrófica em excesso. Não à toa, muitos antiepilépticos reforçam a inibição (o GABA), devolvendo o equilíbrio.</p>'
+     +'<p>O Parkinson traz outra versão. Nos gânglios da base — o portão do módulo motor —, quando a dopamina cai, acumula-se um <span class="term">ritmo beta</span> sincronizado em excesso, e essa super-sincronia parece <b>emperrar</b> a rede, acompanhando a lentidão e a rigidez. Aqui o ritmo a mais não gera uma tempestade: ele <b>tranca</b> o movimento.</p>'
+     +'<p>A virada esperançosa: se a doença é um problema de ritmo, dá para tratá-la <b>re-sintonizando</b> o ritmo. A <span class="term">estimulação cerebral profunda</span> aplica pulsos rápidos que <b>dessincronizam</b> a beta patológica e aliviam muito os sintomas do Parkinson — há até versões em malha fechada, que estimulam só quando a beta sobe. Métodos suaves como estimulação por corrente alternada tentam empurrar ritmos de fora (ainda incipientes e discutidos). É a leitura de <span class="term">oscilopatia</span>: o relógio do cérebro pode quebrar — e pode ser reacertado.</p>'
+  });
+  MINI_QUIZZES.ritmos[4] = [
+    {lvl:0, q:'Em termos de ritmo, o que é uma crise epiléptica?', o:['Hipersincronia: neurônios disparando juntos numa onda que cresce, por excesso de excitação','Ausência total de qualquer oscilação no cérebro','Uma queda súbita da frequência de todos os ritmos'], c:0, er:'Isso: é sincronia demais. O equilíbrio excitação-inibição pende para a excitação e a onda se recruta.', ew:'Não é ausência de ritmo nem só queda de frequência: é HIPERSINCRONIA — disparo conjunto e crescente.'},
+    {lvl:1, q:'Por que a estimulação cerebral profunda ajuda no Parkinson?', o:['Ela dessincroniza a beta patológica que emperrava os gânglios da base','Ela repõe dopamina diretamente na fenda','Ela aquece a região para acelerar os neurônios'], c:0, er:'Exato: pulsos rápidos quebram a super-sincronia beta, liberando a rede motora travada.', ew:'A DBS não repõe dopamina nem aquece: ela DESSINCRONIZA a beta patológica que travava o movimento.'},
+    {lvl:2, q:'O módulo disse que sincronia permite comunicar. Então por que mais sincronia não é simplesmente melhor?', o:['Porque o ritmo útil exige equilíbrio; sincronia demais colapsa a rede numa batida só (crise, ou a beta do Parkinson)','Porque sincronizar gasta energia demais','Porque a sincronia sempre atrapalha a comunicação'], c:0, er:'Isso: na medida, sincronia é endereço temporal; em excesso, afoga a atividade diferenciada que a computação exige.', ew:'Não é gasto de energia nem que sincronia sempre atrapalhe: é que o EXCESSO colapsa a rede numa batida única, útil só em dose.'}
+  ];
+  DEEP.ritmos[4] = '<p>A epilepsia é o exemplo-mãe de <b>oscilopatia</b>. O laço excitação-inibição que gera o gama tem um ponto de operação; empurrado para a excitação — por perda de interneurônios inibitórios, por canais alterados, por lesão —, ele entra em <b>hipersincronia</b>: as células param de se revezar e disparam em bloco, recrutando vizinhas numa descarga que se espalha. Boa parte da farmacologia antiepiléptica age exatamente onde o módulo começou: reforçando o GABA ou reduzindo a excitação, para recuar o ponto de operação.</p><p>No Parkinson, o distúrbio é de outra banda. Com a queda de dopamina, o núcleo subtalâmico e o globo pálido entram em <b>beta</b> (~13–30 Hz) excessivamente sincronizada, e o grau dessa sincronia se correlaciona com a bradicinesia e a rigidez — como se a rede motora ficasse presa a um compasso que impede a troca ágil de estados. É a contrapartida patológica da "janela" da aula 2: aqui a janela trava aberta na frequência errada.</p><p>O tratamento fecha o arco de forma elegante. A <b>estimulação cerebral profunda</b> de alta frequência no subtalâmico suprime a beta patológica — pense numa <b>dessincronização</b> ou numa "lesão informacional" — e melhora os sintomas de imediato; sistemas <b>adaptativos</b> em malha fechada já disparam só quando a beta sobe, poupando estimulação. Fora do crânio, a estimulação transcraniana por corrente alternada tenta <b>entranhar</b> ritmos-alvo, com resultados ainda modestos e debatidos. A moral do módulo ganha um lado clínico: o ritmo não é enfeite — quando desanda, adoece; e reacertá-lo é uma via real de tratamento.</p>';
+  PREDICT.ritmos[4] = {q:'O módulo disse que sincronizar é o jeito de os circuitos se comunicarem. Então mais sincronia seria sempre melhor para o cérebro?', o:['Sim: quanto mais sincronia, mais comunicação','Não: sincronia demais pode colapsar a computação, como numa crise epiléptica','A sincronia não tem nenhum efeito sobre a computação'], c:1, after:'Não. Sincronia é ferramenta com dose certa: na medida, é o endereço temporal que deixa áreas conversarem; em excesso, a rede colapsa numa batida única — a hipersincronia da crise epiléptica, ou a beta que trava o Parkinson. Ritmo bom é ritmo equilibrado, não máximo.'};
+  CHAIN.ritmos[4] = {
+    s:['O laço gama equilibra excitação e inibição (aula 0)','A balança pende para a excitação','Neurônios que deveriam se revezar disparam JUNTOS','A sincronia recruta mais células numa onda que cresce','A onda descontrolada é a crise epiléptica'],
+    h:1, hn:'A virada: sincronia é uma ferramenta com dose. Na medida, é o endereço temporal do módulo; em excesso, colapsa a rede numa batida só. A doença não é algo estranho — é o próprio laço do módulo empurrado além do limite.',
+    w:'E se, em vez de um excesso agudo numa crise, houvesse beta sincronizada demais e constante nos gânglios da base?',
+    wa:'É o padrão do Parkinson: a beta patológica trava a rede motora e acompanha a lentidão e a rigidez. E dá para tratar dessincronizando — é o que a estimulação cerebral profunda faz.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.ritmos) BRIDGE.ritmos[4] = 'A aula é a metade clínica do módulo: quando o mesmo laço de ritmo desanda. Epilepsia (sincronia demais), a beta do Parkinson e a estimulação que re-sintoniza o cérebro.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.ritmos) CONTEXT_TOPIC_TERMS.ritmos['4'] = {
+    'hipersincronia':{steps:[2,3,4],kind:'direct'},
+    'ritmo beta':{steps:[],kind:'context',note:'A sincronia patológica do Parkinson; aparece no "e se".'},
+    'oscilopatia':{steps:[],kind:'context',note:'O guarda-chuva: doença como ritmo desregulado.'}
+  };
+  if(m.quiz) m.quiz.push({q:'O módulo mostrou o ritmo como recurso (endereço temporal, comunicação). O que acontece quando o mesmo laço desanda para sincronia DEMAIS?',
+    o:['A rede trava numa batida só — como na crise epiléptica e na beta do Parkinson','O cérebro fica mais eficiente, sincronizando tudo','Os ritmos desaparecem por completo','Nada: sincronia nunca é demais'], c:0, l:4,
+    er:'Isso. Em excesso, a sincronia colapsa a rede: <strong>hipersincronia</strong> na epilepsia, <strong>beta</strong> patológica no Parkinson. Ritmo bom é equilibrado, não máximo.',
+    ew:'Sincronia demais <strong>trava</strong> a rede (crise, beta do Parkinson) — não deixa o cérebro mais eficiente, nem faz os ritmos sumirem. A dose é o que importa.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
