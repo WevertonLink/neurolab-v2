@@ -550,7 +550,7 @@ const reset = ()=>ev('state = defaultState();');
   eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
 
   const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
-  eq(totalAncoras, 226, '19. o número de âncoras utilizáveis mudou — era 226 (207 + 17 do bloco B + 1 da glia/neuronio-4, mielina no axônio + 1 da poda/plasticidade-4, espinha na pós-sinapse)');
+  eq(totalAncoras, 227, '19. o número de âncoras utilizáveis (207 + 17 do bloco B + 1 por aula da Fatia 2 que ancora um termo numa parte do diagrama do módulo). Atualize ao acrescentar aula com âncora de Localização');
 
   /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
      dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por
@@ -568,7 +568,7 @@ const reset = ()=>ev('state = defaultState();');
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 363,
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 367,
      '19. o total de caixas sobe deliberadamente a cada 5ª aula da Fatia 2 (base 344; cada aula nova mede 3 ou 4 dimensões). Atualize ao acrescentar aula e confira se subiu o quanto devia');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de

@@ -7921,6 +7921,58 @@ Object.assign(TERM_FIG, {
     ew:'A aula mostra que a desvantagem pode virar <strong>cegueira</strong>: o não-atendido pode nem ser percebido nem codificado, em vez de só chegar mais devagar.'});
 })();
 
+/* =====================================================================
+   EXPANSÃO DE CONTEÚDO · Fatia 2 — emocao ganha uma 5ª aula: regular
+
+   A 4ª aula diz que "regular o estado é parte de trabalhar bem", mas não
+   explica COMO. Esta aula desenvolve o mecanismo: reavaliação cognitiva
+   (o pré-frontal reinterpreta e reduz a resposta da amígdala) contra a
+   supressão expressiva. Ancora em emocao:amigdala (Localização). Idempotente.
+   ===================================================================== */
+Object.assign(GLOSSARY, {
+  'reavaliação cognitiva':'Estratégia de regulação que muda a INTERPRETAÇÃO de uma situação para mudar a emoção que ela provoca; o pré-frontal reavalia o significado e reduz a resposta da amígdala.',
+  'supressão expressiva':'Estratégia de regulação que apenas esconde a expressão da emoção; costuma não baixar a resposta interna (às vezes a aumenta) e cobra memória de trabalho.',
+  'regulação emocional':'O conjunto de processos pelos quais influenciamos quais emoções temos, quando e com que intensidade — uma habilidade com mecanismo, não força de vontade.'
+});
+Object.assign(TERM_FIG, {
+  'reavaliação cognitiva':'mod:emocao', 'supressão expressiva':'mod:emocao', 'regulação emocional':'mod:emocao'
+});
+(function(){
+  const m = (typeof MODULES!=='undefined') && MODULES.find(x=>x.id==='emocao');
+  if(!m || m.lessons.length !== 4) return;   // idempotente
+  m.lessons.push({
+    t:'Regular a emoção: reavaliar e o freio pré-frontal',
+    b:'<p>A aula anterior disse que <b>regular o estado é parte de trabalhar bem</b> — mas não contou como. Emoções não são só coisas que acontecem <b>com</b> você: existe maquinaria para direcioná-las, e boa parte dela mora no <b>córtex pré-frontal</b>. Regular não é força de vontade; é um mecanismo, e um mecanismo que se treina.</p>'
+     +'<p>A estratégia mais estudada é a <span class="term">reavaliação cognitiva</span>: mudar a <b>interpretação</b> da situação para mudar a emoção. "É um desafio, não uma ameaça"; "o entrevistador também está tenso". No cérebro isso tem assinatura — regiões do pré-frontal aumentam a atividade e <b>reduzem a resposta da <span class="term">amígdala</span></b>. Muda o significado, e a emoção cai de verdade, mensuravelmente.</p>'
+     +'<p>Compare com a <span class="term">supressão expressiva</span>: apenas segurar a cara, esconder o que sente. Ela costuma <b>não</b> baixar a resposta interna (por vezes a aumenta), consome memória de trabalho e ainda prejudica a lembrança do episódio. Reavaliar trabalha <b>a montante</b>, no significado; suprimir trabalha a jusante, na saída — e por isso perde. O tempo também conta: reavaliar cedo, antes de a emoção chegar ao pico, é mais fácil e mais eficaz.</p>'
+     +'<p>Há um gancho direto com o resto do módulo. Reavaliar é como você anda na curva de Yerkes-Dodson e mantém o pré-frontal <b>on-line</b> em vez de ceder ao modo-ameaça. Um exemplo de um lance só: reinterpretar o frio na barriga como <b>prontidão</b> ("estou animado") em vez de pânico ("estou ansioso") — a mesma ativação, outra moldura, outro desempenho. É a mesma lição de estado, agora com a alavanca na mão.</p>'
+  });
+  MINI_QUIZZES.emocao[4] = [
+    {lvl:0, q:'O que é a reavaliação cognitiva?', o:['Mudar a interpretação de uma situação para mudar a emoção que ela provoca','Esconder a expressão facial da emoção que se sente','Respirar fundo até a emoção passar sozinha'], c:0, er:'Isso: reavaliar é reinterpretar o significado — e é isso que reduz a resposta da amígdala.', ew:'Não é esconder nem só esperar passar: é mudar a INTERPRETAÇÃO da situação, o que muda a própria emoção.'},
+    {lvl:1, q:'Por que a reavaliação costuma vencer a supressão (só esconder o que se sente)?', o:['Porque age no significado (a montante) e baixa a resposta interna, enquanto suprimir só esconde a saída','Porque a supressão é fisicamente cansativa para os músculos do rosto','Porque a supressão é proibida em situações formais'], c:0, er:'Exato: reavaliar edita a causa e reduz a amígdala; suprimir esconde o sintoma e ainda custa memória.', ew:'A diferença é onde cada uma age: reavaliar muda o significado (a montante); suprimir só disfarça a saída, sem baixar a resposta interna.'},
+    {lvl:2, q:'Por que reavaliar reduz de fato a resposta emocional, e não só na aparência?', o:['Porque a emoção é montada a partir de uma avaliação, então mudar a avaliação muda a emoção na fonte','Porque a amígdala deixa de existir depois da reavaliação','Porque o significado não tem qualquer efeito sobre a emoção'], c:0, er:'Isso: o pré-frontal reavalia o significado e regula a amígdala para baixo — a emoção nasce da avaliação.', ew:'A amígdala não some: o pré-frontal reinterpreta o significado e reduz a resposta dela. Como a emoção vem da avaliação, mudar a avaliação muda a emoção.'}
+  ];
+  DEEP.emocao[4] = '<p>James Gross organizou a regulação emocional numa linha do tempo: dá para agir <b>antes</b> de a emoção se formar (estratégias antecedentes, como a reavaliação) ou <b>depois</b> (estratégias focadas na resposta, como a supressão). A diferença de resultado é grande. Estudos de Gross e Kevin Ochsner mostram que reavaliar recruta regiões do pré-frontal lateral e medial e <b>reduz</b> a atividade da amígdala e a resposta fisiológica; a supressão não baixa (por vezes eleva) essa resposta, consome recursos executivos e piora a memória do episódio.</p><p>Faz sentido mecanicamente: se a emoção é construída a partir de uma <b>avaliação</b> do que a situação significa, então editar a avaliação edita a emoção na origem. Esconder a expressão, ao contrário, deixa a origem intacta e só gasta energia mantendo a máscara.</p><p>Há um caso especialmente prático — a reavaliação da <b>ativação</b>. Jeremy Jamieson mostrou que reinterpretar o frio na barriga como um corpo <b>se preparando</b>, em vez de um sinal de fracasso, melhora o desempenho sob pressão. É a curva de Yerkes-Dodson operada por dentro: a mesma ativação, relida, deixa de derrubar e passa a ajudar. A ressalva honesta: reavaliar é <b>esforçado</b> e fica mais difícil justamente sob carga alta e estresse crônico, quando o pré-frontal está menos disponível — mais uma razão para cuidar do estado antes de precisar dele.</p>';
+  PREDICT.emocao[4] = {q:'Duas pessoas sentem a mesma ansiedade antes de uma prova. Uma disfarça e mantém a cara fechada; a outra reinterpreta o frio na barriga como "meu corpo está me preparando". De quem a resposta do corpo e da amígdala tende a cair de verdade?', o:['Da que disfarça e segura a expressão','Da que reinterpreta o significado (reavalia)','De nenhuma das duas: ansiedade não se regula'], c:1, after:'Da que reavalia. Reinterpretar o significado reduz a resposta da amígdala e do corpo — trabalha na origem. Disfarçar (supressão) só esconde a saída: a resposta interna tende a permanecer, e ainda custa memória e foco.'};
+  CHAIN.emocao[4] = {
+    s:['Uma situação é avaliada como ameaça e a amígdala responde','O pré-frontal reinterpreta o significado (reavaliar)','A nova avaliação reduz a resposta da amígdala','A emoção diminui de verdade, não só por fora','Suprimir a expressão, em vez disso, não baixaria essa resposta'],
+    h:1, hn:'A virada: a emoção é montada a partir de uma avaliação, então mudar a avaliação a muda na fonte. Por isso reavaliar (significado) vence suprimir (saída) — um edita a causa, o outro esconde o sintoma.',
+    w:'E se você só apertasse os dentes e escondesse o que sente?',
+    wa:'A resposta da amígdala e do corpo tende a não cair — às vezes sobe —, e ainda custa memória de trabalho e prejudica a lembrança do momento. Suprimir opera no lugar errado.'
+  };
+  if(typeof BRIDGE!=='undefined' && BRIDGE.emocao) BRIDGE.emocao[4] = 'A aula desenvolve o que a 4ª só nomeava: COMO regular. Reavaliar muda o significado e, com ele, a resposta da amígdala — e por que isso vence a supressão.';
+  if(typeof CONTEXT_TOPIC_TERMS!=='undefined' && CONTEXT_TOPIC_TERMS.emocao) CONTEXT_TOPIC_TERMS.emocao['4'] = {
+    'amígdala':{steps:[0,2],kind:'direct'},
+    'reavaliação cognitiva':{steps:[1],kind:'direct'},
+    'supressão expressiva':{steps:[4],kind:'context',note:'A estratégia que age no lugar errado; aparece no "e se".'},
+    'regulação emocional':{steps:[],kind:'context',note:'O guarda-chuva que contém as duas estratégias.'}
+  };
+  if(m.quiz) m.quiz.push({q:'A 4ª aula diz para "regular o estado". Qual estratégia de regulação de fato reduz a resposta emocional, e não só a aparência?',
+    o:['A reavaliação cognitiva, que muda o significado e baixa a resposta da amígdala','A supressão expressiva, que esconde a emoção sem baixá-la por dentro','Ignorar a emoção até ela sumir sozinha, sem fazer nada','Aumentar a ativação ao máximo para "vencer" o medo'], c:0, l:4,
+    er:'Isso. A <strong>reavaliação cognitiva</strong> reinterpreta o significado e reduz a atividade da amígdala — regula na origem. Suprimir só esconde a saída.',
+    ew:'Quem regula de verdade é a <strong>reavaliação</strong> (muda o significado, baixa a amígdala). Suprimir esconde sem baixar, e as outras opções não regulam.'});
+})();
+
 /* --- módulo 04: integrações que dependem de estruturas definidas acima --- */
 try{
   if(typeof ANAT_DEEP !== 'undefined') Object.assign(ANAT_DEEP, {
