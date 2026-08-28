@@ -1,8 +1,14 @@
-# Changelog — Fatia 2: aulas novas (glia no módulo 01, poda no módulo 02)
+# Changelog — Fatia 2: uma 5ª aula em cada módulo (22 aulas novas)
 
-Segunda fatia da expansão: **crescer a grade de aulas**. São as primeiras aulas
-que quebram a grade histórica de 4 por módulo — e os testes (SRS e Playwright)
-foram ajustados para refletir isso, não afrouxados.
+Segunda fatia da expansão: **crescer a grade de aulas**. A grade histórica era de
+4 aulas por módulo; a Fatia 2 acrescenta **uma 5ª aula a cada um dos 22 módulos**,
+sempre escolhida para **completar uma metade que o módulo não contava** (o
+método "eu proponho → você aprova → eu preencho → você confere a ciência"). Os
+testes (SRS e Playwright) foram **ajustados para refletir o crescimento, não
+afrouxados**. A grade passou de 88 para **110 tópicos**.
+
+As duas primeiras (glia e poda) saíram antes e estão descritas abaixo; o bloco
+das outras 20 vem logo em seguida.
 
 ## A aula
 `neuronio` ganha a **5ª aula: "A glia: o cérebro que não dispara"**. O restante
@@ -69,7 +75,54 @@ também mede **Localização** — as quatro dimensões, como a da glia.
 Catracas do `test-srs`: âncoras 225 → **226**, caixas 348 → **352** (+4). `VERSION`
 foi para `neurolab-v1-23-0`.
 
+## O bloco das outras 20 (uma por módulo, aprovado em lote)
+Cada aula completa a "metade não contada" do seu módulo:
+
+| Módulo | 5ª aula | Metade que faltava |
+| --- | --- | --- |
+| 03 recompensa | O avesso: prever e evitar a punição | o sistema **aversivo** (habênula, evitação), não só o de recompensa |
+| 04 decisão | O valor é relativo: enquadramento e contexto | o valor **relativo** (referência, chamariz), não o número absoluto |
+| 05 atenção | O que escapa: cegueira por desatenção | o **custo** da seleção: não ver o óbvio |
+| 06 emoção | Regular a emoção: reavaliar e o freio pré-frontal | **como** regular (reavaliação × supressão) |
+| 07 autônomo | Interocepção: o cérebro lendo o corpo | a via **aferente** (corpo → cérebro), não só a eferente |
+| 08 sono | O sono REM e os sonhos: processar o dia | a **função** do REM (terapia noturna) |
+| 09 neuroanatomia | A fiação: substância branca e redes | as **conexões** (conectoma, desconexão), não só as partes |
+| 10 sensorial | Perceber é prever: a construção da realidade | o **mecanismo** (codificação preditiva) por trás da "construção" |
+| 11 motor | Aprender o movimento: do desajeitado ao automático | a **aprendizagem** motora (modelo interno, cópia eferente) |
+| 12 desenvolvimento | O cérebro que envelhece: declínio e reserva | a **outra ponta** da vida (reserva cognitiva) |
+| 13 linguagem | Como a criança aprende a falar | a **aquisição** (estatística, janela sensível) |
+| 14 clínica | O cérebro que se recupera: plasticidade após a lesão | a **recuperação**, não só a doença |
+| 15 farmacologia | O efeito placebo: expectativa vira farmacologia | a farmácia **do próprio cérebro** |
+| 16 métodos | Ler o cérebro com ceticismo: as armadilhas | o **kit do leitor** (inferência reversa, reprodutibilidade) |
+| 17 memória | Por que esquecemos — e por que isso ajuda | o **esquecer** (adaptativo, memória falsa) |
+| 18 ritmos | Quando o ritmo desanda: sincronia demais | a metade **clínica** (epilepsia, beta do Parkinson) |
+| esforço | Elaborar e explicar: por que ensinar fixa | como **processar** (elaboração, ensinar), não só praticar |
+| ilusões | O viés da retrospectiva: "eu já sabia" | a ilusão que age **depois** da resposta |
+| saber | Do monitorar ao agir: alocar o estudo | o **controle** (a outra metade da metacognição) |
+| palpite | Quando o palpite não serve: o que usar no lugar | o **conserto** (fórmula, visão de fora, decisão estruturada) |
+
+**3 propostas foram trocadas ao preencher**, porque a lição sugerida já existia no
+módulo: recompensa ("querer × gostar" já está na aula 0), decisão ("marcador
+somático" já está na aula 1) e palpite ("dois sistemas" — a aula 0 já adverte
+contra a versão forte). Em cada caso, entrou o verdadeiro buraco do módulo.
+
+Cada aula traz o pacote completo (corpo, mini-quiz de 3 questões, DEEP, PREDICT,
+CHAIN de 5 elos, BRIDGE, termos de contexto), **1 questão nova no quiz do módulo**
+(`l:4`, para não crescer a dívida de aulas órfãs) e **verbetes novos** ancorados
+ao módulo (alimentam a Terminologia), reusando termos que já moram em outros
+módulos quando cabe.
+
+### Portões, sem afrouxar
+As catracas do `test-srs` subiram deliberadamente: total de **caixas de
+agendamento 344 → 419**, **âncoras 224 → 229** (as aulas que ancoram um termo a
+uma parte do diagrama ganham Localização), e o teto de sanidade do bloco 1 subiu
+de 400 para 450. A lista de tópicos sem Localização foi atualizada para as aulas
+conceituais. A suíte Playwright (só no CI) foi rodada **localmente antes de cada
+deploy** (141 passando, 85 puladas, 0 falha) e ajustada onde fixava contagens.
+`VERSION` avançou por lote até `neurolab-v1-27-0`.
+
 ## Revisão
 Conteúdo científico para a **sua revisão final** (modelo: eu proponho → você
-aprova → eu preencho → você confere a ciência). O desenho das duas aulas foi
-aprovado antes de preencher.
+aprova → eu preencho → você confere a ciência). O desenho das duas primeiras
+aulas foi aprovado individualmente; as outras 20 foram aprovadas **em lote** a
+partir da lista de temas.
