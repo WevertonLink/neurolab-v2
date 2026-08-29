@@ -1944,34 +1944,32 @@ const ANATOMY = {
       {id:'mielina', label:'Bainha de mielina', blurb:'Camada isolante em segmentos. Faz o sinal "saltar" de nó em nó, acelerando muito a condução.'},
       {id:'terminais', label:'Terminais axônicos', blurb:'Pontas finais que liberam neurotransmissores para o próximo neurônio, na sinapse.'}
     ],
-    svg: `<svg class="anat-svg" viewBox="0 0 440 200" role="img" aria-label="Neurônio">
-      <g class="apart" data-anat="neuronio" data-struct="dendritos">
-        <path d="M95 90 L44 58 M58 58 L44 58 L40 45 M95 100 L34 100 M50 100 L34 100 L26 91 M97 112 L46 148 M46 133 L46 148 L33 152 M96 78 L58 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </g>
-      <g class="apart" data-anat="neuronio" data-struct="soma">
-        <circle cx="120" cy="100" r="32" fill="currentColor" fill-opacity=".13" stroke="currentColor" stroke-width="2.4"/>
-      </g>
-      <g class="apart" data-anat="neuronio" data-struct="nucleo">
-        <circle cx="120" cy="100" r="12" fill="currentColor" fill-opacity=".5" stroke="currentColor" stroke-width="1.3"/>
-      </g>
-      <g class="apart" data-anat="neuronio" data-struct="axonio">
-        <line x1="152" y1="100" x2="320" y2="100" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-      </g>
+    svg: `<svg class="anat-svg" viewBox="0 0 460 230" role="img" aria-label="Neurônio: dendritos, corpo celular com núcleo, axônio mielinizado e terminais">
+      <g class="apart" data-anat="neuronio" data-struct="axonio"><path d="M176 115 L372 115" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></g>
       <g class="apart" data-anat="neuronio" data-struct="mielina">
-        <ellipse cx="188" cy="100" rx="17" ry="10" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8"/>
-        <ellipse cx="230" cy="100" rx="17" ry="10" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8"/>
-        <ellipse cx="272" cy="100" rx="17" ry="10" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8"/>
+        <rect x="190" y="103" width="40" height="24" rx="12" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.9"/>
+        <rect x="238" y="103" width="40" height="24" rx="12" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.9"/>
+        <rect x="286" y="103" width="40" height="24" rx="12" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.9"/>
+        <rect x="334" y="103" width="32" height="24" rx="12" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.9"/>
       </g>
+      <g class="apart" data-anat="neuronio" data-struct="dendritos">
+        <path d="M126 98 Q102 74 96 46 M108 62 Q100 54 90 52 M104 66 Q112 58 122 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M118 108 Q78 98 50 92 M70 96 Q60 88 48 86 M66 95 Q60 104 54 112" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M118 122 Q80 128 52 146 M74 137 Q64 134 54 136 M72 138 Q74 150 72 162" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M128 132 Q116 160 118 186 M122 168 Q114 176 104 178 M124 170 Q134 178 142 178" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <g class="apart" data-anat="neuronio" data-struct="soma"><ellipse cx="150" cy="115" rx="31" ry="29" fill="currentColor" fill-opacity=".13" stroke="currentColor" stroke-width="2.4"/></g>
+      <g class="apart" data-anat="neuronio" data-struct="nucleo"><circle cx="150" cy="115" r="11" fill="currentColor" fill-opacity=".5" stroke="currentColor" stroke-width="1.3"/></g>
       <g class="apart" data-anat="neuronio" data-struct="terminais">
-        <path d="M320 100 L350 82 M320 100 L356 100 M320 100 L350 118" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="352" cy="80" r="4.5" fill="currentColor" fill-opacity=".6" stroke="currentColor" stroke-width="1.1"/>
-        <circle cx="360" cy="100" r="4.5" fill="currentColor" fill-opacity=".6" stroke="currentColor" stroke-width="1.1"/>
-        <circle cx="352" cy="120" r="4.5" fill="currentColor" fill-opacity=".6" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M372 115 Q392 106 402 92 M372 115 L406 115 M372 115 Q392 124 402 138" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="405" cy="90" r="5" fill="currentColor" fill-opacity=".6" stroke="currentColor" stroke-width="1.1"/>
+        <circle cx="410" cy="115" r="5" fill="currentColor" fill-opacity=".6" stroke="currentColor" stroke-width="1.1"/>
+        <circle cx="405" cy="140" r="5" fill="currentColor" fill-opacity=".6" stroke="currentColor" stroke-width="1.1"/>
       </g>
-      <text x="14" y="38">Dendritos</text>
-      <text x="120" y="160" text-anchor="middle">Corpo celular</text>
-      <text x="230" y="132" text-anchor="middle">Mielina</text>
-      <text x="356" y="140" text-anchor="middle">Terminais</text>
+      <text x="66" y="210" text-anchor="middle">Dendritos</text>
+      <text x="150" y="210" text-anchor="middle">Corpo celular</text>
+      <text x="272" y="210" text-anchor="middle">Mielina</text>
+      <text x="405" y="210" text-anchor="middle">Terminais</text>
     </svg>`
   },
 
@@ -2544,34 +2542,16 @@ ANATOMY['esforco']={
     {id:'retorno', label:'Retorno', blurb:'A conferência da resposta. Sem ela, a tentativa que prepararia o terreno vira treino do erro — e o ganho da recuperação encolhe muito.'},
     {id:'sensacao', label:'Sensação de aprendizado', blurb:'O julgamento que você faz do próprio progresso. É a peça que sabota as outras quatro: ela acompanha a fluência da tarefa, então premia reler e pune recuperar.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 240" role="img" aria-label="Ciclo de estudo: primeiro contato, recuperação, intervalo e retorno, com a sensação de aprendizado ao lado">
-    <g class="apart" data-anat="esforco" data-struct="contato">
-      <rect x="26" y="40" width="104" height="46" rx="10" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.6"/>
-      <text x="78" y="68" text-anchor="middle" font-size="11" fill="currentColor">primeiro contato</text>
-    </g>
-    <path d="M134 63 L176 63" stroke="currentColor" stroke-width="1.6"/><polygon points="176,63 164,58 164,68" fill="currentColor"/>
-    <g class="apart" data-anat="esforco" data-struct="recuperacao">
-      <rect x="180" y="34" width="112" height="58" rx="10" fill="currentColor" fill-opacity=".34" stroke="currentColor" stroke-width="2"/>
-      <text x="236" y="60" text-anchor="middle" font-size="12" fill="currentColor">recuperação</text>
-      <text x="236" y="78" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">puxar sem olhar</text>
-    </g>
-    <path d="M296 63 L338 63" stroke="currentColor" stroke-width="1.6"/><polygon points="338,63 326,58 326,68" fill="currentColor"/>
-    <g class="apart" data-anat="esforco" data-struct="retorno">
-      <rect x="342" y="40" width="72" height="46" rx="10" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.6"/>
-      <text x="378" y="68" text-anchor="middle" font-size="11" fill="currentColor">retorno</text>
-    </g>
-    <path d="M378 92 C378 132 300 150 236 150" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
-    <g class="apart" data-anat="esforco" data-struct="intervalo">
-      <rect x="168" y="128" width="136" height="44" rx="10" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
-      <text x="236" y="147" text-anchor="middle" font-size="11" fill="currentColor">intervalo</text>
-      <text x="236" y="163" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">deixar esfriar</text>
-    </g>
-    <path d="M168 150 C104 150 78 132 78 92" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
-    <polygon points="78,92 73,104 83,104" fill="currentColor"/>
-    <g class="apart" data-anat="esforco" data-struct="sensacao">
-      <rect x="26" y="192" width="388" height="34" rx="8" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".65"/>
-      <text x="220" y="213" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">sensação de aprendizado — mede a facilidade, não o que vai sobrar</text>
-    </g>
+  svg:`<svg class="anat-svg" viewBox="0 0 460 250" role="img" aria-label="Ciclo de estudo: primeiro contato, recuperação, retorno, com intervalo e a sensação de aprendizado">
+    <g class="apart" data-anat="esforco" data-struct="contato"><rect x="24" y="42" width="112" height="50" rx="11" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.7"/><text x="80" y="72" text-anchor="middle" font-size="12" fill="currentColor">primeiro contato</text></g>
+    <path d="M140 67 L180 67" stroke="currentColor" stroke-width="1.7"/><polygon points="180,67 168,62 168,72" fill="currentColor"/>
+    <g class="apart" data-anat="esforco" data-struct="recuperacao"><rect x="184" y="34" width="120" height="66" rx="12" fill="currentColor" fill-opacity=".34" stroke="currentColor" stroke-width="2.1"/><text x="244" y="62" text-anchor="middle" font-size="13" fill="currentColor">recuperação</text><text x="244" y="82" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">puxar sem olhar</text></g>
+    <path d="M308 67 L348 67" stroke="currentColor" stroke-width="1.7"/><polygon points="348,67 336,62 336,72" fill="currentColor"/>
+    <g class="apart" data-anat="esforco" data-struct="retorno"><rect x="352" y="42" width="84" height="50" rx="11" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.7"/><text x="394" y="72" text-anchor="middle" font-size="12" fill="currentColor">retorno</text></g>
+    <path d="M394 100 C394 128 320 140 244 140" fill="none" stroke="currentColor" stroke-width="1.7" stroke-dasharray="5 4"/>
+    <g class="apart" data-anat="esforco" data-struct="intervalo"><rect x="172" y="118" width="144" height="48" rx="11" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="1.7" stroke-dasharray="5 4"/><text x="244" y="140" text-anchor="middle" font-size="12" fill="currentColor">intervalo</text><text x="244" y="157" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">deixar esfriar</text></g>
+    <path d="M172 142 C104 142 80 128 80 100" fill="none" stroke="currentColor" stroke-width="1.7" stroke-dasharray="5 4"/><polygon points="80,100 75,112 85,112" fill="currentColor"/>
+    <g class="apart" data-anat="esforco" data-struct="sensacao"><rect x="24" y="188" width="412" height="52" rx="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".7"/><text x="230" y="210" text-anchor="middle" font-size="11" fill="currentColor" opacity=".9">Sensação de aprendizado</text><text x="230" y="228" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".62">mede a facilidade da tarefa, não o que vai sobrar</text></g>
   </svg>`
 };
 
@@ -2585,34 +2565,14 @@ ANATOMY['ilusoes']={
     {id:'momento', label:'Momento do julgamento', blurb:'Quando você se pergunta se aprendeu. Logo após estudar é a pior hora; depois de um intervalo, sem o material, você é obrigado a recuperar para responder — e a nota passa a medir a coisa certa.'},
     {id:'mecanismo', label:'Explicação de mecanismo', blurb:'O teste que desfaz a ilusão na hora. Ele funciona porque a ilusão é específica de mecanismos: a imagem do objeto funcionando ocupa o lugar da cadeia causal.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 240" role="img" aria-label="Mapa das ilusões do estudo: fluência, reconhecimento, evocação, momento do julgamento e explicação de mecanismo">
-    <g class="apart" data-anat="ilusoes" data-struct="fluencia">
-      <rect x="26" y="30" width="180" height="52" rx="10" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="1.8"/>
-      <text x="116" y="54" text-anchor="middle" font-size="12" fill="currentColor">fluência</text>
-      <text x="116" y="71" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">a leitura corre sem atrito</text>
-    </g>
-    <path d="M116 84 L116 106" stroke="currentColor" stroke-width="1.6"/><polygon points="116,106 111,94 121,94" fill="currentColor"/>
-    <g class="apart" data-anat="ilusoes" data-struct="reconhecimento">
-      <rect x="26" y="110" width="180" height="48" rx="10" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="1.6"/>
-      <text x="116" y="132" text-anchor="middle" font-size="12" fill="currentColor">reconhecimento</text>
-      <text x="116" y="148" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">barato, com o texto à vista</text>
-    </g>
-    <g class="apart" data-anat="ilusoes" data-struct="evocacao">
-      <rect x="234" y="110" width="180" height="48" rx="10" fill="currentColor" fill-opacity=".38" stroke="currentColor" stroke-width="2"/>
-      <text x="324" y="132" text-anchor="middle" font-size="12" fill="currentColor">evocação</text>
-      <text x="324" y="148" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">cara, sem a fonte</text>
-    </g>
-    <path d="M206 134 L232 134" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 4" opacity=".6"/>
-    <text x="219" y="126" text-anchor="middle" font-size="8" fill="currentColor" opacity=".6">≠</text>
-    <text x="324" y="98" text-anchor="middle" font-size="9" fill="currentColor" opacity=".8">é isto que a prova cobra</text>
-    <g class="apart" data-anat="ilusoes" data-struct="momento">
-      <rect x="26" y="176" width="388" height="26" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
-      <text x="220" y="194" text-anchor="middle" font-size="10" fill="currentColor" opacity=".85">momento do julgamento — adiado e sem o material, ele mede a coisa certa</text>
-    </g>
-    <g class="apart" data-anat="ilusoes" data-struct="mecanismo">
-      <rect x="26" y="208" width="388" height="26" rx="8" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.5"/>
-      <text x="220" y="226" text-anchor="middle" font-size="10" fill="currentColor" opacity=".85">explicação de mecanismo — o teste que desfaz a ilusão na hora</text>
-    </g>
+  svg:`<svg class="anat-svg" viewBox="0 0 460 260" role="img" aria-label="Ilusões do estudo: fluência leva a reconhecimento, diferente de evocação; momento do julgamento e explicação de mecanismo">
+    <g class="apart" data-anat="ilusoes" data-struct="fluencia"><rect x="24" y="26" width="412" height="50" rx="11" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="1.8"/><text x="230" y="48" text-anchor="middle" font-size="12" fill="currentColor">fluência</text><text x="230" y="65" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">a leitura corre sem atrito — parece domínio</text></g>
+    <path d="M230 78 L230 96" stroke="currentColor" stroke-width="1.7"/><polygon points="230,96 225,84 235,84" fill="currentColor"/>
+    <g class="apart" data-anat="ilusoes" data-struct="reconhecimento"><rect x="24" y="100" width="184" height="56" rx="11" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="1.6"/><text x="116" y="124" text-anchor="middle" font-size="12" fill="currentColor">reconhecimento</text><text x="116" y="141" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">com o texto à vista</text></g>
+    <text x="230" y="133" text-anchor="middle" font-size="15" fill="currentColor" opacity=".75">≠</text>
+    <g class="apart" data-anat="ilusoes" data-struct="evocacao"><rect x="252" y="100" width="184" height="56" rx="11" fill="currentColor" fill-opacity=".38" stroke="currentColor" stroke-width="2"/><text x="344" y="124" text-anchor="middle" font-size="12" fill="currentColor">evocação</text><text x="344" y="141" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">cara, sem a fonte</text></g>
+    <g class="apart" data-anat="ilusoes" data-struct="momento"><rect x="24" y="172" width="412" height="36" rx="9" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="230" y="194" text-anchor="middle" font-size="10" fill="currentColor" opacity=".88">Momento do julgamento — adiado, mede a coisa certa</text></g>
+    <g class="apart" data-anat="ilusoes" data-struct="mecanismo"><rect x="24" y="214" width="412" height="36" rx="9" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.5"/><text x="230" y="236" text-anchor="middle" font-size="10" fill="currentColor" opacity=".88">Explicação de mecanismo — desfaz a ilusão na hora</text></g>
   </svg>`
 };
 
@@ -2626,38 +2586,14 @@ ANATOMY['saber']={
     {id:'fonte', label:'Fonte', blurb:'De onde aquilo veio. Não é guardada como etiqueta: é inferida a partir de características da lembrança, e essa inferência é frágil. Quando ela falha, some o motivo que você tinha para descontar a informação.'},
     {id:'confianca', label:'Confiança', blurb:'A avaliação de uma resposta já produzida. Diferente de prever o que se vai lembrar — e bem calibrada na primeira medida, antes de teste repetido, pista ou conversa.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 240" role="img" aria-label="O monitor da memória: pergunta, fragmentos, conteúdo, fonte e confiança">
-    <g class="apart" data-anat="saber" data-struct="pergunta">
-      <rect x="22" y="34" width="128" height="48" rx="10" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.8"/>
-      <text x="86" y="56" text-anchor="middle" font-size="12" fill="currentColor">a pergunta</text>
-      <text x="86" y="72" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">a pista que chega</text>
-    </g>
-    <path d="M152 58 L196 58" stroke="currentColor" stroke-width="1.6"/><polygon points="196,58 184,52 184,64" fill="currentColor"/>
-    <g class="apart" data-anat="saber" data-struct="fragmento">
-      <rect x="200" y="34" width="122" height="48" rx="10" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/>
-      <text x="261" y="56" text-anchor="middle" font-size="12" fill="currentColor">fragmentos</text>
-      <text x="261" y="72" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">letra, sílabas, sentido</text>
-    </g>
-    <path d="M86 86 L86 116" stroke="currentColor" stroke-width="1.4" opacity=".6"/>
-    <path d="M261 86 L261 116" stroke="currentColor" stroke-width="1.4" opacity=".6"/>
-    <rect x="60" y="118" width="228" height="34" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
-    <text x="174" y="140" text-anchor="middle" font-size="11" fill="currentColor">o monitor julga com ISTO, não com a resposta</text>
-    <g class="apart" data-anat="saber" data-struct="conteudo">
-      <rect x="22" y="170" width="128" height="42" rx="10" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-      <text x="86" y="196" text-anchor="middle" font-size="12" fill="currentColor">conteúdo</text>
-    </g>
-    <g class="apart" data-anat="saber" data-struct="fonte">
-      <rect x="166" y="170" width="122" height="42" rx="10" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 4"/>
-      <text x="227" y="190" text-anchor="middle" font-size="12" fill="currentColor" opacity=".75">fonte</text>
-      <text x="227" y="205" text-anchor="middle" font-size="9" fill="currentColor" opacity=".6">some primeiro</text>
-    </g>
-    <g class="apart" data-anat="saber" data-struct="confianca">
-      <rect x="304" y="118" width="114" height="94" rx="10" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="1.8"/>
-      <text x="361" y="152" text-anchor="middle" font-size="12" fill="currentColor">confiança</text>
-      <text x="361" y="172" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">sobre a resposta</text>
-      <text x="361" y="187" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">que já saiu</text>
-      <text x="361" y="204" text-anchor="middle" font-size="9" fill="currentColor" opacity=".55">tem data de validade</text>
-    </g>
+  svg:`<svg class="anat-svg" viewBox="0 0 460 250" role="img" aria-label="O monitor da memória: pergunta e fragmentos alimentam o julgamento; conteúdo e fonte; confiança sobre a resposta">
+    <g class="apart" data-anat="saber" data-struct="pergunta"><rect x="24" y="34" width="188" height="48" rx="11" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.8"/><text x="118" y="56" text-anchor="middle" font-size="12" fill="currentColor">a pergunta</text><text x="118" y="72" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">a pista que chega</text></g>
+    <g class="apart" data-anat="saber" data-struct="fragmento"><rect x="24" y="92" width="188" height="48" rx="11" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/><text x="118" y="114" text-anchor="middle" font-size="12" fill="currentColor">fragmentos</text><text x="118" y="130" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">letra, sílabas, sentido</text></g>
+    <text x="118" y="160" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">o monitor julga com ISTO —</text>
+    <text x="118" y="174" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">não com a resposta</text>
+    <g class="apart" data-anat="saber" data-struct="conteudo"><rect x="24" y="190" width="90" height="48" rx="11" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/><text x="69" y="218" text-anchor="middle" font-size="12" fill="currentColor">conteúdo</text></g>
+    <g class="apart" data-anat="saber" data-struct="fonte"><rect x="122" y="190" width="90" height="48" rx="11" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 4"/><text x="167" y="212" text-anchor="middle" font-size="12" fill="currentColor" opacity=".8">fonte</text><text x="167" y="228" text-anchor="middle" font-size="9" fill="currentColor" opacity=".6">some primeiro</text></g>
+    <g class="apart" data-anat="saber" data-struct="confianca"><rect x="236" y="34" width="200" height="204" rx="12" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="1.8"/><text x="336" y="122" text-anchor="middle" font-size="13" fill="currentColor">confiança</text><text x="336" y="146" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">sobre uma resposta já dada</text><text x="336" y="164" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".55">(tem prazo de validade)</text></g>
   </svg>`
 };
 
@@ -2671,35 +2607,14 @@ ANATOMY['palpite']={
     {id:'invalidos', label:'Baixa validade', blurb:'Falta uma das duas, quase sempre o retorno. As repetições acontecem, o aprendizado não — e fórmulas simples chegam a superar o julgamento experiente.'},
     {id:'confianca', label:'A confiança', blurb:'Sobe com a repetição nos DOIS quadrantes. É por isso que a certeza de quem decide não informa em qual deles ele aprendeu, e por isso a pergunta precisa ser sobre o ambiente.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 240" role="img" aria-label="Quadrante de regularidade contra retorno, e o que cada combinação produz">
-    <g class="apart" data-anat="palpite" data-struct="regularidade">
-      <text x="220" y="22" text-anchor="middle" font-size="11" fill="currentColor">regularidade do ambiente →</text>
-    </g>
-    <g class="apart" data-anat="palpite" data-struct="retorno">
-      <text x="18" y="120" text-anchor="middle" font-size="11" fill="currentColor" transform="rotate(-90 18 120)">retorno →</text>
-    </g>
-    <g class="apart" data-anat="palpite" data-struct="invalidos">
-      <rect x="40" y="34" width="180" height="76" rx="8" fill="currentColor" fill-opacity=".06" stroke="currentColor" stroke-width="1.4" stroke-dasharray="5 4"/>
-      <text x="130" y="66" text-anchor="middle" font-size="11" fill="currentColor" opacity=".8">repetição sem</text>
-      <text x="130" y="82" text-anchor="middle" font-size="11" fill="currentColor" opacity=".8">aprendizado</text>
-      <text x="130" y="100" text-anchor="middle" font-size="9" fill="currentColor" opacity=".55">baixa validade</text>
-    </g>
-    <g class="apart" data-anat="palpite" data-struct="validos">
-      <rect x="228" y="34" width="180" height="76" rx="8" fill="currentColor" fill-opacity=".34" stroke="currentColor" stroke-width="2"/>
-      <text x="318" y="66" text-anchor="middle" font-size="11" fill="currentColor">intuição válida</text>
-      <text x="318" y="82" text-anchor="middle" font-size="11" fill="currentColor">se forma aqui</text>
-      <text x="318" y="100" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">alta validade</text>
-    </g>
-    <rect x="40" y="118" width="180" height="70" rx="8" fill="currentColor" fill-opacity=".04" stroke="currentColor" stroke-width="1.2" stroke-dasharray="5 4"/>
-    <text x="130" y="150" text-anchor="middle" font-size="10" fill="currentColor" opacity=".55">nada a aprender,</text>
-    <text x="130" y="166" text-anchor="middle" font-size="10" fill="currentColor" opacity=".55">e nada que avise</text>
-    <rect x="228" y="118" width="180" height="70" rx="8" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="1.4" stroke-dasharray="5 4"/>
-    <text x="318" y="150" text-anchor="middle" font-size="10" fill="currentColor" opacity=".7">há padrão, mas</text>
-    <text x="318" y="166" text-anchor="middle" font-size="10" fill="currentColor" opacity=".7">ninguém confirma</text>
-    <g class="apart" data-anat="palpite" data-struct="confianca">
-      <rect x="40" y="200" width="368" height="30" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
-      <text x="224" y="220" text-anchor="middle" font-size="10" fill="currentColor" opacity=".85">a confiança sobe nos QUATRO — por isso ela não diz em qual você está</text>
-    </g>
+  svg:`<svg class="anat-svg" viewBox="0 0 460 250" role="img" aria-label="Quadrante de regularidade contra retorno, e o que cada combinação produz">
+    <g class="apart" data-anat="palpite" data-struct="regularidade"><text x="250" y="20" text-anchor="middle" font-size="11" fill="currentColor">regularidade do ambiente →</text></g>
+    <g class="apart" data-anat="palpite" data-struct="retorno"><text x="14" y="118" text-anchor="middle" font-size="11" fill="currentColor" transform="rotate(-90 14 118)">retorno →</text></g>
+    <g class="apart" data-anat="palpite" data-struct="invalidos"><rect x="44" y="30" width="196" height="76" rx="9" fill="currentColor" fill-opacity=".06" stroke="currentColor" stroke-width="1.4" stroke-dasharray="5 4"/><text x="142" y="62" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".82">repetição sem aprender</text><text x="142" y="90" text-anchor="middle" font-size="9" fill="currentColor" opacity=".55">baixa validade</text></g>
+    <g class="apart" data-anat="palpite" data-struct="validos"><rect x="248" y="30" width="196" height="76" rx="9" fill="currentColor" fill-opacity=".34" stroke="currentColor" stroke-width="2"/><text x="346" y="62" text-anchor="middle" font-size="10.5" fill="currentColor">intuição se forma aqui</text><text x="346" y="90" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">alta validade</text></g>
+    <rect x="44" y="114" width="196" height="64" rx="9" fill="currentColor" fill-opacity=".04" stroke="currentColor" stroke-width="1.2" stroke-dasharray="5 4"/><text x="142" y="150" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".55">nada a aprender nem avisar</text>
+    <rect x="248" y="114" width="196" height="64" rx="9" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="1.4" stroke-dasharray="5 4"/><text x="346" y="150" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">há padrão, mas sem retorno</text>
+    <g class="apart" data-anat="palpite" data-struct="confianca"><rect x="44" y="192" width="396" height="50" rx="10" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="242" y="213" text-anchor="middle" font-size="10" fill="currentColor" opacity=".88">A confiança sobe nos quatro quadrantes —</text><text x="242" y="230" text-anchor="middle" font-size="10" fill="currentColor" opacity=".88">por isso não diz em qual você está</text></g>
   </svg>`
 };
 ANATOMY['neuroanatomia']={
