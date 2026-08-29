@@ -2497,38 +2497,21 @@ ANATOMY['ritmos']={
     {id:'talamo', label:'Tálamo', blurb:'A origem dos fusos do sono. Eles não caem em qualquer momento: encaixam-se na fase ativa da onda lenta cortical.'},
     {id:'cortex', label:'Córtex', blurb:'Onde a onda lenta alterna estado calado e estado ativo, cerca de uma vez por segundo. É a fase ativa que abre a porta para o que o hipocampo manda.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 240" role="img" aria-label="Esquema com córtex, tálamo, hipocampo e o laço piramidal-interneurônio">
-    <path d="M60 96 C48 46 128 22 196 28 C272 35 318 62 320 100 C321 126 300 140 276 140 L126 140 C88 140 66 118 60 96 Z" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"/>
-    <g class="apart" data-anat="ritmos" data-struct="cortex">
-      <path d="M60 96 C48 46 128 22 196 28 C272 35 318 62 320 100 L300 100 C296 70 258 48 194 44 C136 40 70 62 78 94 Z" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M78 88 C104 74 150 70 196 74 C244 78 282 88 300 98" fill="none" stroke="currentColor" stroke-width="1" opacity=".45"/>
-    </g>
-    <g class="apart" data-anat="ritmos" data-struct="talamo">
-      <ellipse cx="176" cy="102" rx="30" ry="17" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="ritmos" data-struct="hipocampo">
-      <path d="M124 124 C144 114 178 112 206 118 C224 122 230 130 224 134 C210 128 174 124 148 128 C136 130 126 128 124 124 Z" fill="currentColor" fill-opacity=".42" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <text x="176" y="106" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">tálamo</text>
-    <text x="150" y="152" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">hipocampo</text>
-    <text x="192" y="20" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">córtex</text>
-    <line x1="332" y1="44" x2="332" y2="212" stroke="currentColor" stroke-width="1" opacity=".25"/>
-    <text x="386" y="42" text-anchor="middle" font-size="9" fill="currentColor" opacity=".6">o laço</text>
-    <g class="apart" data-anat="ritmos" data-struct="piramidal">
-      <path d="M386 66 L400 92 L372 92 Z" fill="currentColor" fill-opacity=".38" stroke="currentColor" stroke-width="1.6"/>
-      <line x1="386" y1="66" x2="386" y2="54" stroke="currentColor" stroke-width="1.4"/>
-    </g>
-    <g class="apart" data-anat="ritmos" data-struct="interneuronio">
-      <circle cx="386" cy="150" r="14" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <path d="M398 94 C412 112 412 128 398 142" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".8"/>
-    <polygon points="398,142 404,132 392,134" fill="currentColor" opacity=".8"/>
-    <path d="M374 142 C360 128 360 112 374 94" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".8"/>
-    <line x1="368" y1="96" x2="380" y2="96" stroke="currentColor" stroke-width="2.4" opacity=".8"/>
-    <text x="418" y="86" font-size="8" fill="currentColor" opacity=".65">excita</text>
-    <text x="336" y="120" font-size="8" fill="currentColor" opacity=".65">cala</text>
-    <text x="386" y="184" text-anchor="middle" font-size="9" fill="currentColor" opacity=".8">piramidal ⇄ PV</text>
-    <text x="386" y="200" text-anchor="middle" font-size="8" fill="currentColor" opacity=".55">o período é o decaimento</text>
+  svg:`<svg class="anat-svg" viewBox="0 0 460 240" role="img" aria-label="Onde os ritmos nascem: córtex, tálamo e hipocampo à esquerda; o laço piramidal-interneurônio à direita">
+    <text x="150" y="30" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">córtex</text>
+    <g class="apart" data-anat="ritmos" data-struct="cortex"><path d="M40 132 C40 66 110 40 150 40 C190 40 260 66 260 132 Z" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.8"/><path d="M60 96 C100 78 200 78 240 96" fill="none" stroke="currentColor" stroke-width="1" opacity=".4"/><path d="M70 116 C110 100 190 100 230 116" fill="none" stroke="currentColor" stroke-width="1" opacity=".4"/></g>
+    <g class="apart" data-anat="ritmos" data-struct="talamo"><ellipse cx="150" cy="104" rx="30" ry="18" fill="currentColor" fill-opacity=".32" stroke="currentColor" stroke-width="1.7"/></g>
+    <text x="150" y="108" text-anchor="middle" font-size="10" fill="currentColor" opacity=".85">tálamo</text>
+    <g class="apart" data-anat="ritmos" data-struct="hipocampo"><path d="M92 150 C120 138 170 138 206 150 C214 153 214 160 206 160 C176 150 120 150 96 160 C88 160 86 153 92 150 Z" fill="currentColor" fill-opacity=".4" stroke="currentColor" stroke-width="1.6"/></g>
+    <text x="150" y="182" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">hipocampo</text>
+    <line x1="300" y1="42" x2="300" y2="196" stroke="currentColor" stroke-width="1" opacity=".22"/>
+    <text x="384" y="32" text-anchor="middle" font-size="9" fill="currentColor" opacity=".72">piramidal</text>
+    <g class="apart" data-anat="ritmos" data-struct="piramidal"><path d="M384 46 L398 72 L370 72 Z" fill="currentColor" fill-opacity=".38" stroke="currentColor" stroke-width="1.7"/><line x1="384" y1="46" x2="384" y2="40" stroke="currentColor" stroke-width="1.5"/></g>
+    <g class="apart" data-anat="ritmos" data-struct="interneuronio"><circle cx="384" cy="126" r="15" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.7"/></g>
+    <text x="384" y="164" text-anchor="middle" font-size="9" fill="currentColor" opacity=".72">interneurônio</text>
+    <path d="M400 76 C416 92 416 106 402 116" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".8"/><polygon points="402,116 409,106 397,108" fill="currentColor" opacity=".8"/><text x="428" y="100" text-anchor="middle" font-size="8" fill="currentColor" opacity=".65">excita</text>
+    <path d="M368 116 C354 106 354 92 366 76" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".8"/><line x1="360" y1="76" x2="372" y2="76" stroke="currentColor" stroke-width="2.4" opacity=".8"/><text x="344" y="100" text-anchor="middle" font-size="8" fill="currentColor" opacity=".65">cala</text>
+    <text x="230" y="228" text-anchor="middle" font-size="9" fill="currentColor" opacity=".6">o período do ritmo = o tempo que a inibição leva para decair</text>
   </svg>`
 };
 
@@ -7444,46 +7427,17 @@ ANATOMY['decisao']={
     {id:'limiar', label:'Limiar de decisão', blurb:'O critério que precisa ser cruzado. Sua altura é a troca entre velocidade e acerto.'},
     {id:'retorno', label:'Correção pelo resultado', blurb:'O erro de previsão volta e reescreve o valor para a próxima vez.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 210" role="img" aria-label="Etapas de uma decisão: opções, avaliação, desconto, acúmulo e limiar">
-    <text x="46" y="196" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".45">opções</text>
-    <text x="220" y="196" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".45">avaliação</text>
-    <text x="368" y="196" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".45">escolha</text>
-    <path d="M74 62 L108 62" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
-    <path d="M74 108 L108 108" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
-    <path d="M176 86 L200 86" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
-    <path d="M254 86 L276 86" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
-    <g class="apart" data-anat="decisao" data-struct="opcoes">
-      <circle cx="46" cy="62" r="17" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-      <rect x="30" y="92" width="32" height="32" rx="7" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="decisao" data-struct="avaliador">
-      <rect x="110" y="60" width="64" height="52" rx="11" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.7"/>
-      <line x1="122" y1="98" x2="162" y2="98" stroke="currentColor" stroke-width="1.5" opacity=".8"/>
-      <circle cx="134" cy="98" r="3.2" fill="currentColor" fill-opacity=".85"/>
-      <circle cx="153" cy="98" r="3.2" fill="currentColor" fill-opacity=".85"/>
-      <text x="142" y="80" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">valor</text>
-    </g>
-    <g class="apart" data-anat="decisao" data-struct="desconto">
-      <path d="M202 68 C214 68 222 78 224 92 C226 100 228 104 236 105" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>
-      <line x1="202" y1="112" x2="252" y2="112" stroke="currentColor" stroke-width="1.3" opacity=".4"/>
-      <line x1="202" y1="112" x2="202" y2="64" stroke="currentColor" stroke-width="1.3" opacity=".4"/>
-      <text x="228" y="126" text-anchor="middle" font-size="8" fill="currentColor" opacity=".55">tempo · esforço · risco</text>
-    </g>
-    <g class="apart" data-anat="decisao" data-struct="acumulo">
-      <path d="M278 132 L292 118 L300 124 L312 100 L320 106 L332 84 L342 72" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
-      <line x1="278" y1="140" x2="356" y2="140" stroke="currentColor" stroke-width="1.3" opacity=".4"/>
-      <line x1="278" y1="140" x2="278" y2="60" stroke="currentColor" stroke-width="1.3" opacity=".4"/>
-    </g>
-    <g class="apart" data-anat="decisao" data-struct="limiar">
-      <line x1="272" y1="64" x2="362" y2="64" stroke="currentColor" stroke-width="2.2" stroke-dasharray="6 4" opacity=".9"/>
-      <circle cx="342" cy="72" r="4.6" fill="currentColor" fill-opacity=".8"/>
-      <text x="317" y="56" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".6">limiar</text>
-    </g>
-    <g class="apart" data-anat="decisao" data-struct="retorno">
-      <path d="M356 150 C300 178 200 180 142 160 C130 156 124 144 126 132" fill="none" stroke="currentColor" stroke-width="1.9" stroke-dasharray="5 4" stroke-linecap="round" opacity=".75"/>
-      <path d="M122 122 L126 132 L131 124" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" opacity=".75"/>
-      <text x="244" y="176" text-anchor="middle" font-size="8" fill="currentColor" opacity=".5">erro de previsão reescreve o valor</text>
-    </g>
+  svg:`<svg class="anat-svg" viewBox="0 0 460 220" role="img" aria-label="Caminho de uma decisão: opções viram valor, sofrem descontos, a evidência se acumula até o limiar; o resultado corrige o valor">
+    <g class="apart" data-anat="decisao" data-struct="opcoes"><circle cx="44" cy="66" r="16" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/><rect x="30" y="92" width="30" height="30" rx="7" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/></g>
+    <path d="M64 74 L96 84" stroke="currentColor" stroke-width="1.4" opacity=".4"/><path d="M62 104 L96 96" stroke="currentColor" stroke-width="1.4" opacity=".4"/>
+    <g class="apart" data-anat="decisao" data-struct="avaliador"><rect x="100" y="60" width="70" height="58" rx="12" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.8"/><text x="135" y="82" text-anchor="middle" font-size="10" fill="currentColor">valor</text><line x1="112" y1="100" x2="158" y2="100" stroke="currentColor" stroke-width="1.4" opacity=".7"/><circle cx="124" cy="100" r="3" fill="currentColor"/><circle cx="148" cy="100" r="3" fill="currentColor"/></g>
+    <path d="M172 89 L196 89" stroke="currentColor" stroke-width="1.5"/><polygon points="196,89 186,84 186,94" fill="currentColor"/>
+    <g class="apart" data-anat="decisao" data-struct="desconto"><line x1="204" y1="120" x2="256" y2="120" stroke="currentColor" stroke-width="1.2" opacity=".4"/><line x1="204" y1="120" x2="204" y2="66" stroke="currentColor" stroke-width="1.2" opacity=".4"/><path d="M206 72 C222 74 232 96 236 118" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".85"/></g>
+    <path d="M262 89 L286 89" stroke="currentColor" stroke-width="1.5"/><polygon points="286,89 276,84 276,94" fill="currentColor"/>
+    <g class="apart" data-anat="decisao" data-struct="limiar"><line x1="298" y1="62" x2="380" y2="62" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4" opacity=".9"/><text x="339" y="54" text-anchor="middle" font-size="9" fill="currentColor" opacity=".7">limiar</text></g>
+    <g class="apart" data-anat="decisao" data-struct="acumulo"><line x1="298" y1="120" x2="380" y2="120" stroke="currentColor" stroke-width="1.2" opacity=".4"/><line x1="298" y1="120" x2="298" y2="58" stroke="currentColor" stroke-width="1.2" opacity=".4"/><path d="M300 116 L312 104 L320 108 L332 90 L342 94 L356 68 L366 62" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" opacity=".88"/><circle cx="366" cy="62" r="4.6" fill="currentColor" fill-opacity=".85"/></g>
+    <g class="apart" data-anat="decisao" data-struct="retorno"><path d="M366 130 C340 162 200 168 140 150 C133 148 131 140 132 132" fill="none" stroke="currentColor" stroke-width="1.7" stroke-dasharray="5 4" stroke-linecap="round" opacity=".7"/><polygon points="132,132 127,143 137,141" fill="currentColor" opacity=".7"/><text x="250" y="176" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".6">o erro de previsão reescreve o valor</text></g>
+    <text x="45" y="206" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".5">opções</text><text x="135" y="206" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".5">avaliação</text><text x="230" y="206" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".5">descontos</text><text x="339" y="206" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".5">acúmulo → escolha</text>
   </svg>`
 };
 
