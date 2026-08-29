@@ -6219,8 +6219,13 @@ function predAnswered(mid, idx){ return state.predCredit && state.predCredit[pre
 function predictAsReviewQuestion(moduleId, lessonIndex){
   const p = predOf(moduleId, lessonIndex);
   if(!p || !Array.isArray(p.o) || !p.o.length) return null;
+  // Antes, o fechamento (after) servia igual para acerto e erro. Agora o erro
+  // nomeia a previsão certa antes do fechamento — o mesmo padrão er ≠ ew das
+  // mini-questões, para o feedback falar do que você de fato respondeu.
+  const correta = p.o[p.c];
   return { q:p.q, o:p.o, c:p.c,
-           er:p.after, ew:p.after,   // o fechamento serve para acerto e para erro
+           er:p.after,
+           ew:(correta ? 'Na verdade, a previsão certa era: '+correta+'. ' : '')+p.after,
            lvl:1, dim:'application', _source:'prediction' };
 }
 
