@@ -6847,48 +6847,46 @@ ANATOMY['autonomo']={
     {id:'alvos', label:'Órgãos-alvo', blurb:'Coração, pulmões e vísceras recebem os dois ramos e respondem ao equilíbrio entre eles.'},
     {id:'enterico', label:'Sistema entérico', blurb:'Malha própria na parede do intestino, capaz de coordenar a digestão sozinha.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 236" role="img" aria-label="Saídas simpática e parassimpática do sistema nervoso autônomo">
-    <path d="M92 30 C66 30 54 46 56 62 C58 76 70 84 92 84" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"/>
-    <line x1="92" y1="30" x2="92" y2="212" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" opacity=".26"/>
-    <text x="92" y="228" text-anchor="middle" font-size="9" fill="currentColor" opacity=".45">eixo central</text>
-    <text x="336" y="228" text-anchor="middle" font-size="9" fill="currentColor" opacity=".45">órgãos</text>
+  svg:`<svg class="anat-svg" viewBox="0 0 440 246" role="img" aria-label="As duas saídas do sistema autônomo: parassimpático pelo vago, simpático pela cadeia de gânglios, com a medula adrenal, os órgãos-alvo e o sistema entérico">
+    <path d="M78 34 C78 27 100 27 100 34 L100 58 L78 58 Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.4" opacity=".6"/>
+    <rect x="80" y="56" width="12" height="150" rx="6" fill="currentColor" fill-opacity=".06" stroke="currentColor" stroke-width="1.3" opacity=".55"/>
     <g class="apart" data-anat="autonomo" data-struct="craniosacral">
-      <path d="M96 56 C170 48 214 92 244 128 C268 156 300 168 326 170" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity=".85"/>
-      <path d="M96 196 C150 198 200 190 246 180" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
-      <circle cx="96" cy="56" r="5" fill="currentColor" fill-opacity=".5"/>
-      <circle cx="96" cy="196" r="4.4" fill="currentColor" fill-opacity=".5"/>
+      <path d="M100 46 C190 40 258 74 300 112" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity=".85"/>
+      <path d="M92 196 C150 200 226 190 288 176" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+      <circle cx="100" cy="46" r="4.5" fill="currentColor" fill-opacity=".6"/>
     </g>
+    <text x="214" y="38" text-anchor="middle" font-size="9" fill="currentColor" opacity=".72">parassimpático (vago)</text>
     <g class="apart" data-anat="autonomo" data-struct="toracolombar">
-      <rect x="86" y="96" width="12" height="62" rx="5" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="98" y1="106" x2="132" y2="106" stroke="currentColor" stroke-width="1.6" opacity=".75"/>
-      <line x1="98" y1="126" x2="132" y2="126" stroke="currentColor" stroke-width="1.6" opacity=".75"/>
-      <line x1="98" y1="148" x2="132" y2="148" stroke="currentColor" stroke-width="1.6" opacity=".75"/>
+      <rect x="80" y="96" width="12" height="58" rx="6" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="92" y1="106" x2="126" y2="106" stroke="currentColor" stroke-width="1.6" opacity=".75"/>
+      <line x1="92" y1="126" x2="126" y2="126" stroke="currentColor" stroke-width="1.6" opacity=".75"/>
+      <line x1="92" y1="146" x2="126" y2="146" stroke="currentColor" stroke-width="1.6" opacity=".75"/>
     </g>
+    <text x="60" y="128" text-anchor="middle" font-size="9" fill="currentColor" opacity=".72" transform="rotate(-90 60 128)">simpático</text>
     <g class="apart" data-anat="autonomo" data-struct="cadeia">
-      <circle cx="140" cy="106" r="7" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="140" cy="126" r="7" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="140" cy="148" r="7" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="140" y1="113" x2="140" y2="119" stroke="currentColor" stroke-width="1.6"/>
-      <line x1="140" y1="133" x2="140" y2="141" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M147 104 C210 92 268 78 312 74" fill="none" stroke="currentColor" stroke-width="1.7" opacity=".6"/>
-      <path d="M147 126 C214 122 268 120 310 118" fill="none" stroke="currentColor" stroke-width="1.7" opacity=".6"/>
+      <circle cx="134" cy="106" r="7" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="134" cy="126" r="7" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="134" cy="146" r="7" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="134" y1="113" x2="134" y2="119" stroke="currentColor" stroke-width="1.5"/><line x1="134" y1="133" x2="134" y2="139" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M141 104 C210 92 268 96 300 104" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".6"/>
+      <path d="M141 146 C200 150 250 150 286 150" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".6"/>
     </g>
+    <text x="134" y="170" text-anchor="middle" font-size="9" fill="currentColor" opacity=".72">cadeia</text>
     <g class="apart" data-anat="autonomo" data-struct="adrenal">
-      <path d="M98 168 C140 172 168 180 186 186" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="4 3" opacity=".7"/>
-      <path d="M188 178 C202 172 216 178 216 190 C216 200 202 206 192 200 C184 196 182 184 188 178 Z" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/>
-      <text x="203" y="216" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".55">adrenalina</text>
+      <path d="M141 150 C168 168 182 182 194 190" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 3" opacity=".7"/>
+      <path d="M196 182 C210 178 222 186 220 197 C218 207 204 210 196 203 C190 198 189 188 196 182 Z" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5"/>
     </g>
+    <text x="200" y="226" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".62">adrenal → adrenalina</text>
     <g class="apart" data-anat="autonomo" data-struct="alvos">
-      <path d="M318 62 C326 54 340 54 346 62 C352 70 344 82 332 90 C320 82 312 70 318 62 Z" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M316 108 C316 100 326 98 330 104 L330 128 C322 130 314 122 316 108 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M352 108 C352 100 342 98 338 104 L338 128 C346 130 354 122 352 108 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M316 104 C312 98 302 98 300 106 C298 112 306 120 316 128 C326 120 334 112 332 106 C330 98 320 98 316 104 Z" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
+      <ellipse cx="352" cy="120" rx="10" ry="14" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.4"/>
     </g>
+    <text x="332" y="96" text-anchor="middle" font-size="9" fill="currentColor" opacity=".72">órgãos-alvo</text>
     <g class="apart" data-anat="autonomo" data-struct="enterico">
-      <path d="M310 156 C300 168 306 186 322 190 C340 194 358 186 358 172 C358 158 344 150 330 154" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>
-      <circle cx="322" cy="172" r="2.2" fill="currentColor" fill-opacity=".7"/>
-      <circle cx="336" cy="166" r="2.2" fill="currentColor" fill-opacity=".7"/>
-      <circle cx="332" cy="182" r="2.2" fill="currentColor" fill-opacity=".7"/>
+      <path d="M300 168 C292 182 300 200 318 202 C338 204 356 194 354 178 C352 164 336 158 322 164" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>
+      <circle cx="318" cy="182" r="2.2" fill="currentColor" fill-opacity=".7"/><circle cx="332" cy="176" r="2.2" fill="currentColor" fill-opacity=".7"/><circle cx="330" cy="190" r="2.2" fill="currentColor" fill-opacity=".7"/>
     </g>
+    <text x="330" y="224" text-anchor="middle" font-size="9" fill="currentColor" opacity=".72">entérico</text>
   </svg>`
 };
 
