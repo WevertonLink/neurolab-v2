@@ -2065,23 +2065,15 @@ const ANATOMY = {
       {id:'parietal', label:'Córtex parietal', blurb:'Ajuda a orientar a atenção para onde ela é necessária (rede de orientação, Posner).'},
       {id:'rede', label:'Rede frontoparietal', blurb:'Frente e topo do cérebro trabalhando juntos para sustentar e direcionar a atenção.'}
     ],
-    svg: `<svg class="anat-svg" viewBox="0 0 440 200" role="img" aria-label="Córtex pré-frontal e atenção">
-      <path d="M78 108 Q70 46 150 44 Q250 42 320 60 Q372 74 360 108 Q350 150 250 158 Q140 164 96 140 Q80 128 78 108 Z" fill="currentColor" fill-opacity=".03" stroke="currentColor" stroke-width="1.4" opacity=".32"/>
-      <path d="M96 140 Q88 160 92 182" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".32"/>
-      <g class="apart" data-anat="atencao" data-struct="pfc">
-        <path d="M78 108 Q70 46 150 44 Q140 100 150 150 Q120 150 96 140 Q80 128 78 108 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="2"/>
-      </g>
-      <g class="apart" data-anat="atencao" data-struct="parietal">
-        <path d="M232 50 Q290 46 320 60 Q356 74 348 100 Q300 96 258 96 Q244 74 232 50 Z" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2"/>
-      </g>
-      <g class="apart" data-anat="atencao" data-struct="rede">
-        <path d="M126 96 Q210 66 292 82" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="2 6" stroke-linecap="round"/>
-        <circle cx="126" cy="96" r="4" fill="currentColor"/>
-        <circle cx="292" cy="82" r="4" fill="currentColor"/>
-      </g>
-      <text x="112" y="128" text-anchor="middle">Pré-frontal</text>
-      <text x="298" y="120" text-anchor="middle">Parietal</text>
-      <text x="70" y="190">frente do cérebro →</text>
+    svg: `<svg class="anat-svg" viewBox="0 0 440 210" role="img" aria-label="Controle da atenção: córtex pré-frontal e parietal ligados pela rede frontoparietal">
+      <path d="M56 130 C46 92 78 62 130 54 C196 45 274 46 332 62 C374 74 392 98 380 122 C372 140 348 146 322 146 C300 146 286 148 268 150 C230 154 174 156 136 150 C92 143 64 150 56 130 Z" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-width="1.5" opacity=".55"/>
+      <path d="M228 56 C222 84 228 112 234 136" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 4" opacity=".3"/>
+      <text x="70" y="192" font-size="9" fill="currentColor" opacity=".5">← frente do cérebro</text>
+      <g class="apart" data-anat="atencao" data-struct="pfc"><path d="M60 122 C54 92 78 68 120 62 C126 92 122 118 120 138 C96 140 70 138 60 122 Z" fill="currentColor" fill-opacity=".24" stroke="currentColor" stroke-width="2"/></g>
+      <g class="apart" data-anat="atencao" data-struct="parietal"><path d="M244 60 C286 58 316 66 336 78 C350 92 344 112 322 118 C296 116 268 112 250 108 C246 92 244 76 244 60 Z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2"/></g>
+      <g class="apart" data-anat="atencao" data-struct="rede"><path d="M120 96 C180 72 244 76 292 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="2 6" stroke-linecap="round"/><circle cx="120" cy="96" r="4" fill="currentColor"/><circle cx="292" cy="90" r="4" fill="currentColor"/></g>
+      <text x="96" y="164" text-anchor="middle">pré-frontal</text>
+      <text x="296" y="140" text-anchor="middle">parietal</text>
     </svg>`
   },
 
@@ -2844,36 +2836,21 @@ ANATOMY['motor']={
     {id:'medula', label:'Medula espinhal', blurb:'Leva o comando até o neurônio motor e abriga reflexos que dispensam o cérebro.'},
     {id:'musculo', label:'Músculo', blurb:'O destino final: a acetilcolina na junção neuromuscular dispara a contração.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 210" role="img" aria-label="A via do movimento">
-    <path d="M96 106 C84 58 158 34 220 40 C290 47 334 70 336 104 C337 126 319 138 296 139 L158 139 C120 139 100 130 96 106 Z" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".28"/>
-    <g class="apart" data-anat="motor" data-struct="motor">
-      <path d="M186 46 C208 42 228 46 236 56 L226 76 C204 72 192 72 186 70 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="motor" data-struct="ganglios">
-      <path d="M182 96 C190 90 205 90 211 98 C215 104 211 113 200 115 C189 117 180 108 182 96 Z" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="motor" data-struct="cerebelo">
-      <path d="M300 140 C334 138 360 150 360 166 C360 180 340 178 320 175 C306 172 299 156 300 140 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M312 146 C322 150 322 168 316 173 M330 146 C338 152 336 168 330 174" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
-    </g>
-    <path d="M206 76 C220 104 236 126 250 142" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>
-    <g class="apart" data-anat="motor" data-struct="medula">
-      <rect x="243" y="140" width="12" height="54" rx="6" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <path d="M255 186 L286 190" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".8"/>
-    <path d="M286 190 l-11 -4 l1 9 Z" fill="currentColor" opacity=".8"/>
-    <g class="apart" data-anat="motor" data-struct="musculo">
-      <ellipse cx="304" cy="191" rx="16" ry="9" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M294 186 C300 191 300 191 294 196 M304 185 C310 191 310 191 304 197 M314 186 C320 191 320 191 314 196" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
-    </g>
-    <path d="M210 108 C224 118 234 128 244 150" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity=".5"/>
-    <path d="M312 150 C288 150 268 152 252 158" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3" opacity=".5"/>
-    <text x="228" y="44" text-anchor="middle">Córtex motor</text>
-    <text x="168" y="104" text-anchor="end">Gânglios</text>
-    <text x="336" y="192" text-anchor="middle">Cerebelo</text>
-    <text x="249" y="207" text-anchor="middle">Medula</text>
-    <text x="304" y="176" text-anchor="middle">Músculo</text>
-  </svg>`
+  svg:`<svg class="anat-svg" viewBox="0 0 440 220" role="img" aria-label="A via do movimento: córtex motor, gânglios da base, cerebelo, medula e músculo">
+      <path d="M56 120 C46 82 78 54 130 46 C196 37 262 40 316 56 C356 68 372 90 360 112 C352 128 330 134 306 134 C286 134 246 136 210 134 C150 132 64 140 56 120 Z" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-width="1.5" opacity=".55"/>
+      <g class="apart" data-anat="motor" data-struct="motor"><path d="M196 50 C216 48 232 52 238 62 L228 82 C208 78 196 78 190 76 Z" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.8"/></g>
+      <g class="apart" data-anat="motor" data-struct="ganglios"><ellipse cx="176" cy="98" rx="16" ry="12" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.7"/></g>
+      <path d="M212 82 C224 104 236 118 246 132" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity=".8"/>
+      <g class="apart" data-anat="motor" data-struct="medula"><rect x="240" y="132" width="12" height="58" rx="6" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.7"/></g>
+      <g class="apart" data-anat="motor" data-struct="cerebelo"><path d="M300 138 C336 136 360 148 360 164 C360 178 340 176 320 173 C306 170 299 154 300 138 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.7"/><path d="M312 144 C322 148 322 166 316 171 M330 144 C338 150 336 166 330 172" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/></g>
+      <path d="M252 182 L288 188" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".8"/><polygon points="288,188 277,183 278,193" fill="currentColor" opacity=".8"/>
+      <g class="apart" data-anat="motor" data-struct="musculo"><ellipse cx="308" cy="190" rx="18" ry="10" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.7"/><path d="M298 185 C304 190 304 190 298 196 M308 184 C314 190 314 190 308 197 M318 185 C324 190 324 190 318 196" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/></g>
+      <text x="216" y="42" text-anchor="middle">córtex motor</text>
+      <text x="150" y="100" text-anchor="end">gânglios</text>
+      <text x="332" y="150" text-anchor="middle">cerebelo</text>
+      <text x="230" y="168" text-anchor="end" font-size="9">medula</text>
+      <text x="308" y="210" text-anchor="middle">músculo</text>
+    </svg>`
 };
 
 DEEP['motor']=[
@@ -3081,34 +3058,22 @@ ANATOMY['linguagem']={
     {id:'auditivo', label:'Entrada auditiva', blurb:'O som chega pelo córtex auditivo e alimenta a compreensão, em Wernicke.'},
     {id:'motor', label:'Saída motora (fala)', blurb:'O córtex motor executa o comando de Broca, movendo boca e língua para falar.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 200" role="img" aria-label="Rede da linguagem no hemisfério esquerdo">
-    <path d="M96 106 C84 58 158 34 220 40 C290 47 334 70 336 104 C337 126 319 140 296 141 L158 141 C120 141 100 130 96 106 Z" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".28"/>
-    <path d="M150 100 C160 64 244 62 252 104" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".5"/>
-    <g class="apart" data-anat="linguagem" data-struct="arqueado">
-      <path d="M150 100 C160 64 244 62 252 104" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" opacity="0"/>
-    </g>
-    <g class="apart" data-anat="linguagem" data-struct="broca">
-      <path d="M130 100 C140 95 156 97 163 106 C165 113 158 122 147 123 C136 124 125 113 130 100 Z" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="linguagem" data-struct="wernicke">
-      <path d="M236 106 C248 103 262 106 266 115 C264 126 250 130 240 128 C231 126 229 112 236 106 Z" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="linguagem" data-struct="motor">
-      <ellipse cx="182" cy="86" rx="12" ry="9" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/>
-    </g>
-    <g class="apart" data-anat="linguagem" data-struct="auditivo">
-      <ellipse cx="222" cy="126" rx="12" ry="8" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/>
-    </g>
-    <path d="M226 120 C232 116 236 114 240 116" fill="none" stroke="currentColor" stroke-width="1.3" opacity=".55"/>
-    <path d="M240 116 l-7 0 l3 5 Z" fill="currentColor" opacity=".55"/>
-    <path d="M158 100 C168 92 174 90 178 90" fill="none" stroke="currentColor" stroke-width="1.3" opacity=".55"/>
-    <path d="M178 90 l-6 -3 l0 6 Z" fill="currentColor" opacity=".55"/>
-    <text x="140" y="140" text-anchor="middle">Broca</text>
-    <text x="255" y="140" text-anchor="middle">Wernicke</text>
-    <text x="201" y="58" text-anchor="middle">Arqueado</text>
-    <text x="182" y="70" text-anchor="middle">fala</text>
-    <text x="222" y="146" text-anchor="middle">audição</text>
-  </svg>`
+  svg:`<svg class="anat-svg" viewBox="0 0 440 210" role="img" aria-label="Rede da linguagem: Broca e Wernicke ligados pelo fascículo arqueado, com entrada auditiva e saída motora">
+      <path d="M56 130 C46 92 78 62 130 54 C196 45 274 46 332 62 C374 74 392 98 380 122 C372 140 348 146 322 146 C300 146 286 148 268 150 C230 154 174 156 136 150 C92 143 64 150 56 130 Z" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-width="1.5" opacity=".55"/>
+      <path d="M120 122 C180 124 240 122 300 128" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 4" opacity=".28"/>
+      <g class="apart" data-anat="linguagem" data-struct="arqueado"><path d="M150 114 C170 80 262 80 284 114" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".65"/></g>
+      <g class="apart" data-anat="linguagem" data-struct="broca"><ellipse cx="146" cy="118" rx="20" ry="15" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.8"/></g>
+      <g class="apart" data-anat="linguagem" data-struct="wernicke"><ellipse cx="286" cy="118" rx="20" ry="15" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.8"/></g>
+      <g class="apart" data-anat="linguagem" data-struct="motor"><ellipse cx="150" cy="84" rx="11" ry="8" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/></g>
+      <path d="M150 92 L149 103" stroke="currentColor" stroke-width="1.3" opacity=".55"/><polygon points="149,103 145,95 153,95" fill="currentColor" opacity=".55"/>
+      <g class="apart" data-anat="linguagem" data-struct="auditivo"><ellipse cx="306" cy="148" rx="11" ry="8" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/></g>
+      <path d="M304 140 L296 131" stroke="currentColor" stroke-width="1.3" opacity=".55"/><polygon points="296,131 305,134 300,127" fill="currentColor" opacity=".55"/>
+      <text x="218" y="66" text-anchor="middle">fascículo arqueado</text>
+      <text x="150" y="72" text-anchor="middle" font-size="9">fala</text>
+      <text x="146" y="152" text-anchor="middle">Broca</text>
+      <text x="280" y="152" text-anchor="middle">Wernicke</text>
+      <text x="344" y="152" text-anchor="start" font-size="9">audição</text>
+    </svg>`
 };
 
 DEEP['linguagem']=[
