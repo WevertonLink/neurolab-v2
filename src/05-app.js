@@ -2030,29 +2030,16 @@ const ANATOMY = {
       {id:'pfc', label:'Córtex pré-frontal', blurb:'Recebe a projeção dopaminérgica e usa o sinal de valor para guiar decisões e metas.'},
       {id:'via', label:'Via dopaminérgica', blurb:'Caminho ATV → accumbens → córtex pré-frontal. Dispara mais quando algo é melhor que o esperado (erro de previsão).'}
     ],
-    svg: `<svg class="anat-svg" viewBox="0 0 440 200" role="img" aria-label="Via mesolímbica">
-      <path d="M60 96 Q70 34 170 34 Q300 34 322 82 Q332 108 300 132 Q250 160 160 156 Q80 152 62 120 Z" fill="currentColor" fill-opacity=".03" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
-      <path d="M300 132 Q322 150 320 176" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
-      <circle cx="330" cy="150" r="22" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".3"/>
-      <g class="apart" data-anat="recompensa" data-struct="via">
-        <path d="M232 122 Q180 118 150 118" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-        <path d="M150 118 l12 -5 l0 10 Z" fill="currentColor"/>
-        <path d="M232 120 Q160 108 112 92" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-        <path d="M112 92 l13 1 l-5 9 Z" fill="currentColor"/>
-      </g>
-      <g class="apart" data-anat="recompensa" data-struct="vta">
-        <ellipse cx="240" cy="124" rx="17" ry="12" fill="currentColor" fill-opacity=".32" stroke="currentColor" stroke-width="2"/>
-      </g>
-      <g class="apart" data-anat="recompensa" data-struct="accumbens">
-        <ellipse cx="132" cy="120" rx="18" ry="13" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="2"/>
-      </g>
-      <g class="apart" data-anat="recompensa" data-struct="pfc">
-        <path d="M96 88 Q70 80 74 104 Q78 122 100 116 Q92 100 96 88 Z" fill="currentColor" fill-opacity=".24" stroke="currentColor" stroke-width="2"/>
-      </g>
-      <text x="240" y="152" text-anchor="middle">ATV</text>
-      <text x="132" y="150" text-anchor="middle">Accumbens</text>
-      <text x="72" y="76" text-anchor="middle">Pré-frontal</text>
-      <text x="70" y="185">frente do cérebro →</text>
+    svg: `<svg class="anat-svg" viewBox="0 0 440 210" role="img" aria-label="Via da recompensa: ATV, núcleo accumbens e córtex pré-frontal ligados pela via dopaminérgica">
+      <path d="M60 120 C50 78 92 50 152 46 C220 41 300 46 344 66 C380 82 390 106 378 126 C370 140 348 146 322 144 C300 144 250 148 200 146 C140 144 68 140 60 120 Z" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-width="1.5" opacity=".5"/>
+      <text x="70" y="188" font-size="9" fill="currentColor" opacity=".5">← frente do cérebro</text>
+      <g class="apart" data-anat="recompensa" data-struct="via"><path d="M300 112 C240 104 180 100 128 100" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><polygon points="128,100 141,95 139,106" fill="currentColor"/><path d="M300 110 C250 96 180 84 120 80" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".8"/><polygon points="120,80 133,80 126,90" fill="currentColor" opacity=".8"/></g>
+      <g class="apart" data-anat="recompensa" data-struct="vta"><ellipse cx="312" cy="112" rx="17" ry="13" fill="currentColor" fill-opacity=".32" stroke="currentColor" stroke-width="2"/></g>
+      <g class="apart" data-anat="recompensa" data-struct="accumbens"><ellipse cx="120" cy="104" rx="18" ry="13" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="2"/></g>
+      <g class="apart" data-anat="recompensa" data-struct="pfc"><path d="M96 74 C74 68 70 92 82 100 C92 96 96 84 96 74 Z" fill="currentColor" fill-opacity=".24" stroke="currentColor" stroke-width="2"/></g>
+      <text x="312" y="140" text-anchor="middle">ATV</text>
+      <text x="120" y="132" text-anchor="middle">Accumbens</text>
+      <text x="78" y="64" text-anchor="middle">pré-frontal</text>
     </svg>`
   },
 
@@ -2454,28 +2441,18 @@ ANATOMY['memoria']={
     {id:'cerebelo', label:'Cerebelo', blurb:'Aprende por ERRO, não por repetição: usa a diferença entre o movimento previsto e o que aconteceu para corrigir um modelo interno — que é exatamente o que desenhar no espelho exige. Um cuidado com H.M.: o cerebelo dele não estava íntegro, e a atrofia foi ATRIBUÍDA a anos de anticonvulsivante. Isso não desfaz o argumento da aula, por dois motivos: atrofia difusa parcial não é lesão focal, e o teste do espelho é de 1962, décadas antes das imagens que documentaram a atrofia.'},
     {id:'cortex', label:'Córtex', blurb:'O destino da consolidação sistêmica. Recebe as reativações do sono e do repouso acordado e, no modelo padrão, passa a reunir o padrão sem o hipocampo. Que a reativação exista é medido; que o córtex aprenda somando um ajuste a cada uma é o modelo.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 220" role="img" aria-label="Corte esquemático com hipocampo, estriado, cerebelo e córtex">
-    <path d="M84 118 C70 62 152 34 218 40 C292 47 336 74 338 112 C339 138 318 152 294 152 L150 152 C110 152 90 140 84 118 Z" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/>
-    <g class="apart" data-anat="memoria" data-struct="cortex">
-      <path d="M84 118 C70 62 152 34 218 40 C292 47 336 74 338 112 L318 112 C314 82 276 60 216 56 C160 52 92 74 102 116 Z" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5"/>
-    </g>
-    <g class="apart" data-anat="memoria" data-struct="temporal">
-      <path d="M112 126 C120 146 168 152 214 150 L272 148 C266 132 200 128 158 126 Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.5"/>
-    </g>
-    <g class="apart" data-anat="memoria" data-struct="hipocampo">
-      <path d="M150 134 C168 124 200 122 226 128 C244 132 250 140 244 144 C232 138 196 134 172 138 C160 140 152 138 150 134 Z" fill="currentColor" fill-opacity=".42" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="memoria" data-struct="estriado">
-      <ellipse cx="186" cy="96" rx="34" ry="20" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="memoria" data-struct="cerebelo">
-      <path d="M292 132 C316 128 334 136 334 146 C334 158 314 164 296 160 C284 157 282 140 292 132 Z" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M292 138 L332 142 M290 146 L332 150 M294 154 L326 158" stroke="currentColor" stroke-width="1" opacity=".5"/>
-    </g>
-    <text x="186" y="100" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">estriado</text>
-    <text x="196" y="170" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">hipocampo</text>
-    <text x="312" y="180" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">cerebelo</text>
-    <text x="200" y="30" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">córtex</text>
+  svg:`<svg class="anat-svg" viewBox="0 0 440 220" role="img" aria-label="Onde cada memória mora: córtex, estriado, hipocampo e cerebelo">
+    <path d="M80 150 C62 84 150 48 220 48 C290 48 378 84 360 150 C354 168 330 174 300 172 L140 172 C110 174 86 168 80 150 Z" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-width="1.6" opacity=".55"/>
+    <text x="220" y="40" text-anchor="middle" font-size="10" fill="currentColor" opacity=".75">córtex</text>
+    <g class="apart" data-anat="memoria" data-struct="cortex"><path d="M80 150 C62 84 150 48 220 48 C290 48 378 84 360 150 L342 150 C336 96 286 66 220 66 C154 66 104 96 98 150 Z" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.4"/></g>
+    <g class="apart" data-anat="memoria" data-struct="estriado"><ellipse cx="178" cy="104" rx="30" ry="19" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.6"/></g>
+    <g class="apart" data-anat="memoria" data-struct="hipocampo"><path d="M150 138 C172 128 210 126 240 132 C258 136 262 146 254 150 C238 142 200 138 172 142 C160 144 152 142 150 138 Z" fill="currentColor" fill-opacity=".42" stroke="currentColor" stroke-width="1.6"/></g>
+    <g class="apart" data-anat="memoria" data-struct="temporal"><path d="M104 156 C120 170 180 172 230 170 L300 168 C296 158 200 154 150 154 C128 154 112 154 104 156 Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.3"/></g>
+    <g class="apart" data-anat="memoria" data-struct="cerebelo"><path d="M304 150 C334 146 356 156 356 170 C356 184 336 184 316 180 C302 177 296 160 304 150 Z" fill="currentColor" fill-opacity=".24" stroke="currentColor" stroke-width="1.6"/><path d="M314 156 C324 160 324 176 318 181 M330 156 C338 162 336 176 330 182" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/></g>
+    <text x="120" y="98" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">estriado</text>
+    <path d="M138 100 L150 104" stroke="currentColor" stroke-width="1" opacity=".5"/>
+    <text x="204" y="192" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">hipocampo</text>
+    <text x="332" y="200" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">cerebelo</text>
   </svg>`
 };
 
@@ -2603,36 +2580,21 @@ ANATOMY['neuroanatomia']={
     {id:'cerebelo', label:'Cerebelo', blurb:'Afina coordenação, timing e equilíbrio; guarda a maioria dos neurônios do encéfalo. Fica atrás e embaixo.'},
     {id:'tronco', label:'Tronco encefálico', blurb:'Controla funções vitais (respiração, batimento) e liga o cérebro à medula. Dano ali costuma ser fatal.'}
   ],
-  svg:`<svg class="anat-svg" viewBox="0 0 440 200" role="img" aria-label="Mapa lateral do cérebro">
-    <path d="M86 106 C74 58 150 34 214 40 C286 47 330 70 332 104 C333 126 315 138 292 139 L150 139 C112 139 92 128 86 106 Z" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".35"/>
-    <g class="apart" data-anat="neuroanatomia" data-struct="frontal">
-      <path d="M86 106 C74 58 150 34 202 42 L192 112 C150 116 118 116 106 114 C95 112 89 110 86 106 Z" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="neuroanatomia" data-struct="parietal">
-      <path d="M202 42 C246 40 292 52 300 62 L300 112 L192 112 Z" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="neuroanatomia" data-struct="occipital">
-      <path d="M300 62 C320 70 332 82 332 104 C333 126 315 138 298 137 L300 112 Z" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <g class="apart" data-anat="neuroanatomia" data-struct="temporal">
-      <path d="M106 114 C118 116 150 116 192 112 L272 112 C264 134 180 140 150 139 C120 139 110 128 106 114 Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <path d="M202 42 L192 112" stroke="currentColor" stroke-width="1.2" opacity=".4"/>
-    <path d="M106 114 C150 116 220 114 272 112" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".4"/>
-    <g class="apart" data-anat="neuroanatomia" data-struct="cerebelo">
-      <path d="M300 140 C334 138 360 150 360 166 C360 180 340 178 320 175 C306 172 299 156 300 140 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M312 146 C322 150 322 168 316 173 M330 146 C338 152 336 168 330 174" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
-    </g>
-    <g class="apart" data-anat="neuroanatomia" data-struct="tronco">
-      <path d="M256 136 C252 158 256 178 264 192 L280 190 C274 172 276 154 278 137 Z" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.6"/>
-    </g>
-    <text x="128" y="70">Frontal</text>
-    <text x="250" y="66">Parietal</text>
-    <text x="322" y="98" text-anchor="middle">Occipital</text>
-    <text x="180" y="132" text-anchor="middle">Temporal</text>
-    <text x="336" y="192" text-anchor="middle">Cerebelo</text>
-    <text x="252" y="185" text-anchor="end">Tronco</text>
-    <text x="70" y="30">frente do cérebro →</text>
+  svg:`<svg class="anat-svg" viewBox="0 0 460 220" role="img" aria-label="Mapa lateral do cérebro: lobos frontal, parietal, occipital e temporal, com cerebelo e tronco encefálico">
+    <text x="80" y="30" font-size="9" fill="currentColor" opacity=".5">frente do cérebro →</text>
+    <path d="M64 120 C52 70 130 42 206 46 C286 50 340 74 342 112 C343 136 322 150 298 150 L150 150 C110 150 86 138 64 120 Z" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".35"/>
+    <g class="apart" data-anat="neuroanatomia" data-struct="frontal"><path d="M64 120 C52 70 130 42 196 48 L188 120 C150 124 116 124 102 122 C86 120 70 118 64 120 Z" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="1.6"/></g>
+    <g class="apart" data-anat="neuroanatomia" data-struct="parietal"><path d="M196 48 C244 46 292 56 302 68 L302 118 L188 120 Z" fill="currentColor" fill-opacity=".13" stroke="currentColor" stroke-width="1.6"/></g>
+    <g class="apart" data-anat="neuroanatomia" data-struct="occipital"><path d="M302 68 C324 76 342 90 342 112 C343 136 322 150 300 148 L302 118 Z" fill="currentColor" fill-opacity=".26" stroke="currentColor" stroke-width="1.6"/></g>
+    <g class="apart" data-anat="neuroanatomia" data-struct="temporal"><path d="M102 122 C116 124 150 124 188 120 L280 118 C272 140 180 148 150 148 C118 148 108 136 102 122 Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.6"/></g>
+    <g class="apart" data-anat="neuroanatomia" data-struct="cerebelo"><path d="M302 150 C338 148 362 160 362 176 C362 190 342 188 322 185 C308 182 301 166 302 150 Z" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.6"/><path d="M314 156 C324 160 324 178 318 183 M332 156 C340 162 338 178 332 184" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/></g>
+    <g class="apart" data-anat="neuroanatomia" data-struct="tronco"><path d="M250 146 C246 168 250 188 258 200 L276 198 C270 180 272 160 274 147 Z" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.6"/></g>
+    <text x="126" y="92" text-anchor="middle">frontal</text>
+    <text x="246" y="66" text-anchor="middle">parietal</text>
+    <text x="368" y="108" text-anchor="start">occipital</text>
+    <text x="170" y="140" text-anchor="middle">temporal</text>
+    <text x="360" y="200" text-anchor="middle">cerebelo</text>
+    <text x="238" y="196" text-anchor="end">tronco</text>
   </svg>`
 };
 
