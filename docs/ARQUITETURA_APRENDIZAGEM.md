@@ -275,9 +275,10 @@ de exceções, que o quiz de módulo e os casos ficam de fora.
 
 ### 4.6 A sessão de revisão
 
-`startReview` pega `dueTopics()` — que agora devolve **um item por dimensão
-vencida** — corta em `SESSION_CAP = 8` e percorre item a item. Cada item usa só
-as mini-questões que medem aquela dimensão, então a volta é mais curta e mais
+`startReview` intercala `dueTopics()` — que agora devolve **um item por dimensão
+vencida** — com `dueTerms()` (o baralho de Terminologia), corta em
+`SESSION_CAP = 16` e percorre item a item. Cada item de tópico usa só as
+mini-questões que medem aquela dimensão, então a volta é mais curta e mais
 específica: na prática ~1 pergunta por item, onde antes o tópico trazia 3.
 
 Consequência medida na migração de um estado com 40 tópicos estudados: a fila
@@ -298,10 +299,10 @@ Simulação de 180 dias com o escalonador real, 2 aulas/dia, semente fixa:
 | 60% | 8 | 151 | **72** | **80,7** | 7,9 |
 | 60% | 16 | 118 | 16 | 10,2 | 13,3 |
 
-O teto de 8 foi calibrado quando um item era um tópico com 3 perguntas. Com
-164 caixas em intervalos iniciais de 1 a 3 dias, ele virou gargalo de vazão: a
-60% de acerto o aluno **nunca alcança a fila**. Quem mais precisa da revisão
-seria justamente quem ela soterra.
+O teto de 8 foi calibrado quando um item era um tópico com 3 perguntas. Com a
+grade em centenas de caixas (tópico × dimensão) em intervalos iniciais de 1 a 3
+dias, ele virou gargalo de vazão: a 60% de acerto o aluno **nunca alcança a
+fila**. Quem mais precisa da revisão seria justamente quem ela soterra.
 
 O teto é válvula, não cota — na maioria dos dias a fila é menor que ele. Por
 isso dobrá-lo custa ~1 item/dia de trabalho médio e derruba o pico em 40%.

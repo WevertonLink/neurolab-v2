@@ -1241,7 +1241,7 @@ function renderDomainEntry(){
     host.innerHTML=''; return;
   }
   const stage=domainStage(), pct=Math.round(domainCoverageStats().value*100);
-  const due=dueTopics().length, weak=domainWeakTopics(99).length;
+  const due=dueTopics().length + ((typeof dueTerms==='function')?dueTerms().length:0), weak=domainWeakTopics(99).length;
   const casesDone=Object.keys(state.domain.cases).filter(k=>state.domain.cases[k]&&state.domain.cases[k].attempts).length;
   let eyebrow,title,text,button;
   if(stage==='post'){
@@ -1300,7 +1300,10 @@ function renderDomainView(){
   body.innerHTML=(renderers[state.domain.activeTab]||domainRenderToday)();
 }
 function domainRenderToday(){
-  const metrics=domainMetrics(), due=dueTopics(), weak=domainWeakTopics(1)[0], nextCase=domainNextCase(), nextCounter=domainNextCounter();
+  const metrics=domainMetrics();
+  const dueTerm=(typeof dueTerms==='function')?dueTerms():[];
+  const due=(typeof interleaveReviewQueue==='function')?interleaveReviewQueue(dueTopics(),dueTerm):dueTopics();
+  const weak=domainWeakTopics(1)[0], nextCase=domainNextCase(), nextCounter=domainNextCounter();
   return `<section class="dm-overview">
     <div class="dm-metrics">
       ${domainMetricCard('Cobertura',metrics.coverage,m=>`${m.done} de ${m.total} etapas percorridas`)}
@@ -1316,7 +1319,7 @@ function domainRenderToday(){
     <div class="dm-today-grid">
       <article class="dm-action review">
         <div class="dm-action-k">01 · RECUPERAR</div><h4>${due.length?`${due.length} revisão${due.length!==1?'ões':''} pendente${due.length!==1?'s':''}`:'Nenhuma revisão vencida'}</h4>
-        <p>${due.length?'Comece pelo que o intervalo já colocou à prova. A sessão usa no máximo oito tópicos.':'O cronograma está em dia. Não é preciso revisar cedo apenas para preencher uma tarefa.'}</p>
+        <p>${due.length?`Comece pelo que o intervalo já colocou à prova. A sessão usa no máximo ${SESSION_CAP} itens — tópico × dimensão e termos técnicos.`:'O cronograma está em dia. Não é preciso revisar cedo apenas para preencher uma tarefa.'}</p>
         <button onclick="${due.length?'startReview()':"domainSetTab('reviews')"}">${due.length?'Revisar agora':'Ver cronograma'} →</button>
       </article>
       <article class="dm-action weak">
@@ -1338,24 +1341,31 @@ function domainRenderToday(){
   </section>`;
 }
 function domainRenderReviews(){
-  const due=dueTopics(), scheduled=srsScheduledCount(), nd=nextDueDate();
-  if(!scheduled) return `<section class="dm-empty"><div class="dm-empty-icon">↻</div><h3>A fila ainda está sendo construída</h3><p>Concluir aulas e mini quizzes agenda os tópicos. O Modo Domínio não inventa revisões para conteúdo que você ainda não praticou.</p><button class="bigbtn ghost" style="--mc:var(--cyan)" onclick="go('dashboard')">Voltar aos módulos</button></section>`;
+  const dueTerm=(typeof dueTerms==='function')?dueTerms():[];
+  const due=(typeof interleaveReviewQueue==='function')?interleaveReviewQueue(dueTopics(),dueTerm):dueTopics();
+  const scheduled=srsScheduledCount();
+  const termados=(typeof termSeededCount==='function')?termSeededCount():0;
+  const nd=nextDueDate();
+  if(!scheduled && !termados && !dueTerm.length) return `<section class="dm-empty"><div class="dm-empty-icon">↻</div><h3>A fila ainda está sendo construída</h3><p>Concluir aulas e mini quizzes agenda os tópicos. O Modo Domínio não inventa revisões para conteúdo que você ainda não praticou.</p><button class="bigbtn ghost" style="--mc:var(--cyan)" onclick="go('dashboard')">Voltar aos módulos</button></section>`;
   if(!due.length){
     const days=nd?Math.max(0,Math.round((nd-startOfDay(Date.now()))/DAY)):null;
     return `<section class="dm-empty"><div class="dm-empty-icon">✓</div><h3>Nada vence hoje</h3><p>${days!==null?`A próxima revisão está prevista para daqui a ${days} dia${days!==1?'s':''}.`:'O cronograma não possui uma próxima data.'} Voltar cedo demais pode medir familiaridade, não retenção.</p></section>`;
   }
-  /* Desde a Fase 0 cada item é um par tópico × dimensão, não um tópico — e com
-     236 caixas possíveis, listar a fila inteira vira uma parede. Mostra a
-     sessão e declara o excedente, como o painel do dashboard já faz. */
+  /* Cada item é um par tópico × dimensão OU um termo do baralho de Terminologia
+     — a mesma fila que startReview percorre. Listar a fila inteira vira uma
+     parede; mostra a sessão e declara o excedente, como o painel do dashboard. */
   const naSessao = due.slice(0, SESSION_CAP);
   const excedente = Math.max(0, due.length - SESSION_CAP);
   return `<section class="dm-section"><div class="dm-section-head"><div><span>REVISÕES PENDENTES</span><h3>${naSessao.length} ${naSessao.length!==1?'itens':'item'} na próxima sessão</h3></div><button class="bigbtn" style="--mc:var(--violet)" onclick="startReview()">Revisar agora →</button></div>
-    <p class="dm-section-intro">Cada item é um tipo de saber sobre um tópico. O que você reconhece bem sai do radar por semanas; o que você não explica volta em dias.</p>
+    <p class="dm-section-intro">Cada item é um tipo de saber sobre um tópico — ou um termo técnico do baralho de Terminologia. O que você reconhece bem sai do radar por semanas; o que você não explica volta em dias.</p>
     <div class="dm-list">${naSessao.map(d=>{
+      if(d.kind==='term'){
+        return `<article class="dm-row"><i style="--dot:var(--cyan)"></i><div><b>Terminologia — termo técnico</b><p>${d.novo?'termo novo':(d.overdue?`${d.overdue} dia${d.overdue!==1?'s':''} de atraso`:'vence hoje')}${d.novo?'':` · intervalo ${SRS_INTERVALS[d.box]}d`}</p></div></article>`;
+      }
       const why=typeof reviewReasonData==='function'?reviewReasonData(d):null;
       return `<article class="dm-row"><i style="--dot:${d.color}"></i><div><b>Módulo ${d.mn} · ${d.title} — ${dimMeta(d.dim).label}</b><p>${why?why.title:'Revisão vencida'} · ${d.overdue?`${d.overdue} dia${d.overdue!==1?'s':''} de atraso`:'vence hoje'} · intervalo ${SRS_INTERVALS[d.box]}d</p></div></article>`;
     }).join('')}</div>
-    ${excedente?`<p class="dm-section-intro">Faltam ${excedente} para a sessão seguinte.</p>`:''}</section>`;
+    ${excedente?`<p class="dm-section-intro">Outros ${excedente} ficam para as próximas sessões.</p>`:''}</section>`;
 }
 function domainRenderWeak(){
   const topics=domainWeakTopics(12);
