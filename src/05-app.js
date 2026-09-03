@@ -575,6 +575,7 @@ const SRS_LAPSE_CAP = 2;   // ao errar, cai no máximo até esta caixa (7 dias) 
    por dia a 85% de acerto — e derruba o pico da fila de 131 para 79. */
 const SESSION_CAP = 16;
 const TERM_INTRO_PER_SESSION = 8;  // termos novos do glossário que entram por sessão no baralho de Terminologia
+const NEW_TERMS_PER_DAY = 12;  // teto de termos novos POR DIA (acima do por-sessão): barra a enxurrada de várias sessões num dia só
 
 /* =====================================================================
    Estado + persistência
@@ -583,7 +584,7 @@ let state = defaultState();
 function defaultState(){
   return { v:STATE_VERSION, rev:0, xp:0, deepMode:true, selfRate:{}, topicExplain:{}, predCredit:{},
            lessons:{}, mastery:{}, topicMastery:{}, doneQuiz:{}, dimensionEvidence:{}, questionHistory:{},
-    creditC:{}, creditW:{}, miniCredit:{}, miniWrong:{}, srs:{}, termSrs:{},
+    creditC:{}, creditW:{}, miniCredit:{}, miniWrong:{}, srs:{}, termSrs:{}, termIntroDay:{day:0,n:0},
     attempts:0, correctTotal:0, wrongTotal:0, lastModule:null, lastStudiedAt:0,
     domain:(typeof domainDefaultState==='function'?domainDefaultState():{}) };
 }
@@ -1502,7 +1503,13 @@ function scheduleTerm(term, score){
   if(!state.termSrs || typeof state.termSrs!=='object') state.termSrs = {};
   let d = termScheduleRec(term);
   const isNew = !d;
-  if(isNew) d = state.termSrs[term] = { box:0, due:0, last:0, reps:0, lapses:0 };
+  if(isNew){
+    d = state.termSrs[term] = { box:0, due:0, last:0, reps:0, lapses:0 };
+    // conta a introdução no dia, para o teto diário de termos novos
+    const hoje = startOfDay(Date.now());
+    if(!state.termIntroDay || typeof state.termIntroDay!=='object' || state.termIntroDay.day !== hoje) state.termIntroDay = { day:hoje, n:0 };
+    state.termIntroDay.n = (state.termIntroDay.n||0) + 1;
+  }
   const passed = score >= SRS_PASS;
   const wasDue = Date.now() >= (d.due||0);
   d.reps = (d.reps||0)+1;
@@ -1535,10 +1542,13 @@ function dueTerms(){
                                         overdue: Math.max(0, Math.round((today-(d.due||0))/DAY)) });
   });
   list.sort((a,b)=> (a.due-b.due) || (a.box-b.box));
-  // 2) até TERM_INTRO_PER_SESSION termos novos, na ordem do glossário
+  // 2) até TERM_INTRO_PER_SESSION termos novos, na ordem do glossário — mas nunca
+  //    além do saldo do teto diário (NEW_TERMS_PER_DAY), somando as sessões do dia
+  const usadosHoje = (state.termIntroDay && state.termIntroDay.day === today) ? (state.termIntroDay.n||0) : 0;
+  const limiteNovos = Math.min(TERM_INTRO_PER_SESSION, Math.max(0, NEW_TERMS_PER_DAY - usadosHoje));
   let novos = 0;
   const lista = glossaryTermList();
-  for(let i=0; i<lista.length && novos<TERM_INTRO_PER_SESSION; i++){
+  for(let i=0; i<lista.length && novos<limiteNovos; i++){
     const term = lista[i];
     if(seen[term]) continue;
     list.push({ kind:'term', term, box:0, due:today, overdue:0, novo:true });
@@ -1607,7 +1617,7 @@ function loadReviewTopic(){
     if(ancoras.length){
       const reps = ((srsDims(t.key)||{}).location||{}).reps || 0;
       const a = ancoras[reps % ancoras.length];
-      review.loc = { term:a.term, part:a.part, anatId:m.id, answered:false, chosen:null };
+      review.loc = { term:a.term, part:a.part, anatId:m.id, isProcess:(m.trilha==='extras'), answered:false, chosen:null };
       review.topicQs = []; review.qi = 0; review.topicCorrect = 0;
       if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
       renderReviewHead();
@@ -1771,22 +1781,29 @@ function renderReviewLocation(){
   const t = review.queue[review.ti], L = review.loc; if(!L) return;
   const A = ANATOMY[L.anatId] || {};
   const parte = (A.parts||[]).find(p=>p.id===L.part) || {label:L.part};
+  // Extras têm diagrama de PROCESSO (etapas), não de anatomia: o enunciado
+  // pergunta onde o conceito ENTRA no processo, não onde ele "age" numa região.
+  const proc = !!L.isProcess;
+  const verbo = proc ? 'entra em' : 'age em';
+  const vok = proc ? '✓ É nessa etapa' : '✓ É ali';
+  const vbad = proc ? '✕ Não é nessa etapa' : '✕ Não é ali';
+  const outra = proc ? 'outra etapa' : 'outra estrutura';
   let fecho = '';
   if(L.answered){
     const certa = L.chosen === L.part;
     const escolhida = (A.parts||[]).find(p=>p.id===L.chosen);
-    fecho = `<div class="mq-verd" style="color:${certa?'var(--good)':'var(--bad)'}">${certa?'✓ É ali'+' · +'+XP.review+' XP':'✕ Não é ali'}</div>
+    fecho = `<div class="mq-verd" style="color:${certa?'var(--good)':'var(--bad)'}">${certa?vok+' · +'+XP.review+' XP':vbad}</div>
       <p>${certa
-        ? `<strong>${escHtml(L.term)}</strong> age em <strong>${escHtml(parte.label)}</strong>.`
-        : `Você apontou ${escolhida?'<strong>'+escHtml(escolhida.label)+'</strong>':'outra estrutura'}. <strong>${escHtml(L.term)}</strong> age em <strong>${escHtml(parte.label)}</strong>.`}
+        ? `<strong>${escHtml(L.term)}</strong> ${verbo} <strong>${escHtml(parte.label)}</strong>.`
+        : `Você apontou ${escolhida?'<strong>'+escHtml(escolhida.label)+'</strong>':outra}. <strong>${escHtml(L.term)}</strong> ${verbo} <strong>${escHtml(parte.label)}</strong>.`}
         ${parte.blurb?' '+parte.blurb:''}</p>
       <div class="fbnav"><button class="bigbtn" onclick="nextReview()">Continuar</button></div>`;
   }
   document.getElementById('rv-body').innerHTML = `
     <div class="miniquiz-card rv-card">
       <div class="mq-k">Módulo ${t.mn} · ${t.title} · ${dimMeta(t.dim).label}</div>
-      <h4>Onde <strong>${escHtml(L.term)}</strong> age?</h4>
-      <p class="rmeta">Toque a estrutura no diagrama.</p>
+      <h4>Onde <strong>${escHtml(L.term)}</strong> ${proc?'entra neste processo':'age'}?</h4>
+      <p class="rmeta">Toque a ${proc?'etapa':'estrutura'} no diagrama.</p>
       <div class="anat-stage" id="rv-anat">${A.svg||''}</div>
       <div class="mq-feedback" id="rv-fb" aria-live="polite">${fecho}</div>
     </div>`;

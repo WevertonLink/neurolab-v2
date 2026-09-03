@@ -915,6 +915,20 @@ const reset = ()=>ev('state = defaultState();');
   ok(ev(`dueTerms().every(x=>x.kind==='term' && x.novo===true)`),
      '25. com baralho vazio todos os itens são termos novos');
 
+  // teto diário: introduzir NEW_TERMS_PER_DAY termos novos hoje zera o saldo do dia,
+  // e dueTerms deixa de oferecer termo novo até o dia seguinte
+  reset();
+  {
+    const DIA = ev('NEW_TERMS_PER_DAY');
+    const glos = ev('glossaryTermList()');
+    ok(glos.length > DIA + CAP, '25. o glossário tem termos de sobra para o teste do teto');
+    for(let i=0;i<DIA;i++) ev(`scheduleTerm(${JSON.stringify(glos[i])}, 1)`);
+    ok(ev(`!dueTerms().some(x=>x.novo)`), '25. atingido o teto diário, dueTerms não oferece termo novo');
+    // dia seguinte: o contador do dia fica velho e o saldo reabre
+    ev(`state.termIntroDay = { day: startOfDay(Date.now()) - DAY, n: 999 }`);
+    ok(ev(`dueTerms().some(x=>x.novo)`), '25. no dia seguinte o teto diário reabre');
+  }
+
   // termo agendado para o futuro não vence hoje
   reset();
   ev(`state.termSrs['${TERMO}'] = { box:3, due: ${startOfDay(Date.now())} + 5*${DAY}, last:0, reps:2, lapses:0 }`);
