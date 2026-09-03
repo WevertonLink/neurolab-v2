@@ -349,16 +349,20 @@ const reset = ()=>ev('state = defaultState();');
   const impar = ev(`applicationBank(MODULES[0],0,'neuronio-0').map(q=>q._source||'mini')`);
   ok(impar.length > 0 && impar.every(s=>s==='mini'), '10. reps ímpar alterna para as mini-questões');
 
-  // tópico sem mini-questão de aplicação usa a previsão sempre
+  // tópico sem mini-questão de aplicação recai sempre na previsão (ramo !minis.length
+  // de applicationBank). Desde o aprofundamento dos bancos toda aula real tem mini de
+  // aplicação, então exercitamos o ramo esvaziando um tópico com previsão e restaurando.
   const semMini = ev(`(function(){
-    const alvo = MODULES.flatMap((m,mi)=>m.lessons.map((_,li)=>({m:m,mi:mi,li:li})))
-      .find(x=>!(MINI_QUIZZES[x.m.id][x.li]||[]).some(q=>inferQuestionDimension(q,{module:x.m,lessonIndex:x.li,source:'review'})==='application'));
-    if(!alvo) return 'nenhum';
-    const k = topicKey(alvo.m.id, alvo.li);
-    ensureSrsTopic(k);
-    return applicationBank(alvo.m, alvo.li, k).map(q=>q._source||'mini').join(',');
+    const orig = MINI_QUIZZES['neuronio'][0];
+    MINI_QUIZZES['neuronio'][0] = [];
+    try {
+      ensureSrsTopic('neuronio-0');
+      return applicationBank(MODULES[0], 0, 'neuronio-0').map(q=>q._source||'mini').join(',');
+    } finally {
+      MINI_QUIZZES['neuronio'][0] = orig;
+    }
   })()`);
-  eq(semMini, 'prediction', '10. sem mini-questão de aplicação, o banco é sempre a previsão');
+  eq(semMini, 'prediction', '10. sem mini-questão de aplicação, o banco recai sempre na previsão');
 }
 
 /* ---------- 11. Aplicação cobre TODA aula, e o banco é bem formado ---------- */
