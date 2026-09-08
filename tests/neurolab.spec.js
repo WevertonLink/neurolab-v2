@@ -1437,10 +1437,11 @@ test('@coverage banco do Modo Domínio mantém padrão adversarial', async ({ pa
       integratedCases: DOMAIN_CASES.every((item) => item.modules.length >= 3)
     };
   });
-  expect(report.total).toBe(34);
+  expect(report.total).toBe(36);
   // Balanceamento anti-viés de posição. O padrão do projeto passou de "6/6/6/6
   // exato" para "diferença máxima de 1 entre A/B/C/D" quando o banco cresceu na
-  // Fatia 1 (ver audit-content e o CHANGELOG). Hoje: [9,9,8,8]. Esta catraca
+  // Fatia 1 (ver audit-content e o CHANGELOG). Com o módulo avançado memoria-mol
+  // (+1 contrafactual em C, +1 caso em D) hoje é [9,9,9,9]. Esta catraca
   // acompanha a mesma intenção, sem fixar a distribuição exata.
   expect(Math.max(...report.positions) - Math.min(...report.positions)).toBeLessThanOrEqual(1);
   expect(report.allFour).toBe(true);
