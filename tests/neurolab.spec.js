@@ -1446,7 +1446,7 @@ test('@coverage banco do Modo Domínio mantém padrão adversarial', async ({ pa
   expect(Math.max(...report.positions) - Math.min(...report.positions)).toBeLessThanOrEqual(1);
   expect(report.allFour).toBe(true);
   expect(report.unique).toBe(true);
-  expect(report.counterModules).toBe(22);
+  expect(report.counterModules).toBe(23);
   expect(report.integratedCases).toBe(true);
 });
 
