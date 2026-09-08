@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="995" viewBox="0 0 941 1672" role="img" aria-label="Infográfico do módulo avançado Memória Molecular: a porta de duas trancas do NMDA, o interruptor CaMKII, e o caminho do sinal ao gene com marcação e captura">
+<rect width="941" height="1672" fill="#12121c"/>
+<text x="470" y="58" text-anchor="middle" fill="#e9e9f0" font-size="34" font-weight="700">A fábrica que reescreve a si mesma</text>
+<text x="470" y="92" text-anchor="middle" fill="#9aa0b4" font-size="19">Do Ca²⁺ ao gene: como uma lembrança se grava</text>
+
+<line x1="60" y1="120" x2="881" y2="120" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="158" fill="#8b7cf6" font-size="22" font-weight="700">1 · A porta de duas trancas</text>
+<text x="60" y="190" fill="#9aa0b4" font-size="17">O NMDA só deixa o cálcio entrar com as duas chaves ao mesmo tempo.</text>
+<rect x="60" y="212" width="250" height="72" rx="12" fill="#8b7cf6" fill-opacity=".14" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="185" y="248" text-anchor="middle" fill="#e9e9f0" font-size="18">glutamato</text>
+<text x="185" y="272" text-anchor="middle" fill="#9aa0b4" font-size="14">chave química (do pré)</text>
+<rect x="60" y="300" width="250" height="72" rx="12" fill="#8b7cf6" fill-opacity=".14" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="185" y="336" text-anchor="middle" fill="#e9e9f0" font-size="18">despolarização</text>
+<text x="185" y="360" text-anchor="middle" fill="#9aa0b4" font-size="14">expulsa o Mg²⁺ do poro</text>
+<path d="M310 248 C360 248 360 292 400 292" fill="none" stroke="#9aa0b4" stroke-width="2"/>
+<path d="M310 336 C360 336 360 292 400 292" fill="none" stroke="#9aa0b4" stroke-width="2"/>
+<circle cx="430" cy="292" r="34" fill="#8b7cf6" fill-opacity=".28" stroke="#8b7cf6" stroke-width="2"/>
+<text x="430" y="298" text-anchor="middle" fill="#e9e9f0" font-size="20" font-weight="700">E</text>
+<path d="M464 292 L560 292" stroke="#8b7cf6" stroke-width="2.4"/><polygon points="560,292 544,284 544,300" fill="#8b7cf6"/>
+<rect x="566" y="256" width="315" height="72" rx="12" fill="#8b7cf6" fill-opacity=".34" stroke="#8b7cf6" stroke-width="2"/>
+<text x="723" y="292" text-anchor="middle" fill="#e9e9f0" font-size="19" font-weight="700">Ca²⁺ entra pelo NMDA</text>
+<text x="723" y="316" text-anchor="middle" fill="#9aa0b4" font-size="14">o sinal que detecta a coincidência de Hebb</text>
+<text x="60" y="418" fill="#9aa0b4" font-size="17">Só glutamato: porta tampada por Mg²⁺. Só despolarização: nada para abrir a tranca.</text>
+<text x="60" y="446" fill="#9aa0b4" font-size="17">As duas juntas — e apenas então — abrem a porta ao cálcio.</text>
+
+<line x1="60" y1="486" x2="881" y2="486" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="524" fill="#8b7cf6" font-size="22" font-weight="700">2 · O interruptor que se segura</text>
+<text x="60" y="556" fill="#9aa0b4" font-size="17">A dose do cálcio escolhe a direção; a CaMKII sustenta o fortalecimento.</text>
+<rect x="60" y="580" width="390" height="150" rx="14" fill="#8b7cf6" fill-opacity=".1" stroke="#8b7cf6" stroke-width="2"/>
+<text x="255" y="614" text-anchor="middle" fill="#e9e9f0" font-size="18" font-weight="700">cálcio alto e rápido</text>
+<text x="255" y="646" text-anchor="middle" fill="#9aa0b4" font-size="16">→ CaMKII se autofosforila (Thr286)</text>
+<text x="255" y="674" text-anchor="middle" fill="#9aa0b4" font-size="16">→ fica ligada sem cálcio → insere AMPA</text>
+<rect x="120" y="690" width="270" height="30" rx="7" fill="#8b7cf6" fill-opacity=".4"/>
+<text x="255" y="712" text-anchor="middle" fill="#e9e9f0" font-size="16" font-weight="700">LTP · sinapse mais forte</text>
+<rect x="491" y="580" width="390" height="150" rx="14" fill="none" stroke="#2c2c45" stroke-width="2"/>
+<text x="686" y="614" text-anchor="middle" fill="#e9e9f0" font-size="18" font-weight="700">cálcio moderado e longo</text>
+<text x="686" y="646" text-anchor="middle" fill="#9aa0b4" font-size="16">→ fosfatases (calcineurina / PP1)</text>
+<text x="686" y="674" text-anchor="middle" fill="#9aa0b4" font-size="16">→ removem AMPA</text>
+<rect x="551" y="690" width="270" height="30" rx="7" fill="#9aa0b4" fill-opacity=".18"/>
+<text x="686" y="712" text-anchor="middle" fill="#9aa0b4" font-size="16" font-weight="700">LTD · sinapse mais fraca</text>
+<text x="470" y="766" text-anchor="middle" fill="#9aa0b4" font-size="17">Mesmo íon, doses diferentes: é o que a ordem dos disparos (STDP) ajusta.</text>
+<rect x="60" y="792" width="821" height="76" rx="12" fill="#8b7cf6" fill-opacity=".08" stroke="#8b7cf6" stroke-width="1.5"/>
+<text x="86" y="826" fill="#e9e9f0" font-size="17">A autofosforilação é o truque: solta a CaMKII da dependência do cálcio.</text>
+<text x="86" y="854" fill="#9aa0b4" font-size="17">Sem ela, o sinal apagaria junto com o breve pico de Ca²⁺. Com ela, a mudança dura.</text>
+
+<line x1="60" y1="908" x2="881" y2="908" stroke="#2c2c45" stroke-width="2"/>
+<text x="60" y="946" fill="#8b7cf6" font-size="22" font-weight="700">3 · Do sinal ao gene, e a etiqueta</text>
+<text x="60" y="978" fill="#9aa0b4" font-size="17">Para durar dias, a sinapse manda um pedido ao núcleo — e etiqueta a si mesma.</text>
+<rect x="60" y="1002" width="150" height="64" rx="12" fill="#8b7cf6" fill-opacity=".22" stroke="#8b7cf6" stroke-width="1.6"/>
+<text x="135" y="1040" text-anchor="middle" fill="#e9e9f0" font-size="16">sinapse forte</text>
+<path d="M210 1034 L268 1034" stroke="#9aa0b4" stroke-width="2"/><polygon points="268,1034 254,1027 254,1041" fill="#9aa0b4"/>
+<rect x="274" y="1002" width="180" height="64" rx="12" fill="none" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="364" y="1032" text-anchor="middle" fill="#e9e9f0" font-size="15">ERK / importinas</text>
+<text x="364" y="1053" text-anchor="middle" fill="#9aa0b4" font-size="13">levam o sinal ao núcleo</text>
+<path d="M454 1034 L512 1034" stroke="#9aa0b4" stroke-width="2"/><polygon points="512,1034 498,1027 498,1041" fill="#9aa0b4"/>
+<rect x="518" y="1002" width="180" height="64" rx="12" fill="#8b7cf6" fill-opacity=".2" stroke="#8b7cf6" stroke-width="1.6"/>
+<text x="608" y="1032" text-anchor="middle" fill="#e9e9f0" font-size="16">CREB (+CBP)</text>
+<text x="608" y="1053" text-anchor="middle" fill="#9aa0b4" font-size="13">liga Arc, c-fos…</text>
+<path d="M698 1034 L756 1034" stroke="#9aa0b4" stroke-width="2"/><polygon points="756,1034 742,1027 742,1041" fill="#9aa0b4"/>
+<rect x="762" y="1002" width="119" height="64" rx="12" fill="#8b7cf6" fill-opacity=".34" stroke="#8b7cf6" stroke-width="2"/>
+<text x="821" y="1032" text-anchor="middle" fill="#e9e9f0" font-size="15">proteínas</text>
+<text x="821" y="1053" text-anchor="middle" fill="#e9e9f0" font-size="15">novas</text>
+<rect x="60" y="1092" width="821" height="150" rx="14" fill="none" stroke="#2c2c45" stroke-width="1.6"/>
+<text x="86" y="1126" fill="#e9e9f0" font-size="18" font-weight="700">Marcação e captura: por que só a sinapse certa guarda</text>
+<text x="86" y="1158" fill="#9aa0b4" font-size="16">As proteínas novas se espalham pela célula inteira — a ordem do núcleo é global.</text>
+<text x="86" y="1186" fill="#9aa0b4" font-size="16">Mas só a sinapse que deixou um tag as captura e se estabiliza (efeito específico).</text>
+<text x="86" y="1214" fill="#9aa0b4" font-size="16">Um estímulo fraco perto de um forte pega carona — associatividade em moléculas.</text>
+<rect x="60" y="1266" width="821" height="72" rx="12" fill="#8b7cf6" fill-opacity=".1" stroke="#8b7cf6" stroke-width="1.5"/>
+<text x="470" y="1300" text-anchor="middle" fill="#e9e9f0" font-size="18" font-weight="700">tag + captura + transcrição + epigenética = o engrama</text>
+<text x="470" y="1326" text-anchor="middle" fill="#9aa0b4" font-size="15">o rastro físico de uma memória</text>
+
+<text x="470" y="1420" text-anchor="middle" fill="#9aa0b4" font-size="18">Uma lembrança não é um arquivo guardado: é a fiação sendo reconstruída,</text>
+<text x="470" y="1450" text-anchor="middle" fill="#9aa0b4" font-size="18">molécula por molécula, no ponto exato onde dois neurônios se falaram juntos.</text>
+<text x="470" y="1620" text-anchor="middle" fill="#2c2c45" font-size="15">NeuroLab · avançado A1 · Memória Molecular</text>
+</svg>

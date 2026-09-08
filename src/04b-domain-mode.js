@@ -666,7 +666,40 @@ const DOMAIN_COUNTERFACTUALS = [
       "origem espacial precisa ser inferida"
     ],
     "extend": {"q": "E se a pergunta fosse 'onde exatamente', e não 'quando'?", "a": "Aí o EEG seria a ferramenta errada, e algo como a fMRI — boa no espaço, lenta no tempo — encaixaria melhor. Nenhum método é completo: escolher o método é escolher em qual eixo (tempo ou espaço) você pode confiar. Combinar métodos de perfis opostos é como se cobre a lacuna de cada um."}
+  },
+  {
+    "id": "memoria-mol-mg",
+    "module": "memoria-mol",
+    "lesson": 0,
+    "title": "O NMDA sem a rolha de magnésio",
+    "prompt": "Imagine um NMDA mutante cujo poro nunca é tampado por Mg²⁺: ele deixa Ca²⁺ entrar sempre que houver glutamato, mesmo com a célula pós em repouso. Qual previsão é mais consistente?",
+    "options": [
+      "A sinapse passa a exigir os dois sinais com rigor ainda maior, tornando a indução de LTP quase impossível em qualquer cenário.",
+      "A entrada constante de cálcio protegeria a sinapse, produzindo uma forma de LTP mais estável e mais seletiva do que a normal.",
+      "A sinapse perde o detector de coincidência e fortalece com qualquer glutamato, mesmo sem o neurônio pós estar ativo.",
+      "Nada muda na indução da LTP, porque o Mg²⁺ nunca teve qualquer papel na entrada de cálcio pelo receptor NMDA."
+    ],
+    "correct": 2,
+    "optionFeedback": [
+      "É o oposto: remover a rolha afrouxa a exigência, não a aperta — o cálcio entra com menos condições, não mais.",
+      "Cálcio entrando sem coincidência não é seletivo, e sim indiscriminado: fortaleceria tudo, o contrário de uma memória específica.",
+      "Sem a trava de voltagem, o E lógico vira um sempre-ligado: qualquer glutamato basta, e a coincidência deixa de ser exigida.",
+      "O Mg²⁺ é justamente o que bloqueia o poro em repouso; sem ele, a entrada de cálcio deixa de depender da despolarização."
+    ],
+    "explanation": "O bloqueio por Mg²⁺ é o que faz o NMDA ser uma porta lógica E: só cede quando há glutamato E despolarização ao mesmo tempo. É essa exigência dupla que detecta a coincidência entre o neurônio pré e o pós — a base física da regra de Hebb. Sem a rolha, o receptor deixaria cálcio entrar com qualquer glutamato, e a sinapse se fortaleceria mesmo sem o pós estar ativo. A memória associativa, que liga coisas que acontecem juntas, ruiria: tudo passaria a se ligar a tudo.",
+    "chain": [
+      "o Mg²⁺ não tampa mais o poro",
+      "o NMDA deixa Ca²⁺ entrar com qualquer glutamato",
+      "a coincidência pré-pós deixa de ser exigida",
+      "sinapses fortalecem sem seletividade",
+      "a memória associativa se degrada"
+    ],
+    "extend": {
+      "q": "E se, em vez de remover o Mg²⁺, você reduzisse fortemente a entrada de cálcio pelo NMDA?",
+      "a": "Aí a coincidência ainda seria detectada, mas faltaria o mensageiro que a transforma em fortalecimento: a CaMKII não seria acionada e a LTP não se induziria. É o caso oposto — aqui sobra gravação sem seletividade; lá sobraria detecção sem gravação."
+    }
   }
+
 ];
 
 const DOMAIN_CASES = [
@@ -1047,7 +1080,44 @@ const DOMAIN_CASES = [
       "recuperação organizada se deteriora"
     ],
     "extend": {"q": "E se a pessoa reduzisse a ativação antes de começar — respiração lenta, reavaliação da situação?", "a": "O estado muda a montante: menos ativação e ameaça liberam atenção e memória de trabalho, e o mesmo conhecimento volta a ser acessível e organizável. Confirma que o gargalo era o acesso dependente de estado, não o armazenamento — regular o estado é parte de recuperar o que já se sabe."}
+  },
+  {
+    "id": "espacamento-molecular",
+    "title": "Por que espaçar o estudo funciona, da molécula ao hábito",
+    "modules": [
+      "memoria-mol",
+      "esforco",
+      "memoria"
+    ],
+    "scenario": "Dois alunos estudam o mesmo total de horas. Um concentra tudo numa noite; o outro distribui em sessões espaçadas por vários dias. Semanas depois, o segundo lembra muito mais.",
+    "question": "Qual explicação liga o resultado comportamental ao que acontece nas moléculas da sinapse?",
+    "options": [
+      "Concentrar tudo numa noite fortalece mais as sinapses, porque a repetição sem intervalo mantém o cálcio alto continuamente e maximiza a transcrição dos genes da memória.",
+      "O que decide é apenas o total de horas estudadas; a distribuição no tempo não altera a molécula nem a lembrança, e o resultado observado seria um acaso.",
+      "A vantagem vem só de dormir entre as sessões, sem qualquer relação com transcrição, proteínas novas ou o esforço de recuperar o que foi esquecido.",
+      "O intervalo deixa a cascata vencer o freio da transcrição (CREB-2) e fabricar proteínas novas; e recuperar o que já esfriou é o que consolida."
+    ],
+    "correct": 3,
+    "optionFeedback": [
+      "Inverte a molécula: cálcio cronicamente alto não maximiza a L-LTP — é a dinâmica espaçada que vence o freio da transcrição.",
+      "O total de horas não é tudo: a mesma quantidade rende mais distribuída, e isso tem causa molecular, não acaso.",
+      "O sono ajuda, mas não é a história inteira: vencer o CREB-2 e o esforço de recuperar também explicam o ganho.",
+      "Une os dois níveis: o intervalo vence o repressor CREB-2 na molécula, e a recuperação esfriada consolida no comportamento."
+    ],
+    "explanation": "O caso liga três andares. Na molécula, a fase duradoura da LTP (L-LTP) exige transcrição, e essa transcrição tem um freio — o CREB-2 — que os intervalos ajudam a remover; foi o que Kandel mostrou na Aplysia. No comportamento, o efeito de espaçamento diz que a mesma quantidade de estudo rende mais distribuída, porque recuperar algo já parcialmente esquecido é o esforço que consolida. E nos sistemas de memória, o sono entre as sessões favorece a consolidação. Não são três explicações rivais: são o mesmo fenômeno visto da molécula ao hábito.",
+    "chain": [
+      "sessões são distribuídas no tempo",
+      "os intervalos ajudam a remover o freio CREB-2",
+      "a transcrição liga genes e fabrica proteínas novas",
+      "recuperar o que esfriou consolida o traço",
+      "a memória dura mais que no estudo massado"
+    ],
+    "extend": {
+      "q": "E se o aluno espaçasse as sessões, mas nunca se testasse — só relesse o material?",
+      "a": "Ele ganharia parte do efeito de espaçamento, mas perderia a outra metade: sem recuperar, falta o esforço que modifica o traço. Espaçamento e recuperação são duas alavancas distintas, e o melhor resultado usa as duas juntas."
+    }
   }
+
 ];
 
 const DOMAIN_CONNECTIONS = [

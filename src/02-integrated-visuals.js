@@ -325,6 +325,16 @@ const INTEGRATED_VISUALS = {
     caption: "A pergunta útil não é se você confia na sua intuição: é se este assunto tem padrão estável e se você já recebeu retorno sobre ele.",
     layers: [["O palpite chega sem histórico","A sensação de certeza é idêntica no especialista calibrado e em quem só repetiu. A experiência interna não separa os dois."],["As duas condições","Regularidade dá o que aprender; retorno permite aprender. Falta uma e a intuição não se forma — por mais anos que passem."],["O contrapeso obrigatório","Onde há regularidade e retorno, a intuição do especialista é genuinamente válida — o que não é o mesmo que vencer uma fórmula. O problema nunca foi a expertise: foi onde ela foi aplicada."]],
     clarify: "O que decide não é a dificuldade do problema. A atmosfera é dos sistemas mais caóticos que existem, e a previsão do tempo calibra — porque o resultado volta amanhã, milhares de vezes."
+  },
+  'memoria-mol': {
+    title: "A fábrica que reescreve a si mesma",
+    lead: "Uma visão única para ligar a porta do NMDA, o interruptor da CaMKII e o caminho do sinal até o gene.",
+    thumb: "./assets/visuals/avancado-01-memoria-molecular-thumb.svg",
+    src: "./assets/visuals/avancado-01-memoria-molecular.svg",
+    alt: "Infográfico vertical em três faixas. Na primeira, glutamato e despolarização convergem numa porta lógica E que libera a entrada de cálcio pelo NMDA. Na segunda, duas colunas comparam cálcio alto, que aciona a CaMKII e produz LTP, com cálcio moderado, que aciona fosfatases e produz LTD, e uma faixa nota que a autofosforilação sustenta a mudança. Na terceira, o sinal viaja da sinapse ao núcleo (ERK/importinas → CREB → proteínas novas) e a marcação e captura explica por que só a sinapse etiquetada guarda o traço — o engrama.",
+    caption: "Uma lembrança não é um arquivo guardado: é a fiação sendo reconstruída, molécula por molécula, no ponto onde dois neurônios se falaram ao mesmo tempo.",
+    layers: [["A porta de duas trancas","O NMDA só deixa o cálcio entrar com glutamato E despolarização ao mesmo tempo — é assim que ele detecta que o neurônio de antes e o de depois dispararam juntos."],["O interruptor que se segura","Cálcio alto aciona a CaMKII, que se autofosforila e insere AMPA (LTP); cálcio moderado aciona fosfatases que removem AMPA (LTD). A autofosforilação é o que sustenta a mudança depois que o sinal passa."],["Do sinal ao gene, e a etiqueta","Para durar dias, o sinal vai ao núcleo (o CREB liga genes e novas proteínas são feitas); só a sinapse etiquetada captura essas proteínas. Tag, captura, transcrição e epigenética compõem o engrama."]],
+    clarify: "É o retrato mais estudado da plasticidade, não o único: há formas de LTP que não passam pelo NMDA, e gravar uma memória real envolve muitos neurônios e circuitos, não uma sinapse só."
   }
 };
 

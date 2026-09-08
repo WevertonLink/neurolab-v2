@@ -990,8 +990,14 @@ function moduleTopicAverage(m){
    quem terminou os dezoito cairia de 100% para 82% sem ter desaprendido nada.
    Pela mesma razão eles ficam fora do mapa de vias, que representa sistemas do
    cérebro — metacognição não é um deles. */
-const trilhaPrincipal = ()=> MODULES.filter(m=>m.trilha !== 'extras');
+/* A trilha principal são os 18 módulos da Fase 1. Extras (metacognição) e
+   avançados (Fase 2) ficam de fora dela — e por isso fora da barra-troféu, do
+   mapa de vias e do divisor de progresso. O avançado é a Fase 2: um segundo
+   curso que desbloqueia quando a Fase 1 está inteira (todos os quizzes feitos). */
+const trilhaPrincipal = ()=> MODULES.filter(m=>m.trilha !== 'extras' && m.trilha !== 'avancado');
 const trilhaExtras = ()=> MODULES.filter(m=>m.trilha === 'extras');
+const trilhaAvancado = ()=> MODULES.filter(m=>m.trilha === 'avancado');
+const faseUmCompleta = ()=> { const t=trilhaPrincipal(); return t.length>0 && t.every(m=>state.doneQuiz[m.id]); };
 
 function moduleProgress(m){
   const total=m.lessons.length;
@@ -1240,11 +1246,11 @@ function renderDashboard(){
     const done=state.doneQuiz[m.id];
     let read=0; for(let k=0;k<m.lessons.length;k++) if(state.lessons[m.id+'-'+k]) read++;
     const btn=document.createElement('button');
-    btn.className='card'+(m.trilha==='extras'?' card-extra':''); btn.style.setProperty('--mc',m.color);
+    btn.className='card'+(m.trilha==='extras'?' card-extra':'')+(m.trilha==='avancado'?' card-avancado':''); btn.style.setProperty('--mc',m.color);
     btn.onclick=()=>openModule(i);
     btn.innerHTML=`
       ${done?'<span class="badge done">melhor '+Math.round(mastery*100)+'%</span>':(p>0?'<span class="badge">em curso</span>':'')}
-      <div class="cn">${m.trilha==='extras'?'EXTRA':'MÓDULO'} ${m.n}</div>
+      <div class="cn">${m.trilha==='extras'?'EXTRA':(m.trilha==='avancado'?'AVANÇADO':'MÓDULO')} ${m.n}</div>
       <div class="ct">${m.title}</div>
       <div class="cd">${m.tag}</div>
       <div class="cbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p*100)}" aria-label="Progresso do módulo ${m.n}"><i style="width:${p*100}%"></i></div>
@@ -1261,6 +1267,39 @@ function renderDashboard(){
       'Fica fora da conta de progresso acima — estes não são vias do cérebro.</p>';
     wrap.appendChild(cab);
     extras.forEach(m=> wrap.appendChild(cartao(m, MODULES.indexOf(m))));
+  }
+  const avancados = trilhaAvancado();
+  if(avancados.length){
+    const cab = document.createElement('div');
+    cab.className = 'cards-sec cards-sec-avancado';
+    if(faseUmCompleta()){
+      const feitos = avancados.filter(m=>state.doneQuiz[m.id]).length;
+      cab.innerHTML = '<h3>Fase 2 · Avançado</h3>' +
+        '<p>Você concluiu a Fase 1 — o nível avançado está aberto. Aqui a neurociência desce ao ' +
+        'nível molecular e biofísico, na mesma didática de sempre. <b>' + feitos + '/' + avancados.length +
+        '</b> ' + (avancados.length===1?'módulo avançado concluído':'módulos avançados concluídos') + '.</p>';
+      wrap.appendChild(cab);
+      avancados.forEach(m=> wrap.appendChild(cartao(m, MODULES.indexOf(m))));
+    } else {
+      const faltam = trilhaPrincipal().filter(m=>!state.doneQuiz[m.id]).length;
+      cab.innerHTML = '<h3>Fase 2 · Avançado <span class="lock" aria-hidden="true">🔒</span></h3>' +
+        '<p>Um segundo curso, mais fundo: do Ca²⁺ ao gene, a plasticidade molécula a molécula, ' +
+        'o que acontece no núcleo. Conclua a Fase 1 para desbloquear — ' +
+        (faltam>0 ? ('faltam <b>' + faltam + '</b> ' + (faltam===1?'módulo':'módulos') + ' (fazer o quiz de cada um).') :
+                    'termine os quizzes dos módulos que faltam.') + '</p>';
+      wrap.appendChild(cab);
+      avancados.forEach(m=>{
+        const t=document.createElement('div');
+        t.className='card card-avancado card-locked'; t.style.setProperty('--mc',m.color);
+        t.setAttribute('aria-disabled','true');
+        t.innerHTML = '<span class="badge lockbadge" aria-hidden="true">🔒 bloqueado</span>' +
+          '<div class="cn">AVANÇADO ' + m.n + '</div>' +
+          '<div class="ct">' + m.title + '</div>' +
+          '<div class="cd">' + m.tag + '</div>' +
+          '<div class="cmeta"><span>conclua a Fase 1 para abrir</span></div>';
+        wrap.appendChild(t);
+      });
+    }
   }
 }
 function renderInsight(op){
@@ -1617,7 +1656,7 @@ function loadReviewTopic(){
     if(ancoras.length){
       const reps = ((srsDims(t.key)||{}).location||{}).reps || 0;
       const a = ancoras[reps % ancoras.length];
-      review.loc = { term:a.term, part:a.part, anatId:m.id, isProcess:(m.trilha==='extras'), answered:false, chosen:null };
+      review.loc = { term:a.term, part:a.part, anatId:m.id, isProcess:(m.trilha==='extras'||m.trilha==='avancado'), answered:false, chosen:null };
       review.topicQs = []; review.qi = 0; review.topicCorrect = 0;
       if(typeof beginEvidenceBatch==='function') beginEvidenceBatch();
       renderReviewHead();
@@ -7324,6 +7363,203 @@ MODULES.push({
      ew:'Não são dois circuitos identificados, e também não é metáfora vazia: há diferenças reais de velocidade e de esforço. E rápido não quer dizer pior — a aula seguinte mostra quando ele é melhor.'}
   ]
 });
+
+MODULES.push({
+  id:'memoria-mol', n:'A1', trilha:'avancado', title:'Memória Molecular', color:'#8b7cf6', hex:'#8b7cf6',
+  tag:'Do Ca²⁺ ao gene: como uma lembrança se grava',
+  intro:'A Fase 1 mostrou QUE a sinapse aprende. Aqui a gente desce até a oficina e olha as ferramentas, uma a uma: o íon que decide, o interruptor que se tranca sozinho, o relógio que escolhe fortalecer ou enfraquecer, e a carta que a sinapse manda ao núcleo quando a lembrança precisa durar. Mesma didática de sempre — uma metáfora abre a porta, e aí o mecanismo aparece inteiro.',
+  lessons:[
+    {t:'O detector de coincidência',
+     b:`<p>Imagine uma porta com <b>duas trancas</b> e uma fechadura só. A primeira cede a uma <b>chave química</b>; a segunda, só a um <b>pulso elétrico</b>. Girar uma não adianta — a porta só abre quando as duas são acionadas <i>juntas</i>. Essa porta existe na sinapse, e o que entra quando ela abre é o sinal que manda a memória se gravar.</p><p>Quando o neurônio de cima dispara, libera <span class="term">glutamato</span>. O receptor <span class="term">AMPA</span> abre na hora: Na⁺ entra, a membrana <b>despolariza</b>. Já o <span class="term">receptor NMDA</span> é a porta de duas trancas — mesmo com glutamato ligado, o poro fica <b>entupido por um íon Mg²⁺</b>, uma rolha que só sai quando a membrana <i>já</i> está despolarizada. Só então, com glutamato presente <b>e</b> poro livre, o NMDA deixa entrar <span class="term">cálcio</span>. É por isso que o NMDA é um <span class="term">detector de coincidência</span>: ele mede, na própria química, se o neurônio pré e o pós estiveram ativos no mesmo instante — a regra de Hebb virada íon. E é o Ca²⁺ que passa porque a <span class="term">força motriz</span> o empurra forte para dentro (o equilíbrio do cálcio fica lá em cima, ~+120 mV). Esse cálcio local é o mensageiro que dispara todo o resto.</p>`},
+    {t:'A CaMKII: o interruptor que se segura',
+     b:`<p>Um interruptor comum volta a desligar quando você tira o dedo. Agora imagine um que, uma vez ligado, <b>se tranca sozinho</b> e continua aceso mesmo depois de o dedo sair. É esse tipo de interruptor que o cálcio liga.</p><p>O Ca²⁺ que entrou pelo NMDA ativa a <span class="term">CaMKII</span>. E aqui está a mágica: ela se <span class="term">autofosforila</span> num ponto específico (a Thr286) e passa a ficar ativa <b>mesmo sem cálcio</b> — uma memória molecular que dura muito além do sinal que a acendeu. Ligada, a CaMKII fosforila e <b>insere receptores AMPA</b> na membrana: mais AMPA significa resposta maior ao mesmo glutamato — isso <i>é</i> a <span class="term">LTP</span>. Um caso lindo: as <span class="term">sinapses silenciosas</span>, que têm NMDA mas quase nenhum AMPA, não respondem em repouso — até a LTP entregar AMPA e elas ganharem voz. Veja o cuidado: a autofosforilação sustenta a fase inicial, mas uma lembrança que dura dias exige mais do que uma proteína teimosa — exige ir ao núcleo (aula 3).</p>`},
+    {t:'O relógio de Hebb: STDP',
+     b:`<p>"Dispara junto, conecta junto" está quase certo — falta um relógio. O que decide não é só disparar junto, é a <b>ordem</b>, na casa dos milissegundos.</p><p>Na <span class="term">STDP</span> (plasticidade dependente do tempo do disparo), o pré disparar <i>pouco antes</i> do pós fortalece (LTP); o pós antes do pré <b>enfraquece</b> (<span class="term">LTD</span>). O mesmo cálcio decide os dois: entrada <b>alta e rápida</b> aciona a CaMKII e fortalece; entrada <b>moderada e prolongada</b> aciona fosfatases (<span class="term">calcineurina</span>/PP1) que <b>removem</b> AMPA e enfraquecem. É a dose e o tempo do cálcio, não outro mecanismo, que escolhem a direção. E o limiar entre fortalecer e enfraquecer não é fixo: ele <i>desliza</i> conforme a história recente de atividade da célula — a <span class="term">metaplasticidade</span> (a ideia BCM). Um circuito muito ativo fica mais difícil de fortalecer e mais fácil de enfraquecer, o que o impede de saturar.</p>`},
+    {t:'Do sináptico ao núcleo',
+     b:`<p>A sinapse fica na ponta de um dendrito, a uma distância enorme do núcleo — em escala celular, é como mandar uma carta de outra cidade. E às vezes ela precisa mandar essa carta: quando a lembrança tem de <b>durar</b>.</p><p>A LTP inicial (<span class="term">E-LTP</span>) usa só proteínas que já existem e dura horas. A LTP que persiste (<span class="term">L-LTP</span>) exige <b>transcrição de genes e síntese de novas proteínas</b>. Para isso, o sinal viaja da sinapse ao núcleo: quinases como a <span class="term">ERK</span> translocam, e <span class="term">importinas</span> carregam mensageiros pelo axônio até o núcleo. Lá, o fator de transcrição <span class="term">CREB</span> é fosforilado, recruta o coativador CBP e liga os <span class="term">genes de expressão imediata</span> (Arc, c-fos, Zif268). Foi na lesma <i>Aplysia</i> que Kandel desenhou isso: cAMP → PKA → CREB, com um <b>freio</b> (CREB-2) que precisa ser removido — e é por isso que a prática <b>espaçada</b>, que vence esse freio, fixa melhor. Fica um enigma: o núcleo é um só e a ordem que ele dá é global — mas a sinapse que muda é uma específica. Como?</p>`},
+    {t:'Tag e captura: por que só algumas guardam',
+     b:`<p>A fábrica de proteínas fica no centro (núcleo e corpo celular) e o que ela produz se espalha pela célula inteira. Então por que só a sinapse <i>certa</i> — aquela que foi ativada — fica mais forte, e não todas de uma vez?</p><p>A resposta é a <span class="term">marcação e captura sináptica</span>: a sinapse ativada deixa ali um <b>tag</b> local e temporário. As proteínas novas, feitas no centro, viajam para toda parte, mas só as sinapses <b>etiquetadas</b> as capturam e se estabilizam. É isso que reconcilia o enigma da aula 3 — ordem global, mudança específica. Consequência elegante: um estímulo <b>fraco</b> (que cria tag mas não dispara transcrição) pode "pegar carona" nas proteínas produzidas por um estímulo <b>forte</b> próximo no tempo — associatividade em escala molecular. Por cima disso, a <span class="term">epigenética</span> (acetilação de histonas) mantém os genes certos acessíveis por mais tempo, e o mRNA de <span class="term">Arc</span> volta justamente para a sinapse ativa. É desse conjunto — tag, captura, transcrição, epigenética — que nasce o <span class="term">engrama</span>: o rastro físico de uma memória.</p>`}
+  ],
+  quiz:[
+    {q:'O que o receptor NMDA exige para deixar o cálcio entrar?',
+     o:['Glutamato ligado E a membrana já despolarizada, ao mesmo tempo','Apenas glutamato, em qualquer estado da membrana','Apenas despolarização, mesmo sem glutamato','Que o Mg²⁺ esteja tampando o poro'], c:0, l:0,
+     er:'São as duas trancas: a chave química (glutamato) e a elétrica (a despolarização que expulsa o Mg²⁺). Só com as duas o Ca²⁺ passa — é isso que detecta a coincidência entre pré e pós.',
+     ew:'Glutamato sozinho encontra o poro ainda tampado por Mg²⁺; despolarização sozinha abre o poro mas não há o que ligar o receptor. E o Mg²⁺ no poro é justamente o que BLOQUEIA a entrada.'},
+    {q:'Por que a autofosforilação da CaMKII (na Thr286) é tão importante para a memória?',
+     o:['Ela mantém a CaMKII ativa mesmo depois de o cálcio ir embora — um sinal que se sustenta','Ela desliga a CaMKII assim que o cálcio some','Ela transforma a CaMKII num receptor de glutamato','Ela impede a inserção de receptores AMPA'], c:0, l:1,
+     er:'Autofosforilada, a CaMKII fica ligada sozinha, sem depender do cálcio — uma memória molecular que dura além do estímulo, e que insere AMPA para fortalecer a sinapse.',
+     ew:'É o contrário de desligar: ela se mantém acesa. E ela não vira receptor nem bloqueia AMPA — ela justamente insere AMPA.'},
+    {q:'Na STDP, o que decide se uma sinapse vai fortalecer (LTP) ou enfraquecer (LTD)?',
+     o:['A ordem e a dose do cálcio: alto e rápido fortalece; moderado e prolongado enfraquece','O tipo de neurotransmissor liberado','A distância entre os dois neurônios','A cor da célula pós-sináptica'], c:0, l:2,
+     er:'Pré antes de pós dá cálcio alto e rápido → CaMKII → LTP; a ordem inversa dá cálcio moderado → fosfatases (calcineurina/PP1) → LTD. Mesmo íon, doses diferentes, direções opostas.',
+     ew:'Não é o transmissor nem a geometria: é a quantidade e o tempo da entrada de cálcio que escolhem o rumo.'},
+    {q:'O que distingue a LTP inicial (E-LTP) da LTP duradoura (L-LTP)?',
+     o:['A L-LTP exige transcrição de genes e síntese de novas proteínas; a E-LTP não','A E-LTP dura mais que a L-LTP','A L-LTP não envolve o receptor NMDA','A E-LTP acontece só no núcleo'], c:0, l:3,
+     er:'A E-LTP usa proteínas prontas e dura horas; para durar dias, a L-LTP precisa que o sinal chegue ao núcleo, ative o CREB e fabrique proteínas novas.',
+     ew:'É a L-LTP que dura mais, justamente por exigir genes novos; e a E-LTP acontece na sinapse, não no núcleo.'},
+    {q:'Como a "marcação e captura sináptica" resolve o paradoxo entre um núcleo global e uma mudança específica de sinapse?',
+     o:['A sinapse ativa deixa um tag local; só sinapses etiquetadas capturam as proteínas feitas no centro','O núcleo envia proteínas só para uma sinapse por vez','Cada sinapse tem seu próprio núcleo','As proteínas novas fortalecem todas as sinapses igualmente'], c:0, l:4,
+     er:'As proteínas do núcleo se espalham por toda a célula, mas só as sinapses com tag as capturam e se estabilizam — ordem global, efeito específico.',
+     ew:'O núcleo não endereça uma sinapse de cada vez, e não há um núcleo por sinapse. Se todas fortalecessem igual, não haveria memória específica.'}
+  ]
+});
+
+/* ===================== memoria-mol · satélites (Fase 2) ===================== */
+
+MINI_QUIZZES['memoria-mol']=[
+  [
+    {lvl:0,q:"O poro do receptor NMDA, em repouso, é tapado por qual íon?",o:["Mg²⁺ (magnésio)","Cl⁻ (cloreto)","K⁺ (potássio)"],c:0,er:"Em repouso um Mg²⁺ funciona como rolha dentro do poro do NMDA; ele só sai quando a membrana despolariza.",ew:"Não é cloreto nem potássio — é o magnésio, e a graça é que esse bloqueio depende da voltagem."},
+    {lvl:0,q:"Qual receptor carrega a transmissão rápida do dia a dia, abrindo assim que o glutamato chega?",o:["AMPA","NMDA","O transportador de glutamato"],c:0,er:"O AMPA é o portão rápido: glutamato liga, ele abre, o Na⁺ entra e a membrana despolariza.",ew:"O NMDA existe para detectar coincidência, não para a transmissão comum; e o transportador recolhe glutamato, não o recebe como sinal."},
+    {lvl:2,q:"Por que o NMDA só deixa o cálcio entrar quando há glutamato E despolarização ao mesmo tempo?",o:["Porque o glutamato abre a tranca química, mas só a despolarização expulsa o Mg²⁺ que tampa o poro","Porque o glutamato sozinho não consegue se ligar ao receptor em repouso","Porque a despolarização é o que fabrica o glutamato na fenda"],c:0,er:"São duas travas: glutamato liga (chave química) e a despolarização remove o bloqueio de Mg²⁺ (chave elétrica). Só com as duas o Ca²⁺ passa — e é isso que detecta a coincidência entre pré e pós.",ew:"O glutamato se liga normalmente mesmo em repouso; e a despolarização não fabrica glutamato — ela desentope o poro."},
+    {lvl:2,q:"Por que é o cálcio, e não o sódio, que atravessa o NMDA e serve de sinal de aprendizado?",o:["Porque a força motriz empurra o Ca²⁺ fortemente para dentro e ele aciona as enzimas da plasticidade","Porque o sódio não consegue passar por nenhum receptor","Porque o cálcio é a única partícula com carga positiva na célula"],c:0,er:"O equilíbrio do cálcio fica lá em cima (~+120 mV), então há sempre um empurrão forte para dentro; e, uma vez dentro, o Ca²⁺ é o mensageiro que dispara a CaMKII e o resto.",ew:"O sódio passa por vários canais, inclusive pelo AMPA; e há outros íons positivos (Na⁺, K⁺). O que distingue o cálcio é o papel de mensageiro químico."},
+    {lvl:1,q:"Durante um experimento, a célula pós é mantida despolarizada à força, mas nenhum glutamato é liberado. O esperado para a LTP é:",o:["Nenhuma LTP — falta o glutamato, uma das duas condições do NMDA","LTP forte, porque a despolarização já basta sozinha","LTD imediata, apagando a sinapse"],c:0,er:"O NMDA exige as duas chaves. Poro livre, mas sem glutamato para abrir a tranca química, o Ca²⁺ não entra — e sem cálcio não há fortalecimento.",ew:"Despolarização sozinha não basta: é exatamente a coincidência com o glutamato que o NMDA foi feito para detectar."}
+  ],
+  [
+    {lvl:0,q:"A autofosforilação que mantém a CaMKII ativa acontece em qual resíduo?",o:["Treonina 286 (Thr286)","Serina 133","Tirosina 705"],c:0,er:"Ao se autofosforilar na Thr286, a CaMKII passa a ficar ligada mesmo sem cálcio — uma memória molecular.",ew:"Ser133 é o sítio famoso do CREB (aula 4), e a Tyr705 é de outra via; o interruptor da CaMKII é a Thr286."},
+    {lvl:0,q:"Sinapses silenciosas têm receptores NMDA, mas quase nenhum de qual outro tipo?",o:["AMPA","GABA","Dopaminérgico"],c:0,er:"Sem AMPA, elas não respondem em repouso — até a LTP entregar AMPA e elas ganharem voz.",ew:"GABA é inibitório e dopamina é neuromodulação; a sinapse silenciosa é glutamatérgica, e o que lhe falta é o AMPA."},
+    {lvl:2,q:"Por que a autofosforilação da CaMKII funciona como uma 'memória molecular'?",o:["Porque mantém a enzima ativa mesmo depois de o cálcio ir embora — o sinal se sustenta sozinho","Porque desliga a enzima assim que o cálcio some","Porque transforma a CaMKII num receptor de glutamato"],c:0,er:"Autofosforilada, a CaMKII fica ligada sem depender do cálcio: uma memória que dura além do estímulo e que insere AMPA para fortalecer a sinapse.",ew:"É o contrário de desligar: ela se mantém acesa. E ela não vira receptor — ela insere receptores AMPA."},
+    {lvl:2,q:"Como a inserção de mais receptores AMPA produz o fortalecimento da sinapse (a LTP)?",o:["Com mais AMPA na membrana, o mesmo glutamato gera uma resposta elétrica maior","Removendo NMDA da membrana para dar lugar ao AMPA","Impedindo o glutamato de se ligar, o que acalma a sinapse"],c:0,er:"Mais AMPA significa mais corrente para a mesma quantidade de glutamato — a sinapse responde mais forte, e isso é a LTP.",ew:"A LTP não remove NMDA nem bloqueia o glutamato: ela aumenta a resposta ao glutamato pondo mais AMPA para receber."},
+    {lvl:1,q:"Numa situação em que a CaMKII é impedida de se autofosforilar, o que se espera da LTP?",o:["A LTP fica prejudicada, porque falta o interruptor que se sustenta e insere AMPA","A LTP fica mais forte e mais estável","Nada muda, porque a CaMKII não participa da LTP"],c:0,er:"Sem a autofosforilação, o sinal do cálcio não se sustenta e a inserção de AMPA falha — a base inicial da LTP se enfraquece.",ew:"A CaMKII é central na indução da LTP; travá-la não fortalece nem é indiferente — prejudica."}
+  ],
+  [
+    {lvl:0,q:"Na STDP, o neurônio pré disparar pouco antes do pós costuma produzir:",o:["Fortalecimento da sinapse (LTP)","Enfraquecimento da sinapse (LTD)","Nenhuma mudança, em nenhum caso"],c:0,er:"Pré antes de pós, na casa dos milissegundos, é a ordem que fortalece: a marca temporal da causalidade de Hebb.",ew:"A ordem inversa (pós antes de pré) é a que enfraquece; e há mudança, sim — a direção é o que a ordem decide."},
+    {lvl:0,q:"Qual enzima é acionada por cálcio moderado e prolongado, removendo AMPA e enfraquecendo a sinapse?",o:["Calcineurina (com a PP1)","CaMKII","Adenilato ciclase"],c:0,er:"Cálcio moderado aciona fosfatases como a calcineurina/PP1, que retiram AMPA — a base da LTD.",ew:"A CaMKII é acionada por cálcio alto e faz o oposto (fortalece); a adenilato ciclase é de outra via."},
+    {lvl:2,q:"Por que o mesmo íon cálcio pode tanto fortalecer quanto enfraquecer uma sinapse?",o:["Porque a dose e o tempo do cálcio decidem: alto e rápido aciona a CaMKII; moderado e prolongado, as fosfatases","Porque existem dois tipos de cálcio, um bom e um ruim","Porque o cálcio só fortalece, e o enfraquecimento vem de outro íon"],c:0,er:"É o mesmo cálcio: a quantidade e a duração da entrada escolhem qual enzima domina, e com ela a direção da mudança.",ew:"Não há dois cálcios, e o enfraquecimento também depende do cálcio — só que numa faixa diferente de dose e tempo."},
+    {lvl:2,q:"Por que a metaplasticidade (o limiar que desliza) impede um circuito muito ativo de saturar?",o:["Porque muita atividade recente eleva o limiar, tornando mais difícil fortalecer e mais fácil enfraquecer","Porque ela apaga todas as sinapses de uma vez","Porque ela impede qualquer mudança para sempre"],c:0,er:"O limiar entre LTP e LTD não é fixo: ele acompanha a história de atividade da célula (a ideia BCM), o que mantém a rede num regime útil.",ew:"A metaplasticidade não apaga nem congela a sinapse: ela move o ponto de virada para evitar a saturação."},
+    {lvl:1,q:"Numa situação em que o pós dispara sistematicamente antes do pré, o que a STDP prevê para essa sinapse?",o:["Enfraquecimento (LTD), porque a ordem inversa gera cálcio moderado","Fortalecimento (LTP), porque qualquer disparo junto fortalece","Nenhum efeito, porque só a frequência importa"],c:0,er:"Pós-antes-de-pré é a ordem que enfraquece: cálcio moderado aciona fosfatases, e a sinapse perde AMPA.",ew:"Não é 'qualquer disparo junto': a ordem importa. E a STDP mostra justamente que o tempo relativo, não só a frequência, decide."}
+  ],
+  [
+    {lvl:0,q:"A LTP que persiste por dias (L-LTP) exige, além de proteínas já prontas, o quê?",o:["Transcrição de genes e síntese de novas proteínas","Apenas mais glutamato na fenda","A remoção do hipocampo"],c:0,er:"A E-LTP usa proteínas existentes e dura horas; para durar dias, a L-LTP precisa fabricar proteínas novas.",ew:"Mais glutamato não basta para a fase duradoura, e o hipocampo não é removido — o que muda é a exigência de genes novos."},
+    {lvl:0,q:"Qual fator de transcrição, uma vez fosforilado, liga os genes de expressão imediata como Arc e c-fos?",o:["CREB","CaMKII","AMPA"],c:0,er:"O CREB fosforilado recruta o coativador CBP e acende os genes de expressão imediata que sustentam a memória duradoura.",ew:"A CaMKII age na sinapse, não é fator de transcrição; e o AMPA é um receptor, não liga genes."},
+    {lvl:2,q:"Por que uma memória duradoura precisa que o sinal chegue até o núcleo?",o:["Porque só no núcleo os genes são lidos para fabricar as proteínas novas que estabilizam a mudança","Porque o núcleo guarda o glutamato de reserva","Porque a sinapse não tem contato com o resto da célula"],c:0,er:"Durar dias exige proteínas novas, e produzi-las começa com transcrição — que só acontece no núcleo.",ew:"O núcleo não estoca glutamato; e a sinapse se comunica com a célula, tanto que manda o sinal até o núcleo."},
+    {lvl:2,q:"Por que a prática espaçada fixa melhor do que a massada, na leitura molecular de Kandel na Aplysia?",o:["Porque os intervalos ajudam a vencer o freio (CREB-2) e a manter a transcrição ligada","Porque o espaçamento aumenta a quantidade de glutamato liberado","Porque massar o treino destrói o núcleo"],c:0,er:"A cascata cAMP→PKA→CREB precisa superar um repressor (CREB-2); o treino espaçado remove esse freio de forma mais eficaz, favorecendo a fase que exige genes novos.",ew:"Não é a quantidade de glutamato nem dano ao núcleo: é a dinâmica temporal que vence o repressor e sustenta a transcrição."},
+    {lvl:1,q:"Comparado ao treino massado, o treino espaçado, no mesmo total de tentativas, tende a produzir memória:",o:["Mais duradoura","Mais fraca","Idêntica, porque o total é o mesmo"],c:0,er:"Espaçar dá tempo às cascatas que ligam a transcrição, favorecendo a L-LTP — a mesma lógica molecular por trás da revisão espaçada.",ew:"O total de tentativas é igual, mas a distribuição no tempo muda o resultado molecular: espaçar rende mais."}
+  ],
+  [
+    {lvl:0,q:"Como se chama a marca local e temporária que a sinapse ativada deixa, permitindo capturar as proteínas novas?",o:["O tag (etiqueta sináptica)","O axônio","A bainha de mielina"],c:0,er:"A sinapse ativada deixa um tag; só sinapses etiquetadas capturam as proteínas feitas no centro e se estabilizam.",ew:"Axônio e mielina são estruturas do neurônio, não a marca local da sinapse ativada — essa marca é o tag."},
+    {lvl:0,q:"O rastro físico de uma memória, montado por tag, captura, transcrição e epigenética, recebe que nome?",o:["Engrama","Sinapse silenciosa","Potencial de ação"],c:0,er:"Engrama é o nome do rastro físico da memória — o conjunto de mudanças que a sustenta.",ew:"Sinapse silenciosa é um estado de uma sinapse, e o potencial de ação é um sinal elétrico; nenhum é o rastro da memória."},
+    {lvl:2,q:"Por que só a sinapse etiquetada se fortalece, se as proteínas novas se espalham pela célula inteira?",o:["Porque as proteínas viajam para toda parte, mas só as sinapses com tag conseguem capturá-las e se estabilizar","Porque cada sinapse tem seu próprio núcleo","Porque o núcleo envia proteína só para uma sinapse por vez"],c:0,er:"É a marcação e captura: a ordem do núcleo é global, mas o efeito é específico porque só o tag captura as proteínas.",ew:"Não há um núcleo por sinapse, e o núcleo não endereça uma sinapse de cada vez — quem seleciona é o tag local."},
+    {lvl:2,q:"Por que um estímulo fraco pode 'pegar carona' e formar memória duradoura ao ocorrer perto de um forte?",o:["Porque o fraco cria o tag e captura as proteínas produzidas pela transcrição que o estímulo forte disparou","Porque o estímulo fraco também dispara transcrição sozinho","Porque o estímulo forte apaga o fraco"],c:0,er:"O fraco faz tag mas não liga a transcrição; se um forte próximo no tempo fabrica proteínas, o tag do fraco as captura — associatividade em escala molecular.",ew:"Sozinho, o fraco não dispara transcrição suficiente; e o forte não apaga o fraco — ele o socorre com proteínas."},
+    {lvl:1,q:"Numa situação em que um estímulo fraco chega isolado, sem nenhum estímulo forte por perto, o que se espera da memória?",o:["Ela tende a ser passageira — há tag, mas faltam as proteínas novas para estabilizá-la","Ela se torna permanente do mesmo jeito","Ela apaga memórias vizinhas"],c:0,er:"Sem um estímulo forte por perto para disparar a transcrição, o tag do estímulo fraco não tem o que capturar, e a mudança não se estabiliza.",ew:"O estímulo fraco isolado não basta para a fase duradoura, e não apaga vizinhos: apenas não é capturado."}
+  ]
+];
+
+PREDICT['memoria-mol']=[
+  {q:"Uma sinapse recebe glutamato de novo, e de novo — mas a célula pós mal se mexe, fica abaixo do limiar. Essa sinapse vai fortalecer?",o:["Não: sem despolarização suficiente, o Mg²⁺ não sai e o cálcio não entra","Sim: glutamato repetido, por si só, já fortalece","Sim, mas só depois de muitas horas"],c:0,
+   after:"Repetir estímulo fraco não fortalece — falta a chave elétrica que expulsa o Mg²⁺. Por isso a LTP precisa de cooperatividade (várias entradas somando) ou de um disparo pós forte. Glutamato sozinho, por mais que insista, bate numa porta ainda trancada."},
+  {q:"Depois que o cálcio já foi todo bombeado para fora da espinha, a CaMKII autofosforilada continua fortalecendo a sinapse?",o:["Sim: autofosforilada, ela segue ativa mesmo sem cálcio","Não: sem cálcio ela desliga na hora","Só se um novo glutamato chegar naquele instante"],c:0,
+   after:"Esse é o pulo do gato da aula: a autofosforilação na Thr286 solta a CaMKII da dependência do cálcio. Ela vira um sinal que se sustenta sozinho — a razão de a fase inicial da memória durar mais do que o breve pico de cálcio que a acendeu."},
+  {q:"Duas sinapses recebem o mesmo cálcio total, mas uma o recebe num pico rápido e a outra num fluxo moderado e longo. Elas mudam na mesma direção?",o:["Não: o pico rápido tende à LTP; o fluxo moderado e longo, à LTD","Sim: mesmo cálcio total, mesma mudança","Nenhuma das duas muda"],c:0,
+   after:"O que decide não é só quanto cálcio, é como ele chega. Pico alto aciona a CaMKII (fortalece); fluxo moderado aciona as fosfatases (enfraquece). É o mesmo íon lido de dois jeitos — a base química de por que a ordem dos disparos importa na STDP."},
+  {q:"Você bloqueia a síntese de proteínas novas logo após um treino forte. A memória de curtíssimo prazo some, mas e a de horas contra a de dias?",o:["A de horas (E-LTP) resiste; a de dias (L-LTP) é a que falha","As duas somem igualmente na hora","Nenhuma é afetada, porque proteína não importa"],c:0,
+   after:"Aqui a aula separa dois andares. A E-LTP roda com proteínas prontas e sobrevive ao bloqueio; a L-LTP depende de fabricar proteínas novas, então é ela que desaba. É a assinatura experimental da fronteira entre memória de horas e memória que dura."},
+  {q:"Um estímulo forte numa sinapse fabrica proteínas que se espalham pela célula toda. Por que a sinapse vizinha, que recebeu só um toque fraco, também acaba fortalecida — e a de longe, não?",o:["Porque a vizinha fraca criou um tag e capturou as proteínas; a de longe, sem estímulo, não fez tag","Porque as proteínas só andam para o lado","Porque a distância física aumenta a força da sinapse"],c:0,
+   after:"É a marcação e captura em ação: as proteínas viajam para toda parte, mas só quem tem tag as pega. A vizinha fraca fez tag e aproveitou a produção do forte; a sinapse sem nenhum estímulo não etiquetou nada, e as mesmas proteínas passam por ela sem parar."}
+];
+
+CHAIN['memoria-mol']=[
+  {s:["Glutamato é liberado e liga-se a AMPA e NMDA","O AMPA abre e o Na⁺ entra, despolarizando a membrana pós","A despolarização somada expulsa o Mg²⁺ do poro do NMDA","Com glutamato ligado E poro livre, o NMDA deixa entrar Ca²⁺","O Ca²⁺ local é o sinal que dispara o fortalecimento"], h:2,
+   hn:"O passo que carrega a lógica toda é o terceiro: é a despolarização que remove o Mg²⁺. É por isso que o NMDA é um detector de coincidência e não um simples canal — ele precisa das duas coisas ao mesmo tempo, e a regra de Hebb vira, literalmente, um íon passando por um poro.",
+   w:"E se o Mg²⁺ nunca tampasse o poro do NMDA?",
+   wa:"O NMDA deixaria cálcio entrar com qualquer glutamato, mesmo sem o pós estar ativo. A sinapse perderia o detector de coincidência: fortaleceria a tudo, e a memória associativa — ligar coisas que acontecem juntas — desmoronaria."},
+  {s:["O Ca²⁺ entra pela espinha e ativa a CaMKII","A CaMKII se autofosforila na Thr286","Autofosforilada, ela permanece ativa mesmo sem cálcio","Ela fosforila e insere receptores AMPA na membrana","Mais AMPA para o mesmo glutamato = sinapse mais forte (LTP)"], h:2,
+   hn:"O elo decisivo é o terceiro: a autofosforilação solta a enzima da dependência do cálcio. Sem esse truque, o sinal apagaria junto com o pico de cálcio; com ele, a mudança se sustenta tempo suficiente para virar memória.",
+   w:"E se a CaMKII não conseguisse se autofosforilar?",
+   wa:"Ela desligaria assim que o cálcio saísse, e a inserção de AMPA não se sustentaria. A fase inicial da LTP encolheria muito: a coincidência seria detectada, mas não gravada."},
+  {s:["A entrada de cálcio varia em dose e em tempo","Cálcio alto e rápido aciona sobretudo a CaMKII","Cálcio moderado e prolongado aciona fosfatases (calcineurina/PP1)","A CaMKII insere AMPA (LTP); as fosfatases removem AMPA (LTD)","A ordem dos disparos (pré↔pós) escolhe qual regime domina"], h:1,
+   hn:"O ponto que quase todo resumo perde: não são dois mecanismos rivais, é o mesmo cálcio lido por sua dose e duração. A ordem dos disparos, na STDP, é o que ajusta essa dose — e por isso o tempo relativo, e não só a frequência, decide o rumo.",
+   w:"E se qualquer entrada de cálcio, forte ou fraca, acionasse só a CaMKII?",
+   wa:"A sinapse só saberia fortalecer, nunca enfraquecer. Sem LTD, os circuitos saturariam: tudo o que dispara junto ficaria forte para sempre, e a rede perderia a capacidade de corrigir e de esquecer o que não serve."},
+  {s:["A LTP inicial (E-LTP) usa proteínas já prontas e dura horas","Uma ativação forte manda o sinal da sinapse ao núcleo (ERK, importinas)","No núcleo, o CREB é fosforilado e recruta o CBP","Genes de expressão imediata (Arc, c-fos) são ligados","Novas proteínas são fabricadas e a LTP passa a durar dias (L-LTP)"], h:1,
+   hn:"O salto está no segundo elo: a sinapse fica longe do núcleo, e mandar o sinal até lá é o que separa uma memória de horas de uma de dias. Sem essa viagem, a mudança fica local e temporária; com ela, o genoma entra na conta.",
+   w:"E se o sinal nunca chegasse ao núcleo?",
+   wa:"A sinapse ainda teria a E-LTP — o fortalecimento de algumas horas com proteínas prontas. Mas nada de novo seria fabricado, e a memória não passaria para a forma duradoura. Você lembraria por uma tarde, não por uma semana."},
+  {s:["O núcleo produz proteínas que se espalham pela célula inteira","A sinapse ativada deixa um tag local e temporário","Só as sinapses etiquetadas capturam as proteínas novas","As sinapses capturadoras se estabilizam; as demais, não","Tag + captura + transcrição + epigenética compõem o engrama"], h:2,
+   hn:"O elo que resolve o paradoxo é o terceiro: a ordem do núcleo é global, mas o tag torna o efeito específico. É isso que permite a uma sinapse fraca 'pegar carona' nas proteínas de uma forte próxima — associatividade escrita em moléculas.",
+   w:"E se toda sinapse capturasse as proteínas novas, sem precisar de tag?",
+   wa:"Toda a célula se fortaleceria junto a cada aprendizado, e a especificidade da memória se perderia: em vez de gravar a conexão certa, o neurônio reforçaria todas as suas sinapses de uma vez — o oposto de uma lembrança precisa."}
+];
+
+BRIDGE['memoria-mol']=[
+  `A aula mostrou a porta de duas trancas. Aqui está por que essa mesma porta explica três propriedades clássicas da LTP — e onde ela deixa de ser a história inteira.`,
+  `A aula apresentou o interruptor que se segura. Aqui está o que a bi-estabilidade da CaMKII resolve, e a ressalva honesta sobre o quanto ela sozinha sustenta.`,
+  `A aula disse que a dose do cálcio escolhe a direção. Aqui está como isso vira uma regra de tempo (a STDP) e um limiar que se move (a metaplasticidade).`,
+  `A aula levou o sinal da sinapse ao núcleo. Aqui está a via molecular, o prêmio Nobel por trás dela e por que a Aplysia foi a escolha certa.`,
+  `A aula fechou com tag e captura. Aqui está o experimento do fraco-e-forte que fundou a ideia, e o que ela hoje conversa com a epigenética.`
+];
+
+DEEP['memoria-mol']=[
+  `<p>A LTP dependente de NMDA tem três propriedades clássicas, e as três caem da mesma porta de duas trancas. A <b>cooperatividade</b>: é preciso somar várias entradas para despolarizar o bastante e expulsar o Mg²⁺ — uma sinapse fraca sozinha não consegue. A <b>especificidade de entrada</b>: só a sinapse que recebeu glutamato fortalece, porque o Ca²⁺ entra ali, localmente. E a <b>associatividade</b>: uma entrada fraca "pega carona" e fortalece se chega junto de uma forte que despolariza a região.</p><p>Um cuidado honesto, do tipo que o NeuroLab faz questão de marcar: esta é <i>a</i> forma mais estudada de LTP, não a única. Há LTP independente de NMDA — por exemplo, via canais de cálcio dependentes de voltagem em certas sinapses, ou a plasticidade das fibras musgosas no CA3, que é pré-sináptica. O detector de coincidência é o retrato central do campo, não o retrato inteiro.</p>`,
+  `<p>A CaMKII é abundante justamente onde precisa estar: é uma das proteínas mais concentradas na densidade pós-sináptica. A ideia da <b>bi-estabilidade</b> — um interruptor com dois estados estáveis, ligado e desligado — resolve um problema real: proteínas duram horas a dias e são trocadas o tempo todo, então como um sinal sobrevive à substituição das próprias moléculas que o carregam? O modelo clássico responde que o holoenzima (um anel de subunidades) se mantém fosforilado porque subunidades ativas fosforilam as vizinhas e as recém-chegadas, preservando o estado através da renovação.</p><p>A ressalva: o quanto a CaMKII é <i>necessária e suficiente</i> para <i>manter</i> a memória (e não só para induzi-la) ainda é debatido, e experimentos que "apagam" e "reescrevem" a atividade da enzima refinaram — sem fechar — a história. O que é sólido: ela é essencial para a indução da LTP e para o tráfego de AMPA.</p>`,
+  `<p>A <b>STDP</b> deu à regra de Hebb um relógio. Em muitas sinapses, uma janela de dezenas de milissegundos decide o sinal: pré-antes-de-pós fortalece, pós-antes-de-pré enfraquece. O elegante é que uma única variável — o perfil de cálcio na espinha — costuma dar conta dos dois lados: o pico coincidente (o back-propagating do potencial de ação do pós somado ao glutamato) produz cálcio alto e rápido; a ordem inversa produz cálcio mais modesto e espalhado.</p><p>Sobre a <b>metaplasticidade</b>: o modelo <b>BCM</b> propôs, antes de haver mecanismo, um limiar de modificação que <i>desliza</i> com a atividade média recente da célula. Décadas depois, apareceu um candidato molecular — mudanças na razão entre subunidades do NMDA (GluN2A/2B) alteram quanto cálcio entra, movendo o limiar. É um bom exemplo de previsão teórica que a biologia foi alcançar depois.</p>`,
+  `<p>Foi na lesma marinha <i>Aplysia</i> que Eric Kandel (Nobel de 2000) desenhou a ponte sinapse→núcleo, e a escolha do animal não foi acaso: neurônios enormes e identificáveis, circuitos simples de reflexo, e uma distinção limpa entre memória de curto e de longo prazo no mesmo comportamento. A cascata central: serotonina → cAMP → <b>PKA</b>, que na memória de curto prazo apenas modifica proteínas existentes, mas na de longo prazo transloca ao núcleo e ativa o <b>CREB-1</b>.</p><p>O achado que mudou a prática de estudo foi o <b>freio</b>: existe um repressor, o <b>CREB-2</b>, que precisa ser removido para a transcrição acontecer. Como esse alívio do freio tem dinâmica própria no tempo, treinos <b>espaçados</b> o vencem melhor do que treinos massados — a base molecular do efeito de espaçamento, e a razão de a revisão espaçada não ser só um truque de agenda. Em mamíferos, a lógica se conserva com nomes parcialmente diferentes (ERK levando o sinal, importinas fazendo o transporte pelo axônio).</p>`,
+  `<p>A <b>marcação e captura sináptica</b> foi demonstrada por Frey e Morris (1997) num experimento de desenho lindo: um estímulo <b>forte</b> numa via (que dispara transcrição) e um <b>fraco</b> em outra via da mesma população de neurônios (que normalmente só daria E-LTP). Quando os dois acontecem perto no tempo, a via fraca também exibe L-LTP — ela capturou as proteínas fabricadas por conta do estímulo forte. Inverta a ordem ou afaste demais no tempo, e o efeito some. É a prova de que as proteínas são compartilhadas pela célula e o <b>tag</b> é o que as endereça.</p><p>A camada mais recente é a <b>epigenética</b>: a acetilação de histonas (por enzimas como as HATs, com o CBP entre elas) afrouxa a cromatina e mantém os genes certos acessíveis por mais tempo; inibir as desacetilases (HDACs) chega a "resgatar" formas de memória em modelos animais. E o mRNA de <b>Arc</b> é transportado de volta justamente para as sinapses ativas, fechando o laço núcleo→sinapse. É desse conjunto — tag, captura, transcrição, epigenética — que emerge o <b>engrama</b>, hoje manipulável: reativar opticamente as células marcadas durante um aprendizado pode evocar a própria memória.</p>`
+];
+
+REFERENCES['memoria-mol']=[
+  {src:"Bliss & Lømo (1973)",note:"O registro original da potenciação de longo prazo no hipocampo — o ponto de partida do campo."},
+  {src:"Malenka & Bear (2004) — LTP and LTD: an embarrassment of riches",note:"A revisão que organiza indução, expressão e as muitas formas de plasticidade."},
+  {src:"Frey & Morris (1997)",note:"O experimento de marcação e captura sináptica: o fraco captura o que o forte fabricou."},
+  {src:"Kandel (2001) — The molecular biology of memory storage",note:"A via cAMP/PKA/CREB e o freio CREB-2, da Aplysia ao mamífero (aula do Nobel)."}
+];
+
+ANATOMY['memoria-mol']={
+  title:'A fábrica da sinapse, por dentro',
+  caption:'Toque numa peça para ver o que ela faz no processo — e o que acontece quando falta.',
+  parts:[
+    {id:'pre', label:'Terminal pré-sináptico', blurb:'De onde vem o glutamato. Quando o neurônio de cima dispara, ele libera o glutamato que inicia tudo — a mensagem que os dois receptores do outro lado vão receber.'},
+    {id:'ampa', label:'Receptor AMPA', blurb:'O portão rápido. Glutamato liga, ele abre, o Na⁺ entra e a membrana despolariza. É ele que carrega a transmissão comum — e é o número dele na membrana que a LTP aumenta.'},
+    {id:'nmda', label:'Receptor NMDA', blurb:'A porta de duas trancas e o detector de coincidência. Só deixa o Ca²⁺ entrar com glutamato ligado E a membrana já despolarizada (o que expulsa o Mg²⁺ do poro).'},
+    {id:'espinha', label:'Espinha dendrítica', blurb:'O compartimento pós-sináptico onde o cálcio se concentra localmente. É essa localização que torna a mudança específica daquela sinapse — e é aqui que mora o tag.'},
+    {id:'camkii', label:'CaMKII', blurb:'O interruptor que se segura. O cálcio a ativa; ela se autofosforila (Thr286), fica ligada sem cálcio e insere AMPA. É a ponte entre o sinal elétrico e o fortalecimento.'}
+  ],
+  svg:`<svg class="anat-svg" viewBox="0 0 460 250" role="img" aria-label="Corte de uma sinapse: terminal pré-sináptico libera glutamato sobre os receptores AMPA e NMDA na espinha dendrítica, com a CaMKII dentro da espinha">
+    <text x="150" y="26" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">terminal pré-sináptico</text>
+    <g class="apart" data-anat="memoria-mol" data-struct="pre"><path d="M60 32 C60 32 240 32 240 32 C248 60 210 84 150 84 C90 84 52 60 60 32 Z" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.8"/><circle cx="118" cy="60" r="6" fill="currentColor" fill-opacity=".5"/><circle cx="150" cy="66" r="6" fill="currentColor" fill-opacity=".5"/><circle cx="182" cy="60" r="6" fill="currentColor" fill-opacity=".5"/></g>
+    <g><circle cx="130" cy="100" r="2.4" fill="currentColor" opacity=".8"/><circle cx="150" cy="106" r="2.4" fill="currentColor" opacity=".8"/><circle cx="170" cy="100" r="2.4" fill="currentColor" opacity=".8"/><text x="234" y="104" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".6">glutamato</text></g>
+    <line x1="40" y1="150" x2="420" y2="150" stroke="currentColor" stroke-width="1" opacity=".25"/>
+    <g class="apart" data-anat="memoria-mol" data-struct="espinha"><path d="M60 150 C60 210 120 232 150 232 C180 232 240 210 240 150 Z" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="1.6"/></g>
+    <text x="150" y="205" text-anchor="middle" font-size="10" fill="currentColor" opacity=".8">espinha dendrítica</text>
+    <g class="apart" data-anat="memoria-mol" data-struct="ampa"><rect x="104" y="140" width="26" height="20" rx="4" fill="currentColor" fill-opacity=".34" stroke="currentColor" stroke-width="1.7"/></g>
+    <text x="117" y="176" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".72">AMPA</text>
+    <g class="apart" data-anat="memoria-mol" data-struct="nmda"><rect x="170" y="140" width="26" height="20" rx="4" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.9"/><circle cx="183" cy="150" r="4" fill="currentColor" fill-opacity=".85"/></g>
+    <text x="183" y="176" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".72">NMDA · Mg²⁺</text>
+    <g class="apart" data-anat="memoria-mol" data-struct="camkii"><circle cx="150" cy="192" r="15" fill="currentColor" fill-opacity=".4" stroke="currentColor" stroke-width="1.8"/><text x="150" y="195" text-anchor="middle" font-size="8" fill="currentColor">CaMKII</text></g>
+    <path d="M330 60 L330 140" stroke="currentColor" stroke-width="1.3" opacity=".5"/><polygon points="330,140 325,128 335,128" fill="currentColor" opacity=".6"/>
+    <text x="330" y="52" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".6">o sinal sobe</text>
+    <text x="330" y="158" text-anchor="middle" font-size="8.5" fill="currentColor" opacity=".6">ao núcleo (aula 4)</text>
+  </svg>`
+};
+
+/* ---- memoria-mol · termos avançados novos (os já existentes não são reescritos) ---- */
+Object.assign(GLOSSARY, {
+  'STDP':'Plasticidade dependente do tempo do disparo (spike-timing-dependent plasticity): não basta disparar junto, importa a ordem. Pré pouco antes de pós fortalece (LTP); pós antes de pré enfraquece (LTD) — na casa dos milissegundos.',
+  'autofosforilação':'Quando uma enzima fosforila a si mesma. Na CaMKII, é o truque que a mantém ativa mesmo depois que o cálcio some: um sinal que se sustenta sozinho, a base da "memória molecular".',
+  'calcineurina':'Uma fosfatase ativada por cálcio moderado e prolongado. Ela (com a PP1) remove receptores AMPA da sinapse — o caminho da LTD, o oposto do que a CaMKII faz.',
+  'metaplasticidade':'A plasticidade da própria plasticidade: o limiar entre fortalecer e enfraquecer não é fixo — ele desliza conforme a atividade recente da célula (a ideia BCM), o que impede um circuito muito ativo de saturar.',
+  'tag sináptico':'A marca local e temporária que uma sinapse ativada deixa. As proteínas novas se espalham pela célula inteira, mas só as sinapses etiquetadas as capturam — é isso que torna a memória específica daquela conexão.',
+  'marcação e captura':'O mecanismo que reconcilia uma ordem global (o núcleo fabrica proteínas para a célula toda) com um efeito específico (só uma sinapse muda): apenas a sinapse com tag captura as proteínas e se estabiliza.'
+});
+Object.assign(TERM_FIG, {
+  'STDP':'mod:memoria-mol','autofosforilação':'mod:memoria-mol','calcineurina':'mod:memoria-mol',
+  'metaplasticidade':'mod:memoria-mol','tag sináptico':'mod:memoria-mol','marcação e captura':'mod:memoria-mol'
+});
+
+CONCEPTS['detector-coincidencia']={cat:'fenomeno', n:'O detector de coincidência',
+ q:'Como uma sinapse "sabe" que os dois neurônios dispararam ao mesmo tempo?',
+ a:'Pelo receptor <b>NMDA</b>, que é uma porta de duas trancas. Mesmo com <b>glutamato</b> ligado, o poro fica tampado por um <b>Mg²⁺</b> que só sai quando a membrana já está despolarizada. Então o NMDA só deixa o <b>Ca²⁺</b> entrar quando as duas coisas acontecem juntas — o neurônio de antes liberou glutamato E o de depois está ativo. É a regra de Hebb ("dispara junto, conecta junto") escrita como um íon passando por um poro; e, como a força motriz empurra o cálcio para dentro, é ele que vira o sinal de aprendizado.',
+ t:['NMDA','glutamato','Ca²⁺'],
+ m:[{m:'memoria-mol',l:0},{m:'memoria-mol',l:2}],
+ k:['hipocampo'],
+ s:['nmda','coincidencia','hebb','porta de duas trancas','magnesio','deteccao de coincidencia']};
+
+CONCEPTS['interruptor-camkii']={cat:'fenomeno', n:'O interruptor que se segura',
+ q:'Como uma memória dura muito mais do que o breve sinal que a criou?',
+ a:'Graças à <b>CaMKII</b>. O <b>Ca²⁺</b> que entrou pelo NMDA a ativa, e ela então se autofosforila: passa a ficar ligada mesmo sem cálcio, como um interruptor que se tranca sozinho. Ligada, ela insere mais receptores <b>AMPA</b> na membrana, e mais AMPA significa uma resposta maior ao mesmo glutamato — isso é a <b>LTP</b>. Mas uma proteína teimosa só sustenta horas; para durar dias, o sinal precisa chegar ao núcleo e ligar o <b>CREB</b>, que fabrica proteínas novas. Curto prazo mexe no que já existe; longo prazo constrói.',
+ t:['CaMKII','AMPA','LTP','CREB'],
+ m:[{m:'memoria-mol',l:1},{m:'memoria-mol',l:3}],
+ k:['hipocampo'],
+ s:['camkii','autofosforilacao','memoria molecular','interruptor','thr286','e-ltp l-ltp']};
 
 MINI_QUIZZES['decisao']=[
   [

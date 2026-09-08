@@ -554,7 +554,7 @@ const reset = ()=>ev('state = defaultState();');
   eq(quebradas.length, 0, '19. âncoras apontando para parte inexistente: ' + quebradas.slice(0,3).join(' | '));
 
   const totalAncoras = ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+locationAnchorsOf(m.id,li).length,0),0)`);
-  eq(totalAncoras, 229, '19. o número de âncoras utilizáveis (207 + 17 do bloco B + 1 por aula da Fatia 2 que ancora um termo numa parte do diagrama do módulo). Atualize ao acrescentar aula com âncora de Localização');
+  eq(totalAncoras, 239, '19. o número de âncoras utilizáveis (207 + 17 do bloco B + 1 por aula da Fatia 2 que ancora um termo numa parte do diagrama do módulo + 10 do módulo avançado memoria-mol: 3+3+2+1+1 nas 5 aulas). Atualize ao acrescentar aula com âncora de Localização');
 
   /* 56 tópicos ganham Localização pelo diagrama. A cobertura final é 58 porque
      dois dos 8 sem âncora — emocao-3 e clinica-0 — já mediam Localização por
@@ -572,8 +572,8 @@ const reset = ()=>ev('state = defaultState();');
   /* Este continua sendo catraca de propósito: o total só deve subir, e subir
      deliberadamente. Quem acrescentar conteúdo atualiza o número e, ao fazê-lo,
      é obrigado a olhar se subiu o quanto devia. */
-  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 419,
-     '19. o total de caixas sobe deliberadamente a cada 5ª aula da Fatia 2 (base 344; cada aula nova mede 3 ou 4 dimensões). Atualize ao acrescentar aula e confira se subiu o quanto devia');
+  eq(ev(`MODULES.reduce((s,m)=>s+m.lessons.reduce((t,_,li)=>t+measurableDimensions(m.id,li).length,0),0)`), 439,
+     '19. o total de caixas sobe deliberadamente a cada 5ª aula da Fatia 2 (base 344; cada aula nova mede 3 ou 4 dimensões) + 20 do módulo avançado memoria-mol (5 aulas × 4 dimensões). Atualize ao acrescentar aula e confira se subiu o quanto devia');
 
   /* A invariante que realmente importa: nenhum tópico pode ter caixa de
      Localização sem NENHUMA fonte — nem âncora no diagrama, nem mini-questão.

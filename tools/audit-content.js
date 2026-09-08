@@ -77,10 +77,10 @@ if (!errors.length) {
   const caseBlock = domain.match(/const DOMAIN_CASES = \[(.*?)\];\n\nconst DOMAIN_CONNECTIONS/s);
   const connectionBlock = domain.match(/const DOMAIN_CONNECTIONS = \[(.*?)\];\n\nconst DOMAIN_TRAILS/s);
   const trailBlock = domain.match(/const DOMAIN_TRAILS = \[(.*?)\];\n\nconst DOMAIN_SESSION/s);
-  ok(counterBlock && (counterBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 22,
-    'o Modo Domínio deve manter 22 desafios contrafactuais');
-  ok(caseBlock && (caseBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 12,
-    'o Modo Domínio deve manter 12 casos integrados');
+  ok(counterBlock && (counterBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 23,
+    'o Modo Domínio deve manter 23 desafios contrafactuais');
+  ok(caseBlock && (caseBlock[1].match(/\n\s*(?:id:|\"id\"\s*:)/g)||[]).length === 13,
+    'o Modo Domínio deve manter 13 casos integrados');
   ok(connectionBlock && (connectionBlock[1].match(/\{a:'/g)||[]).length === 12,
     'o mapa de conexões deve manter 12 relações explícitas');
   ok(trailBlock && (trailBlock[1].match(/\{id:'/g)||[]).length === 4,
@@ -142,8 +142,8 @@ if (!errors.length) {
 
   ok(Math.max(...correctPositions) - Math.min(...correctPositions) <= 1,
     `posições corretas devem ficar equilibradas (diferença máxima de 1 entre A/B/C/D); encontrado ${correctPositions.join('/')}`);
-  ok(domainCounters.length === 22 && new Set(domainCounters.map((item) => item.module)).size === 22,
-    'os contrafactuais devem cobrir os 22 módulos sem repetição de módulo');
+  ok(domainCounters.length === 23 && new Set(domainCounters.map((item) => item.module)).size === 23,
+    'os contrafactuais devem cobrir os 23 módulos sem repetição de módulo');
   domainCases.forEach((item) => ok(Array.isArray(item.modules) && item.modules.length >= 3,
     `${item.id}: caso integrado deve exigir pelo menos 3 módulos`));
   const correctLongest = domainActivities.filter((item) => {
@@ -225,7 +225,9 @@ if (!errors.length) {
   /* Derivado do conteúdo. A invariante é "todo módulo tem visão integrada, com
      imagem cheia e miniatura" — e ela vale com 16, 18 ou 40 módulos. O 32 fixo
      que estava aqui obrigava a editar o portão a cada módulo novo. */
-  const semVisual = idsDeModulo.filter((id) => !new RegExp(`\\n  ${id}: \\{`).test(integrated));
+  // a chave pode vir sem aspas (ids simples) ou entre aspas (ids com hífen, como
+  // os módulos avançados 'memoria-mol'), já que hífen não é identificador válido.
+  const semVisual = idsDeModulo.filter((id) => !new RegExp(`\\n  ['"]?${id}['"]?: \\{`).test(integrated));
   ok(semVisual.length === 0,
     `todo módulo precisa de visão integrada; sem ela: ${semVisual.join(', ')}`);
   medido.imagens = visualPaths.length;

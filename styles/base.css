@@ -176,6 +176,13 @@ header.top{
    especificidade, então `border-style:dashed` sozinho era sobrescrito e a
    borda tracejada nunca aparecia. `.card.card-extra` sobe a especificidade. */
 .card.card-extra{border-style:dashed}
+/* Fase 2 · avançado: mesma família visual dos extras (borda tracejada), com o
+   estado bloqueado antes de a Fase 1 fechar — um teaser que mostra o horizonte. */
+.card.card-avancado{border-style:dashed}
+.card.card-locked{opacity:.6;cursor:not-allowed;filter:grayscale(.3)}
+.card.card-locked:hover{transform:none;border-color:var(--line)}
+.card .badge.lockbadge{color:var(--ink-3);border-color:var(--line);background:var(--panel);text-transform:none;letter-spacing:.04em}
+.cards-sec-avancado h3 .lock{font-size:13px;margin-left:5px;vertical-align:middle}
 .card{
   position:relative;text-align:left;border:1px solid var(--line);border-radius:16px;padding:15px 15px 14px;
   background:linear-gradient(180deg,var(--panel),var(--panel-2));
